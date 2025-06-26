@@ -1,6 +1,6 @@
-# README
+# Let us walk on the 3-isogeny graph: efficient, fast, and simple
 
-## Let us walk on the 3-isogeny graph: efficient, fast, and simple
+Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
 ## Setup Process
 
