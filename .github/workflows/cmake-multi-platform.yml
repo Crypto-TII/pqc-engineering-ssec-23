@@ -61,6 +61,33 @@ jobs:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
+  build-nanoseconds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-ccode-dir-nano=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
+          echo "build-output-dir-nano=${{ github.workspace }}/c-code/cmake-build-release-time-x8664" >> "$GITHUB_OUTPUT"
+
+      - name: Configuring CMake for all primes' libraries and tests targets
+        run: |
+          cd c-code
+          cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
+
+      - name: Build all primes' libraries and tests targets
+        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+        run: |
+          make
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmake-build-release-time-x8664
+          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+
 
   test-p254:
     name: Test prime 254
@@ -85,7 +112,7 @@ jobs:
           cd tests
           ./tests-ssec-p254
 
-  benchmark-p254:
+  benchmark-p254-cycles:
     name: Benchmark prime 254
     runs-on: ubuntu-latest
     needs: build-cycles
@@ -102,7 +129,29 @@ jobs:
           cd benchmarks
           chmod +x benchmarks-ssec-p254
 
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      - name: Benchmarking (Cycles count)
+        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
+        run: |
+          benchmarks/benchmarks-ssec-p254
+
+  benchmark-p254-nanoseconds:
+    name: Benchmark prime 254
+    runs-on: ubuntu-latest
+    needs: build-nanoseconds
+    steps:
+      - name: Downloading p254 CYCLES artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-release-time-x8664
+          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+
+      - name: Restoring execution permission
+        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+        run: |
+          cd benchmarks
+          chmod +x benchmarks-ssec-p254
+
+      - name: Benchmarking (Cycles count)
+        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
         run: |
           benchmarks/benchmarks-ssec-p254
