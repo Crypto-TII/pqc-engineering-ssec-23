@@ -37,9 +37,17 @@ Please refer to the figure below for clarification.
 To generate the Doxygen documentation of the project, please run
 
 ```bash
-ssec-23/docs$ doxygen Doxyfile
+pqc-engineering-ssec-23/docs$ doxygen Doxyfile
 ```
+
+## Integrated CI/CD testing and benchmarking
+
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD) is important, we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses docker images to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
+
+<p align="center">
+  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="500">
+</p>
 
 ## Detailed build process
 
-Please refer to [c-code/README.md](c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](dCTIDH/README.md).
+Please refer to [c-code/README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/blob/6f5033499375796b7aa919348278963818129299/c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](dCTIDH/README.md).
