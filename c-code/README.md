@@ -13,7 +13,7 @@ Compilation for Linux and MacOS using CMAKE
 First configure the build directory with
 
 ```bash
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=<BUILD_TYPE> -B <folder-build-name>
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=<BUILD_TYPE> -B <folder-build-name>
 ```
 
 where `<BUILD_TYPE>` is either **Release** or **Debug**. Optionally, add personal preference to CMAKE such as
@@ -25,7 +25,7 @@ where `<BUILD_TYPE>` is either **Release** or **Debug**. Optionally, add persona
 An example of how to build the debug build type is shown below 
 
 ```bash
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
 ```
 
 ### Make library targets
@@ -33,24 +33,24 @@ ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
 Jump into the <folder-build-name> folder and build all target libraries for all supported primes:
 
 ```bash
-ssec-23/c-code$ cd <folder-build-name>
-ssec-23/c-code/<folder-build-name>$ make -j8
+pqc-engineering-ssec-23/c-code$ cd <folder-build-name>
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ make -j8
 ```
 Example:
 
 ```bash
-ssec-23/c-code$ cd cmake-build-debug
-ssec-23/c-code/cmake-build-debug$ make -j8
+pqc-engineering-ssec-23/c-code$ cd cmake-build-debug
+pqc-engineering-ssec-23/c-code/cmake-build-debug$ make -j8
 ```
 
 To build target libraries individually, simply run
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ make ssec-p<PRIME>
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ make ssec-p<PRIME>
 ```
 where `<PRIME>` is one of the supported primes `p254, p255, p381, p383, p398, p511, p575, p592, p765`, and `p783`. Example:
 ```bash
-ssec-23/c-code/cmake-build-debug$ make ssec-p254
+pqc-engineering-ssec-23/c-code/cmake-build-debug$ make ssec-p254
 ```
 
 ### Make test targets
@@ -59,13 +59,13 @@ Building all targets from last step will create all test targets as well.
 To compile specific test target, simply run
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ make tests-ssec-p<PRIME>
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ make tests-ssec-p<PRIME>
 ```
 
 where `<PRIME>` is one of the supported primes. Example:
 
 ```bash
-ssec-23/c-code/cmake-build-debug$ make tests-ssec-p254
+pqc-engineering-ssec-23/c-code/cmake-build-debug$ make tests-ssec-p254
 ```
 
 ## Tests
@@ -73,30 +73,30 @@ ssec-23/c-code/cmake-build-debug$ make tests-ssec-p254
 Ctest is supported and can be used to call tests using regex, with the command
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ ctest
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ ctest
 ```
 
 Example:
 ```bash
-ssec-23/c-code/cmake-build-debug$ ctest
+pqc-engineering-ssec-23/c-code/cmake-build-debug$ ctest
 ```
 
 will run all tests. To run all tests in parallel, run
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ make test-parallel
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ make test-parallel
 ```
 
 Example:
 
 ```bash
-ssec-23/c-code/cmake-build-debug$ make test-parallel
+pqc-engineering-ssec-23/c-code/cmake-build-debug$ make test-parallel
 ```
 
 Another way to run the tests is provided by
 
 ```bash
-ssec-23/c-code/<folder-build-name>$  ctest -V -R test
+pqc-engineering-ssec-23/c-code/<folder-build-name>$  ctest -V -R test
 ```
 
 ## Benchmarking
@@ -104,71 +104,71 @@ ssec-23/c-code/<folder-build-name>$  ctest -V -R test
 For benchmarking, the correct commands must be used when doing the first cmake.
 
 ```bash
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-debug-cycles-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-debug-time-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-debug-cycles-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-debug-time-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
 ```
 followed by
 ```bash
-ssec-23/c-code$ cd <folder-build-name>
-ssec-23/c-code/<folder-build-name>$ make -j8
+pqc-engineering-ssec-23/c-code$ cd <folder-build-name>
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ make -j8
 ```
 
 NOTE: Benchmarking does not work for
 ```bash
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
 ```
 
 To run the benchmarks in verbose mode, run
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ ctest -V -R bench
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ ctest -V -R bench
 ```
 
 Individual test suites can be run similarly as
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ ctest -V -R test-ssec-p<PRIME>-fp
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ ctest -V -R test-ssec-p<PRIME>-fp
 ```
 or a single test case by calling directly the test app as
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ cd tests
-ssec-23/c-code/<folder-build-name>/tests$ ./tests-ssec-p<PRIME> tests/fp/add_and_sub
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ cd tests
+pqc-engineering-ssec-23/c-code/<folder-build-name>/tests$ ./tests-ssec-p<PRIME> tests/fp/add_and_sub
 ```
 
 To run tests and benchmarks with more iterations, you can modify the number of times each test is evaluated with the following.
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ cd tests
-ssec-23/c-code/<folder-build-name>/tests$ ./tests-ssec-p<PRIME> --iterations 10000
-ssec-23/c-code/<folder-build-name>/tests$ cd ..
-ssec-23/c-code/<folder-build-name>$ cd benchmarks  
-ssec-23/c-code/<folder-build-name>/benchmarks$ ./benchmarks/benchmarks-ssec-p<PRIME> # By default 10000
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ cd tests
+pqc-engineering-ssec-23/c-code/<folder-build-name>/tests$ ./tests-ssec-p<PRIME> --iterations 10000
+pqc-engineering-ssec-23/c-code/<folder-build-name>/tests$ cd ..
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ cd benchmarks  
+pqc-engineering-ssec-23/c-code/<folder-build-name>/benchmarks$ ./benchmarks/benchmarks-ssec-p<PRIME> # By default 10000
 ```
 
 Finally, another way to run the benchmarks is given by
 
 ```bash
-ssec-23/c-code/<folder-build-name>$ benchmarks/benchmarks-ssec-p<PRIME> # By default 10000
+pqc-engineering-ssec-23/c-code/<folder-build-name>$ benchmarks/benchmarks-ssec-p<PRIME> # By default 10000
 ```
 
 ## Benchmarking script
 
-A high-level benchmarking script exists in the `ssec-23/high-level-scripts` folder. To run it, first replace the `WORKSPACE` variable inside `benchmark_02_20250408.sh`, and then execute (in their respective folders)
+A high-level benchmarking script exists in the `pqc-engineering-ssec-23/high-level-scripts` folder. To run it, first replace the `WORKSPACE` variable inside `benchmark_02_20250408.sh`, and then execute (in their respective folders)
 
 ```bash
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-debug-cycles-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-debug-time-x8664
-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-debug-cycles-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-debug-time-x8664
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
 ```
 and
 ```bash
-ssec-23/high-level-scripts$ mkdir results
-ssec-23/high-level-scripts$ sudo bash benchmark_02_20250408.sh
+pqc-engineering-ssec-23/high-level-scripts$ mkdir results
+pqc-engineering-ssec-23/high-level-scripts$ sudo bash benchmark_02_20250408.sh
 ```
 
 This will create the benchmark results inside the `high-level-scripts/results` folder, with a timestamp. 
