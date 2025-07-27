@@ -13,10 +13,10 @@ In order to reproduce some of the figures in the manuscript, we provide with eas
 ├───📁 reproduce_results
 │   ├───📁 manuscript_figure_03
 │   │   ├───📄 benchmark_graph_03.py
-│   │   └───📄 **generate_figure_03.py**
+│   │   └───📄 generate_figure_03.py
 │   └───📁 manuscript_figure_04
 │       ├───📄 benchmark_graph_04.py
-│       └───📄 **generate_figure_04.py**
+│       └───📄 generate_figure_04.py
 └───📄 README.md
 ```
 

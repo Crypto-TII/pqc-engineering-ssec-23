@@ -56,7 +56,7 @@ In this section we present a setup process that can be run in any Linux terminal
 
 #### System requirements
 
-Our project works out-of-the-box in any Linux-based environment with some basic software requirements:
+Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
 - Python3 (numpy and matplotlib)
 
@@ -88,6 +88,9 @@ An example of the whole process of setup and build is shown below.
 
 <a name="section_02_02"></a>
 ### 2.2. Testing
+
+After building as shown in the previous section 
+
 
 ## Doxygen
 
