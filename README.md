@@ -91,6 +91,7 @@ Please refer to the figure below for clarification.
 <a name="section_02_02"></a>
 ### 2.2. General Terminal Setup
 
+<a name="section_02_02_01"></a>
 #### 2.2.1. Build
 
 Our project works out-of-the-box in any Linux-based environment with some basic software requirements:
@@ -113,6 +114,14 @@ make -j
 This will create the `cmake-build-release` folder with all the tests for all the supported primes: `p254`, `p255`, `p381`, `p383`, `p398`, `p511`, `p575`, `p592`, `p765`, and `p783`. A list of the generated tests is shown below.
 
 ![](gifs/03-examples/01.png)
+
+An example of the whole process of setup and build is shown below.
+
+![](gifs/03-examples/build_release.gif)
+
+
+<a name="section_02_02_02"></a>
+#### 2.2.2. Testing
 
 ## Doxygen
 
