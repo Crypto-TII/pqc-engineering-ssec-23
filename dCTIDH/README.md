@@ -1,4 +1,4 @@
-# dCTIDH modified version
+# Let us walk on the 3-isogeny graph: dCTIDH modified version
 
 This repository contains auxiliary material taken from the [dCTIDH repository](https://github.com/PaZeZeVaAt/dCTIDH).
 In particular, we list the modifications performed on the code below.
