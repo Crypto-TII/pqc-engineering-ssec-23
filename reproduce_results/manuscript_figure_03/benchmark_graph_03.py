@@ -103,7 +103,7 @@ plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='ECE')
 plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
 plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
 plt.xticks([r + barWidth for r in range(len(IT))],
-           ['254', '255', '381', '383', '398', '511', '575', '592', '765', '783'])
+           ['p254', 'p255', 'p381', 'p383', 'p398', 'p511', 'p575', 'p592', 'p765', 'p783'])
 
 plt.title('Benchmarks for the 2-isogenies vs. 3-isogenies walks')
 

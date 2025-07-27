@@ -66,7 +66,7 @@ plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='ECE')
 plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
 plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
 plt.xticks([r + barWidth for r in range(len(IT))],
-           ['381', '398', '575', '592', '765', '783'])
+           ['128-bits: p381 vs p398', '192-bits: p575 vs p592', '256-bits: p765 vs. p783'])
 
 plt.title('Benchmarks for the 3-isogenies walks: Our solution vs. QFESTA')
 
