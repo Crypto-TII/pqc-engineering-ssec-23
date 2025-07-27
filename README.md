@@ -19,10 +19,14 @@ The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph
 
 ## Setup Process
 
-<details>
-  <summary>IDE Setup: CLion </summary>
+In case an IDE like CLion is desired, the instructions are shown below. For a general terminal setup process, please skip to the following subsection.
 
-This project uses `cmake` and it has been configured to run with clion. A stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
+### IDE Setup: CLion
+
+<details>
+  <summary>Details</summary>
+
+This project uses `cmake`. In case it is desired to use a specialized IDE like Clion, a stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
 
 To set up the environment, in clion, create four different cmake profiles with the following instructions:
 
@@ -51,6 +55,10 @@ Please refer to the figure below for clarification.
 ![CMake Profile](gifs/01-cmake-profile/cmake-profile.gif)
 
 </details>
+
+### General Terminal Setup
+
+For a general terminal setup
 
 ## Doxygen
 
