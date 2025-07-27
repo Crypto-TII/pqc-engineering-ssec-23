@@ -187,7 +187,7 @@ The related code to reproduce our results is shown in the tree below.
 └───📄 README.md
 ```
 
-### 3.1. Figure 03: Benchmarks for the 2-isogenies vs. 3-isogenies walks
+### 3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
 
 Inside the `reproduce_results/manuscript_figure_03` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -203,11 +203,33 @@ A demo of how to obtain the manuscript's Figure 03 is shown below.
 
 ![](gifs/04-replicate-results/fig_03/fig_03.gif)
 
-where the original Figure 03 presented in the manuscript is shown below.
+where the original Figure 3 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_03/figure_03_original.png)
 
-## Doxygen
+
+### 3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
+
+Similar to the previous figure, inside the `reproduce_results/manuscript_figure_04` folder, it is necessary to give execution permissions to the script, via
+```shell
+chmod +x generate_figure_04.sh
+```
+Then, just simply execute it
+```shell
+./generate_figure_04.sh
+```
+This will automatically build with the `-DBENCHMARKING=CYCLES -DARCHITECTURE=x8664` flags, and perform all the statistics. At the end, a bar graph is automatically generated.
+
+A demo of how to obtain the manuscript's Figure 03 is shown below.
+
+![](gifs/04-replicate-results/fig_04/fig_04.gif)
+
+where the original Figure 4 presented in the manuscript is shown below.
+
+![](gifs/04-replicate-results/fig_03/figure_03_original.png)
+
+
+## 4. Doxygen
 
 To generate the Doxygen documentation of the project, please run
 
