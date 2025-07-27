@@ -48,7 +48,7 @@ To set up the environment, in clion, create four different cmake profiles with t
 
 Please refer to the figure below for clarification.
 
-![CMake Profile](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/gifs/01-cmake-profile/cmake-profile.gif)
+![CMake Profile](gifs/01-cmake-profile/cmake-profile.gif)
 
 </details>
 
