@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['i_0',['i',['../d2/d00/prime__search_8m.html#a6f6ccfcf58b31cb6412107d9d5281426',1,'prime_search.m']]],
-  ['if_1',['if',['../d2/d00/prime__search_8m.html#acb18b236f7946309bc59d6e3e4e9f27c',1,'prime_search.m']]],
-  ['im_2',['im',['../dd/d41/structfp2__t.html#adb377523cdae1a45b83e6e3de61c9f5c',1,'fp2_t']]],
-  ['iterations_3',['iterations',['../d6/dbd/struct_munit_test_runner.html#a49884a390fe5592f17ab6795b728d63c',1,'MunitTestRunner::iterations'],['../d3/d4e/struct_munit_suite__.html#a49884a390fe5592f17ab6795b728d63c',1,'MunitSuite_::iterations']]]
+  ['ece_0',['ECE',['../d6/d03/namespacebenchmark__graph.html#a8a0be6f040203c466ff547919936f659',1,'benchmark_graph.ECE'],['../d4/d8d/namespacebenchmark__graph__03.html#a8a0be6f040203c466ff547919936f659',1,'benchmark_graph_03.ECE'],['../d7/d23/namespacebenchmark__graph__04.html#a8a0be6f040203c466ff547919936f659',1,'benchmark_graph_04.ECE']]],
+  ['edgecolor_1',['edgecolor',['../d6/d03/namespacebenchmark__graph.html#a38f76b97c962a10dfb81409b855b54a5',1,'benchmark_graph.edgecolor'],['../d4/d8d/namespacebenchmark__graph__03.html#a38f76b97c962a10dfb81409b855b54a5',1,'benchmark_graph_03.edgecolor'],['../d7/d23/namespacebenchmark__graph__04.html#a38f76b97c962a10dfb81409b855b54a5',1,'benchmark_graph_04.edgecolor']]],
+  ['elapsed_5ftime_2',['elapsed_time',['../d9/df4/namespacetests.html#aa97c7080953b1a37809879b21049d531',1,'tests']]],
+  ['ells_3',['ells',['../d4/d54/structprivate__key.html#ae4fefb6a9e874c5bc10cbbf2ea33dc5c',1,'private_key']]],
+  ['end_5ftime_4',['end_time',['../d9/df4/namespacetests.html#aa18736cc12f8beb112bd108c5a09ef8d',1,'tests']]],
+  ['errored_5',['errored',['../d2/d63/struct_munit_report.html#ab82c286bde0259d1b7f30d06f603433c',1,'MunitReport']]]
 ];

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['tear_5fdown_0',['tear_down',['../d0/d79/struct_munit_test.html#a3376de1f13f419a7028d36d15111c0f4',1,'MunitTest']]],
-  ['test_1',['test',['../d0/d79/struct_munit_test.html#a11cb63916f20d86999093d851a46840a',1,'MunitTest']]],
-  ['test_5ffp_2',['test_fp',['../d9/d0f/test__declarations_8h.html#a5ec9c922551b230cd7e985ccb7e461f7',1,'test_fp:&#160;test_fp.c'],['../d7/d0f/test__fp_8c.html#a5ec9c922551b230cd7e985ccb7e461f7',1,'test_fp:&#160;test_fp.c']]],
-  ['test_5ffq_3',['test_fq',['../d9/d0f/test__declarations_8h.html#a0a6831ce9e23597696e24c2443f6dc67',1,'test_fq:&#160;test_fq.c'],['../d5/d7b/test__fq_8c.html#a0a6831ce9e23597696e24c2443f6dc67',1,'test_fq:&#160;test_fq.c']]],
-  ['test_5fisogeny_5fwalks_4',['test_isogeny_walks',['../d9/d0f/test__declarations_8h.html#aaa0b97b1038464ded6628068902308df',1,'test_isogeny_walks:&#160;test_isogeny_walks.c'],['../da/d97/test__isogeny__walks_8c.html#aaa0b97b1038464ded6628068902308df',1,'test_isogeny_walks:&#160;test_isogeny_walks.c']]],
-  ['tests_5',['tests',['../d6/dbd/struct_munit_test_runner.html#a0abd97632a373b252a144f34b24665b0',1,'MunitTestRunner::tests'],['../d3/d4e/struct_munit_suite__.html#a607aa1e2cf9083802078f0c88fa7a3e2',1,'MunitSuite_::tests']]]
+  ['matching_5fvalues_0',['matching_values',['../d4/d8d/namespacebenchmark__graph__03.html#a2ff1aee45b2a5cecc25be0452b8a8b16',1,'benchmark_graph_03.matching_values'],['../d7/d23/namespacebenchmark__graph__04.html#a2ff1aee45b2a5cecc25be0452b8a8b16',1,'benchmark_graph_04.matching_values']]],
+  ['mcyc_1',['Mcyc',['../db/d8e/namespaceanalyze__bench.html#afa073ac28db2a9222c7b4d9ffb6bfa0a',1,'analyze_bench']]],
+  ['model_2',['model',['../d5/dac/to__model_8m.html#aac579274aa2e3d29b9b3c34d728f62c3',1,'to_model.m']]],
+  ['mul_3',['mul',['../db/d8e/namespaceanalyze__bench.html#ab5180fa31f3a4727764de27705f76940',1,'analyze_bench']]],
+  ['mulsq_4',['mulsq',['../db/d8e/namespaceanalyze__bench.html#ace1743672a003a347f66e8103c704abd',1,'analyze_bench']]],
+  ['mults_5',['mults',['../db/d8e/namespaceanalyze__bench.html#a3ef65c71ec630ff524c8230d81dd2dbe',1,'analyze_bench']]]
 ];

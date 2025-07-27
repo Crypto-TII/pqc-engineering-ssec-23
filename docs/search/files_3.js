@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['fp_2ec_0',['fp.c',['../d4/d6c/fp_8c.html',1,'']]],
-  ['fp_2eh_1',['fp.h',['../d1/dca/fp_8h.html',1,'']]],
-  ['fp2_2ec_2',['fp2.c',['../d0/da2/fp2_8c.html',1,'']]],
-  ['fp2_2eh_3',['fp2.h',['../d8/db6/fp2_8h.html',1,'']]]
+  ['elligator_2ec_0',['elligator.c',['../d5/d78/elligator_8c.html',1,'']]],
+  ['elligator_2eh_1',['elligator.h',['../d0/d35/elligator_8h.html',1,'']]],
+  ['enable_5fccr_2ec_2',['enable_ccr.c',['../d5/d9f/enable__ccr_8c.html',1,'']]]
 ];

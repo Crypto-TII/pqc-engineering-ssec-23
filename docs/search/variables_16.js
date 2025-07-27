@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['x_0',['x',['../d8/d6e/structproj.html#a31f41d568a93c482a68ec892b90fbb62',1,'proj::x'],['../db/d8e/namespaceanalyze__bench.html#a248f825393a9883799bb751d1ba521b3',1,'analyze_bench.x']]],
-  ['xs_1',['xs',['../d9/df4/namespacetests.html#ae0f5e82ee31a657ad8312b0ed1851438',1,'tests']]]
+  ['wall_5fclock_0',['wall_clock',['../d2/d63/struct_munit_report.html#aab8f938f7cf59dd1e30a0a40cd36545a',1,'MunitReport']]],
+  ['width_1',['width',['../d6/d03/namespacebenchmark__graph.html#a5558ace5433f9aabbf0a0ec059900d94',1,'benchmark_graph.width'],['../d4/d8d/namespacebenchmark__graph__03.html#a5558ace5433f9aabbf0a0ec059900d94',1,'benchmark_graph_03.width'],['../d7/d23/namespacebenchmark__graph__04.html#a5558ace5433f9aabbf0a0ec059900d94',1,'benchmark_graph_04.width']]],
+  ['write_5fhelp_2',['write_help',['../dd/d8f/struct_munit_argument__.html#a99887d559f94689d2ac7e655f014c631',1,'MunitArgument_']]]
 ];

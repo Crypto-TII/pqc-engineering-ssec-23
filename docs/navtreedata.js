@@ -24,12 +24,15 @@
 */
 var NAVTREE =
 [
-  [ "pqc-engineering-ssec-23", "index.html", [
+  [ "Let us walk on the 3-isogeny graph", "index.html", [
+    [ "Let us walk on the 3-isogeny graph: efficient, fast, and simple", "index.html", "index" ],
+    [ "Let us walk on the 3-isogeny graph: CLion Setup", "dc/d0c/md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e___clion___i_d_e.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ]
+        [ "All", "namespacemembers.html", "namespacemembers_dup" ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ]
       ] ]
     ] ],
     [ "Data Structures", "annotated.html", [
@@ -58,8 +61,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d5/d9f/enable__ccr_8c_source.html",
-"dc/dbb/munit_8h.html#a22bd230460316185616072fd4a207598"
+"d1/dd5/namespace_asm_mont_redc_a_v_x2.html#ac1c10ecab7a4a1f7f7a0da8f568d9682",
+"d4/d05/fp-karatsuba_8h.html#aa457b84193089368b678092181a52217",
+"d6/d5d/structfp2.html#a791f3000bd3df43c42d675d28ea8063e",
+"d7/db6/utilities_8c.html#ab34dd3f2d0a0a3045648426c823249af",
+"db/d77/c-code_2src_2cycle_8h_source.html",
+"dc/dbb/munit_8h.html#a911f7feac596763738164755f75e00a1",
+"df/d2a/namespace_8h.html#a9d3e50d98cd2db3a83be03e46bec0864"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

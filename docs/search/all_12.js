@@ -1,25 +1,7 @@
 var searchData=
 [
-  ['script_0',['Benchmarking script',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md8',1,'']]],
-  ['seconds_1',['seconds',['../d0/d3b/struct_psnip_clock_timespec.html#ac1803243ca3b63a9a5108d15413ba5ec',1,'PsnipClockTimespec']]],
-  ['security_5fbits_2',['SECURITY_BITS',['../dc/df8/p254_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p254.h'],['../d2/d72/p255_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p255.h'],['../d7/dad/p381_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p381.h'],['../db/de8/p383_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p383.h'],['../d5/d19/p398_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p398.h'],['../d0/dcc/p511_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p511.h'],['../da/d9b/p575_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p575.h'],['../d6/dc1/p592_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p592.h'],['../d3/daa/p765_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p765.h'],['../d4/dd4/p783_8h.html#a3a505b7148327e600343a7d18febec5b',1,'SECURITY_BITS:&#160;p783.h']]],
-  ['seed_3',['seed',['../d6/dbd/struct_munit_test_runner.html#a9f628e62e2f9a981b5e26030b95ef4dc',1,'MunitTestRunner']]],
-  ['setup_4',['setup',['../d0/d79/struct_munit_test.html#ad067f7427db16958de17a0505ce0b1fa',1,'MunitTest']]],
-  ['show_5fstderr_5',['show_stderr',['../d6/dbd/struct_munit_test_runner.html#a011ca507433e2c2c29ce6075dcabafae',1,'MunitTestRunner']]],
-  ['simple_6',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md0',1,'']]],
-  ['single_5fparameter_5fmode_7',['single_parameter_mode',['../d6/dbd/struct_munit_test_runner.html#ab94c7f0c93f12a143495bc8e6b9d3161',1,'MunitTestRunner']]],
-  ['skipped_8',['skipped',['../d2/d63/struct_munit_report.html#ab4ea3ecae8530a3099e24893b5643cf0',1,'MunitReport']]],
-  ['square_5froot_5fexponent_5fbits_9',['SQUARE_ROOT_EXPONENT_BITS',['../d2/d72/p255_8h.html#a445d9b9a671d110e8dc2e4c7be111e9f',1,'SQUARE_ROOT_EXPONENT_BITS:&#160;p255.h'],['../db/de8/p383_8h.html#a445d9b9a671d110e8dc2e4c7be111e9f',1,'SQUARE_ROOT_EXPONENT_BITS:&#160;p383.h'],['../d0/dcc/p511_8h.html#a445d9b9a671d110e8dc2e4c7be111e9f',1,'SQUARE_ROOT_EXPONENT_BITS:&#160;p511.h']]],
-  ['ssec_5fcube_5froot_5fover_5ffp_10',['SSEC_CUBE_ROOT_OVER_FP',['../dc/df8/p254_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p254.h'],['../d2/d72/p255_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p255.h'],['../db/de8/p383_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p383.h'],['../d5/d19/p398_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p398.h'],['../d0/dcc/p511_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p511.h'],['../d6/dc1/p592_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p592.h'],['../d4/dd4/p783_8h.html#a5604120ea42b5031a24cdc331e1eccc4',1,'SSEC_CUBE_ROOT_OVER_FP:&#160;p783.h']]],
-  ['ssec_5fkong_5fet_5fal_5fs_5falgorithm_11',['SSEC_KONG_ET_AL_S_ALGORITHM',['../d2/d72/p255_8h.html#a1a4cee2b9ad5d9e8f87313365ebcc750',1,'SSEC_KONG_ET_AL_S_ALGORITHM:&#160;p255.h'],['../db/de8/p383_8h.html#a1a4cee2b9ad5d9e8f87313365ebcc750',1,'SSEC_KONG_ET_AL_S_ALGORITHM:&#160;p383.h'],['../d0/dcc/p511_8h.html#a1a4cee2b9ad5d9e8f87313365ebcc750',1,'SSEC_KONG_ET_AL_S_ALGORITHM:&#160;p511.h']]],
-  ['subtraction_5fwith_5fborrow_5fu64_12',['subtraction_with_borrow_u64',['../de/df0/utilities_8h.html#a1a7d5b8c2d15335ada56f51328b934ec',1,'utilities.h']]],
-  ['successful_13',['successful',['../d2/d63/struct_munit_report.html#aedf99a69110340d0f44aaf371af6423d',1,'MunitReport']]],
-  ['suite_14',['SUITE',['../df/dfd/test__utils_8h.html#a59ef99828f69185768ecd8a4a30fa91f',1,'test_utils.h']]],
-  ['suite_15',['suite',['../d6/dbd/struct_munit_test_runner.html#a5284c009b720594db850c00ccc268a0f',1,'MunitTestRunner']]],
-  ['suite_5fend_16',['SUITE_END',['../df/dfd/test__utils_8h.html#a1f115caa51a6e44de592f7f368d2f6a4',1,'test_utils.h']]],
-  ['suite_5fit_17',['SUITE_IT',['../df/dfd/test__utils_8h.html#ad10216f489b5c49225a999df08da686e',1,'test_utils.h']]],
-  ['suite_5fof_5fsuite_18',['SUITE_OF_SUITE',['../df/dfd/test__utils_8h.html#a3242a21519197e51c7732b859ae0f2b4',1,'test_utils.h']]],
-  ['suites_19',['suites',['../d3/d4e/struct_munit_suite__.html#a49c57794a02342e83a59fa6d02a07547',1,'MunitSuite_']]],
-  ['supported_20',['Primes supported',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md1',1,'']]],
-  ['swap_21',['swap',['../d7/d2e/benchmarks__main_8c.html#a37ff1021c7b3c98b667b003ea90614a6',1,'benchmarks_main.c']]]
+  ['j_0',['j',['../d2/d00/prime__search_8m.html#ac86694252f8dfdb19aaeadc4b7c342c6',1,'j:&#160;prime_search.m'],['../d9/df4/namespacetests.html#abf2bc2545a4a5f5683d9ef3ed0d977e0',1,'tests.j']]],
+  ['j_2dinvariants_2em_1',['j-invariants.m',['../df/d02/j-invariants_8m.html',1,'']]],
+  ['j0_2',['j0',['../d0/d9e/structcgl__hash__2__ctx.html#a23b4567e61671f0961bbed427a980b33',1,'cgl_hash_2_ctx']]],
+  ['j_5f_3',['j_',['../d0/d9e/structcgl__hash__2__ctx.html#ab11f87cf9733124956b3abc08c4fabfb',1,'cgl_hash_2_ctx']]]
 ];

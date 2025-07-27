@@ -1,9 +1,15 @@
 var searchData=
 [
-  ['_5f_5fpad0_5f_5f_0',['__pad0__',['../d2/d00/prime__search_8m.html#aa3442bca0ac180e994070e148b962106',1,'prime_search.m']]],
-  ['_5f_5fpad1_5f_5f_1',['__pad1__',['../d2/d00/prime__search_8m.html#a1be07b78109b3474f28215a311d8a88b',1,'prime_search.m']]],
-  ['_5f_5fpad2_5f_5f_2',['__pad2__',['../d2/d00/prime__search_8m.html#a796577d406e4ac82be2252f0ac7f06c1',1,'prime_search.m']]],
-  ['_5f_5fpad3_5f_5f_3',['__pad3__',['../d2/d00/prime__search_8m.html#a5555297804668875babc9a883d796aa0',1,'prime_search.m']]],
-  ['_5f_5fpad4_5f_5f_4',['__pad4__',['../d2/d00/prime__search_8m.html#af6e5510b89cb7f71a88118e39d90e463',1,'prime_search.m']]],
-  ['_5fposix_5fc_5fsource_5',['_POSIX_C_SOURCE',['../d7/d13/munit_8c.html#a3024ccd4a9af5109d24e6c57565d74a1',1,'munit.c']]]
+  ['2_201_20build_0',['2.1. Build',['../index.html#autotoc_md24',1,'']]],
+  ['2_201_20cmake_20configuration_1',['2.1. Cmake configuration',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md4',1,'']]],
+  ['2_202_20make_20library_20targets_2',['2.2. Make library targets',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md5',1,'']]],
+  ['2_202_20testing_3',['2.2. Testing',['../index.html#autotoc_md26',1,'']]],
+  ['2_203_20benchmarking_4',['2.3. Benchmarking',['../index.html#autotoc_md27',1,'']]],
+  ['2_203_20make_20test_20targets_5',['2.3. Make test targets',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md6',1,'']]],
+  ['2_20build_6',['2. Build',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md3',1,'']]],
+  ['2_20figure_204_3a_20benchmarks_20for_20the_203_20isogenies_20walks_20our_20solution_20vs_20qfesta_7',['3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)',['../index.html#autotoc_md30',1,'']]],
+  ['2_20isogenies_20vs_203_20isogenies_20walks_8',['3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks',['../index.html#autotoc_md29',1,'']]],
+  ['2_20make_20library_20targets_9',['2.2. Make library targets',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md5',1,'']]],
+  ['2_20setup_20process_10',['2. Setup Process',['../index.html#autotoc_md23',1,'']]],
+  ['2_20testing_11',['2.2. Testing',['../index.html#autotoc_md26',1,'']]]
 ];

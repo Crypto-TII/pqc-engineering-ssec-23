@@ -1,10 +1,15 @@
 var searchData=
 [
-  ['a1_0',['a1',['../d1/d30/structcgl__hash__3__ctx.html#ad7ba7a3a4b01c41535b40f75820fcf56',1,'cgl_hash_3_ctx']]],
-  ['a3_1',['a3',['../d1/d30/structcgl__hash__3__ctx.html#a3af1a01cb5686f669ef24480dab2fe50',1,'cgl_hash_3_ctx']]],
-  ['addition_5fwith_5fcarry_5fu64_2',['addition_with_carry_u64',['../de/df0/utilities_8h.html#ac31c0084e50315f45865f7c385dd9647',1,'utilities.h']]],
-  ['and_20simple_3',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md0',1,'']]],
-  ['arguments_4',['arguments',['../d3/dbd/namespacehdr__code.html#a59e670ef57c21d42bccbf9418238097b',1,'hdr_code']]],
-  ['atomic_5fuint32_5finit_5',['ATOMIC_UINT32_INIT',['../d7/d13/munit_8c.html#a6ede33c120d70e15074cd1fb99ee55c3',1,'munit.c']]],
-  ['atomic_5fuint32_5ft_6',['ATOMIC_UINT32_T',['../d7/d13/munit_8c.html#a7a749780c76ea55a9f7f8f3e9fea0c63',1,'munit.c']]]
+  ['3_201_20figure_203_3a_20benchmarks_20for_20the_202_20isogenies_20vs_203_20isogenies_20walks_0',['3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks',['../index.html#autotoc_md29',1,'']]],
+  ['3_202_20figure_204_3a_20benchmarks_20for_20the_203_20isogenies_20walks_20our_20solution_20vs_20qfesta_1',['3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)',['../index.html#autotoc_md30',1,'']]],
+  ['3_20benchmarking_2',['2.3. Benchmarking',['../index.html#autotoc_md27',1,'']]],
+  ['3_20isogenies_20walks_3',['3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks',['../index.html#autotoc_md29',1,'']]],
+  ['3_20isogenies_20walks_20our_20solution_20vs_20qfesta_4',['3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)',['../index.html#autotoc_md30',1,'']]],
+  ['3_20isogeny_20graph_3a_20clion_20setup_5',['Let us walk on the 3-isogeny graph: CLion Setup',['../dc/d0c/md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e___clion___i_d_e.html',1,'']]],
+  ['3_20isogeny_20graph_3a_20detailed_20build_20test_20and_20benchmarking_20framework_20documentation_6',['Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md0',1,'']]],
+  ['3_20isogeny_20graph_3a_20efficient_20fast_20and_20simple_7',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['../index.html',1,'']]],
+  ['3_20make_20test_20targets_8',['2.3. Make test targets',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md6',1,'']]],
+  ['3_20reproducing_20the_20manuscript_20results_9',['3. Reproducing the Manuscript Results',['../index.html#autotoc_md28',1,'']]],
+  ['3_20tests_10',['3. Tests',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md7',1,'']]],
+  ['3_3a_20benchmarks_20for_20the_202_20isogenies_20vs_203_20isogenies_20walks_11',['3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks',['../index.html#autotoc_md29',1,'']]]
 ];

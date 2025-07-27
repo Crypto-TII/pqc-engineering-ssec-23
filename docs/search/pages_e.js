@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['targets_0',['targets',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md4',1,'Make library targets'],['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md5',1,'Make test targets']]],
-  ['test_20targets_1',['Make test targets',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md5',1,'']]],
-  ['tests_2',['Tests',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md6',1,'']]],
-  ['the_203_20isogeny_20graph_3a_20efficient_20fast_20and_20simple_3',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['..///wsl.localhost/Ubuntu-24.04/home/liwuen/projects_dev/pqc-engineering-ssec-23/c-code/README.md#autotoc_md0',1,'']]]
+  ['graph_3a_20clion_20setup_0',['Let us walk on the 3-isogeny graph: CLion Setup',['../dc/d0c/md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e___clion___i_d_e.html',1,'']]],
+  ['graph_3a_20detailed_20build_20test_20and_20benchmarking_20framework_20documentation_1',['Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md0',1,'']]],
+  ['graph_3a_20efficient_20fast_20and_20simple_2',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['../index.html',1,'']]]
 ];

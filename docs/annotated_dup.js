@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "cgl_hash_2_ctx", "d0/d9e/structcgl__hash__2__ctx.html", "d0/d9e/structcgl__hash__2__ctx" ],
     [ "cgl_hash_3_ctx", "d1/d30/structcgl__hash__3__ctx.html", "d1/d30/structcgl__hash__3__ctx" ],
+    [ "fp2", "d6/d5d/structfp2.html", "d6/d5d/structfp2" ],
     [ "fp2_t", "dd/d41/structfp2__t.html", "dd/d41/structfp2__t" ],
     [ "MunitArgument_", "dd/d8f/struct_munit_argument__.html", "dd/d8f/struct_munit_argument__" ],
     [ "MunitParameter", "d8/dc2/struct_munit_parameter.html", "d8/dc2/struct_munit_parameter" ],
@@ -10,5 +11,16 @@ var annotated_dup =
     [ "MunitSuite_", "d3/d4e/struct_munit_suite__.html", "d3/d4e/struct_munit_suite__" ],
     [ "MunitTest", "d0/d79/struct_munit_test.html", "d0/d79/struct_munit_test" ],
     [ "MunitTestRunner", "d6/dbd/struct_munit_test_runner.html", "d6/dbd/struct_munit_test_runner" ],
-    [ "PsnipClockTimespec", "d0/d3b/struct_psnip_clock_timespec.html", "d0/d3b/struct_psnip_clock_timespec" ]
+    [ "private_key", "d4/d54/structprivate__key.html", "d4/d54/structprivate__key" ],
+    [ "proj", "d8/d6e/structproj.html", "d8/d6e/structproj" ],
+    [ "PsnipClockTimespec", "d0/d3b/struct_psnip_clock_timespec.html", "d0/d3b/struct_psnip_clock_timespec" ],
+    [ "public_key", "d3/dce/structpublic__key.html", "d3/dce/structpublic__key" ],
+    [ "sha3_256incctx", "d7/d88/structsha3__256incctx.html", "d7/d88/structsha3__256incctx" ],
+    [ "sha3_384incctx", "d2/d49/structsha3__384incctx.html", "d2/d49/structsha3__384incctx" ],
+    [ "sha3_512incctx", "d0/db7/structsha3__512incctx.html", "d0/db7/structsha3__512incctx" ],
+    [ "shake128ctx", "d1/dfb/structshake128ctx.html", "d1/dfb/structshake128ctx" ],
+    [ "shake128incctx", "dc/d34/structshake128incctx.html", "dc/d34/structshake128incctx" ],
+    [ "shake256ctx", "d0/d52/structshake256ctx.html", "d0/d52/structshake256ctx" ],
+    [ "shake256incctx", "de/d79/structshake256incctx.html", "de/d79/structshake256incctx" ],
+    [ "uintbig", "de/d11/structuintbig.html", "de/d11/structuintbig" ]
 ];

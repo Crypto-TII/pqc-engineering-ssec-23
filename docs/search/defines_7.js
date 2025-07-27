@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['number_5fof_5fbenchmark_5fexperiments_0',['NUMBER_OF_BENCHMARK_EXPERIMENTS',['../de/df0/utilities_8h.html#a0f7d6f5d76f6d4b7f0bc5f22d30eee8d',1,'utilities.h']]],
-  ['number_5fof_5ftest_5fexperiments_1',['NUMBER_OF_TEST_EXPERIMENTS',['../de/df0/utilities_8h.html#a0ced52396d7567c20aa8cad106decbf6',1,'utilities.h']]]
+  ['get_5ffull_5fpoint_0',['get_full_point',['../d4/d4c/ctidh_8h.html#a79557dda1ae7017643a4cd10288c0080',1,'ctidh.h']]]
 ];

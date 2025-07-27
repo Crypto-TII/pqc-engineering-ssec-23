@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['randombytes_0',['randombytes',['../d5/d26/rng_8c.html#aabbddb731663436423d24fa841900821',1,'randombytes(void *x, size_t l):&#160;rng.c'],['../d2/d8d/rng_8h.html#aabbddb731663436423d24fa841900821',1,'randombytes(void *x, size_t l):&#160;rng.c']]]
+  ['keccakf1600_5fstateextractbytes_0',['KeccakF1600_StateExtractBytes',['../d3/dda/keccakf1600_8c.html#a3598f8be46b17fbcfe8dbead47c1241f',1,'KeccakF1600_StateExtractBytes(uint64_t *state, unsigned char *data, unsigned int offset, unsigned int length):&#160;keccakf1600.c'],['../d8/d46/keccakf1600_8h.html#a3598f8be46b17fbcfe8dbead47c1241f',1,'KeccakF1600_StateExtractBytes(uint64_t *state, unsigned char *data, unsigned int offset, unsigned int length):&#160;keccakf1600.c']]],
+  ['keccakf1600_5fstatepermute_1',['KeccakF1600_StatePermute',['../d3/dda/keccakf1600_8c.html#a9384b0f51bc5e9548b61dce9a28430bf',1,'KeccakF1600_StatePermute(uint64_t *state):&#160;keccakf1600.c'],['../d8/d46/keccakf1600_8h.html#a9384b0f51bc5e9548b61dce9a28430bf',1,'KeccakF1600_StatePermute(uint64_t *state):&#160;keccakf1600.c']]],
+  ['keccakf1600_5fstatexorbytes_2',['KeccakF1600_StateXORBytes',['../d3/dda/keccakf1600_8c.html#a4735103b0eca9295f0edf46d23fc8612',1,'KeccakF1600_StateXORBytes(uint64_t *state, const unsigned char *data, unsigned int offset, unsigned int length):&#160;keccakf1600.c'],['../d8/d46/keccakf1600_8h.html#a4735103b0eca9295f0edf46d23fc8612',1,'KeccakF1600_StateXORBytes(uint64_t *state, const unsigned char *data, unsigned int offset, unsigned int length):&#160;keccakf1600.c']]]
 ];
