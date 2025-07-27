@@ -9,7 +9,10 @@ Our paper reached several important results:
 - Our results help to propose friendly parameters for QFESTA, along with the first efficient implementation in C of the radical 3-isogenies. 
 - Our results speedup the dCTIDH-2048  by a 4x factor, without any considerable change in the parameter sets and allowing a straightforward integration (just replacing small isogenies of degree 3,5,7,11 and 13 by the aforementioned radical 3-isogenies).
 
-[![Watch the video](https://img.youtube.com/vi/KhoViHztXpE/default.jpg)](https://youtu.be/KhoViHztXpE)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=KhoViHztXpE" target="_blank">
+ <img src="http://img.youtube.com/vi/KhoViHztXpE/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
+</a>
+
 
 ## :computer: Setup Process
 
