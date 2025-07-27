@@ -16,7 +16,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p381-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#our_solution.append(matching_values[0])
 our_solution.append(matching_values[1])
 
 # Check for p398
@@ -24,7 +23,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p398-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#qfesta.append(matching_values[0])
 qfesta.append(matching_values[1])
 
 # Check for p575
@@ -32,7 +30,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p575-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#our_solution.append(matching_values[0])
 our_solution.append(matching_values[1])
 
 # Check for p592
@@ -40,7 +37,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p592-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#qfesta.append(matching_values[0])
 qfesta.append(matching_values[1])
 
 # Check for p765
@@ -48,7 +44,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p765-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#our_solution.append(matching_values[0])
 our_solution.append(matching_values[1])
 
 # Check for p783
@@ -56,7 +51,6 @@ matching_values = []
 for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p783-output.txt')):
     for match in re.finditer(pattern, line):
         matching_values.append(int(match.group(2)))
-#qfesta.append(matching_values[0])
 qfesta.append(matching_values[1])
 
 

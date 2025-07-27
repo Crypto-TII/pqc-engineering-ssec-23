@@ -7,18 +7,6 @@ fig = plt.subplots(figsize =(12, 8))
 
 pattern = re.compile("(32m)([0-9]+)")
 
-# for i, line in enumerate(open('../c-code/cmake-build-release-cycles-x8664/test_bench_01.txt')):
-#     for match in re.finditer(pattern, line):
-#         print(f'Found on line %s: %s' % (i+1, match.group(2)))
-#
-# for i, line in enumerate(open('../c-code/cmake-build-release-cycles-x8664/test_bench_02.txt')):
-#     for match in re.finditer(pattern, line):
-#         print(f'Found on line %s: %s' % (i+1, match.group(2)))
-#
-# for i, line in enumerate(open('../c-code/cmake-build-release-cycles-x8664/test_bench_04.txt')):
-#     for match in re.finditer(pattern, line):
-#         print(f'Found on line %s: %s' % (i+1, match.group(2)))
-
 average_cglhash2 = []
 average_cglhash3 = []
 
