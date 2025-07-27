@@ -97,8 +97,8 @@ ECE = average_cglhash3
 br1 = np.arange(len(IT))
 br2 = [x + barWidth for x in br1]
 
-plt.bar(br1, IT, color ='r', width = barWidth, edgecolor ='grey', label ='IT')
-plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='ECE')
+plt.bar(br1, IT, color ='r', width = barWidth, edgecolor ='grey', label ='2-isogenies')
+plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='3-isogenies')
 
 plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
 plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
