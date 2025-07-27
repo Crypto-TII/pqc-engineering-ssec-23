@@ -9,15 +9,18 @@ Our paper reached several important results:
 - Our results help to propose friendly parameters for QFESTA, along with the first efficient implementation in C of the radical 3-isogenies. 
 - Our results speedup the dCTIDH-2048  by a 4x factor, without any considerable change in the parameter sets and allowing a straightforward integration (just replacing small isogenies of degree 3,5,7,11 and 13 by the aforementioned radical 3-isogenies).
 
-A video summarizing our ideas and contribution (in a general-reader level) is shown below
+A video summarizing our ideas and contribution (in a general-reader level) is shown below:
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=KhoViHztXpE" target="_blank">
  <img src="http://img.youtube.com/vi/KhoViHztXpE/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
 </a>
 
-The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE)
+The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE).
 
 ## Setup Process
+
+<details>
+  <summary>IDE Setup: CLion </summary>
 
 This project uses `cmake` and it has been configured to run with clion. A stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
 
@@ -45,7 +48,9 @@ To set up the environment, in clion, create four different cmake profiles with t
 
 Please refer to the figure below for clarification.
 
-![CMake Profile](gifs/01-cmake-profile/cmake-profile.gif)
+![CMake Profile](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/gifs/01-cmake-profile/cmake-profile.gif)
+
+</details>
 
 ## Doxygen
 
