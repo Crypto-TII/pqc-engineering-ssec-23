@@ -89,6 +89,8 @@ A demo of the whole process of setup and build process is shown below.
 <a name="section_02_02"></a>
 ### 2.2. Testing
 
+In this section, we show how to perform the **testing** of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
+
 After building as shown in the previous section, inside the `c-code/cmake-build-release` folder, locate all the possible tests with 
 ```shell
 ls ./tests/
@@ -109,6 +111,58 @@ To execute any particular test, simply select one of the following
 For example, the execution of `./tests/tests-ssec-p254` is shown below.
 
 ![](gifs/03-examples/testing.gif)
+
+To run ALL the tests in verbose mode, simply run
+```
+ctest -V -R test
+```
+
+A demo of all the tests running in verbose mode is shown below.
+
+![](gifs/03-examples/testing_verbose.gif)
+
+### 2.3. Benchmarking
+
+In this section, we show how to perform the **benchmarking** of our source code. For a detailed explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
+
+For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
+
+```bash
+pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
+```
+followed by
+```bash
+cd cmake-build-release-cycles-x8664
+make -j
+```
+
+**NOTE:** Benchmarking does not work for
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release
+cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
+```
+In case you run the benchmarking in either one of these two build modes (without the `-DBENCHMARKING` and the `-DARCHITECTURE` flags), you will get the following error:
+
+![](../gifs/03-examples/benchmarks_error.png)
+
+To execute any particular benchmarking, inside the `cmake-build-release-cycles-x8664` folder, simply select one of the following
+```shell
+benchmarks/benchmarks-ssec-p254
+benchmarks/benchmarks-ssec-p255
+benchmarks/benchmarks-ssec-p381
+benchmarks/benchmarks-ssec-p383
+benchmarks/benchmarks-ssec-p398
+benchmarks/benchmarks-ssec-p511
+benchmarks/benchmarks-ssec-p575
+benchmarks/benchmarks-ssec-p592
+benchmarks/benchmarks-ssec-p765
+benchmarks/benchmarks-ssec-p783
+```
+
+A demo of successful benchmarkings is shown below.
+
+![](gifs/03-examples/benchmarking.gif)
+
 
 ## Doxygen
 
