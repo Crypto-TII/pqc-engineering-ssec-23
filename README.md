@@ -49,60 +49,26 @@ In the following sections, we will cover in detail:
 <a name="section_02"></a>
 ## 2. Setup Process
 
-In case an IDE like CLion is desired, the instructions are shown below. **For a general terminal setup process, please skip to the following subsection: [General Terminal Setup](#section_02_02).**
-
+In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to [Let us walk on the 3-isogeny graph: CLion Setup](README_Clion_IDE.md).
 
 <a name="section_02_01"></a>
-### 2.1. IDE Setup: CLion
+### 2.1. Build
 
-<details>
-  <summary>Details</summary>
-
-This project uses `cmake`. In case it is desired to use a specialized IDE like Clion, a stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
-
-To set up the environment, in clion, create four different cmake profiles with the following instructions:
-
-- Debug-cycles-x8664:
-  - Build type: Use `Debug`.
-  - Generator: Use `Unix Makefiles`.
-  - CMake Options: Use `-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664`
-
-- Release-cycles-x8664:
-  - Build type: Use `Release`.
-  - Generator: Use `Unix Makefiles`.
-  - CMake Options: Use `-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664`
-
-- Debug-time-x8664:
-  - Build type: Use `Debug`.
-  - Generator: Use `Unix Makefiles`.
-  - CMake Options: Use `-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBENCHMARKING=TIME -DARCHITECTURE=x8664`
-
-- Release-cycles-x8664:
-  - Build type: Use `Release`.
-  - Generator: Use `Unix Makefiles`.
-  - CMake Options: Use `-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664`
-
-Please refer to the figure below for clarification.
-
-![CMake Profile](gifs/01-cmake-profile/cmake-profile.gif)
-
-</details>
-
-<a name="section_02_02"></a>
-### 2.2. General Terminal Setup
-
-<a name="section_02_02_01"></a>
-#### 2.2.1. Build
+#### System requirements
 
 Our project works out-of-the-box in any Linux-based environment with some basic software requirements:
 - Cmake
-- Python3 (numpy)
+- Python3 (numpy and matplotlib)
 
 To check if your system counts with the required software, simply run 
 ```shell
 cmake --version
 python3 --version
+pip list | grep numpy
+pip list | grep matplotlib
 ```
+If all the requirements are met, the terminal should return installed versions like the ones below.
+![](gifs/01-cmake-profile/numpy.png)
 
 To build our project, in the root directory `pqc-engineering-ssec-23`, simply run
 ```shell
@@ -120,8 +86,8 @@ An example of the whole process of setup and build is shown below.
 ![](gifs/03-examples/build_release.gif)
 
 
-<a name="section_02_02_02"></a>
-#### 2.2.2. Testing
+<a name="section_02_02"></a>
+### 2.2. Testing
 
 ## Doxygen
 
