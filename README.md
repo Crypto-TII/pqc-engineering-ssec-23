@@ -1,14 +1,22 @@
 # Let us walk on the 3-isogeny graph: efficient, fast, and simple
 
+[![Build and testing multiple primes' targets.](https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml)
+
 Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
 ## Table of contents
 1. [Introduction](#section_01)  
-2. [Setup Process](#section_02)  
-   2.1. [IDE Setup: CLion](#section_02_01)  
-   2.2. [General Terminal Setup](#section_02_02)
-3. [Another paragraph](#paragraph2)
-
+2. [Setup Process](#section_02)
+   1. [Build](#section_02_01)  
+   2. [Testing](#section_02_02)
+   3. [Benchmarking](#section_02_03)
+3. [Reproducing the Manuscript Results](#section_03)
+   1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_03_01)
+   2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_03_02)
+4. [Source-Code Technical Documentation: Doxygen](#section_04)
+5. [Integrated CI/CD: Build, Test and Benchmarking](#section_05)
+6. [Additional Resources' Build Process](#section_06)
+7. [Authors](#section_07)
 
 <a name="section_01"></a>
 ## 1. Introduction
@@ -121,6 +129,7 @@ A demo of all the tests running in verbose mode is shown below.
 
 ![](gifs/03-examples/testing_verbose.gif)
 
+<a name="section_02_03"></a>
 ### 2.3. Benchmarking
 
 In this section, we show how to perform the **benchmarking** of our source code. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
@@ -163,7 +172,8 @@ A demo of successful benchmarkings is shown below.
 
 ![](gifs/03-examples/benchmarking.gif)
 
-## 3. Reproducing the manuscript results
+<a name="section_03"></a>
+## 3. Reproducing the Manuscript Results
 
 In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
 
@@ -187,6 +197,7 @@ The related code to reproduce our results is shown in the tree below.
 └───📄 README.md
 ```
 
+<a name="section_03_01"></a>
 ### 3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
 
 Inside the `reproduce_results/manuscript_figure_03` folder, it is necessary to give execution permissions to the script, via
@@ -207,7 +218,7 @@ where the original Figure 3 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_03/figure_03_original.png)
 
-
+<a name="section_03_02"></a>
 ### 3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
 
 Similar to the previous figure, inside the `reproduce_results/manuscript_figure_04` folder, it is necessary to give execution permissions to the script, via
@@ -226,9 +237,9 @@ A demo of how to obtain the manuscript's Figure 03 is shown below.
 
 where the original Figure 4 presented in the manuscript is shown below.
 
-![](gifs/04-replicate-results/fig_03/figure_04_original.png)
+![](gifs/04-replicate-results/fig_04/figure_04_original.png)
 
-
+<a name="section_04"></a>
 ## 4. Source-Code Technical Documentation: Doxygen
 
 Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the `docs` folder, simply run
@@ -241,22 +252,28 @@ This will generate an HTML site with interactive diagrams, and plenty of technic
 
 A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
 
-## Integrated CI/CD testing and benchmarking
+<a name="section_05"></a>
+## 5. Integrated CI/CD: Build, Test and Benchmarking
 
-To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD) is important, we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses docker images to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
+
+![](gifs/02-pipeline/ci-cd.png)
+
+To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
 <p align="center">
   <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="500">
 </p>
 
-## Detailed build process
+<a name="section_06"></a>
+## 6. Additional Resources' Build Process
 
-Please refer to `c-code/README.md` for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to `dCTIDH/README.md`.
+As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
-Please refer to [c-code/README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/dCTIDH/README.md).
+As part of our experiments, we used the a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
 
-
-## Authors
+<a name="section_07"></a>
+## 7. Authors
 
 For further information, please feel free to contact any of the authors:
 <p align="center">
