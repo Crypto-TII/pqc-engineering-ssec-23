@@ -2,6 +2,15 @@
 
 Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
+## Introduction
+
+Our paper reached several important results:
+- This work centers on improving HASH functions (CGL Function), KEMs (QFESTA) and NIKEs (CTIDH). 
+- Our results help to propose friendly parameters for QFESTA, along with the first efficient implementation in C of the radical 3-isogenies. 
+- Our results speedup the dCTIDH-2048  by a 4x factor, without any considerable change in the parameter sets and allowing a straightforward integration (just replacing small isogenies of degree 3,5,7,11 and 13 by the aforementioned radical 3-isogenies).
+
+[![Watch the video](https://img.youtube.com/vi/KhoViHztXpE/default.jpg)](https://youtu.be/KhoViHztXpE)
+
 ## :computer: Setup Process
 
 This project uses `cmake` and it has been configured to run with clion. A stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
@@ -51,3 +60,13 @@ To prove that this project can be integrated in an industrial environment where 
 ## Detailed build process
 
 Please refer to [c-code/README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/blob/6f5033499375796b7aa919348278963818129299/c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](dCTIDH/README.md).
+
+
+## :id: Authors
+
+For further information, please feel free to contact any of the authors:
+<p align="center">
+    <a href="mailto:jesus.dominguez@tii.ae"><strong>Jesús-Javier Chi-Domínguez</strong></a>,
+    <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
+    <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>,
+</p>
