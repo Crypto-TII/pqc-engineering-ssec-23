@@ -81,7 +81,7 @@ This will create the `cmake-build-release` folder with all the tests for all the
 
 ![](gifs/03-examples/01.png)
 
-An example of the whole process of setup and build is shown below.
+A demo of the whole process of setup and build process is shown below.
 
 ![](gifs/03-examples/build_release.gif)
 
@@ -89,8 +89,26 @@ An example of the whole process of setup and build is shown below.
 <a name="section_02_02"></a>
 ### 2.2. Testing
 
-After building as shown in the previous section 
+After building as shown in the previous section, inside the `c-code/cmake-build-release` folder, locate all the possible tests with 
+```shell
+ls ./tests/
+```
+To execute any particular test, simply select one of the following 
+```shell
+./tests/tests-ssec-p254
+./tests/tests-ssec-p255
+./tests/tests-ssec-p381
+./tests/tests-ssec-p383
+./tests/tests-ssec-p398
+./tests/tests-ssec-p511
+./tests/tests-ssec-p575
+./tests/tests-ssec-p592
+./tests/tests-ssec-p765
+./tests/tests-ssec-p783
+```
+For example, the execution of `./tests/tests-ssec-p254` is shown below.
 
+![](gifs/03-examples/testing.gif)
 
 ## Doxygen
 
