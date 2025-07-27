@@ -148,6 +148,10 @@ In case you run the benchmarking in either one of these two build modes (without
 
 ![](../gifs/03-examples/benchmarks_error.png)
 
+A successful built that can generate correct benchmarks is shown below.
+
+![](../gifs/03-examples/benchmarks_ok.png)
+
 After building using the correct flags, to run the benchmarks in verbose mode, run
 
 ```bash
