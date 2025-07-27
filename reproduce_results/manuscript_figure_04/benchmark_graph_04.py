@@ -1,0 +1,80 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import re
+
+barWidth = 0.25
+fig = plt.subplots(figsize =(12, 8))
+
+pattern = re.compile("(32m)([0-9]+)")
+
+our_solution = []
+qfesta = []
+
+
+# Check for p381
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p381-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#our_solution.append(matching_values[0])
+our_solution.append(matching_values[1])
+
+# Check for p398
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p398-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#qfesta.append(matching_values[0])
+qfesta.append(matching_values[1])
+
+# Check for p575
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p575-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#our_solution.append(matching_values[0])
+our_solution.append(matching_values[1])
+
+# Check for p592
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p592-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#qfesta.append(matching_values[0])
+qfesta.append(matching_values[1])
+
+# Check for p765
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p765-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#our_solution.append(matching_values[0])
+our_solution.append(matching_values[1])
+
+# Check for p783
+matching_values = []
+for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph/benchmarks_ssec-p783-output.txt')):
+    for match in re.finditer(pattern, line):
+        matching_values.append(int(match.group(2)))
+#qfesta.append(matching_values[0])
+qfesta.append(matching_values[1])
+
+
+IT = our_solution
+ECE = qfesta
+
+br1 = np.arange(len(IT))
+br2 = [x + barWidth for x in br1]
+
+plt.bar(br1, IT, color ='r', width = barWidth, edgecolor ='grey', label ='IT')
+plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='ECE')
+
+plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
+plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
+plt.xticks([r + barWidth for r in range(len(IT))],
+           ['381', '398', '575', '592', '765', '783'])
+
+plt.title('Benchmarks for the 3-isogenies walks: Our solution vs. QFESTA')
+
+plt.legend()
+plt.show()
