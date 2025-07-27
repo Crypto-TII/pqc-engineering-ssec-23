@@ -123,7 +123,7 @@ A demo of all the tests running in verbose mode is shown below.
 
 ### 2.3. Benchmarking
 
-In this section, we show how to perform the **benchmarking** of our source code. For a detailed explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
+In this section, we show how to perform the **benchmarking** of our source code. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
 
@@ -143,7 +143,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
 ```
 In case you run the benchmarking in either one of these two build modes (without the `-DBENCHMARKING` and the `-DARCHITECTURE` flags), you will get the following error:
 
-![](../gifs/03-examples/benchmarks_error.png)
+![](gifs/03-examples/benchmarks_error.png)
 
 To execute any particular benchmarking, inside the `cmake-build-release-cycles-x8664` folder, simply select one of the following
 ```shell
@@ -163,6 +163,49 @@ A demo of successful benchmarkings is shown below.
 
 ![](gifs/03-examples/benchmarking.gif)
 
+## 3. Reproducing the manuscript results
+
+In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
+
+The related code to reproduce our results is shown in the tree below.
+
+```
+📁 pqc-engineering-ssec-23
+├───📁 c-code
+├───📁 dCTIDH
+├───📁 docs
+├───📁 gifs
+├───📁 high-level-scripts
+├───📁 obtained_statistics_examples
+├───📁 reproduce_results
+│   ├───📁 manuscript_figure_03
+│   │   ├───📄 benchmark_graph_03.py
+│   │   └───📄 generate_figure_03.sh    # <= NEED TO EXECUTE
+│   └───📁 manuscript_figure_04
+│       ├───📄 benchmark_graph_04.py
+│       └───📄 generate_figure_04.sh    # <= NEED TO EXECUTE
+└───📄 README.md
+```
+
+### 3.1. Figure 03: Benchmarks for the 2-isogenies vs. 3-isogenies walks
+
+Inside the `reproduce_results/manuscript_figure_03` folder, it is necessary to give execution permissions to the script, via
+```shell
+chmod +x generate_figure_03.sh
+```
+Then, just simply execute it
+```shell
+./generate_figure_03.sh
+```
+This will automatically build with the `-DBENCHMARKING=CYCLES -DARCHITECTURE=x8664` flags, and perform all the statistics. At the end, a bar graph is automatically generated.
+
+A demo of how to obtain the manuscript's Figure 03 is shown below.
+
+![](gifs/04-replicate-results/fig_03/fig_03.gif)
+
+where the original Figure 03 presented in the manuscript is shown below.
+
+![](gifs/04-replicate-results/fig_03/figure_03_original.png)
 
 ## Doxygen
 
