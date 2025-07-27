@@ -26,6 +26,26 @@ A video summarizing our ideas and contribution (in a general-reader level) is sh
 
 The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE).
 
+A general tree description of the source code of our project is shown below.
+
+```
+📁 pqc-engineering-ssec-23
+├───📁 .github
+├───📁 c-code
+├───📁 dCTIDH
+├───📁 docs
+├───📁 gifs
+├───📁 high-level-scripts
+├───📁 obtained_statistics_examples
+├───📁 reproduce_results
+└───📄 README.md
+```
+In the following sections, we will cover in detail:
+1. How to build, test, and benchmark,
+2. How to replicate the results reported in the manuscript, 
+3. How to generate the source code technical documentation using Doxygen, and
+4. A real-life production CI/CD pipeline integration.
+
 <a name="section_02"></a>
 ## 2. Setup Process
 
@@ -71,7 +91,27 @@ Please refer to the figure below for clarification.
 <a name="section_02_02"></a>
 ### 2.2. General Terminal Setup
 
-For a general terminal setup
+#### 2.2.1. Build
+
+Our project works out-of-the-box in any Linux-based environment with some basic software requirements:
+- Cmake
+- Python3 (numpy)
+
+To check if your system counts with the required software, simply run 
+```shell
+cmake --version
+python3 --version
+```
+
+To build our project, in the root directory `pqc-engineering-ssec-23`, simply run
+```shell
+cd c-code
+cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release
+cd cmake-build-release
+make -j
+```
+This will create the `cmake-build-release` folder with all the tests for all the supported primes: p254, p255, p381, p383, p398, p511, p575, p592, p765`, and `p783`. Example:
+
 
 ## Doxygen
 
