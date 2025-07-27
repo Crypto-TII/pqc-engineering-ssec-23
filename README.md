@@ -110,8 +110,9 @@ cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release
 cd cmake-build-release
 make -j
 ```
-This will create the `cmake-build-release` folder with all the tests for all the supported primes: p254, p255, p381, p383, p398, p511, p575, p592, p765`, and `p783`. Example:
+This will create the `cmake-build-release` folder with all the tests for all the supported primes: `p254`, `p255`, `p381`, `p383`, `p398`, `p511`, `p575`, `p592`, `p765`, and `p783`. A list of the generated tests is shown below.
 
+![](gifs/03-examples/01.png)
 
 ## Doxygen
 
