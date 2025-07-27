@@ -2,7 +2,16 @@
 
 Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
-## Introduction
+# Table of contents
+1. [Introduction](#section_01)  
+2. [Setup Process](#section_02)  
+   2.1. [IDE Setup: CLion](#section_02_01)  
+   2.2. [General Terminal Setup](#section_02_02)
+3. [Another paragraph](#paragraph2)
+
+
+<a name="section_01"></a>
+## 1. Introduction
 
 Our paper reached several important results:
 - This work centers on improving HASH functions (CGL Function), KEMs (QFESTA) and NIKEs (CTIDH). 
@@ -17,11 +26,14 @@ A video summarizing our ideas and contribution (in a general-reader level) is sh
 
 The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE).
 
-## Setup Process
+<a name="section_02"></a>
+## 2. Setup Process
 
 In case an IDE like CLion is desired, the instructions are shown below. For a general terminal setup process, please skip to the following subsection.
 
-### IDE Setup: CLion
+
+<a name="section_02_01"></a>
+### 2.1. IDE Setup: CLion
 
 <details>
   <summary>Details</summary>
@@ -56,7 +68,8 @@ Please refer to the figure below for clarification.
 
 </details>
 
-### General Terminal Setup
+<a name="section_02_02"></a>
+### 2.2. General Terminal Setup
 
 For a general terminal setup
 
