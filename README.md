@@ -2,7 +2,7 @@
 
 Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
-## Setup Process
+## :computer: Setup Process
 
 This project uses `cmake` and it has been configured to run with clion. A stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
 
