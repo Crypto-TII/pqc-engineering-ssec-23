@@ -226,16 +226,20 @@ A demo of how to obtain the manuscript's Figure 03 is shown below.
 
 where the original Figure 4 presented in the manuscript is shown below.
 
-![](gifs/04-replicate-results/fig_03/figure_03_original.png)
+![](gifs/04-replicate-results/fig_03/figure_04_original.png)
 
 
-## 4. Doxygen
+## 4. Source-Code Technical Documentation: Doxygen
 
-To generate the Doxygen documentation of the project, please run
-
+Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
-pqc-engineering-ssec-23/docs$ doxygen Doxyfile
+doxygen Doxyfile
 ```
+This will generate an HTML site with interactive diagrams, and plenty of technical documentation. A demo of the generated documentation is shown below.
+
+![](gifs/05-doxygen/doxygen.gif)
+
+A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
 
 ## Integrated CI/CD testing and benchmarking
 
