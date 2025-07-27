@@ -257,7 +257,9 @@ A link to a public-hosted version of our source-code documentation is shown here
 
 To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
 
-![](gifs/02-pipeline/ci-cd.png)
+<p align="center">
+  <img src="gifs/02-pipeline/ci-cd.png" alt="Build, test and benchmark jobs." width="100">
+</p>
 
 To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
