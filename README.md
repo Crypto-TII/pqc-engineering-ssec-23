@@ -14,7 +14,7 @@ Our paper reached several important results:
 </a>
 
 
-## :computer: Setup Process
+## Setup Process
 
 This project uses `cmake` and it has been configured to run with clion. A stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
 
@@ -62,14 +62,14 @@ To prove that this project can be integrated in an industrial environment where 
 
 ## Detailed build process
 
-Please refer to [c-code/README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/blob/6f5033499375796b7aa919348278963818129299/c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](dCTIDH/README.md).
+Please refer to [c-code/README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/c-code/README.md) for a detailed description of the build process of the c code. To build the modified dCTIDH, please refer to [README.md](https://github.com/Crypto-TII/pqc-engineering-ssec-23/tree/main/dCTIDH/README.md).
 
 
-## :id: Authors
+## Authors
 
 For further information, please feel free to contact any of the authors:
 <p align="center">
     <a href="mailto:jesus.dominguez@tii.ae"><strong>Jesús-Javier Chi-Domínguez</strong></a>,
     <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
-    <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>,
+    <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>.
 </p>
