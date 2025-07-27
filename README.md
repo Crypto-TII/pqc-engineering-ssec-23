@@ -2,7 +2,7 @@
 
 Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
 
-# Table of contents
+## Table of contents
 1. [Introduction](#section_01)  
 2. [Setup Process](#section_02)  
    2.1. [IDE Setup: CLion](#section_02_01)  
@@ -29,7 +29,7 @@ The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph
 <a name="section_02"></a>
 ## 2. Setup Process
 
-In case an IDE like CLion is desired, the instructions are shown below. For a general terminal setup process, please skip to the following subsection.
+In case an IDE like CLion is desired, the instructions are shown below. **For a general terminal setup process, please skip to the following subsection: [General Terminal Setup](#section_02_02).**
 
 
 <a name="section_02_01"></a>
