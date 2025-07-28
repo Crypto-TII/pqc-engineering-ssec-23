@@ -1,4 +1,15 @@
-# dCTIDH modified version
+# Let us walk on the 3-isogeny graph: dCTIDH modified version
+
+## Table of contents
+1. [Introduction](#section_01)
+2. [Building](#section_02)
+3. [Benchmarking](#section_03)
+4. [Benchmarking Script](#section_04)
+5. [Constant-time Check](#section_05)
+6. [Licenses](#section_06)
+
+<a name="section_01"></a>
+## 1. Introduction
 
 This repository contains auxiliary material taken from the [dCTIDH repository](https://github.com/PaZeZeVaAt/dCTIDH).
 In particular, we list the modifications performed on the code below.
@@ -29,7 +40,8 @@ In particular, we list the modifications performed on the code below.
 
 In addition, this repository includes the corresponding implementation of projective radical 3-isogenies.
 
-## Building
+<a name="section_02"></a>
+## 2. Building
 
 Use the flag option `-DOPT_RAD=ARG_RAD` with `ARG_RAD=[0/1/2/3/4/5]` to employ radical 3-isogenies. The code takes `ARG_RAD=0` by default.
 
@@ -48,7 +60,8 @@ This builds the executables for 3 versions:
 - 2047m4l205
 - 2047m6l194
 
-## Benchmarking
+<a name="section_03"></a>
+## 3. Benchmarking
 
 ```sh
 usage (when in /build/main) : 	
@@ -64,7 +77,8 @@ $ ./build/main/ctidh-2047m1l226.main -bkey 500 > bench_keygen.out
 $ python3 analyze_bench.py < bench_action.out 
 ```
 
-## Benchmarking script
+<a name="section_04"></a>
+## 4. Benchmarking Script
 
 To run the benchmarking script and generate the related statistics, please run
 
@@ -93,7 +107,8 @@ This will output the results like the following
 
 where the highlighted number is the desired statistical result.
 
-## Constant-time Check
+<a name="section_05"></a>
+## 5. Constant-time Check
 
 If `DENABLE_CT_TESTING=ON`, `checkct` versions of the executable are created for all versions, which can be validated with `valgrind`.
 
@@ -102,8 +117,8 @@ For example, to validate that ctidh-2047m6l194 is constant-time:
 ```sh 
 valgrind ./main/checkct-2047m6l194.main
 ```
-
-## Licenses
+<a name="section_06"></a>
+## 6. Licenses
 
 For the third-party code see their licenses:
 
