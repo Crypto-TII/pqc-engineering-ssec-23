@@ -66,6 +66,8 @@ In this section we present a setup process that can be run in any Linux terminal
 
 #### System requirements
 
+Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
+
 Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
 - Python3 (numpy and matplotlib)
