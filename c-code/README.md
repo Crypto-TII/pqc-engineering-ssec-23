@@ -1,3 +1,6 @@
+\page ccode_README Let us walk on the 3-isogeny graph: CLion Setup
+
+
 # Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation
 
 ## Table of contents

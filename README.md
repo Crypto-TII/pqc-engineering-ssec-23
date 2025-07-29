@@ -62,6 +62,11 @@ In the following sections, we will cover in detail:
 
 In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to [Let us walk on the 3-isogeny graph: CLion Setup](README_Clion_IDE.md).
 
+
+
+In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to \ref ccode_README for more information.
+
+
 <a name="section_02_01"></a>
 ### 2.1. Build
 
