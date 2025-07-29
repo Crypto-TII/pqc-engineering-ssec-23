@@ -13,6 +13,7 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 3. [Reproducing the Manuscript Results](#section_03)
    1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_03_01)
    2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_03_02)
+   3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_03_03)
 4. [Source-Code Technical Documentation: Doxygen](#section_04)
 5. [Integrated CI/CD: Build, Test and Benchmarking](#section_05)
 6. [Additional Resources' Build Process](#section_06)
@@ -65,6 +66,8 @@ In this section we present a setup process that can be run in any Linux terminal
 ### 2.1. Build
 
 #### System requirements
+
+Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
 
 Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
@@ -192,10 +195,17 @@ The related code to reproduce our results is shown in the tree below.
 ├───📁 reproduce_results
 │   ├───📁 manuscript_figure_03
 │   │   ├───📄 benchmark_graph_03.py
-│   │   └───📄 generate_figure_03.sh    # <= NEED TO EXECUTE
-│   └───📁 manuscript_figure_04
-│       ├───📄 benchmark_graph_04.py
-│       └───📄 generate_figure_04.sh    # <= NEED TO EXECUTE
+│   │   └───📄 generate_figure_03.sh       # <= NEED TO EXECUTE
+│   ├───📁 manuscript_figure_04
+│   │   ├───📄 benchmark_graph_04.py
+│   │   └───📄 generate_figure_04.sh       # <= NEED TO EXECUTE
+│   └───📁 manuscript_figure_05
+│       ├───📁 dCTIDH_benchmarks_output    # <= AUTOMATICALLY GENERATED!
+│       ├───📁 dCTIDH_builds               # <= AUTOMATICALLY GENERATED!
+│       ├───📁 statistics_output           # <= AUTOMATICALLY GENERATED!
+│       ├───📄 analyze_bench.py
+│       ├───📄 benchmark_graph_05.py
+│       └───📄 generate_figure_05.sh       # <= NEED TO EXECUTE
 └───📄 README.md
 ```
 
@@ -241,6 +251,39 @@ where the original Figure 4 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_04/figure_04_original.png)
 
+
+<a name="section_03_03"></a>
+### 3.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
+
+Similar to the previous figures, inside the `reproduce_results/manuscript_figure_05` folder, it is necessary to give execution permissions to the script, via
+```shell
+chmod +x generate_figure_05.sh
+```
+Then, just simply execute it
+```shell
+./generate_figure_05.sh
+```
+This will automatically create three folders:
+```
+📁 manuscript_figure_05
+├───📁 dCTIDH_benchmarks_output    # <= AUTOMATICALLY GENERATED!
+├───📁 dCTIDH_builds               # <= AUTOMATICALLY GENERATED!
+├───📁 statistics_output           # <= AUTOMATICALLY GENERATED!
+├───📄 analyze_bench.py
+├───📄 benchmark_graph_05.py
+└───📄 generate_figure_05.sh       # <= NEED TO EXECUTE
+```
+The script will generate all the required folders to perform all the statistics. At the end, two line graphs are automatically generated. The first graph is the one associated to Figure 5 (a) in the manuscript, while the second graph is Figure 5 (b).
+
+A demo of how to obtain the manuscript's Figure 05 is shown below.
+
+![](gifs/04-replicate-results/fig_05/fig_05.gif)
+
+where the original Figure 5 presented in the manuscript is shown below.
+
+![](gifs/04-replicate-results/fig_05/figure_05_original.png)
+
+
 <a name="section_04"></a>
 ## 4. Source-Code Technical Documentation: Doxygen
 
@@ -260,7 +303,7 @@ A link to a public-hosted version of our source-code documentation is shown here
 To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
 
 <p align="center">
-  <img src="gifs/02-pipeline/ci-cd.png" alt="Build, test and benchmark jobs." width="350">
+  <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="350">
 </p>
 
 To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.

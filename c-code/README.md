@@ -25,7 +25,7 @@ In the following sections, the list of all the supported primes is: `p254, p255,
 <a name="section_02"></a>
 ## 2. Build
 
-The following instructions work on both Linux and MacOS using CMAKE. **NOTE: Only Intel x86_64 is currently supported.**
+The following instructions work on Linux using CMAKE. **NOTE: Only Intel x86_64 is currently supported.**
 
 <a name="section_02_01"></a>
 ### 2.1. Cmake configuration
@@ -297,7 +297,7 @@ static unsigned long long get_nanos(void)
 {
    struct timespec ts;
    timespec_get(&ts, TIME_UTC);
-   return (unsigned long long)ts.tv_sec * \textcolor{blue}{1000000000ull} + ts.tv_nsec;
+   return (unsigned long long)ts.tv_sec * 1000000000ull + ts.tv_nsec;
 }
 ```
 <a name="section_08"></a>

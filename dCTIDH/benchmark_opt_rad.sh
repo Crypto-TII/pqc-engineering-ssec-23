@@ -32,7 +32,7 @@ PERF_GOV=performance
 SAVE_GOV=powersave
 
 # CHANGE THIS FOLDER TO THE LOCATION OF ssec-23/c-code
-WORKSPACE=(location to project)/11-ssec-23/ssec-23/c-code
+WORKSPACE=../c-code
 
 
 disableTurbo() {
@@ -112,9 +112,8 @@ prime03=2047m6l194
 TOTAL_EXPERIMENTS=100
 
 DIR_TIMED=results_$(date +%Y%m%d_%H%M%S)
-
-#for opt_rad in 5 4 3 2 1 0
-for opt_rad in 0
+for opt_rad in 5 4 3 2 1 0
+#for opt_rad in 0
 do
 {
   echo "Setting up benchmark OPT_RAD_$opt_rad..."
