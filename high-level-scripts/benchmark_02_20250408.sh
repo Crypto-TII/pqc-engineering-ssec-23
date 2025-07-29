@@ -5,7 +5,7 @@
 # - benchmark_02_20250408.sh - results (these two folders at the same level)
 # To run:
 # 1. Clear cmake-build folders with sudo
-# $ sudo rm -rf ssec-23/c-code/cmake-build-*
+# $ sudo rm -rf pqc-engineering-ssec-23/c-code/cmake-build-*
 # 2. Run script with sudo
 # $ sudo bash benchmark_02_20250408.sh
 
@@ -22,8 +22,8 @@ GOV=/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 PERF_GOV=performance
 SAVE_GOV=powersave
 
-# CHANGE THIS FOLDER TO THE LOCATION OF ssec-23/c-code
-WORKSPACE=(location to the project)/11-ssec-23/ssec-23/c-code
+# CHANGE THIS FOLDER TO THE LOCATION OF pqc-engineering-ssec-23/c-code
+WORKSPACE=(location to the project)/pqc-engineering-ssec-23/c-code
 
 # BE SURE THAT THESE FOLDERS EXIST (run cmake)
 BUILD_DIR_CYCLES=${WORKSPACE}/cmake-build-release-cycles-x8664
