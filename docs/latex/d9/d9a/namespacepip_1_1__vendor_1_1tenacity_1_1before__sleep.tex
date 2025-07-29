@@ -1,0 +1,85 @@
+\doxysection{pip.\+\_\+vendor.\+tenacity.\+before\+\_\+sleep Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep}{}\label{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep}\index{pip.\_vendor.tenacity.before\_sleep@{pip.\_vendor.tenacity.before\_sleep}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+None \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab469dcae25a9743de2e70ec582b23078}{before\+\_\+sleep\+\_\+nothing}} ("{}Retry\+Call\+State"{} retry\+\_\+state)
+\item 
+typing.\+Callable\mbox{[}\mbox{[}"{}Retry\+Call\+State"{}\mbox{]}, None\mbox{]} \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab9857b2907c0369aa7fbc4ab5b9b73e9}{before\+\_\+sleep\+\_\+log}} ("{}logging.\+Logger"{} logger, int log\+\_\+level, bool exc\+\_\+info=False)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab9857b2907c0369aa7fbc4ab5b9b73e9}\index{pip.\_vendor.tenacity.before\_sleep@{pip.\_vendor.tenacity.before\_sleep}!before\_sleep\_log@{before\_sleep\_log}}
+\index{before\_sleep\_log@{before\_sleep\_log}!pip.\_vendor.tenacity.before\_sleep@{pip.\_vendor.tenacity.before\_sleep}}
+\doxysubsubsection{\texorpdfstring{before\_sleep\_log()}{before\_sleep\_log()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab9857b2907c0369aa7fbc4ab5b9b73e9} 
+ typing.\+Callable\mbox{[}\mbox{[}"{}Retry\+Call\+State"{}\mbox{]}, None\mbox{]} before\+\_\+sleep\+\_\+log (\begin{DoxyParamCaption}\item[{"{}logging.\+Logger"{}}]{logger}{, }\item[{int}]{log\+\_\+level}{, }\item[{bool }]{exc\+\_\+info}{ = {\ttfamily False}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Before call strategy that logs to some logger the attempt.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{before__sleep_8py_source_l00031}{31}} of file \mbox{\hyperlink{before__sleep_8py_source}{before\+\_\+sleep.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00035\ )\ -\/>\ typing.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Before\ call\ strategy\ that\ logs\ to\ some\ logger\ the\ attempt."{}"{}"{}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{def\ }log\_it(retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ local\_exc\_info:\ BaseException\ |\ bool\ |\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_state.outcome\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{"{}log\_it()\ called\ before\ outcome\ was\ set"{}})}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_state.next\_action\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{"{}log\_it()\ called\ before\ next\_action\ was\ set"{}})}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_state.outcome.failed:}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ ex\ =\ retry\_state.outcome.exception()}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ verb,\ value\ =\ \textcolor{stringliteral}{"{}raised"{}},\ f\textcolor{stringliteral}{"{}\{ex.\_\_class\_\_.\_\_name\_\_\}:\ \{ex\}"{}}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ exc\_info:}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ local\_exc\_info\ =\ retry\_state.outcome.exception()}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ local\_exc\_info\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ verb,\ value\ =\ \textcolor{stringliteral}{"{}returned"{}},\ retry\_state.outcome.result()}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ local\_exc\_info\ =\ \textcolor{keyword}{False}\ \ \textcolor{comment}{\#\ exc\_info\ does\ not\ apply\ when\ no\ exception}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_state.fn\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ NOTE(sileht):\ can't\ really\ happen,\ but\ we\ must\ please\ mypy}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ fn\_name\ =\ \textcolor{stringliteral}{"{}<unknown>"{}}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ fn\_name\ =\ \_utils.get\_callback\_name(retry\_state.fn)}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ logger.log(}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ log\_level,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Retrying\ \{fn\_name\}\ "{}}\ f\textcolor{stringliteral}{"{}in\ \{retry\_state.next\_action.sleep\}\ seconds\ as\ it\ \{verb\}\ \{value\}."{}},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ exc\_info=local\_exc\_info,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{return}\ log\_it}
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab469dcae25a9743de2e70ec582b23078}\index{pip.\_vendor.tenacity.before\_sleep@{pip.\_vendor.tenacity.before\_sleep}!before\_sleep\_nothing@{before\_sleep\_nothing}}
+\index{before\_sleep\_nothing@{before\_sleep\_nothing}!pip.\_vendor.tenacity.before\_sleep@{pip.\_vendor.tenacity.before\_sleep}}
+\doxysubsubsection{\texorpdfstring{before\_sleep\_nothing()}{before\_sleep\_nothing()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1tenacity_1_1before__sleep_ab469dcae25a9743de2e70ec582b23078} 
+ None before\+\_\+sleep\+\_\+nothing (\begin{DoxyParamCaption}\item[{"{}Retry\+Call\+State"{}}]{retry\+\_\+state}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Before call strategy that does nothing.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{before__sleep_8py_source_l00027}{27}} of file \mbox{\hyperlink{before__sleep_8py_source}{before\+\_\+sleep.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00027\ \textcolor{keyword}{def\ }before\_sleep\_nothing(retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Before\ call\ strategy\ that\ does\ nothing."{}"{}"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+
+\end{DoxyCode}

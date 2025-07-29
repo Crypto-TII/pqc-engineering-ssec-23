@@ -1,0 +1,152 @@
+\doxysection{requirements.\+py}
+\hypertarget{__vendor_2packaging_2requirements_8py_source}{}\label{__vendor_2packaging_2requirements_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/packaging/requirements.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/packaging/requirements.py}}
+\mbox{\hyperlink{__vendor_2packaging_2requirements_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements}{00001}}\ \textcolor{comment}{\#\ This\ file\ is\ dual\ licensed\ under\ the\ terms\ of\ the\ Apache\ License,\ Version}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00002}00002\ \textcolor{comment}{\#\ 2.0,\ and\ the\ BSD\ License.\ See\ the\ LICENSE\ file\ in\ the\ root\ of\ this\ repository}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00003}00003\ \textcolor{comment}{\#\ for\ complete\ details.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00005}00005\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00006}00006\ \textcolor{keyword}{import}\ string}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00007}00007\ \textcolor{keyword}{import}\ urllib.parse}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00008}00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional\ \textcolor{keyword}{as}\ TOptional,\ Set}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing}{pip.\_vendor.pyparsing}}\ \textcolor{keyword}{import}\ (\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00011}00011\ \ \ \ \ Combine,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00012}00012\ \ \ \ \ Literal\ \textcolor{keyword}{as}\ L,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00013}00013\ \ \ \ \ Optional,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00014}00014\ \ \ \ \ ParseException,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00015}00015\ \ \ \ \ Regex,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00016}00016\ \ \ \ \ Word,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00017}00017\ \ \ \ \ ZeroOrMore,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00018}00018\ \ \ \ \ originalTextFor,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00019}00019\ \ \ \ \ stringEnd,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00020}00020\ \ \ \ \ stringStart,}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00021}00021\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00023}00023\ \textcolor{keyword}{from}\ .markers\ \textcolor{keyword}{import}\ MARKER\_EXPR,\ Marker}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00024}00024\ \textcolor{keyword}{from}\ .specifiers\ \textcolor{keyword}{import}\ LegacySpecifier,\ Specifier,\ SpecifierSet}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00027}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_invalid_requirement}{00027}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_invalid_requirement}{InvalidRequirement}}(ValueError):}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ An\ invalid\ requirement\ was\ found,\ users\ should\ refer\ to\ PEP\ 508.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00033}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a441b6a61f5c7065660617f8fd1edaf46}{00033}}\ ALPHANUM\ =\ Word(string.ascii\_letters\ +\ string.digits)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00035}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_ab0cecff706b40d3d193e3a2660284bb0}{00035}}\ LBRACKET\ =\ L(\textcolor{stringliteral}{"{}["{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a17146668ee6ab465aa72cd5ee91da349}{00036}}\ RBRACKET\ =\ L(\textcolor{stringliteral}{"{}]"{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_ae92cc9563ad6ea74464b65553339ac3f}{00037}}\ LPAREN\ =\ L(\textcolor{stringliteral}{"{}("{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a48b56009cf11e986df5bd818fd421bbc}{00038}}\ RPAREN\ =\ L(\textcolor{stringliteral}{"{})"{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00039}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a28073488d2463f84f89bd8482d9f95a9}{00039}}\ COMMA\ =\ L(\textcolor{stringliteral}{"{},"{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00040}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_adaa6a2c3dcb37b9dcc42bf8919eb4fb8}{00040}}\ SEMICOLON\ =\ L(\textcolor{stringliteral}{"{};"{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00041}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a38543412d616e44ab5c654b236207cd5}{00041}}\ AT\ =\ L(\textcolor{stringliteral}{"{}@"{}}).suppress()}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_ac5be101a21d8f66fd9d09617ad2ce2d0}{00043}}\ PUNCTUATION\ =\ Word(\textcolor{stringliteral}{"{}-\/\_."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00044}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a5fda6c270f7c05b53111b5504ad5ee65}{00044}}\ IDENTIFIER\_END\ =\ ALPHANUM\ |\ (ZeroOrMore(PUNCTUATION)\ +\ ALPHANUM)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00045}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_aaf806be72660b1067974e6dfa04be414}{00045}}\ IDENTIFIER\ =\ Combine(ALPHANUM\ +\ ZeroOrMore(IDENTIFIER\_END))}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00047}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a57972b9e70d3db965db541436673dcc3}{00047}}\ NAME\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_aaf806be72660b1067974e6dfa04be414}{IDENTIFIER}}(\textcolor{stringliteral}{"{}name"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00048}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a8a7f10ff81da00070f47097a0bf335f6}{00048}}\ EXTRA\ =\ IDENTIFIER}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00050}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_af21b73134fa573d798172846768f5cb1}{00050}}\ URI\ =\ Regex(\textcolor{stringliteral}{r"{}[\string^\ ]+"{}})(\textcolor{stringliteral}{"{}url"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00051}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a137e9820b1471188f4c68eba640db272}{00051}}\ URL\ =\ AT\ +\ URI}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00053}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a145983a5e95c91a00074ec4fa1b50fa1}{00053}}\ EXTRAS\_LIST\ =\ EXTRA\ +\ ZeroOrMore(COMMA\ +\ EXTRA)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00054}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a9a3f0c5a25c649ef71428e08170731b2}{00054}}\ EXTRAS\ =\ (LBRACKET\ +\ Optional(EXTRAS\_LIST)\ +\ RBRACKET)(\textcolor{stringliteral}{"{}extras"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00056}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a82e48ecfd5968bf25117c81ec72b388c}{00056}}\ VERSION\_PEP440\ =\ Regex(Specifier.\_regex\_str,\ re.VERBOSE\ |\ re.IGNORECASE)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00057}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a7311ddeb5d9720b18b0f0946211e55db}{00057}}\ VERSION\_LEGACY\ =\ Regex(LegacySpecifier.\_regex\_str,\ re.VERBOSE\ |\ re.IGNORECASE)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00059}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a8ea4af36619f84b5a7d2376c17a78b7c}{00059}}\ VERSION\_ONE\ =\ VERSION\_PEP440\ \string^\ VERSION\_LEGACY}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00060}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a0a493f2621704c905f43acdb5a4d2308}{00060}}\ VERSION\_MANY\ =\ Combine(}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00061}00061\ \ \ \ \ VERSION\_ONE\ +\ ZeroOrMore(COMMA\ +\ VERSION\_ONE),\ joinString=\textcolor{stringliteral}{"{},"{}},\ adjacent=\textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00062}00062\ )(\textcolor{stringliteral}{"{}\_raw\_spec"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00063}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a8effe6a4834267148fb79a052cb8d0cd}{00063}}\ \_VERSION\_SPEC\ =\ Optional((LPAREN\ +\ VERSION\_MANY\ +\ RPAREN)\ |\ VERSION\_MANY)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00064}00064\ \_VERSION\_SPEC.setParseAction(\textcolor{keyword}{lambda}\ s,\ l,\ t:\ t.\_raw\_spec\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00066}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a84f8f4c55034e86fab75a2c7cc15dbc3}{00066}}\ VERSION\_SPEC\ =\ originalTextFor(\_VERSION\_SPEC)(\textcolor{stringliteral}{"{}specifier"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00067}00067\ VERSION\_SPEC.setParseAction(\textcolor{keyword}{lambda}\ s,\ l,\ t:\ t[1])}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00069}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_af4410dee001f84b2193fadf7bd0afa07}{00069}}\ MARKER\_EXPR\ =\ originalTextFor(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_af4410dee001f84b2193fadf7bd0afa07}{MARKER\_EXPR}}())(\textcolor{stringliteral}{"{}marker"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00070}00070\ MARKER\_EXPR.setParseAction(}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00071}00071\ \ \ \ \ \textcolor{keyword}{lambda}\ s,\ l,\ t:\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1markers_1_1_marker}{Marker}}(s[t.\_original\_start\ :\ t.\_original\_end])}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00072}00072\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00073}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_ae6ff6a86a3fa162111610c0ea469a7dd}{00073}}\ MARKER\_SEPARATOR\ =\ SEMICOLON}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00074}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_ac536fbabf91aeb2601cac9bb222af0b1}{00074}}\ MARKER\ =\ MARKER\_SEPARATOR\ +\ MARKER\_EXPR}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00076}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a9945079f5b8e948ad0f23eca0b82f292}{00076}}\ VERSION\_AND\_MARKER\ =\ VERSION\_SPEC\ +\ Optional(MARKER)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00077}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a0898f4852df0f973789b7d99dfa839d9}{00077}}\ URL\_AND\_MARKER\ =\ URL\ +\ Optional(MARKER)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00079}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_a09d2da686ba7c384910e1dc0c5470bba}{00079}}\ NAMED\_REQUIREMENT\ =\ NAME\ +\ Optional(EXTRAS)\ +\ (URL\_AND\_MARKER\ |\ VERSION\_AND\_MARKER)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00081}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements_aea341e1e7e848bca033f82cdaa29608e}{00081}}\ REQUIREMENT\ =\ stringStart\ +\ NAMED\_REQUIREMENT\ +\ stringEnd}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00082}00082\ \textcolor{comment}{\#\ pyparsing\ isn't\ thread\ safe\ during\ initialization,\ so\ we\ do\ it\ eagerly,\ see}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00083}00083\ \textcolor{comment}{\#\ issue\ \#104}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00084}00084\ REQUIREMENT.parseString(\textcolor{stringliteral}{"{}x[]"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00087}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement}{00087}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement}{Requirement}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00088}00088\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Parse\ a\ requirement.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00089}00089\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ Parse\ a\ given\ requirement\ string\ into\ its\ parts,\ such\ as\ name,\ specifier,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ URL,\ and\ extras.\ Raises\ InvalidRequirement\ on\ a\ badly-\/formed\ requirement}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ string.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00093}00093\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00095}00095\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Can\ we\ test\ whether\ something\ is\ contained\ within\ a\ requirement?}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00096}00096\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ If\ so\ how\ do\ we\ do\ that?\ Do\ we\ need\ to\ test\ against\ the\ \_name\_\ of}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00097}00097\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ the\ thing\ as\ well\ as\ the\ version?\ What\ about\ the\ markers?}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00098}00098\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Can\ we\ normalize\ the\ name\ and\ extra\ name?}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00100}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a1177ebfd4727683a72374e4798611bd4}{00100}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a1177ebfd4727683a72374e4798611bd4}{\_\_init\_\_}}(self,\ requirement\_string:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ REQUIREMENT.parseString(requirement\_string)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ParseException\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_invalid_requirement}{InvalidRequirement}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{'Parse\ error\ at\ "{}\{\ requirement\_string[e.loc\ :\ e.loc\ +\ 8]!r\}"{}:\ \{e.msg\}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00108}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_ae057a05edfbf71fef52477aeb25af27f}{00108}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_ae057a05edfbf71fef52477aeb25af27f}{name}}:\ str\ =\ req.name}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.url:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ parsed\_url\ =\ urllib.parse.urlparse(req.url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ parsed\_url.scheme\ ==\ \textcolor{stringliteral}{"{}file"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ urllib.parse.urlunparse(parsed\_url)\ !=\ req.url:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_invalid_requirement}{InvalidRequirement}}(\textcolor{stringliteral}{"{}Invalid\ URL\ given"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ (parsed\_url.scheme\ \textcolor{keywordflow}{and}\ parsed\_url.netloc)\ \textcolor{keywordflow}{or}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ parsed\_url.scheme\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ parsed\_url.netloc}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_invalid_requirement}{InvalidRequirement}}(f\textcolor{stringliteral}{"{}Invalid\ URL:\ \{req.url\}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00118}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aa1d1366e73486741c92636926d3795b7}{00118}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aa1d1366e73486741c92636926d3795b7}{url}}:\ TOptional[str]\ =\ req.url}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aa1d1366e73486741c92636926d3795b7}{url}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00121}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a4fcc933bf6ebf36c349fad2564d0f571}{00121}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a4fcc933bf6ebf36c349fad2564d0f571}{extras}}:\ Set[str]\ =\ set(req.extras.asList()\ \textcolor{keywordflow}{if}\ req.extras\ \textcolor{keywordflow}{else}\ [])}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00122}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a248f926b1bdb24ba9b13c2d98f3e609f}{00122}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a248f926b1bdb24ba9b13c2d98f3e609f}{specifier}}:\ SpecifierSet\ =\ SpecifierSet(req.specifier)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00123}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a361bd2f3f057a0a62b59ed1afb259c88}{00123}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a361bd2f3f057a0a62b59ed1afb259c88}{marker}}:\ TOptional[Marker]\ =\ req.marker\ \textcolor{keywordflow}{if}\ req.marker\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00125}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_ae07f7930f92d3591c93e2381cd5be285}{00125}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ parts:\ List[str]\ =\ [self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_ae057a05edfbf71fef52477aeb25af27f}{name}}]}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a4fcc933bf6ebf36c349fad2564d0f571}{extras}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ formatted\_extras\ =\ \textcolor{stringliteral}{"{},"{}}.join(sorted(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a4fcc933bf6ebf36c349fad2564d0f571}{extras}}))}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(f\textcolor{stringliteral}{"{}[\{formatted\_extras\}]"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a248f926b1bdb24ba9b13c2d98f3e609f}{specifier}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(str(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a248f926b1bdb24ba9b13c2d98f3e609f}{specifier}}))}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aa1d1366e73486741c92636926d3795b7}{url}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(f\textcolor{stringliteral}{"{}@\ \{self.url\}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a361bd2f3f057a0a62b59ed1afb259c88}{marker}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_a361bd2f3f057a0a62b59ed1afb259c88}{marker}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(f\textcolor{stringliteral}{"{};\ \{self.marker\}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(parts)}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00145}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aea815b0c6c23fc48a11ee0404b782c7a}{00145}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2packaging_2requirements_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<Requirement('\{self\}')>"{}}}
+
+\end{DoxyCode}

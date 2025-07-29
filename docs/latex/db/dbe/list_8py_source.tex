@@ -1,0 +1,374 @@
+\doxysection{list.\+py}
+\hypertarget{list_8py_source}{}\label{list_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/list.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/list.py}}
+\mbox{\hyperlink{list_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list}{00001}}\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00002}00002\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00003}00003\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00004}00004\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING,\ Generator,\ List,\ Optional,\ Sequence,\ Tuple,\ cast}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1utils}{pip.\_vendor.packaging.utils}}\ \textcolor{keyword}{import}\ canonicalize\_name}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli}{pip.\_internal.cli}}\ \textcolor{keyword}{import}\ cmdoptions}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1req__command}{pip.\_internal.cli.req\_command}}\ \textcolor{keyword}{import}\ IndexGroupCommand}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ CommandError}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1collector}{pip.\_internal.index.collector}}\ \textcolor{keyword}{import}\ LinkCollector}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1package__finder}{pip.\_internal.index.package\_finder}}\ \textcolor{keyword}{import}\ PackageFinder}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ BaseDistribution,\ get\_environment}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1selection__prefs}{pip.\_internal.models.selection\_prefs}}\ \textcolor{keyword}{import}\ SelectionPreferences}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00016}00016\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1session}{pip.\_internal.network.session}}\ \textcolor{keyword}{import}\ PipSession}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat}{pip.\_internal.utils.compat}}\ \textcolor{keyword}{import}\ stdlib\_pkgs}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ tabulate,\ write\_output}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00020}00020\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1base}{pip.\_internal.metadata.base}}\ \textcolor{keyword}{import}\ DistributionVersion}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1___dist_with_latest_info}{00023}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1___dist_with_latest_info}{\_DistWithLatestInfo}}(\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution}{BaseDistribution}}):}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Give\ the\ distribution\ object\ a\ couple\ of\ extra\ fields.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ will\ be\ populated\ during\ \`{}\`{}get\_outdated()\`{}\`{}.\ This\ is\ dirty\ but}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ makes\ the\ rest\ of\ the\ code\ much\ cleaner.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ latest\_version:\ DistributionVersion}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ latest\_filetype:\ str}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00033}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a1f9171002b076320a802cea3f71f0a2c}{00033}}\ \ \ \ \ \_ProcessedDists\ =\ Sequence[\_DistWithLatestInfo]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a0b14e488ae28d98d262453f3e9cd6e4d}{00036}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00039}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{00039}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{ListCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_index_group_command}{IndexGroupCommand}}):}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ List\ installed\ packages,\ including\ editables.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00042}00042\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ Packages\ are\ listed\ in\ a\ case-\/insensitive\ sorted\ order.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{00046}}\ \ \ \ \ ignore\_require\_venv\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00047}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{00047}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00050}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a1168021049b96b5b9957aa2186f7f72c}{00050}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a1168021049b96b5b9957aa2186f7f72c}{add\_options}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/o"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/outdated"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}List\ outdated\ packages"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/u"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/uptodate"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}List\ uptodate\ packages"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/e"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/editable"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}List\ editable\ projects."{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/l"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/local"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}If\ in\ a\ virtualenv\ that\ has\ global\ access,\ do\ not\ list\ "{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}globally-\/installed\ packages."{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/user"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}user"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Only\ output\ packages\ installed\ in\ user-\/site."{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.list\_path())}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/pre"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Include\ pre-\/release\ and\ development\ versions.\ By\ default,\ "{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip\ only\ finds\ stable\ versions."{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/format"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}list\_format"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{stringliteral}{"{}columns"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ choices=(\textcolor{stringliteral}{"{}columns"{}},\ \textcolor{stringliteral}{"{}freeze"{}},\ \textcolor{stringliteral}{"{}json"{}}),}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Select\ the\ output\ format\ among:\ columns\ (default),\ freeze,\ or\ json.\ "{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ 'freeze'\ format\ cannot\ be\ used\ with\ the\ -\/-\/outdated\ option."{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/not-\/required"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}not\_required"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}List\ packages\ that\ are\ not\ dependencies\ of\ installed\ packages."{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/exclude-\/editable"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}include\_editable"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Exclude\ editable\ package\ from\ output."{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/include-\/editable"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}include\_editable"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Include\ editable\ package\ from\ output."{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.list\_exclude())}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ index\_opts\ =\ cmdoptions.make\_option\_group(cmdoptions.index\_group,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ index\_opts)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00136}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{00136}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00138}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a5fe3e8dd6611d3027db0bb00288d3e38}{00138}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a5fe3e8dd6611d3027db0bb00288d3e38}{\_build\_package\_finder}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ self,\ options:\ Values,\ session:\ PipSession}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00140}00140\ \ \ \ \ )\ -\/>\ PackageFinder:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Create\ a\ package\ finder\ appropriate\ to\ this\ list\ command.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ link\_collector\ =\ LinkCollector.create(session,\ options=options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Pass\ allow\_yanked=False\ to\ ignore\ yanked\ versions.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ selection\_prefs\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1selection__prefs_1_1_selection_preferences}{SelectionPreferences}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ allow\_yanked=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ allow\_all\_prereleases=options.pre,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ PackageFinder.create(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ link\_collector=link\_collector,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ selection\_prefs=selection\_prefs,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00157}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_aed702143af1fdca26efdec21bf5c396e}{00157}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.outdated\ \textcolor{keywordflow}{and}\ options.uptodate:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(\textcolor{stringliteral}{"{}Options\ -\/-\/outdated\ and\ -\/-\/uptodate\ cannot\ be\ combined."{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.outdated\ \textcolor{keywordflow}{and}\ options.list\_format\ ==\ \textcolor{stringliteral}{"{}freeze"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}List\ format\ 'freeze'\ cannot\ be\ used\ with\ the\ -\/-\/outdated\ option."{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ cmdoptions.check\_list\_path\_option(options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ skip\ =\ set(stdlib\_pkgs)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.excludes:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ skip.update(canonicalize\_name(n)\ \textcolor{keywordflow}{for}\ n\ \textcolor{keywordflow}{in}\ options.excludes)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}}\ =\ [}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ cast(\textcolor{stringliteral}{"{}\_DistWithLatestInfo"{}},\ d)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ d\ \textcolor{keywordflow}{in}\ get\_environment(options.path).iter\_installed\_distributions(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ local\_only=options.local,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ user\_only=options.user,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ editables\_only=options.editable,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_editables=options.include\_editable,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ skip=skip,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\_not\_required\ must\ be\ called\ firstly\ in\ order\ to\ find\ and}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ filter\ out\ all\ dependencies\ correctly.\ Otherwise\ a\ package}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ can't\ be\ identified\ as\ requirement\ because\ some\ parent\ packages}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ could\ be\ filtered\ out\ before.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.not\_required:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ packages\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a4e189d3081de93404059fff3a948848a}{get\_not\_required}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.outdated:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ packages\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a84e6d05a314768a7694ddcc1e7af5406}{get\_outdated}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ options.uptodate:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ packages\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a9de4537de679b88a863c5fc629cf5982}{get\_uptodate}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac4f3b6160008c32bc6955717df7f5743}{output\_package\_listing}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00198}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a84e6d05a314768a7694ddcc1e7af5406}{00198}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a84e6d05a314768a7694ddcc1e7af5406}{get\_outdated}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ self,\ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00200}00200\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ dist}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac826bcc4faced09800db777988f0ae30}{iter\_packages\_latest\_infos}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dist.latest\_version\ >\ dist.version}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00207}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a9de4537de679b88a863c5fc629cf5982}{00207}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a9de4537de679b88a863c5fc629cf5982}{get\_uptodate}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ self,\ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00209}00209\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ dist}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac826bcc4faced09800db777988f0ae30}{iter\_packages\_latest\_infos}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dist.latest\_version\ ==\ dist.version}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00216}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a4e189d3081de93404059fff3a948848a}{00216}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a4e189d3081de93404059fff3a948848a}{get\_not\_required}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ self,\ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00218}00218\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ dep\_keys\ =\ \{}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ canonicalize\_name(dep.name)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ packages}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ (dist.iter\_dependencies()\ \textcolor{keywordflow}{or}\ ())}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Create\ a\ set\ to\ remove\ duplicate\ packages,\ and\ cast\ it\ to\ a\ list}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ keep\ the\ return\ type\ consistent\ with\ get\_outdated\ and}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\_uptodate}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ list(\{pkg\ \textcolor{keywordflow}{for}\ pkg\ \textcolor{keywordflow}{in}\ packages\ \textcolor{keywordflow}{if}\ pkg.canonical\_name\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ dep\_keys\})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00230}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac826bcc4faced09800db777988f0ae30}{00230}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac826bcc4faced09800db777988f0ae30}{iter\_packages\_latest\_infos}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ self,\ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00232}00232\ \ \ \ \ )\ -\/>\ Generator[\textcolor{stringliteral}{"{}\_DistWithLatestInfo"{}},\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_session_command_mixin_a0d90b1dcd4101874eb11e7fe220e6494}{\_build\_session}}(options)\ \textcolor{keyword}{as}\ session:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ finder\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_a5fe3e8dd6611d3027db0bb00288d3e38}{\_build\_package\_finder}}(options,\ session)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }latest\_info(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist:\ \textcolor{stringliteral}{"{}\_DistWithLatestInfo"{}},}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ )\ -\/>\ Optional[\textcolor{stringliteral}{"{}\_DistWithLatestInfo"{}}]:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ all\_candidates\ =\ finder.find\_all\_candidates(dist.canonical\_name)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.pre:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Remove\ prereleases}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ all\_candidates\ =\ [}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ candidate}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ candidate\ \textcolor{keywordflow}{in}\ all\_candidates}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ candidate.version.is\_prerelease}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ evaluator\ =\ finder.make\_candidate\_evaluator(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ project\_name=dist.canonical\_name,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ best\_candidate\ =\ evaluator.sort\_best\_candidate(all\_candidates)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ best\_candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remote\_version\ =\ best\_candidate.version}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ best\_candidate.link.is\_wheel:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typ\ =\ \textcolor{stringliteral}{"{}wheel"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typ\ =\ \textcolor{stringliteral}{"{}sdist"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist.latest\_version\ =\ remote\_version}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist.latest\_filetype\ =\ typ}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dist}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ map(latest\_info,\ packages):}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dist\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ dist}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00268}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac4f3b6160008c32bc6955717df7f5743}{00268}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ac4f3b6160008c32bc6955717df7f5743}{output\_package\_listing}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ self,\ packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00270}00270\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ packages\ =\ sorted(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ packages,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ key=\textcolor{keyword}{lambda}\ dist:\ dist.canonical\_name,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.list\_format\ ==\ \textcolor{stringliteral}{"{}columns"{}}\ \textcolor{keywordflow}{and}\ packages:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ data,\ header\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d}{format\_for\_columns}}(packages,\ options)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ab7a68877a09b9613c2daf9d7fafb5e1d}{output\_package\_listing\_columns}}(data,\ header)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ options.list\_format\ ==\ \textcolor{stringliteral}{"{}freeze"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ packages:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s==\%s\ (\%s)"{}},\ dist.raw\_name,\ dist.version,\ dist.location}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(\textcolor{stringliteral}{"{}\%s==\%s"{}},\ dist.raw\_name,\ dist.version)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ options.list\_format\ ==\ \textcolor{stringliteral}{"{}json"{}}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65}{format\_for\_json}}(packages,\ options))}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00289}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ab7a68877a09b9613c2daf9d7fafb5e1d}{00289}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command_ab7a68877a09b9613c2daf9d7fafb5e1d}{output\_package\_listing\_columns}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ self,\ data:\ List[List[str]],\ header:\ List[str]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00291}00291\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ insert\ the\ header\ first:\ we\ need\ to\ know\ the\ size\ of\ column\ names}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(data)\ >\ 0:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ data.insert(0,\ header)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ pkg\_strings,\ sizes\ =\ tabulate(data)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Create\ and\ add\ a\ separator.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(data)\ >\ 0:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ pkg\_strings.insert(1,\ \textcolor{stringliteral}{"{}\ "{}}.join(map(\textcolor{keyword}{lambda}\ x:\ \textcolor{stringliteral}{"{}-\/"{}}\ *\ x,\ sizes)))}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ val\ \textcolor{keywordflow}{in}\ pkg\_strings:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(val)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00306}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d}{00306}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d}{format\_for\_columns}}(}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00307}00307\ \ \ \ \ pkgs:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00308}00308\ )\ -\/>\ Tuple[List[List[str]],\ List[str]]:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00309}00309\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00310}00310\ \textcolor{stringliteral}{\ \ \ \ Convert\ the\ package\ data\ into\ something\ usable}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00311}00311\ \textcolor{stringliteral}{\ \ \ \ by\ output\_package\_listing\_columns.}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00312}00312\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00313}00313\ \ \ \ \ header\ =\ [\textcolor{stringliteral}{"{}Package"{}},\ \textcolor{stringliteral}{"{}Version"{}}]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00315}00315\ \ \ \ \ running\_outdated\ =\ options.outdated}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00316}00316\ \ \ \ \ \textcolor{keywordflow}{if}\ running\_outdated:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ header.extend([\textcolor{stringliteral}{"{}Latest"{}},\ \textcolor{stringliteral}{"{}Type"{}}])}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00319}00319\ \ \ \ \ has\_editables\ =\ any(x.editable\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ pkgs)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{if}\ has\_editables:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Editable\ project\ location"{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Location"{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00325}00325\ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Installer"{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00328}00328\ \ \ \ \ data\ =\ []}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{for}\ proj\ \textcolor{keywordflow}{in}\ pkgs:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ we're\ working\ on\ the\ 'outdated'\ list,\ separate\ out\ the}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ latest\_version\ and\ type}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ row\ =\ [proj.raw\_name,\ str(proj.version)]}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00334}00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ running\_outdated:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(str(proj.latest\_version))}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.latest\_filetype)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ has\_editables:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.editable\_project\_location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.installer)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00346}00346\ \ \ \ \ \ \ \ \ data.append(row)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00348}00348\ \ \ \ \ \textcolor{keywordflow}{return}\ data,\ header}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00351}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65}{00351}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65}{format\_for\_json}}(packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00352}00352\ \ \ \ \ data\ =\ []}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00353}00353\ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ packages:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ info\ =\ \{}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\ dist.raw\_name,}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version"{}}:\ str(dist.version),}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}location"{}}]\ =\ dist.location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}installer"{}}]\ =\ dist.installer}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.outdated:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}latest\_version"{}}]\ =\ str(dist.latest\_version)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}latest\_filetype"{}}]\ =\ dist.latest\_filetype}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ editable\_project\_location\ =\ dist.editable\_project\_location}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ editable\_project\_location:}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}editable\_project\_location"{}}]\ =\ editable\_project\_location}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ data.append(info)}
+\DoxyCodeLine{\Hypertarget{list_8py_source_l00368}00368\ \ \ \ \ \textcolor{keywordflow}{return}\ json.dumps(data)}
+
+\end{DoxyCode}

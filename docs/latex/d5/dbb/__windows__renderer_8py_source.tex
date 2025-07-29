@@ -1,0 +1,62 @@
+\doxysection{\+\_\+windows\+\_\+renderer.\+py}
+\hypertarget{__windows__renderer_8py_source}{}\label{__windows__renderer_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/\_windows\_renderer.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/\_windows\_renderer.py}}
+\mbox{\hyperlink{__windows__renderer_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1__windows__renderer}{00001}}\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Iterable,\ Sequence,\ Tuple,\ cast}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00003}00003\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1__win32__console}{pip.\_vendor.rich.\_win32\_console}}\ \textcolor{keyword}{import}\ LegacyWindowsTerm,\ WindowsCoordinates}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00004}00004\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1segment}{pip.\_vendor.rich.segment}}\ \textcolor{keyword}{import}\ ControlCode,\ ControlType,\ Segment}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00007}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1__windows__renderer_a67ba73167d86be0e6fc0762585cf21df}{00007}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1__windows__renderer_a67ba73167d86be0e6fc0762585cf21df}{legacy\_windows\_render}}(buffer:\ Iterable[Segment],\ term:\ LegacyWindowsTerm)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00008}00008\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Makes\ appropriate\ Windows\ Console\ API\ calls\ based\ on\ the\ segments\ in\ the\ buffer.}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00009}00009\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00010}00010\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ buffer\ (Iterable[Segment]):\ Iterable\ of\ Segments\ to\ convert\ to\ Win32\ API\ calls.}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00012}00012\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ term\ (LegacyWindowsTerm):\ Used\ to\ call\ the\ Windows\ Console\ API.}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00014}00014\ \ \ \ \ \textcolor{keywordflow}{for}\ text,\ style,\ control\ \textcolor{keywordflow}{in}\ buffer:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00015}00015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ control:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00016}00016\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.write\_styled(text,\ style)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00018}00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.write\_text(text)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ control\_codes:\ Sequence[ControlCode]\ =\ control}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ control\_code\ \textcolor{keywordflow}{in}\ control\_codes:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ control\_type\ =\ control\_code[0]}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ control\_type\ ==\ ControlType.CURSOR\_MOVE\_TO:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_,\ x,\ y\ =\ cast(Tuple[ControlType,\ int,\ int],\ control\_code)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_to(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_windows_coordinates}{WindowsCoordinates}}(row=y\ -\/\ 1,\ col=x\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CARRIAGE\_RETURN:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.write\_text(\textcolor{stringliteral}{"{}\(\backslash\)r"{}})}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.HOME:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_to(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_windows_coordinates}{WindowsCoordinates}}(0,\ 0))}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CURSOR\_UP:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_up()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CURSOR\_DOWN:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_down()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CURSOR\_FORWARD:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_forward()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CURSOR\_BACKWARD:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_backward()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.CURSOR\_MOVE\_TO\_COLUMN:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_,\ column\ =\ cast(Tuple[ControlType,\ int],\ control\_code)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.move\_cursor\_to\_column(column\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.HIDE\_CURSOR:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.hide\_cursor()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.SHOW\_CURSOR:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.show\_cursor()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.ERASE\_IN\_LINE:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_,\ mode\ =\ cast(Tuple[ControlType,\ int],\ control\_code)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ mode\ ==\ 0:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.erase\_end\_of\_line()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ mode\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.erase\_start\_of\_line()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ mode\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.erase\_line()}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ control\_type\ ==\ ControlType.SET\_WINDOW\_TITLE:}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_,\ title\ =\ cast(Tuple[ControlType,\ str],\ control\_code)}
+\DoxyCodeLine{\Hypertarget{__windows__renderer_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ term.set\_title(title)}
+
+\end{DoxyCode}

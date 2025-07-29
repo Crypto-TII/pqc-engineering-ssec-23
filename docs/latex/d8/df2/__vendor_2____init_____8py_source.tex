@@ -1,0 +1,126 @@
+\doxysection{\+\_\+\+\_\+init\+\_\+\+\_\+.\+py}
+\hypertarget{__vendor_2____init_____8py_source}{}\label{__vendor_2____init_____8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/\_\_init\_\_.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/\_\_init\_\_.py}}
+\mbox{\hyperlink{__vendor_2____init_____8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00002}00002\ \textcolor{stringliteral}{pip.\_vendor\ is\ for\ vendoring\ dependencies\ of\ pip\ to\ prevent\ needing\ pip\ to}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00003}00003\ \textcolor{stringliteral}{depend\ on\ something\ external.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00005}00005\ \textcolor{stringliteral}{Files\ inside\ of\ pip.\_vendor\ should\ be\ considered\ immutable\ and\ should\ only\ be}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00006}00006\ \textcolor{stringliteral}{updated\ to\ versions\ from\ upstream.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00007}00007\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00008}00008\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00010}00010\ \textcolor{keyword}{import}\ glob}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00011}00011\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00012}00012\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00014}00014\ \textcolor{comment}{\#\ Downstream\ redistributors\ which\ have\ debundled\ our\ dependencies\ should\ also}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00015}00015\ \textcolor{comment}{\#\ patch\ this\ value\ to\ be\ true.\ This\ will\ trigger\ the\ additional\ patching}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00016}00016\ \textcolor{comment}{\#\ to\ cause\ things\ like\ "{}six"{}\ to\ be\ available\ as\ pip.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00017}\mbox{\hyperlink{namespacepip_1_1__vendor_acd8eb8d592017eeb72e2ed3b9579e333}{00017}}\ DEBUNDLED\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00019}00019\ \textcolor{comment}{\#\ By\ default,\ look\ in\ this\ directory\ for\ a\ bunch\ of\ .whl\ files\ which\ we\ will}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00020}00020\ \textcolor{comment}{\#\ add\ to\ the\ beginning\ of\ sys.path\ before\ attempting\ to\ import\ anything.\ This}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00021}00021\ \textcolor{comment}{\#\ is\ done\ to\ support\ downstream\ re-\/distributors\ like\ Debian\ and\ Fedora\ who}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00022}00022\ \textcolor{comment}{\#\ wish\ to\ create\ their\ own\ Wheels\ for\ our\ dependencies\ to\ aid\ in\ debundling.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00023}\mbox{\hyperlink{namespacepip_1_1__vendor_a8acd9927a05808d006e61dceae5385da}{00023}}\ WHEEL\_DIR\ =\ os.path.abspath(os.path.dirname(\_\_file\_\_))}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00026}00026\ \textcolor{comment}{\#\ Define\ a\ small\ helper\ function\ to\ alias\ our\ vendored\ modules\ to\ the\ real\ ones}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00027}00027\ \textcolor{comment}{\#\ if\ the\ vendored\ ones\ do\ not\ exist.\ This\ idea\ of\ this\ was\ taken\ from}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00028}00028\ \textcolor{comment}{\#\ https://github.com/kennethreitz/requests/pull/2567.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(modulename):}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00030}00030\ \ \ \ \ vendored\_name\ =\ \textcolor{stringliteral}{"{}\{0\}.\{1\}"{}}.format(\_\_name\_\_,\ modulename)}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \_\_import\_\_(modulename,\ globals(),\ locals(),\ level=0)}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ can\ just\ silently\ allow\ import\ failures\ to\ pass\ here.\ If\ we}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ got\ to\ this\ point\ it\ means\ that\ \`{}\`{}import\ pip.\_vendor.whatever``}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ failed\ and\ so\ did\ \`{}\`{}import\ whatever``.\ Since\ we're\ importing\ this}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ upfront\ in\ an\ attempt\ to\ alias\ imports,\ not\ erroring\ here\ will}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ just\ mean\ we\ get\ a\ regular\ import\ error\ whenever\ pip\ *actually*}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ tries\ to\ import\ one\ of\ these\ modules\ to\ use\ it,\ which\ actually}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ gives\ us\ a\ better\ error\ message\ than\ we\ would\ have\ otherwise}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ gotten.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00045}00045\ \ \ \ \ \ \ \ \ sys.modules[vendored\_name]\ =\ sys.modules[modulename]}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00046}00046\ \ \ \ \ \ \ \ \ base,\ head\ =\ vendored\_name.rsplit(\textcolor{stringliteral}{"{}."{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00047}00047\ \ \ \ \ \ \ \ \ setattr(sys.modules[base],\ head,\ sys.modules[modulename])}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00050}00050\ \textcolor{comment}{\#\ If\ we're\ operating\ in\ a\ debundled\ setup,\ then\ we\ want\ to\ go\ ahead\ and\ trigger}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00051}00051\ \textcolor{comment}{\#\ the\ aliasing\ of\ our\ vendored\ libraries\ as\ well\ as\ looking\ for\ wheels\ to\ add}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00052}00052\ \textcolor{comment}{\#\ to\ our\ sys.path.\ This\ will\ cause\ all\ of\ this\ code\ to\ be\ a\ no-\/op\ typically}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00053}00053\ \textcolor{comment}{\#\ however\ downstream\ redistributors\ can\ enable\ it\ in\ a\ consistent\ way\ across}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00054}00054\ \textcolor{comment}{\#\ all\ platforms.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00055}00055\ \textcolor{keywordflow}{if}\ DEBUNDLED:}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00056}00056\ \ \ \ \ \textcolor{comment}{\#\ Actually\ look\ inside\ of\ WHEEL\_DIR\ to\ find\ .whl\ files\ and\ add\ them\ to\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00057}00057\ \ \ \ \ \textcolor{comment}{\#\ front\ of\ our\ sys.path.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00058}00058\ \ \ \ \ sys.path[:]\ =\ glob.glob(os.path.join(WHEEL\_DIR,\ \textcolor{stringliteral}{"{}*.whl"{}}))\ +\ sys.path}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00060}00060\ \ \ \ \ \textcolor{comment}{\#\ Actually\ alias\ all\ of\ our\ vendored\ dependencies.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00061}00061\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}cachecontrol"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00062}00062\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}certifi"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00063}00063\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}colorama"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00064}00064\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}distlib"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00065}00065\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}distro"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00066}00066\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}six"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00067}00067\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}six.moves"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00068}00068\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}six.moves.urllib"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00069}00069\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}six.moves.urllib.parse"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00070}00070\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}packaging"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00071}00071\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}packaging.version"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00072}00072\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}packaging.specifiers"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00073}00073\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}pep517"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00074}00074\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}pkg\_resources"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00075}00075\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}platformdirs"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00076}00076\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}progress"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00077}00077\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00078}00078\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.exceptions"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00079}00079\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00080}00080\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00081}00081\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.\_collections"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00082}00082\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.connection"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00083}00083\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.connectionpool"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00084}00084\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.contrib"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00085}00085\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.contrib.ntlmpool"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00086}00086\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.contrib.pyopenssl"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00087}00087\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.exceptions"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00088}00088\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.fields"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00089}00089\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.filepost"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00090}00090\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.packages"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00091}00091\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.packages.ordered\_dict"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00092}00092\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.packages.six"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00093}00093\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.packages.ssl\_match\_hostname"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00094}00094\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.packages.ssl\_match\_hostname."{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_implementation"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00096}00096\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.poolmanager"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00097}00097\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.request"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00098}00098\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.response"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00099}00099\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00100}00100\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.connection"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00101}00101\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.request"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00102}00102\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.response"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00103}00103\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.retry"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00104}00104\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.ssl\_"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00105}00105\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.timeout"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00106}00106\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}requests.packages.urllib3.util.url"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00107}00107\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}resolvelib"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00108}00108\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00109}00109\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.console"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00110}00110\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.highlighter"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00111}00111\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.logging"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00112}00112\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.markup"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00113}00113\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.progress"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00114}00114\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.segment"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00115}00115\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.style"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00116}00116\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.text"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00117}00117\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}rich.traceback"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00118}00118\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}tenacity"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00119}00119\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}tomli"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2____init_____8py_source_l00120}00120\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_aca236590a7ae09ae84067fcd1a2c21b3}{vendored}}(\textcolor{stringliteral}{"{}urllib3"{}})}
+
+\end{DoxyCode}

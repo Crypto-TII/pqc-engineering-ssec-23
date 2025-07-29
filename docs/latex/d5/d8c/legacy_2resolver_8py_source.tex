@@ -1,0 +1,606 @@
+\doxysection{resolver.\+py}
+\hypertarget{legacy_2resolver_8py_source}{}\label{legacy_2resolver_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/resolution/legacy/resolver.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/resolution/legacy/resolver.py}}
+\mbox{\hyperlink{legacy_2resolver_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Dependency\ Resolution}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00002}00002\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00003}00003\ \textcolor{stringliteral}{The\ dependency\ resolution\ in\ pip\ is\ performed\ as\ follows:}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00005}00005\ \textcolor{stringliteral}{for\ top-\/level\ requirements:}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00006}00006\ \textcolor{stringliteral}{\ \ \ \ a.\ only\ one\ spec\ allowed\ per\ project,\ regardless\ of\ conflicts\ or\ not.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00007}00007\ \textcolor{stringliteral}{\ \ \ \ \ \ \ otherwise\ a\ "{}double\ requirement"{}\ exception\ is\ raised}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ b.\ they\ override\ sub-\/dependency\ requirements.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00009}00009\ \textcolor{stringliteral}{for\ sub-\/dependencies}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00010}00010\ \textcolor{stringliteral}{\ \ \ \ a.\ "{}first\ found,\ wins"{}\ (where\ the\ order\ is\ breadth\ first)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00011}00011\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00013}00013\ \textcolor{comment}{\#\ The\ following\ comment\ should\ be\ removed\ at\ some\ point\ in\ the\ future.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00014}00014\ \textcolor{comment}{\#\ mypy:\ strict-\/optional=False}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00016}00016\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00017}00017\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00018}00018\ \textcolor{keyword}{from}\ collections\ \textcolor{keyword}{import}\ defaultdict}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00019}00019\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ chain}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00020}00020\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ DefaultDict,\ Iterable,\ List,\ Optional,\ Set,\ Tuple}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00022}00022\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging}{pip.\_vendor.packaging}}\ \textcolor{keyword}{import}\ specifiers}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements}{pip.\_vendor.packaging.requirements}}\ \textcolor{keyword}{import}\ Requirement}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00025}00025\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cache}{pip.\_internal.cache}}\ \textcolor{keyword}{import}\ WheelCache}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00026}00026\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00027}00027\ \ \ \ \ BestVersionAlreadyInstalled,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00028}00028\ \ \ \ \ DistributionNotFound,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00029}00029\ \ \ \ \ HashError,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00030}00030\ \ \ \ \ HashErrors,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00031}00031\ \ \ \ \ InstallationError,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00032}00032\ \ \ \ \ NoneMetadataError,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00033}00033\ \ \ \ \ UnsupportedPythonVersion,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00034}00034\ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00035}00035\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1package__finder}{pip.\_internal.index.package\_finder}}\ \textcolor{keyword}{import}\ PackageFinder}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00036}00036\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ BaseDistribution}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00037}00037\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1link}{pip.\_internal.models.link}}\ \textcolor{keyword}{import}\ Link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00038}00038\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1wheel}{pip.\_internal.models.wheel}}\ \textcolor{keyword}{import}\ Wheel}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00039}00039\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1prepare}{pip.\_internal.operations.prepare}}\ \textcolor{keyword}{import}\ RequirementPreparer}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00040}00040\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req_1_1req__install}{pip.\_internal.req.req\_install}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00041}00041\ \ \ \ \ InstallRequirement,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00042}00042\ \ \ \ \ check\_invalid\_constraint\_type,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00043}00043\ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00044}00044\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req_1_1req__set}{pip.\_internal.req.req\_set}}\ \textcolor{keyword}{import}\ RequirementSet}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00045}00045\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1base}{pip.\_internal.resolution.base}}\ \textcolor{keyword}{import}\ BaseResolver,\ InstallRequirementProvider}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00046}00046\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils}{pip.\_internal.utils}}\ \textcolor{keyword}{import}\ compatibility\_tags}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00047}00047\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags}{pip.\_internal.utils.compatibility\_tags}}\ \textcolor{keyword}{import}\ get\_supported}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00048}00048\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1direct__url__helpers}{pip.\_internal.utils.direct\_url\_helpers}}\ \textcolor{keyword}{import}\ direct\_url\_from\_link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00049}00049\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging}{pip.\_internal.utils.logging}}\ \textcolor{keyword}{import}\ indent\_log}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00050}00050\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ normalize\_version\_info}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00051}00051\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging}{pip.\_internal.utils.packaging}}\ \textcolor{keyword}{import}\ check\_requires\_python}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00053}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_a0b14e488ae28d98d262453f3e9cd6e4d}{00053}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00055}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_a2bcd099fc59d4823dba805c93db6dc9b}{00055}}\ DiscoveredDependencies\ =\ DefaultDict[str,\ List[InstallRequirement]]}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00058}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_a92040bbd6468907cfff023b8af12ee21}{00058}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_a92040bbd6468907cfff023b8af12ee21}{\_check\_dist\_requires\_python}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00059}00059\ \ \ \ \ dist:\ BaseDistribution,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00060}00060\ \ \ \ \ version\_info:\ Tuple[int,\ int,\ int],}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00061}00061\ \ \ \ \ ignore\_requires\_python:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00062}00062\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00063}00063\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ Check\ whether\ the\ given\ Python\ version\ is\ compatible\ with\ a\ distribution's}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ "{}Requires-\/Python"{}\ value.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00066}00066\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ :param\ version\_info:\ A\ 3-\/tuple\ of\ ints\ representing\ the\ Python}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ major-\/minor-\/micro\ version\ to\ check.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ :param\ ignore\_requires\_python:\ Whether\ to\ ignore\ the\ "{}Requires-\/Python"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ value\ if\ the\ given\ Python\ version\ isn't\ compatible.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00071}00071\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00072}00072\ \textcolor{stringliteral}{\ \ \ \ :raises\ UnsupportedPythonVersion:\ When\ the\ given\ Python\ version\ isn't}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00073}00073\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ compatible.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00075}00075\ \ \ \ \ \textcolor{comment}{\#\ This\ idiosyncratically\ converts\ the\ SpecifierSet\ to\ str\ and\ let}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00076}00076\ \ \ \ \ \textcolor{comment}{\#\ check\_requires\_python\ then\ parse\ it\ again\ into\ SpecifierSet.\ But\ this}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00077}00077\ \ \ \ \ \textcolor{comment}{\#\ is\ the\ legacy\ resolver\ so\ I'm\ just\ not\ going\ to\ bother\ refactoring.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ requires\_python\ =\ str(dist.requires\_python)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{except}\ FileNotFoundError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error}{NoneMetadataError}}(dist,\ str(e))}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00082}00082\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ is\_compatible\ =\ check\_requires\_python(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ requires\_python,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ version\_info=version\_info,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{except}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_invalid_specifier}{specifiers.InvalidSpecifier}}\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Package\ \%r\ has\ an\ invalid\ Requires-\/Python:\ \%s"{}},\ dist.raw\_name,\ exc}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_compatible:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00096}00096\ \ \ \ \ version\ =\ \textcolor{stringliteral}{"{}."{}}.join(map(str,\ version\_info))}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ ignore\_requires\_python:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ logger.debug(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Ignoring\ failed\ Requires-\/Python\ check\ for\ package\ \%r:\ \%s\ not\ in\ \%r"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ dist.raw\_name,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ version,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ requires\_python,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_unsupported_python_version}{UnsupportedPythonVersion}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Package\ \{!r\}\ requires\ a\ different\ Python:\ \{\}\ not\ in\ \{!r\}"{}}.format(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ dist.raw\_name,\ version,\ requires\_python}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00110}00110\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00113}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver}{00113}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver}{Resolver}}(\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1base_1_1_base_resolver}{BaseResolver}}):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00114}00114\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Resolves\ which\ packages\ need\ to\ be\ installed/uninstalled\ to\ perform\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ the\ requested\ operation\ without\ breaking\ the\ requirements\ of\ any\ package.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00118}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a145bb86a5bb1d779a43ab49e6de2ce54}{00118}}\ \ \ \ \ \_allowed\_strategies\ =\ \{\textcolor{stringliteral}{"{}eager"{}},\ \textcolor{stringliteral}{"{}only-\/if-\/needed"{}},\ \textcolor{stringliteral}{"{}to-\/satisfy-\/only"{}}\}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00120}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aafc84e3ecf593b23d93fd7dec2297ff3}{00120}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aafc84e3ecf593b23d93fd7dec2297ff3}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ preparer:\ RequirementPreparer,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ finder:\ PackageFinder,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ wheel\_cache:\ Optional[WheelCache],}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ make\_install\_req:\ InstallRequirementProvider,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ use\_user\_site:\ bool,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ ignore\_dependencies:\ bool,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ ignore\_installed:\ bool,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ ignore\_requires\_python:\ bool,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ force\_reinstall:\ bool,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ upgrade\_strategy:\ str,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ py\_version\_info:\ Optional[Tuple[int,\ ...]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00133}00133\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aafc84e3ecf593b23d93fd7dec2297ff3}{\_\_init\_\_}}()}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ upgrade\_strategy\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a145bb86a5bb1d779a43ab49e6de2ce54}{\_allowed\_strategies}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ py\_version\_info\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ py\_version\_info\ =\ sys.version\_info[:3]}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ py\_version\_info\ =\ normalize\_version\_info(py\_version\_info)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00142}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a5e42d027684333716a8d6d4346af6ffd}{00142}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a5e42d027684333716a8d6d4346af6ffd}{\_py\_version\_info}}\ =\ py\_version\_info}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00144}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{00144}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{preparer}}\ =\ preparer}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00145}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae46cc3f0b70ec94158c1c0bcc4c27187}{00145}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae46cc3f0b70ec94158c1c0bcc4c27187}{finder}}\ =\ finder}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00146}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a8c3c96d0e18c18cc399c225b6117c22d}{00146}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a8c3c96d0e18c18cc399c225b6117c22d}{wheel\_cache}}\ =\ wheel\_cache}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00148}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{00148}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ =\ upgrade\_strategy}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00149}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3748853dd9e95d6ac740d6f6680979ab}{00149}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3748853dd9e95d6ac740d6f6680979ab}{force\_reinstall}}\ =\ force\_reinstall}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00150}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aacf16c11fa981be8684b4cfd6ae48066}{00150}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aacf16c11fa981be8684b4cfd6ae48066}{ignore\_dependencies}}\ =\ ignore\_dependencies}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00151}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3e7728b9924a84cb0828e651a836b0fa}{00151}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3e7728b9924a84cb0828e651a836b0fa}{ignore\_installed}}\ =\ ignore\_installed}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00152}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1d12aa68ad7599e855a4252bcca3a259}{00152}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1d12aa68ad7599e855a4252bcca3a259}{ignore\_requires\_python}}\ =\ ignore\_requires\_python}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00153}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a635a6971e37b444275203bae019fc210}{00153}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a635a6971e37b444275203bae019fc210}{use\_user\_site}}\ =\ use\_user\_site}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae3fc1886d0fd8269dcc5a1e2a67fa100}{00154}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae3fc1886d0fd8269dcc5a1e2a67fa100}{\_make\_install\_req}}\ =\ make\_install\_req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00156}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1b702ab48021b6a9a09f299c5f8339f9}{00156}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1b702ab48021b6a9a09f299c5f8339f9}{\_discovered\_dependencies}}:\ DiscoveredDependencies\ =\ defaultdict(list)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00158}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a5c48ab2cd13f4ba5e95a83333a7077cf}{00158}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a5c48ab2cd13f4ba5e95a83333a7077cf}{resolve}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ self,\ root\_reqs:\ List[InstallRequirement],\ check\_supported\_wheels:\ bool}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00160}00160\ \ \ \ \ )\ -\/>\ RequirementSet:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Resolve\ what\ operations\ need\ to\ be\ done}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00162}00162\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00163}00163\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ As\ a\ side-\/effect\ of\ this\ method,\ the\ packages\ (and\ their\ dependencies)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00164}00164\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ are\ downloaded,\ unpacked\ and\ prepared\ for\ installation.\ This}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00165}00165\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ preparation\ is\ done\ by\ \`{}\`{}pip.operations.prepare\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00166}00166\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00167}00167\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Once\ PyPI\ has\ static\ dependency\ metadata\ available,\ it\ would\ be}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00168}00168\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ possible\ to\ move\ the\ preparation\ to\ become\ a\ step\ separated\ from}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ dependency\ resolution.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ requirement\_set\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1req_1_1req__set_1_1_requirement_set}{RequirementSet}}(check\_supported\_wheels=check\_supported\_wheels)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ req\ \textcolor{keywordflow}{in}\ root\_reqs:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.constraint:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ check\_invalid\_constraint\_type(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1ce83dc4498aa7b01547986dd2bf1cf6}{\_add\_requirement\_to\_set}}(requirement\_set,\ req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Actually\ prepare\ the\ files,\ and\ collect\ any\ exceptions.\ Most\ hash}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ exceptions\ cannot\ be\ checked\ ahead\ of\ time,\ because}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \_populate\_link()\ needs\ to\ be\ called\ before\ we\ can\ make\ decisions}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ based\ on\ link\ type.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ discovered\_reqs:\ List[InstallRequirement]\ =\ []}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ hash\_errors\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors}{HashErrors}}()}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ req\ \textcolor{keywordflow}{in}\ chain(requirement\_set.all\_requirements,\ discovered\_reqs):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ discovered\_reqs.extend(self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ac1ac1a437a27583e34e04c2e8e525728}{\_resolve\_one}}(requirement\_set,\ req))}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ HashError\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exc.req\ =\ req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hash\_errors.append(exc)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hash\_errors:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ hash\_errors}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ requirement\_set}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00195}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1ce83dc4498aa7b01547986dd2bf1cf6}{00195}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1ce83dc4498aa7b01547986dd2bf1cf6}{\_add\_requirement\_to\_set}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ requirement\_set:\ RequirementSet,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ install\_req:\ InstallRequirement,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ parent\_req\_name:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ extras\_requested:\ Optional[Iterable[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00201}00201\ \ \ \ \ )\ -\/>\ Tuple[List[InstallRequirement],\ Optional[InstallRequirement]]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ install\_req\ as\ a\ requirement\ to\ install.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00203}00203\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00204}00204\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ parent\_req\_name:\ The\ name\ of\ the\ requirement\ that\ needed\ this}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00205}00205\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ added.\ The\ name\ is\ used\ because\ when\ multiple\ unnamed\ requirements}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ resolve\ to\ the\ same\ name,\ we\ could\ otherwise\ end\ up\ with\ dependency}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ links\ that\ point\ outside\ the\ Requirements\ set.\ parent\_req\ must}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ already\ be\ added.\ Note\ that\ None\ implies\ that\ this\ is\ a\ user}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ supplied\ requirement,\ vs\ an\ inferred\ one.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00210}00210\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ extras\_requested:\ an\ iterable\ of\ extras\ used\ to\ evaluate\ the}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00211}00211\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ environment\ markers.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ Additional\ requirements\ to\ scan.\ That\ is\ either\ []\ if}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ the\ requirement\ is\ not\ applicable,\ or\ [install\_req]\ if\ the}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00214}00214\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ requirement\ is\ applicable\ and\ has\ just\ been\ added.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ the\ markers\ do\ not\ match,\ ignore\ this\ requirement.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ install\_req.match\_markers(extras\_requested):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ logger.info(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Ignoring\ \%s:\ markers\ '\%s'\ don't\ match\ your\ environment"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ install\_req.name,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ install\_req.markers,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [],\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ the\ wheel\ is\ not\ supported,\ raise\ an\ error.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Should\ check\ this\ after\ filtering\ out\ based\ on\ environment\ markers\ to}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ allow\ specifying\ different\ wheels\ based\ on\ the\ environment/OS,\ in\ a}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ single\ requirements\ file.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ install\_req.link\ \textcolor{keywordflow}{and}\ install\_req.link.is\_wheel:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ wheel\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1wheel_1_1_wheel}{Wheel}}(install\_req.link.filename)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ tags\ =\ compatibility\_tags.get\_supported()}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ requirement\_set.check\_supported\_wheels\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ wheel.supported(tags):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\}\ is\ not\ a\ supported\ wheel\ on\ this\ platform."{}}.format(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel.filename}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ next\ bit\ is\ really\ a\ sanity\ check.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ install\_req.user\_supplied\ \textcolor{keywordflow}{or}\ parent\_req\_name\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ ),\ \textcolor{stringliteral}{"{}a\ user\ supplied\ req\ shouldn't\ have\ a\ parent"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Unnamed\ requirements\ are\ scanned\ again\ and\ the\ requirement\ won't\ be}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ added\ as\ a\ dependency\ until\ after\ scanning.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ install\_req.name:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set.add\_unnamed\_requirement(install\_req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [install\_req],\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req:\ Optional[}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InstallRequirement}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ ]\ =\ requirement\_set.get\_requirement(install\_req.name)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ has\_conflicting\_requirement\ =\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ parent\_req\_name\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ existing\_req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ existing\_req.constraint}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ existing\_req.extras\ ==\ install\_req.extras}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ existing\_req.req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ install\_req.req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ existing\_req.req.specifier\ !=\ install\_req.req.specifier}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ has\_conflicting\_requirement:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Double\ requirement\ given:\ \{\}\ (already\ in\ \{\},\ name=\{!r\})"{}}.format(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ install\_req,\ existing\_req,\ install\_req.name}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ When\ no\ existing\ requirement\ exists,\ add\ the\ requirement\ as\ a}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ dependency\ and\ it\ will\ be\ scanned\ again\ after.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ existing\_req:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set.add\_named\_requirement(install\_req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We'd\ want\ to\ rescan\ this\ requirement\ later}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [install\_req],\ install\_req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Assume\ there's\ no\ need\ to\ scan,\ and\ that\ we've\ already}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ encountered\ this\ for\ scanning.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ install\_req.constraint\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ existing\_req.constraint:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [],\ existing\_req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ does\_not\_satisfy\_constraint\ =\ install\_req.link\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req.link\ \textcolor{keywordflow}{and}\ install\_req.link.path\ ==\ existing\_req.link.path}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ does\_not\_satisfy\_constraint:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Could\ not\ satisfy\ constraints\ for\ '\{\}':\ "{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}installation\ from\ path\ or\ url\ cannot\ be\ "{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}constrained\ to\ a\ version"{}}.format(install\_req.name)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we're\ now\ installing\ a\ constraint,\ mark\ the\ existing}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ object\ for\ real\ installation.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ existing\_req.constraint\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we're\ now\ installing\ a\ user\ supplied\ requirement,}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ mark\ the\ existing\ object\ as\ such.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ install\_req.user\_supplied:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req.user\_supplied\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ existing\_req.extras\ =\ tuple(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ sorted(set(existing\_req.extras)\ |\ set(install\_req.extras))}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ logger.debug(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Setting\ \%s\ extras\ to:\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ existing\_req.extras,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Return\ the\ existing\ requirement\ for\ addition\ to\ the\ parent\ and}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ scanning\ again.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [existing\_req],\ existing\_req}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00313}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a06433d9c4fb53ab5ee6d86e5ff1c8f37}{00313}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a06433d9c4fb53ab5ee6d86e5ff1c8f37}{\_is\_upgrade\_allowed}}(self,\ req:\ InstallRequirement)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ ==\ \textcolor{stringliteral}{"{}to-\/satisfy-\/only"{}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ ==\ \textcolor{stringliteral}{"{}eager"{}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ ==\ \textcolor{stringliteral}{"{}only-\/if-\/needed"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ req.user\_supplied\ \textcolor{keywordflow}{or}\ req.constraint}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00322}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a57dda8483116d91afe9f26fb39bf9d62}{00322}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a57dda8483116d91afe9f26fb39bf9d62}{\_set\_req\_to\_reinstall}}(self,\ req:\ InstallRequirement)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00324}00324\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ a\ requirement\ to\ be\ installed.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00325}00325\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ uninstall\ the\ conflict\ if\ doing\ a\ user\ install\ and\ the}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ conflict\ is\ not\ a\ user\ install.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a635a6971e37b444275203bae019fc210}{use\_user\_site}}\ \textcolor{keywordflow}{or}\ req.satisfied\_by.in\_usersite:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ req.should\_reinstall\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ req.satisfied\_by\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00332}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a56d5f6f16cb8d911dfac8c34229c5c41}{00332}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a56d5f6f16cb8d911dfac8c34229c5c41}{\_check\_skip\_installed}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00333}00333\ \ \ \ \ \ \ \ \ self,\ req\_to\_install:\ InstallRequirement}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00334}00334\ \ \ \ \ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ req\_to\_install\ should\ be\ skipped.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00336}00336\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00337}00337\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ will\ check\ if\ the\ req\ is\ installed,\ and\ whether\ we\ should\ upgrade}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00338}00338\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ or\ reinstall\ it,\ taking\ into\ account\ all\ the\ relevant\ user\ options.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00339}00339\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00340}00340\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ After\ calling\ this\ req\_to\_install\ will\ only\ have\ satisfied\_by\ set\ to}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00341}00341\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ None\ if\ the\ req\_to\_install\ is\ to\ be\ upgraded/reinstalled\ etc.\ Any}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00342}00342\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ other\ value\ will\ be\ a\ dist\ recording\ the\ current\ thing\ installed\ that}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00343}00343\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ satisfies\ the\ requirement.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00344}00344\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00345}00345\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Note\ that\ for\ vcs\ urls\ and\ the\ like\ we\ can't\ assess\ skipping\ in\ this}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00346}00346\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ routine\ -\/\ we\ simply\ identify\ that\ we\ need\ to\ pull\ the\ thing\ down,}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00347}00347\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ then\ later\ on\ it\ is\ pulled\ down\ and\ introspected\ to\ assess\ upgrade/}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00348}00348\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ reinstalls\ etc.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00349}00349\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00350}00350\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ text\ reason\ for\ why\ it\ was\ skipped,\ or\ None.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00351}00351\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3e7728b9924a84cb0828e651a836b0fa}{ignore\_installed}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ req\_to\_install.check\_if\_exists(self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a635a6971e37b444275203bae019fc210}{use\_user\_site}})}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ req\_to\_install.satisfied\_by:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3748853dd9e95d6ac740d6f6680979ab}{force\_reinstall}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a57dda8483116d91afe9f26fb39bf9d62}{\_set\_req\_to\_reinstall}}(req\_to\_install)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a06433d9c4fb53ab5ee6d86e5ff1c8f37}{\_is\_upgrade\_allowed}}(req\_to\_install):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ ==\ \textcolor{stringliteral}{"{}only-\/if-\/needed"{}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}already\ satisfied,\ skipping\ upgrade"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}already\ satisfied"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ the\ possibility\ of\ an\ upgrade.\ \ For\ link-\/based}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ requirements\ we\ have\ to\ pull\ the\ tree\ down\ and\ inspect\ to\ assess}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ version\ \#,\ so\ it's\ handled\ way\ down.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ req\_to\_install.link:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae46cc3f0b70ec94158c1c0bcc4c27187}{finder}}.find\_requirement(req\_to\_install,\ upgrade=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ BestVersionAlreadyInstalled:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Then\ the\ best\ version\ is\ installed.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}already\ up-\/to-\/date"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ DistributionNotFound:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ No\ distribution\ found,\ so\ we\ squash\ the\ error.\ \ It\ will}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ be\ raised\ later\ when\ we\ re-\/try\ later\ to\ do\ the\ install.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Why\ don't\ we\ just\ raise\ here?}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a57dda8483116d91afe9f26fb39bf9d62}{\_set\_req\_to\_reinstall}}(req\_to\_install)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00386}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a469cc5865367ba5113eb926d97bc0f5d}{00386}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a469cc5865367ba5113eb926d97bc0f5d}{\_find\_requirement\_link}}(self,\ req:\ InstallRequirement)\ -\/>\ Optional[Link]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ upgrade\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a06433d9c4fb53ab5ee6d86e5ff1c8f37}{\_is\_upgrade\_allowed}}(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ best\_candidate\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae46cc3f0b70ec94158c1c0bcc4c27187}{finder}}.find\_requirement(req,\ upgrade)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ best\_candidate:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Log\ a\ warning\ per\ PEP\ 592\ if\ necessary\ before\ returning.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ link\ =\ best\_candidate.link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ link.is\_yanked:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ link.yanked\_reason\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}<none\ given>"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Mark\ this\ as\ a\ unicode\ string\ to\ prevent}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ "{}UnicodeEncodeError:\ 'ascii'\ codec\ can't\ encode\ character"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ Python\ 2\ when\ the\ reason\ contains\ non-\/ascii\ characters.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ candidate\ selected\ for\ download\ or\ install\ is\ a\ "{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}yanked\ version:\ \{candidate\}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Reason\ for\ being\ yanked:\ \{reason\}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ ).format(candidate=best\_candidate,\ reason=reason)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(msg)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00408}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a44e1fc45a4f84ecd0b4ad93dc93b8ef8}{00408}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a44e1fc45a4f84ecd0b4ad93dc93b8ef8}{\_populate\_link}}(self,\ req:\ InstallRequirement)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Ensure\ that\ if\ a\ link\ can\ be\ found\ for\ this,\ that\ it\ is\ found.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00410}00410\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00411}00411\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Note\ that\ req.link\ may\ still\ be\ None\ -\/\ if\ the\ requirement\ is\ already}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00412}00412\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ installed\ and\ not\ needed\ to\ be\ upgraded\ based\ on\ the\ return\ value\ of}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00413}00413\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \_is\_upgrade\_allowed().}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00414}00414\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00415}00415\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ preparer.require\_hashes\ is\ True,\ don't\ use\ the\ wheel\ cache,\ because}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00416}00416\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ cached\ wheels,\ always\ built\ locally,\ have\ different\ hashes\ than\ the}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00417}00417\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ files\ downloaded\ from\ the\ index\ server\ and\ thus\ throw\ false\ hash}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00418}00418\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ mismatches.\ Furthermore,\ cached\ wheels\ at\ present\ have\ undeterministic}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00419}00419\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ contents\ due\ to\ file\ modification\ times.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00420}00420\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.link\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ req.link\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a469cc5865367ba5113eb926d97bc0f5d}{\_find\_requirement\_link}}(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00423}00423\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a8c3c96d0e18c18cc399c225b6117c22d}{wheel\_cache}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{preparer}}.require\_hashes:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00426}00426\ \ \ \ \ \ \ \ \ cache\_entry\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a8c3c96d0e18c18cc399c225b6117c22d}{wheel\_cache}}.get\_cache\_entry(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ link=req.link,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ package\_name=req.name,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ supported\_tags=get\_supported(),}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cache\_entry\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Using\ cached\ wheel\ link:\ \%s"{}},\ cache\_entry.link)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.link\ \textcolor{keywordflow}{is}\ req.original\_link\ \textcolor{keywordflow}{and}\ cache\_entry.persistent:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req.cached\_wheel\_source\_link\ =\ req.link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cache\_entry.origin\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req.download\_info\ =\ cache\_entry.origin}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Legacy\ cache\ entry\ that\ does\ not\ have\ origin.json.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ download\_info\ may\ miss\ the\ archive\_info.hashes\ field.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req.download\_info\ =\ direct\_url\_from\_link(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req.link,\ link\_is\_in\_wheel\_cache=cache\_entry.persistent}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ req.link\ =\ cache\_entry.link}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00445}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a71f24ffb2a75aaf5f870f4109c9d969f}{00445}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a71f24ffb2a75aaf5f870f4109c9d969f}{\_get\_dist\_for}}(self,\ req:\ InstallRequirement)\ -\/>\ BaseDistribution:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Takes\ a\ InstallRequirement\ and\ returns\ a\ single\ AbstractDist\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00447}00447\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ representing\ a\ prepared\ variant\ of\ the\ same.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00448}00448\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00449}00449\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.editable:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{preparer}}.prepare\_editable\_requirement(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ satisfied\_by\ is\ only\ evaluated\ by\ calling\ \_check\_skip\_installed,}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ so\ it\ must\ be\ None\ here.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ req.satisfied\_by\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ skip\_reason\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a56d5f6f16cb8d911dfac8c34229c5c41}{\_check\_skip\_installed}}(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.satisfied\_by:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{preparer}}.prepare\_installed\_requirement(req,\ skip\_reason)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ eagerly\ populate\ the\ link,\ since\ that's\ our\ "{}legacy"{}\ behavior.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a44e1fc45a4f84ecd0b4ad93dc93b8ef8}{\_populate\_link}}(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ dist\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a54fb19d4b896b0169ce9e1a077b78628}{preparer}}.prepare\_linked\_requirement(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ NOTE}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ following\ portion\ is\ for\ determining\ if\ a\ certain\ package\ is}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00466}00466\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ going\ to\ be\ re-\/installed/upgraded\ or\ not\ and\ reporting\ to\ the\ user.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ should\ probably\ get\ cleaned\ up\ in\ a\ future\ refactor.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ req.req\ is\ only\ avail\ after\ unpack\ for\ URL}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ pkgs\ repeat\ check\_if\_exists\ to\ uninstall-\/on-\/upgrade}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (\#14)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3e7728b9924a84cb0828e651a836b0fa}{ignore\_installed}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ req.check\_if\_exists(self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a635a6971e37b444275203bae019fc210}{use\_user\_site}})}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.satisfied\_by:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ should\_modify\ =\ (}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a43a56f7eb000641d22e834f01811b41c}{upgrade\_strategy}}\ !=\ \textcolor{stringliteral}{"{}to-\/satisfy-\/only"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3748853dd9e95d6ac740d6f6680979ab}{force\_reinstall}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3e7728b9924a84cb0828e651a836b0fa}{ignore\_installed}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ req.link.scheme\ ==\ \textcolor{stringliteral}{"{}file"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ should\_modify:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a57dda8483116d91afe9f26fb39bf9d62}{\_set\_req\_to\_reinstall}}(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.info(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Requirement\ already\ satisfied\ (use\ -\/-\/upgrade\ to\ upgrade):\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dist}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00491}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ac1ac1a437a27583e34e04c2e8e525728}{00491}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ac1ac1a437a27583e34e04c2e8e525728}{\_resolve\_one}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ requirement\_set:\ RequirementSet,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ req\_to\_install:\ InstallRequirement,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00495}00495\ \ \ \ \ )\ -\/>\ List[InstallRequirement]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepare\ a\ single\ requirements\ file.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00497}00497\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00498}00498\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ list\ of\ additional\ InstallRequirements\ to\ also\ install.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00499}00499\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Tell\ user\ what\ we\ are\ doing\ for\ this\ requirement:}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ obtain\ (editable),\ skipping,\ processing\ (local\ url),\ collecting}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (remote\ url\ or\ package\ name)}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req\_to\_install.constraint\ \textcolor{keywordflow}{or}\ req\_to\_install.prepared:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ []}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00505}00505\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ req\_to\_install.prepared\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Parse\ and\ return\ dependencies}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ dist\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a71f24ffb2a75aaf5f870f4109c9d969f}{\_get\_dist\_for}}(req\_to\_install)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ will\ raise\ UnsupportedPythonVersion\ if\ the\ given\ Python}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ version\ isn't\ compatible\ with\ the\ distribution's\ Requires-\/Python.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_a92040bbd6468907cfff023b8af12ee21}{\_check\_dist\_requires\_python}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ dist,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ version\_info=self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a5e42d027684333716a8d6d4346af6ffd}{\_py\_version\_info}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_requires\_python=self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1d12aa68ad7599e855a4252bcca3a259}{ignore\_requires\_python}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ more\_reqs:\ List[InstallRequirement]\ =\ []}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }add\_req(subreq:\ Requirement,\ extras\_requested:\ Iterable[str])\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ idiosyncratically\ converts\ the\ Requirement\ to\ str\ and\ let}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ make\_install\_req\ then\ parse\ it\ again\ into\ Requirement.\ But\ this\ is}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ legacy\ resolver\ so\ I'm\ just\ not\ going\ to\ bother\ refactoring.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ sub\_install\_req\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_ae3fc1886d0fd8269dcc5a1e2a67fa100}{\_make\_install\_req}}(str(subreq),\ req\_to\_install)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ parent\_req\_name\ =\ req\_to\_install.name}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ to\_scan\_again,\ add\_to\_parent\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1ce83dc4498aa7b01547986dd2bf1cf6}{\_add\_requirement\_to\_set}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_install\_req,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent\_req\_name=parent\_req\_name,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extras\_requested=extras\_requested,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ parent\_req\_name\ \textcolor{keywordflow}{and}\ add\_to\_parent:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1b702ab48021b6a9a09f299c5f8339f9}{\_discovered\_dependencies}}[parent\_req\_name].append(add\_to\_parent)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ more\_reqs.extend(to\_scan\_again)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ indent\_log():}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ add\ req\_to\_install\ before\ its\ dependencies,\ so\ that\ we}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ can\ refer\ to\ it\ when\ adding\ dependencies.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ requirement\_set.has\_requirement(req\_to\_install.name):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 'unnamed'\ requirements\ will\ get\ added\ here}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 'unnamed'\ requirements\ can\ only\ come\ from\ being\ directly}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ provided\ by\ the\ user.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ req\_to\_install.user\_supplied}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1ce83dc4498aa7b01547986dd2bf1cf6}{\_add\_requirement\_to\_set}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set,\ req\_to\_install,\ parent\_req\_name=\textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_aacf16c11fa981be8684b4cfd6ae48066}{ignore\_dependencies}}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req\_to\_install.extras:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.debug(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Installing\ extra\ requirements:\ \%r"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{},"{}}.join(req\_to\_install.extras),}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ missing\_requested\ =\ sorted(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ set(req\_to\_install.extras)\ -\/\ set(dist.iter\_provided\_extras())}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ missing\ \textcolor{keywordflow}{in}\ missing\_requested:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s\ \%s\ does\ not\ provide\ the\ extra\ '\%s'"{}},}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist.raw\_name,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist.version,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ missing,}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ available\_requested\ =\ sorted(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ set(dist.iter\_provided\_extras())\ \&\ set(req\_to\_install.extras)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ subreq\ \textcolor{keywordflow}{in}\ dist.iter\_dependencies(available\_requested):}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ add\_req(subreq,\ extras\_requested=available\_requested)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00571}00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ more\_reqs}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00573}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3ca3914dec1dab8670c08cab46249073}{00573}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a3ca3914dec1dab8670c08cab46249073}{get\_installation\_order}}(}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ self,\ req\_set:\ RequirementSet}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00575}00575\ \ \ \ \ )\ -\/>\ List[InstallRequirement]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00576}00576\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Create\ the\ installation\ order.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00577}00577\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00578}00578\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ installation\ order\ is\ topological\ -\/\ requirements\ are\ installed}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00579}00579\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ before\ the\ requiring\ thing.\ We\ break\ cycles\ at\ an\ arbitrary\ point,}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00580}00580\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ make\ no\ other\ guarantees.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00581}00581\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ current\ implementation,\ which\ we\ may\ change\ at\ any\ point}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ installs\ the\ user\ specified\ things\ in\ the\ order\ given,\ except\ when}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ dependencies\ must\ come\ earlier\ to\ achieve\ topological\ order.}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ order\ =\ []}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ ordered\_reqs:\ Set[InstallRequirement]\ =\ set()}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }schedule(req:\ InstallRequirement)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.satisfied\_by\ \textcolor{keywordflow}{or}\ req\ \textcolor{keywordflow}{in}\ ordered\_reqs:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.constraint:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ ordered\_reqs.add(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1legacy_1_1resolver_1_1_resolver_a1b702ab48021b6a9a09f299c5f8339f9}{\_discovered\_dependencies}}[req.name]:}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ schedule(dep)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ order.append(req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00598}00598\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ install\_req\ \textcolor{keywordflow}{in}\ req\_set.requirements.values():}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ schedule(install\_req)}
+\DoxyCodeLine{\Hypertarget{legacy_2resolver_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ order}
+
+\end{DoxyCode}

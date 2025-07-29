@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['init_5fkeys_0',['init_keys',['../de/d7a/ctidh__api_8h.html#aeddfa85cb76d2d04027aa661e40b0eb0',1,'ctidh_api.h']]],
+  ['inline_5felapsed_1',['INLINE_ELAPSED',['../db/d77/c-code_2src_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h'],['../db/dbe/d_c_t_i_d_h_2main_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h']]],
+  ['int32_2',['int32',['../de/de7/int32__sort_8c.html#ae5125ea470cb5e419d49e07ad57eeba2',1,'int32_sort.c']]],
+  ['int32_5fminmax_3',['int32_MINMAX',['../d0/d36/int32__minmax__x86_8c.html#a3c7d2acd5caeae4e88d0d121c5b75b29',1,'int32_minmax_x86.c']]],
+  ['int32_5fsort_4',['int32_sort',['../dc/d36/int32__sort_8h.html#ae059af982adfb60f176da9058368aa87',1,'int32_sort.h']]],
+  ['int32_5fsort_5fcompiler_5',['int32_sort_compiler',['../dc/d36/int32__sort_8h.html#adcfddad9a8b2898cbfb856aea5e8a575',1,'int32_sort.h']]],
+  ['int32_5fsort_5fimplementation_6',['int32_sort_implementation',['../dc/d36/int32__sort_8h.html#ad20f3d135db254ca0d539b87725bcda8',1,'int32_sort.h']]],
+  ['int32_5fsort_5fversion_7',['int32_sort_version',['../dc/d36/int32__sort_8h.html#aeb0910343971a29cca7bd16fba0b2c20',1,'int32_sort.h']]],
+  ['int32x8_5fload_8',['int32x8_load',['../de/de7/int32__sort_8c.html#a4131eaaf3d65078f7c7a67527d1164b4',1,'int32_sort.c']]],
+  ['int32x8_5fmax_9',['int32x8_max',['../de/de7/int32__sort_8c.html#a81e92b6435bb607ab2e472d7f359e2ef',1,'int32_sort.c']]],
+  ['int32x8_5fmin_10',['int32x8_min',['../de/de7/int32__sort_8c.html#aff0b2e2cd0851451d872888b4c5e4338',1,'int32_sort.c']]],
+  ['int32x8_5fminmax_11',['int32x8_MINMAX',['../de/de7/int32__sort_8c.html#a677a62cc74fbdf7f254098f069493040',1,'int32_sort.c']]],
+  ['int32x8_5fstore_12',['int32x8_store',['../de/de7/int32__sort_8c.html#ae875e49b0722e8a9176f6b9b8c943f55',1,'int32_sort.c']]],
+  ['internal_5fderive_13',['internal_derive',['../de/d7a/ctidh__api_8h.html#a6c8ed9bc125c20c8afd2cf55b6f70c4b',1,'ctidh_api.h']]],
+  ['internal_5fkeygen_14',['internal_keygen',['../de/d7a/ctidh__api_8h.html#a30f20039fec651fcf53aee3b7ed9627e',1,'ctidh_api.h']]],
+  ['inv_5fmin_5fp_5fmod_5fr_15',['inv_min_p_mod_r',['../d8/d66/fp-gmp_8h.html#a5f9e86fdb64fe87ff496a049e200064a',1,'inv_min_p_mod_r:&#160;fp-gmp.h'],['../d4/d05/fp-karatsuba_8h.html#ade8dfdcced7f55673f51e89e272a431a',1,'inv_min_p_mod_r:&#160;fp-karatsuba.h'],['../d4/d05/fp-karatsuba_8h.html#ade8dfdcced7f55673f51e89e272a431a',1,'inv_min_p_mod_r:&#160;fp-karatsuba.h']]],
+  ['itch_5fsize_16',['itch_size',['../d4/df9/fp-karatsuba_8c.html#a8e79fe19eb94db94405ba833a28a12bb',1,'fp-karatsuba.c']]]
+];

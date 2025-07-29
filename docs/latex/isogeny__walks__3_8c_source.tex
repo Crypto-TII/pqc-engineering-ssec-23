@@ -1,0 +1,227 @@
+\doxysection{isogeny\+\_\+walks\+\_\+3.\+c}
+\hypertarget{isogeny__walks__3_8c_source}{}\label{isogeny__walks__3_8c_source}\index{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/c-\/code/src/isogeny\_walks\_3.c@{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/c-\/code/src/isogeny\_walks\_3.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00001}00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00002}00002\ \textcolor{comment}{//\ 3-\/isogeny\ walk\ calculations\ via\ radical\ computations}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00003}00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}isogeny\_walks.h"{}}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}utilities.h"{}}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00010}00010\ \textcolor{keywordtype}{void}\ isogeny\_walks\_3(\mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output\_a1,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output\_a3,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_a1,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_a3,\ \textcolor{keyword}{const}\ uint8\_t\ *input\_path,\ \textcolor{keywordtype}{size\_t}\ input\_length)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00011}00011\ \ \ \ \ \textcolor{comment}{//\ This\ function\ assumes\ the\ input\ and\ output\ determines\ elliptic}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00012}00012\ \ \ \ \ \textcolor{comment}{//\ curves\ of\ form\ y²\ +\ a₁xy\ +\ a₃y\ =\ x³\ −\ 5a₁a₃x\ −\ (a₁³)a₃\ −\ 7(a₃)²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00013}00013\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,\ j;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00014}00014\ \ \ \ \ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ a,\ a1,\ a3,\ cube\_roots\_of\_unity[3],\ r,\ s,\ t;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00016}00016\ \ \ \ \ fp2\_set\_to\_one(\&cube\_roots\_of\_unity[0]);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00017}00017\ \ \ \ \ fp2\_copy(\&cube\_roots\_of\_unity[1],\ *((\mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *)\&CUBE\_ROOT\_OF\_UNITY));}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00018}00018\ \ \ \ \ fp2\_sqr(\&cube\_roots\_of\_unity[2],\ cube\_roots\_of\_unity[1]);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00020}00020\ \ \ \ \ fp2\_copy(\&a1,\ input\_a1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00021}00021\ \ \ \ \ fp2\_copy(\&a3,\ input\_a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00023}00023\ \ \ \ \ uint32\_t\ trit\_string[input\_length];}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00024}00024\ \ \ \ \ to\_trit\_string(trit\_string,\ input\_path,\ input\_length);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ input\_length;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00027}00027\ \ \ \ \ \ \ \ \ uint32\_t\ mask\ =\ 0x0000000F;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 0;\ j\ <\ 5;\ j++)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_neg(\&a,\ a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_curt(\&a,\ a);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_linear\_pass\_in(\&t,\ cube\_roots\_of\_unity,\ 3,\ (trit\_string[i]\ \&\ mask)\ >>\ (4*j));}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_mul(\&a,\ a,\ t);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ radical\ 3-\/isogeny}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ a,\ a);\ \ \ \textcolor{comment}{//\ 2α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ t,\ a);\ \ \ \textcolor{comment}{//\ 3α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ t,\ t);\ \ \ \textcolor{comment}{//\ 6α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&r,\ a1,\ a1);\ \textcolor{comment}{//\ 2a₁}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&r,\ r,\ a1);\ \ \textcolor{comment}{//\ 3a₁}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_sqr(\&s,\ a1);\ \ \ \ \ \textcolor{comment}{//\ a₁²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_sub(\&a1,\ a1,\ t);\ \textcolor{comment}{//\ a₁\ <-\/\ a₁\ -\/\ 6α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_sqr(\&t,\ a);\ \ \ \ \ \ \textcolor{comment}{//\ α²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_mul(\&r,\ r,\ t);\ \ \ \textcolor{comment}{//\ 3a₁\ ·\ α²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_mul(\&s,\ s,\ a);\ \ \ \textcolor{comment}{//\ a₁²\ ·\ α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ a3,\ a3);\ \textcolor{comment}{//\ 2a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ t,\ a3);\ \ \textcolor{comment}{//\ 3a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&a,\ t,\ t);\ \ \ \textcolor{comment}{//\ 6a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&t,\ a,\ t);\ \ \ \textcolor{comment}{//\ 9a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_sub(\&a3,\ r,\ s);\ \ \textcolor{comment}{//\ \ a₃\ <-\/\ 3a₁\ ·\ α²\ -\/\ a₁²\ ·\ α}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ fp2\_add(\&a3,\ a3,\ t);\ \textcolor{comment}{//\ \ a₃\ <-\/\ 3a₁\ ·\ α²\ -\/\ a₁²\ ·\ α\ +\ 9a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ mask\ <<=\ 4;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00056}00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00057}00057\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00058}00058\ \ \ \ \ fp2\_copy(output\_a1,\ a1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00059}00059\ \ \ \ \ fp2\_copy(output\_a3,\ a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00062}00062\ \textcolor{keywordtype}{void}\ isogeny\_walks\_from\_montgomery\_model\_3(\mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output\_a1,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output\_a3,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_A,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_xP)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00063}00063\ \ \ \ \ \textcolor{comment}{//\ inputs:\ x-\/coordinate\ of\ an\ order-\/3\ point\ P\ on\ E:\ y²\ =\ x³\ +\ Ax²\ +\ x,\ and\ A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00064}00064\ \ \ \ \ \textcolor{comment}{//\ output:\ isomorphic\ curve\ of\ form\ F:\ y²\ +\ a₁xy\ +\ a₃y\ =\ x³}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00065}00065\ \ \ \ \ \textcolor{comment}{//\ Cost:\ 2M\ +\ 2S\ +\ 7A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00066}00066\ \ \ \ \ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ r,\ s,\ xP\_squared,\ A\_times\_xP;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00067}00067\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00068}00068\ \ \ \ \ fp2\_sqr(\&xP\_squared,\ input\_xP);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00069}00069\ \ \ \ \ fp2\_add(\&r,\ xP\_squared,\ xP\_squared);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00070}00070\ \ \ \ \ fp2\_add(\&r,\ xP\_squared,\ r);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00071}00071\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00072}00072\ \ \ \ \ fp2\_mul(\&A\_times\_xP,\ input\_A,\ input\_xP);\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00073}00073\ \ \ \ \ fp2\_add(\&s,\ A\_times\_xP,\ A\_times\_xP);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00074}00074\ \ \ \ \ fp2\_add(\&r,\ r,\ s);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00076}00076\ \ \ \ \ fp2\_set\_to\_one(\&s);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00077}00077\ \ \ \ \ fp2\_add(output\_a1,\ r,\ s);\ \textcolor{comment}{//\ (3xₚ²\ +\ 2Axₚ\ +\ 1)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00079}00079\ \ \ \ \ fp2\_add(output\_a3,\ xP\_squared,\ A\_times\_xP);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00080}00080\ \ \ \ \ fp2\_add(output\_a3,\ *output\_a3,\ s);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00081}00081\ \ \ \ \ fp2\_mul(output\_a3,\ *output\_a3,\ input\_xP);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00082}00082\ \ \ \ \ fp2\_sqr(output\_a3,\ *output\_a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00083}00083\ \ \ \ \ fp2\_add(output\_a3,\ *output\_a3,\ *output\_a3);\ \textcolor{comment}{//\ 2\ yₚ⁴\ =\ 2\ (xₚ³\ +\ Axₚ²\ +\ xₚ)²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00087}00087\ \textcolor{keywordtype}{void}\ isogeny\_walks\_switch\_from\_model\_3(\mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output\_j,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_a1,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_a3)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00088}00088\ \ \ \ \ \textcolor{comment}{//\ Computes\ the\ j-\/invariant\ of\ an\ elliptic\ curve\ E\ :\ y²\ +\ a₁xy\ +\ a₃y\ =\ x³\ −\ 5a₁a₃x\ −\ (a₁³)a₃\ −\ 7(a₃)²}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00089}00089\ \ \ \ \ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ aux,\ tmp,\ num,\ den,\ a1\_cube,\ a3\_cube;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00091}00091\ \ \ \ \ fp2\_sqr(\&a1\_cube,\ input\_a1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00092}00092\ \ \ \ \ fp2\_sqr(\&a3\_cube,\ input\_a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00093}00093\ \ \ \ \ fp2\_mul(\&a1\_cube,\ a1\_cube,\ input\_a1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00094}00094\ \ \ \ \ fp2\_mul(\&a3\_cube,\ a3\_cube,\ input\_a3);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00096}00096\ \ \ \ \ fp2\_add(\&tmp,\ input\_a3,\ input\_a3);\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ 2\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00097}00097\ \ \ \ \ fp2\_add(\&tmp,\ tmp,\ input\_a3);\ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ 3\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00098}00098\ \ \ \ \ fp2\_add(\&aux,\ tmp,\ tmp);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ 6\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00099}00099\ \ \ \ \ fp2\_add(\&aux,\ aux,\ aux);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ 12\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00101}00101\ \ \ \ \ fp2\_add(\&aux,\ aux,\ aux);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ 24\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00102}00102\ \ \ \ \ fp2\_add(\&aux,\ aux,\ tmp);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ 27\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00103}00103\ \ \ \ \ fp2\_add(\&tmp,\ aux,\ aux);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ 54\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00104}00104\ \ \ \ \ fp2\_add(\&tmp,\ tmp,\ tmp);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ 108\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00105}00105\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00106}00106\ \ \ \ \ fp2\_add(\&tmp,\ tmp,\ tmp);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ 216\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00107}00107\ \ \ \ \ fp2\_add(\&num,\ a1\_cube,\ tmp);\ \ \ \ \ \ \ \textcolor{comment}{//\ a₁³\ +\ 216\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00108}00108\ \ \ \ \ fp2\_sub(\&den,\ a1\_cube,\ aux);\ \ \ \ \ \ \ \textcolor{comment}{//\ a₁³\ -\/\ \ 27\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00110}00110\ \ \ \ \ fp2\_sqr(\&tmp,\ num);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00111}00111\ \ \ \ \ fp2\_sqr(\&aux,\ den);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00112}00112\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00113}00113\ \ \ \ \ fp2\_mul(\&num,\ num,\ tmp);\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a₁³\ +\ 216\ ×\ a₃)³}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00114}00114\ \ \ \ \ fp2\_mul(\&den,\ den,\ aux);\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a₁³\ -\/\ \ 27\ ×\ a₃)³}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00115}00115\ \ \ \ \ fp2\_mul(\&num,\ a1\_cube,\ num);\ \ \ \ \ \ \textcolor{comment}{//\ (a₁³\ +\ 216\ ×\ a₃)³\ ×\ a₁³}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00116}00116\ \ \ \ \ fp2\_mul(\&den,\ input\_a3,\ den);\ \ \ \ \ \textcolor{comment}{//\ (a₁³\ -\/\ \ 27\ ×\ a₃)³\ ×\ a₃}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00118}00118\ \ \ \ \ fp2\_inv(\&den,\ den);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00119}00119\ \ \ \ \ fp2\_mul(output\_j,\ num,\ den);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00121}00121\ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00124}00124\ \textcolor{keywordtype}{void}\ isogeny\_walks\_get\_points\_3(\mbox{\hyperlink{structfp2__t}{fp2\_t}}\ *output,\ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ input\_A)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00125}00125\ \ \ \ \ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ A\_times\_one\_third,\ A\_squared,\ r,\ s,\ t,\ u,\ v,\ y,\ s0,\ i0,\ s1,\ s2;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00126}00126\ \ \ \ \ fp\_t\ THREE,\ EIGHT;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00127}00127\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00128}00128\ \ \ \ \ fp\_set\_to\_one(THREE);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00130}00130\ \ \ \ \ fp\_add(EIGHT,\ THREE,\ THREE);\ \textcolor{comment}{//\ 2}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00131}00131\ \ \ \ \ fp\_add(THREE,\ THREE,\ EIGHT);\ \textcolor{comment}{//\ 3}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00132}00132\ \ \ \ \ fp\_add(EIGHT,\ EIGHT,\ EIGHT);\ \textcolor{comment}{//\ 4}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00133}00133\ \ \ \ \ fp\_add(EIGHT,\ EIGHT,\ EIGHT);\ \textcolor{comment}{//\ 8}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00134}00134\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00135}00135\ \ \ \ \ fp\_mul(A\_times\_one\_third.re,\ input\_A.re,\ ONE\_THIRD);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00136}00136\ \ \ \ \ fp\_mul(A\_times\_one\_third.im,\ input\_A.im,\ ONE\_THIRD);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00137}00137\ \ \ \ \ fp2\_sqr(\&A\_squared,\ input\_A);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00138}00138\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00139}00139\ \ \ \ \ \textcolor{comment}{//\ t\ takes\ the\ value\ of\ ⅑(3\ -\/\ A²)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00140}00140\ \ \ \ \ fp\_sub(t.re,\ THREE,\ A\_squared.re);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00141}00141\ \ \ \ \ fp\_neg(t.im,\ A\_squared.im);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00142}00142\ \ \ \ \ fp\_mul(t.re,\ t.re,\ ONE\_NINTH);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00143}00143\ \ \ \ \ fp\_mul(t.im,\ t.im,\ ONE\_NINTH);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00144}00144\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00145}00145\ \ \ \ \ \textcolor{comment}{//\ r\ takes\ the\ value\ of\ (⁸⁄₂₇)A³}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00146}00146\ \ \ \ \ fp2\_mul(\&r,\ A\_squared,\ input\_A);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00147}00147\ \ \ \ \ fp\_mul(r.re,\ r.re,\ ONE\_BY\_27);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00148}00148\ \ \ \ \ fp\_mul(r.im,\ r.im,\ ONE\_BY\_27);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00149}00149\ \ \ \ \ fp2\_add(\&r,\ r,\ r);\ \textcolor{comment}{//\ \ 2r}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00150}00150\ \ \ \ \ fp2\_add(\&r,\ r,\ r);\ \textcolor{comment}{//\ \ 4r}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00151}00151\ \ \ \ \ fp2\_add(\&r,\ r,\ r);\ \textcolor{comment}{//\ \ 8r}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00152}00152\ \ \ \ \ fp2\_add(\&r,\ r,\ r);\ \textcolor{comment}{//\ 16r}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00154}00154\ \ \ \ \ \textcolor{comment}{//\ s\ takes\ the\ calue\ of\ (⁸⁄₃)A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00155}00155\ \ \ \ \ fp2\_copy(\&s,\ A\_times\_one\_third);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00156}00156\ \ \ \ \ fp2\_add(\&s,\ s,\ s);\ \textcolor{comment}{//\ 2s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00157}00157\ \ \ \ \ fp2\_add(\&s,\ s,\ s);\ \textcolor{comment}{//\ 4s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00158}00158\ \ \ \ \ fp2\_add(\&s,\ s,\ s);\ \textcolor{comment}{//\ 8s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00159}00159\ \ \ \ \ fp2\_sub(\&u,\ r,\ s);\ \textcolor{comment}{//\ r\ -\/\ s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00161}00161\ \ \ \ \ \textcolor{comment}{//\ v\ takes\ the\ value\ of\ -\/2A²\ +\ 8}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00162}00162\ \ \ \ \ fp2\_add(\&v,\ A\_squared,\ A\_squared);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00163}00163\ \ \ \ \ fp\_sub(v.re,\ EIGHT,\ v.re);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00164}00164\ \ \ \ \ fp\_neg(v.im,\ v.im);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00165}00165\ \ \ \ \ fp2\_curt(\&y,\ v);\ \textcolor{comment}{//\ cube-\/root\ of\ v}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00167}00167\ \ \ \ \ \textcolor{comment}{//\ y\ takes\ the\ value\ of\ t\ +\ (¹⁄₃)∛v}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00168}00168\ \ \ \ \ fp\_mul(y.re,\ y.re,\ ONE\_THIRD);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00169}00169\ \ \ \ \ fp\_mul(y.im,\ y.im,\ ONE\_THIRD);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00170}00170\ \ \ \ \ fp2\_add(\&y,\ t,\ y);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00171}00171\ \ \ \ \ fp2\_add(\&r,\ y,\ y);\ \textcolor{comment}{//\ 2y}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00173}00173\ \ \ \ \ fp2\_add(\&s,\ t,\ t);\ \textcolor{comment}{//\ 2t}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00174}00174\ \ \ \ \ fp2\_add(\&s,\ t,\ s);\ \textcolor{comment}{//\ 3t}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00175}00175\ \ \ \ \ fp2\_add(\&s,\ s,\ s);\ \textcolor{comment}{//\ 6t}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00176}00176\ \ \ \ \ fp2\_sub(\&t,\ r,\ s);\ \textcolor{comment}{//\ r\ -\/\ s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00178}00178\ \ \ \ \ \textcolor{comment}{//\ s₀\ takes\ the\ value\ of\ √(r\ -\/\ s)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00179}00179\ \ \ \ \ fp2\_sqrt\_slow(\&s0,\ t);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00180}00180\ \ \ \ \ fp2\_inv(\&i0,\ s0);\ \textcolor{comment}{//\ 1\ /\ s₀}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00182}00182\ \ \ \ \ fp2\_add(\&v,\ r,\ s);\ \ \textcolor{comment}{//\ \ \ r\ +\ s}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00183}00183\ \ \ \ \ fp2\_neg(\&v,\ v);\ \ \ \ \ \textcolor{comment}{//\ -\/(r\ +\ s)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00184}00184\ \ \ \ \ fp2\_mul(\&t,\ u,\ i0);\ \textcolor{comment}{//\ u\ /\ s₀}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00186}00186\ \ \ \ \ \textcolor{comment}{//\ s₁\ takes\ the\ value\ of\ √[v\ +\ (u\ /\ s₀)]}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00187}00187\ \ \ \ \ fp2\_add(\&s,\ v,\ t);\ \ \textcolor{comment}{//\ v\ +\ (u\ /\ s₀)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00188}00188\ \ \ \ \ fp2\_sqrt\_slow(\&s1,\ s);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00189}00189\ \ \ \ \ \textcolor{comment}{//\ s₂\ takes\ the\ value\ of\ √[v\ -\/\ (u\ /\ s₀)]}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00190}00190\ \ \ \ \ fp2\_sub(\&s,\ v,\ t);\ \ \textcolor{comment}{//\ v\ -\/\ (u\ /\ s₀)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00191}00191\ \ \ \ \ fp2\_sqrt\_slow(\&s2,\ s);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00193}00193\ \ \ \ \ fp2\_sub(\&r,\ s1,\ s0);\ \textcolor{comment}{//\ -\/s₀\ +\ s₁}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00194}00194\ \ \ \ \ fp2\_add(\&s,\ s1,\ s0);\ \textcolor{comment}{//\ \ s₀\ +\ s₁}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00195}00195\ \ \ \ \ fp2\_add(\&t,\ s0,\ s2);\ \textcolor{comment}{//\ \ s₀\ +\ s₂}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00196}00196\ \ \ \ \ fp2\_sub(\&u,\ s0,\ s2);\ \textcolor{comment}{//\ \ s₀\ -\/\ s₂}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00198}00198\ \ \ \ \ fp2\_neg(\&s,\ s);\ \ \ \ \ \ \textcolor{comment}{//\ -\/(s₀\ +\ s₁)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00200}00200\ \ \ \ \ fp2\_half(\&r,\ r);\ \textcolor{comment}{//\ (¹⁄₂)(-\/s₀\ +\ s₁)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00201}00201\ \ \ \ \ fp2\_half(\&s,\ s);\ \textcolor{comment}{//\ (¹⁄₂)(-\/s₀\ -\/\ s₁)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00202}00202\ \ \ \ \ fp2\_half(\&t,\ t);\ \textcolor{comment}{//\ (¹⁄₂)(\ s₀\ +\ s₂)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00203}00203\ \ \ \ \ fp2\_half(\&u,\ u);\ \textcolor{comment}{//\ (¹⁄₂)(\ s₀\ -\/\ s₂)}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00205}00205\ \ \ \ \ fp2\_sub(\&output[3],\ u,\ A\_times\_one\_third);\ \textcolor{comment}{//\ r\ -\/\ (¹⁄₃)A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00206}00206\ \ \ \ \ fp2\_sub(\&output[2],\ t,\ A\_times\_one\_third);\ \textcolor{comment}{//\ s\ -\/\ (¹⁄₃)A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00207}00207\ \ \ \ \ fp2\_sub(\&output[1],\ s,\ A\_times\_one\_third);\ \textcolor{comment}{//\ t\ -\/\ (¹⁄₃)A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00208}00208\ \ \ \ \ fp2\_sub(\&output[0],\ r,\ A\_times\_one\_third);\ \textcolor{comment}{//\ u\ -\/\ (¹⁄₃)A}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00209}00209\ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00212}00212\ \textcolor{keywordtype}{void}\ isogeny\_walks\_sample\_trit\_string(uint8\_t\ *output)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00213}00213\ \ \ \ \ uint8\_t\ bound\ =\ 0xF3;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ (TRITLENGTH\_PATH\ /\ 5);\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ output[i]\ =\ 0x00;}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ randombytes(\&output[i],\ 1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (issmaller((int32\_t)bound,\ (int32\_t)(output[i])))\ \{}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ randombytes(\&output[i],\ 1);}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00220}00220\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{isogeny__walks__3_8c_source_l00221}00221\ \}}
+
+\end{DoxyCode}

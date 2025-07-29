@@ -1,0 +1,60 @@
+\doxysection{check.\+py}
+\hypertarget{commands_2check_8py_source}{}\label{commands_2check_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/check.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/check.py}}
+\mbox{\hyperlink{commands_2check_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1check}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00002}00002\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ Values}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1base__command}{pip.\_internal.cli.base\_command}}\ \textcolor{keyword}{import}\ Command}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ ERROR,\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1check}{pip.\_internal.operations.check}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00008}00008\ \ \ \ \ check\_package\_set,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00009}00009\ \ \ \ \ create\_package\_set\_from\_installed,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00010}00010\ \ \ \ \ warn\_legacy\_versions\_and\_specifiers,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00011}00011\ )}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ write\_output}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00014}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1check_a0b14e488ae28d98d262453f3e9cd6e4d}{00014}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00017}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1check_1_1_check_command}{00017}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1check_1_1_check_command}{CheckCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command}{Command}}):}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00018}00018\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Verify\ installed\ packages\ have\ compatible\ dependencies."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00020}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1check_1_1_check_command}{00020}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1check_1_1_check_command_aed702143af1fdca26efdec21bf5c396e}{00023}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1check_1_1_check_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ package\_set,\ parsing\_probs\ =\ create\_package\_set\_from\_installed()}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ warn\_legacy\_versions\_and\_specifiers(package\_set)}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ missing,\ conflicting\ =\ check\_package\_set(package\_set)}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ project\_name\ \textcolor{keywordflow}{in}\ missing:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ version\ =\ package\_set[project\_name].version}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dependency\ \textcolor{keywordflow}{in}\ missing[project\_name]:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s\ \%s\ requires\ \%s,\ which\ is\ not\ installed."{}},}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ project\_name,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dependency[0],}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ project\_name\ \textcolor{keywordflow}{in}\ conflicting:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ version\ =\ package\_set[project\_name].version}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\_name,\ dep\_version,\ req\ \textcolor{keywordflow}{in}\ conflicting[project\_name]:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s\ \%s\ has\ requirement\ \%s,\ but\ you\ have\ \%s\ \%s."{}},}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ project\_name,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dep\_name,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dep\_version,}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ missing\ \textcolor{keywordflow}{or}\ conflicting\ \textcolor{keywordflow}{or}\ parsing\_probs:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ERROR}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(\textcolor{stringliteral}{"{}No\ broken\ requirements\ found."{}})}
+\DoxyCodeLine{\Hypertarget{commands_2check_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+
+\end{DoxyCode}

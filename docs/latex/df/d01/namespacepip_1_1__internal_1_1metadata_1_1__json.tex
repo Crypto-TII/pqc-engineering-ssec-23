@@ -1,0 +1,167 @@
+\doxysection{pip.\+\_\+internal.\+metadata.\+\_\+json Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json}{}\label{namespacepip_1_1__internal_1_1metadata_1_1__json}\index{pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1__json_a2853fe761387d27ad59f3332c5be1d49}{json\+\_\+name}} (str field)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1__json_a5debbe760da54658060aeb0508ccf64b}{msg\+\_\+to\+\_\+json}} (Message msg)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1__json_a8918cc37c8a4a0cef1f4679c2b78514a}{METADATA\+\_\+\+FIELDS}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json_a2853fe761387d27ad59f3332c5be1d49}\index{pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}!json\_name@{json\_name}}
+\index{json\_name@{json\_name}!pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}}
+\doxysubsubsection{\texorpdfstring{json\_name()}{json\_name()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1metadata_1_1__json_a2853fe761387d27ad59f3332c5be1d49} 
+ str json\+\_\+name (\begin{DoxyParamCaption}\item[{str}]{field}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{__json_8py_source_l00037}{37}} of file \mbox{\hyperlink{__json_8py_source}{\+\_\+json.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00037\ \textcolor{keyword}{def\ }json\_name(field:\ str)\ -\/>\ str:}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{return}\ field.lower().replace(\textcolor{stringliteral}{"{}-\/"{}},\ \textcolor{stringliteral}{"{}\_"{}})}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{__json_8py_source_l00041}{msg\+\_\+to\+\_\+json()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{df/d01/namespacepip_1_1__internal_1_1metadata_1_1__json_a2853fe761387d27ad59f3332c5be1d49_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json_a5debbe760da54658060aeb0508ccf64b}\index{pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}!msg\_to\_json@{msg\_to\_json}}
+\index{msg\_to\_json@{msg\_to\_json}!pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}}
+\doxysubsubsection{\texorpdfstring{msg\_to\_json()}{msg\_to\_json()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1metadata_1_1__json_a5debbe760da54658060aeb0508ccf64b} 
+ Dict\mbox{[}str, Any\mbox{]} msg\+\_\+to\+\_\+json (\begin{DoxyParamCaption}\item[{Message}]{msg}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Convert a Message object into a JSON-compatible dictionary.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__json_8py_source_l00041}{41}} of file \mbox{\hyperlink{__json_8py_source}{\+\_\+json.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00041\ \textcolor{keyword}{def\ }msg\_to\_json(msg:\ Message)\ -\/>\ Dict[str,\ Any]:}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ a\ Message\ object\ into\ a\ JSON-\/compatible\ dictionary."{}"{}"{}}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{def\ }sanitise\_header(h:\ Union[Header,\ str])\ -\/>\ str:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(h,\ Header):}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ chunks\ =\ []}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ bytes,\ encoding\ \textcolor{keywordflow}{in}\ decode\_header(h):}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ encoding\ ==\ \textcolor{stringliteral}{"{}unknown-\/8bit"{}}:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ See\ if\ UTF-\/8\ works}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bytes.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ encoding\ =\ \textcolor{stringliteral}{"{}utf-\/8"{}}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ not,\ latin1\ at\ least\ won't\ fail}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ encoding\ =\ \textcolor{stringliteral}{"{}latin1"{}}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunks.append((bytes,\ encoding))}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str(make\_header(chunks))}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str(h)}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ result\ =\ \{\}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{for}\ field,\ multi\ \textcolor{keywordflow}{in}\ METADATA\_FIELDS:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ field\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ msg:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ key\ =\ json\_name(field)}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ multi:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ value:\ Union[str,\ List[str]]\ =\ [}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sanitise\_header(v)\ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ msg.get\_all(field)}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ sanitise\_header(msg.get(field))}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}keywords"{}}:}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Accept\ both\ comma-\/separated\ and\ space-\/separated}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ forms,\ for\ better\ compatibility\ with\ old\ data.}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{},"{}}\ \textcolor{keywordflow}{in}\ value:}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ [v.strip()\ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ value.split(\textcolor{stringliteral}{"{},"{}})]}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ value.split()}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ result[key]\ =\ value}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ payload\ =\ msg.get\_payload()}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ payload:}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ result[\textcolor{stringliteral}{"{}description"{}}]\ =\ payload}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{__json_8py_source_l00037}{json\+\_\+name()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{df/d01/namespacepip_1_1__internal_1_1metadata_1_1__json_a5debbe760da54658060aeb0508ccf64b_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1__json_a8918cc37c8a4a0cef1f4679c2b78514a}\index{pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}!METADATA\_FIELDS@{METADATA\_FIELDS}}
+\index{METADATA\_FIELDS@{METADATA\_FIELDS}!pip.\_internal.metadata.\_json@{pip.\_internal.metadata.\_json}}
+\doxysubsubsection{\texorpdfstring{METADATA\_FIELDS}{METADATA\_FIELDS}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1metadata_1_1__json_a8918cc37c8a4a0cef1f4679c2b78514a} 
+list METADATA\+\_\+\+FIELDS}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{comment}{\#\ Name,\ Multiple-\/Use}}
+\DoxyCodeLine{00003\ \ \ \ \ (\textcolor{stringliteral}{"{}Metadata-\/Version"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00004\ \ \ \ \ (\textcolor{stringliteral}{"{}Name"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00005\ \ \ \ \ (\textcolor{stringliteral}{"{}Version"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00006\ \ \ \ \ (\textcolor{stringliteral}{"{}Dynamic"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00007\ \ \ \ \ (\textcolor{stringliteral}{"{}Platform"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00008\ \ \ \ \ (\textcolor{stringliteral}{"{}Supported-\/Platform"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00009\ \ \ \ \ (\textcolor{stringliteral}{"{}Summary"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00010\ \ \ \ \ (\textcolor{stringliteral}{"{}Description"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00011\ \ \ \ \ (\textcolor{stringliteral}{"{}Description-\/Content-\/Type"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00012\ \ \ \ \ (\textcolor{stringliteral}{"{}Keywords"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00013\ \ \ \ \ (\textcolor{stringliteral}{"{}Home-\/page"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00014\ \ \ \ \ (\textcolor{stringliteral}{"{}Download-\/URL"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00015\ \ \ \ \ (\textcolor{stringliteral}{"{}Author"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00016\ \ \ \ \ (\textcolor{stringliteral}{"{}Author-\/email"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00017\ \ \ \ \ (\textcolor{stringliteral}{"{}Maintainer"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00018\ \ \ \ \ (\textcolor{stringliteral}{"{}Maintainer-\/email"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00019\ \ \ \ \ (\textcolor{stringliteral}{"{}License"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00020\ \ \ \ \ (\textcolor{stringliteral}{"{}Classifier"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00021\ \ \ \ \ (\textcolor{stringliteral}{"{}Requires-\/Dist"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00022\ \ \ \ \ (\textcolor{stringliteral}{"{}Requires-\/Python"{}},\ \textcolor{keyword}{False}),}
+\DoxyCodeLine{00023\ \ \ \ \ (\textcolor{stringliteral}{"{}Requires-\/External"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00024\ \ \ \ \ (\textcolor{stringliteral}{"{}Project-\/URL"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00025\ \ \ \ \ (\textcolor{stringliteral}{"{}Provides-\/Extra"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00026\ \ \ \ \ (\textcolor{stringliteral}{"{}Provides-\/Dist"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00027\ \ \ \ \ (\textcolor{stringliteral}{"{}Obsoletes-\/Dist"{}},\ \textcolor{keyword}{True}),}
+\DoxyCodeLine{00028\ ]}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{__json_8py_source_l00007}{7}} of file \mbox{\hyperlink{__json_8py_source}{\+\_\+json.\+py}}.
+

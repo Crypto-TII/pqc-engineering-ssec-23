@@ -1,0 +1,143 @@
+\doxysection{request.\+py}
+\hypertarget{util_2request_8py_source}{}\label{util_2request_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/request.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/request.py}}
+\mbox{\hyperlink{util_2request_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00003}00003\ \textcolor{keyword}{from}\ base64\ \textcolor{keyword}{import}\ b64encode}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00005}00005\ \textcolor{keyword}{from}\ ..exceptions\ \textcolor{keyword}{import}\ UnrewindableBodyError}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00006}00006\ \textcolor{keyword}{from}\ ..packages.six\ \textcolor{keyword}{import}\ b,\ integer\_types}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00008}00008\ \textcolor{comment}{\#\ Pass\ as\ a\ value\ within\ \`{}\`{}headers``\ to\ skip}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00009}00009\ \textcolor{comment}{\#\ emitting\ some\ HTTP\ headers\ that\ are\ added\ automatically.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00010}00010\ \textcolor{comment}{\#\ The\ only\ headers\ that\ are\ supported\ are\ \`{}\`{}Accept-\/Encoding``,}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00011}00011\ \textcolor{comment}{\#\ \`{}\`{}Host``,\ and\ \`{}\`{}User-\/Agent``.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_aca1bfcb5966db33733aef57b3b2d6c60}{00012}}\ SKIP\_HEADER\ =\ \textcolor{stringliteral}{"{}@@@SKIP\_HEADER@@@"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00013}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_ab0ea3c308cd63aa2a4f4ca1440ac5e85}{00013}}\ SKIPPABLE\_HEADERS\ =\ frozenset([\textcolor{stringliteral}{"{}accept-\/encoding"{}},\ \textcolor{stringliteral}{"{}host"{}},\ \textcolor{stringliteral}{"{}user-\/agent"{}}])}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_ac7904264cdd84d47dab4a70ce7d3dfc6}{00015}}\ ACCEPT\_ENCODING\ =\ \textcolor{stringliteral}{"{}gzip,deflate"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00017}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_aca29fce2eaec3eb71aa078c12ff7a279}{00017}}\ \_FAILEDTELL\ =\ object()}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_aa9f13de391322e6dad774d9b47a7efa1}{00020}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_aa9f13de391322e6dad774d9b47a7efa1}{make\_headers}}(}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00021}00021\ \ \ \ \ keep\_alive=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00022}00022\ \ \ \ \ accept\_encoding=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00023}00023\ \ \ \ \ user\_agent=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00024}00024\ \ \ \ \ basic\_auth=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00025}00025\ \ \ \ \ proxy\_basic\_auth=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00026}00026\ \ \ \ \ disable\_cache=None,}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00027}00027\ ):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ Shortcuts\ for\ generating\ request\ headers.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00030}00030\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ :param\ keep\_alive:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ \`{}\`{}True\`{}\`{},\ adds\ 'connection:\ keep-\/alive'\ header.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00033}00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ :param\ accept\_encoding:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Can\ be\ a\ boolean,\ list,\ or\ string.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}True\`{}\`{}\ translates\ to\ 'gzip,deflate'.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ List\ will\ get\ joined\ by\ comma.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ String\ will\ be\ used\ as\ provided.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ :param\ user\_agent:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ String\ representing\ the\ user-\/agent\ you\ want,\ such\ as}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}python-\/urllib3/0.6"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00043}00043\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ :param\ basic\_auth:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Colon-\/separated\ username:password\ string\ for\ 'authorization:\ basic\ ...'}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ auth\ header.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00047}00047\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ :param\ proxy\_basic\_auth:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Colon-\/separated\ username:password\ string\ for\ 'proxy-\/authorization:\ basic\ ...'}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ auth\ header.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00051}00051\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ :param\ disable\_cache:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ \`{}\`{}True\`{}\`{},\ adds\ 'cache-\/control:\ no-\/cache'\ header.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00054}00054\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ Example::}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00056}00056\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ make\_headers(keep\_alive=True,\ user\_agent="{}Batman/1.0"{})}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \{'connection':\ 'keep-\/alive',\ 'user-\/agent':\ 'Batman/1.0'\}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ make\_headers(accept\_encoding=True)}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \{'accept-\/encoding':\ 'gzip,deflate'\}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00062}00062\ \ \ \ \ headers\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{if}\ accept\_encoding:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(accept\_encoding,\ str):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(accept\_encoding,\ list):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ accept\_encoding\ =\ \textcolor{stringliteral}{"{},"{}}.join(accept\_encoding)}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ accept\_encoding\ =\ ACCEPT\_ENCODING}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}accept-\/encoding"{}}]\ =\ accept\_encoding}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{if}\ user\_agent:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}user-\/agent"{}}]\ =\ user\_agent}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ keep\_alive:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}connection"{}}]\ =\ \textcolor{stringliteral}{"{}keep-\/alive"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{if}\ basic\_auth:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}authorization"{}}]\ =\ \textcolor{stringliteral}{"{}Basic\ "{}}\ +\ b64encode(b(basic\_auth)).decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{if}\ proxy\_basic\_auth:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}proxy-\/authorization"{}}]\ =\ \textcolor{stringliteral}{"{}Basic\ "{}}\ +\ b64encode(}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ b(proxy\_basic\_auth)}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ ).decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ disable\_cache:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}cache-\/control"{}}]\ =\ \textcolor{stringliteral}{"{}no-\/cache"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{return}\ headers}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00092}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_a5b816fd8afb1b58d3c847fc555bace96}{00092}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_a5b816fd8afb1b58d3c847fc555bace96}{set\_file\_position}}(body,\ pos):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00093}00093\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ If\ a\ position\ is\ provided,\ move\ file\ to\ that\ point.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ Otherwise,\ we'll\ attempt\ to\ record\ a\ position\ for\ future\ use.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ pos\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_a55c5e3912fffd3ab197cc528c9183984}{rewind\_body}}(body,\ pos)}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{elif}\ getattr(body,\ \textcolor{stringliteral}{"{}tell"{}},\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ pos\ =\ body.tell()}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (IOError,\ OSError):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ differentiates\ from\ None,\ allowing\ us\ to\ catch}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ failed\ \`{}tell()`\ later\ when\ trying\ to\ rewind\ the\ body.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ pos\ =\ \_FAILEDTELL}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{return}\ pos}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00110}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_a55c5e3912fffd3ab197cc528c9183984}{00110}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1request_a55c5e3912fffd3ab197cc528c9183984}{rewind\_body}}(body,\ body\_pos):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00111}00111\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00112}00112\ \textcolor{stringliteral}{\ \ \ \ Attempt\ to\ rewind\ body\ to\ a\ certain\ position.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ Primarily\ used\ for\ request\ redirects\ and\ retries.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00114}00114\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ :param\ body:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ File-\/like\ object\ that\ supports\ seek.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00117}00117\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ pos:}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Position\ to\ seek\ to\ in\ file.}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00120}00120\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00121}00121\ \ \ \ \ body\_seek\ =\ getattr(body,\ \textcolor{stringliteral}{"{}seek"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{if}\ body\_seek\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ isinstance(body\_pos,\ integer\_types):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ body\_seek(body\_pos)}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (IOError,\ OSError):}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_unrewindable_body_error}{UnrewindableBodyError}}(}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}An\ error\ occurred\ when\ rewinding\ request\ body\ for\ redirect/retry."{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{elif}\ body\_pos\ \textcolor{keywordflow}{is}\ \_FAILEDTELL:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_unrewindable_body_error}{UnrewindableBodyError}}(}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Unable\ to\ record\ file\ position\ for\ rewinding\ "{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}request\ body\ during\ a\ redirect/retry."{}}}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}body\_pos\ must\ be\ of\ type\ integer,\ instead\ it\ was\ \%s."{}}\ \%\ type(body\_pos)}
+\DoxyCodeLine{\Hypertarget{util_2request_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}

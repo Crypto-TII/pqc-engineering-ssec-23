@@ -1,0 +1,171 @@
+\doxysection{compatibility\+\_\+tags.\+py}
+\hypertarget{compatibility__tags_8py_source}{}\label{compatibility__tags_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/compatibility\_tags.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/compatibility\_tags.py}}
+\mbox{\hyperlink{compatibility__tags_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Generate\ and\ work\ with\ PEP\ 425\ Compatibility\ Tags.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00002}00002\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00004}00004\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00005}00005\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional,\ Tuple}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1tags}{pip.\_vendor.packaging.tags}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00008}00008\ \ \ \ \ PythonVersion,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00009}00009\ \ \ \ \ Tag,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00010}00010\ \ \ \ \ compatible\_tags,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00011}00011\ \ \ \ \ cpython\_tags,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00012}00012\ \ \ \ \ generic\_tags,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00013}00013\ \ \ \ \ interpreter\_name,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00014}00014\ \ \ \ \ interpreter\_version,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00015}00015\ \ \ \ \ mac\_platforms,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00016}00016\ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00018}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a5cd2560517677db001c92ae804213953}{00018}}\ \_osx\_arch\_pat\ =\ re.compile(\textcolor{stringliteral}{r"{}(.+)\_(\(\backslash\)d+)\_(\(\backslash\)d+)\_(.+)"{}})}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00021}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a9a4abd556fd1bbb23be7e6461a13f580}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a9a4abd556fd1bbb23be7e6461a13f580}{version\_info\_to\_nodot}}(version\_info:\ Tuple[int,\ ...])\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00022}00022\ \ \ \ \ \textcolor{comment}{\#\ Only\ use\ up\ to\ the\ first\ two\ numbers.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(map(str,\ version\_info[:2]))}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7c10f42829c8faf7e97e2c2b56c565fd}{00026}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7c10f42829c8faf7e97e2c2b56c565fd}{\_mac\_platforms}}(arch:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00027}00027\ \ \ \ \ match\ =\ \_osx\_arch\_pat.match(arch)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}\ match:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ name,\ major,\ minor,\ actual\_arch\ =\ match.groups()}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ mac\_version\ =\ (int(major),\ int(minor))}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ arches\ =\ [}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Since\ we\ have\ always\ only\ checked\ that\ the\ platform\ starts}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ with\ "{}macosx"{},\ for\ backwards-\/compatibility\ we\ extract\ the}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ actual\ prefix\ provided\ by\ the\ user\ in\ case\ they\ provided}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ something\ like\ "{}macosxcustom\_"{}.\ It\ may\ be\ good\ to\ remove}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ this\ as\ undocumented\ or\ deprecate\ it\ in\ the\ future.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\}\_\{\}"{}}.format(name,\ arch[len(\textcolor{stringliteral}{"{}macosx\_"{}})\ :])}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ arch\ \textcolor{keywordflow}{in}\ mac\_platforms(mac\_version,\ actual\_arch)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ arch\ pattern\ didn't\ match\ (?!)}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ arches\ =\ [arch]}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{return}\ arches}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00046}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7b919e09bbd55164ca429b966fd3caf2}{00046}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7b919e09bbd55164ca429b966fd3caf2}{\_custom\_manylinux\_platforms}}(arch:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00047}00047\ \ \ \ \ arches\ =\ [arch]}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00048}00048\ \ \ \ \ arch\_prefix,\ arch\_sep,\ arch\_suffix\ =\ arch.partition(\textcolor{stringliteral}{"{}\_"{}})}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{if}\ arch\_prefix\ ==\ \textcolor{stringliteral}{"{}manylinux2014"{}}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manylinux1/manylinux2010\ wheels\ run\ on\ most\ manylinux2014\ systems}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ with\ the\ exception\ of\ wheels\ depending\ on\ ncurses.\ PEP\ 599\ states}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manylinux1/manylinux2010\ wheels\ should\ be\ considered}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manylinux2014\ wheels:}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://www.python.org/dev/peps/pep-\/0599/\#backwards-\/compatibility-\/with-\/manylinux2010-\/wheels}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ arch\_suffix\ \textcolor{keywordflow}{in}\ \{\textcolor{stringliteral}{"{}i686"{}},\ \textcolor{stringliteral}{"{}x86\_64"{}}\}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ arches.append(\textcolor{stringliteral}{"{}manylinux2010"{}}\ +\ arch\_sep\ +\ arch\_suffix)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ arches.append(\textcolor{stringliteral}{"{}manylinux1"{}}\ +\ arch\_sep\ +\ arch\_suffix)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{elif}\ arch\_prefix\ ==\ \textcolor{stringliteral}{"{}manylinux2010"{}}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manylinux1\ wheels\ run\ on\ most\ manylinux2010\ systems\ with\ the}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ exception\ of\ wheels\ depending\ on\ ncurses.\ PEP\ 571\ states}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manylinux1\ wheels\ should\ be\ considered\ manylinux2010\ wheels:}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://www.python.org/dev/peps/pep-\/0571/\#backwards-\/compatibility-\/with-\/manylinux1-\/wheels}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ arches.append(\textcolor{stringliteral}{"{}manylinux1"{}}\ +\ arch\_sep\ +\ arch\_suffix)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00064}00064\ \ \ \ \ \textcolor{keywordflow}{return}\ arches}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00067}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a5569f927723f7f0cac07ad6aa0e28597}{00067}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a5569f927723f7f0cac07ad6aa0e28597}{\_get\_custom\_platforms}}(arch:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00068}00068\ \ \ \ \ arch\_prefix,\ arch\_sep,\ arch\_suffix\ =\ arch.partition(\textcolor{stringliteral}{"{}\_"{}})}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00069}00069\ \ \ \ \ \textcolor{keywordflow}{if}\ arch.startswith(\textcolor{stringliteral}{"{}macosx"{}}):}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ arches\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7c10f42829c8faf7e97e2c2b56c565fd}{\_mac\_platforms}}(arch)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{elif}\ arch\_prefix\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}manylinux2014"{}},\ \textcolor{stringliteral}{"{}manylinux2010"{}}]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ arches\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7b919e09bbd55164ca429b966fd3caf2}{\_custom\_manylinux\_platforms}}(arch)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ arches\ =\ [arch]}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{return}\ arches}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00078}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a3afad85b169920664fe4dc251e7b3581}{00078}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a3afad85b169920664fe4dc251e7b3581}{\_expand\_allowed\_platforms}}(platforms:\ Optional[List[str]])\ -\/>\ Optional[List[str]]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ platforms:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00082}00082\ \ \ \ \ seen\ =\ set()}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00083}00083\ \ \ \ \ result\ =\ []}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{for}\ p\ \textcolor{keywordflow}{in}\ platforms:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ p\ \textcolor{keywordflow}{in}\ seen:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ additions\ =\ [c\ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a5569f927723f7f0cac07ad6aa0e28597}{\_get\_custom\_platforms}}(p)\ \textcolor{keywordflow}{if}\ c\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ seen]}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ seen.update(additions)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ result.extend(additions)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00095}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7466faeb373118793b379d1b8bc372c7}{00095}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7466faeb373118793b379d1b8bc372c7}{\_get\_python\_version}}(version:\ str)\ -\/>\ PythonVersion:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00096}00096\ \ \ \ \ \textcolor{keywordflow}{if}\ len(version)\ >\ 1:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ int(version[0]),\ int(version[1:])}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (int(version[0]),)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00102}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_ac4902f3e4e9b89e6c610c57f21100fcd}{00102}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_ac4902f3e4e9b89e6c610c57f21100fcd}{\_get\_custom\_interpreter}}(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00103}00103\ \ \ \ \ implementation:\ Optional[str]\ =\ \textcolor{keywordtype}{None},\ version:\ Optional[str]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00104}00104\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{if}\ implementation\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ implementation\ =\ interpreter\_name()}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{if}\ version\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ version\ =\ interpreter\_version()}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{implementation\}\{version\}"{}}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00112}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_abb83bc8776538302aae0dbfc6603b747}{00112}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_abb83bc8776538302aae0dbfc6603b747}{get\_supported}}(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00113}00113\ \ \ \ \ version:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00114}00114\ \ \ \ \ platforms:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00115}00115\ \ \ \ \ impl:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00116}00116\ \ \ \ \ abis:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00117}00117\ )\ -\/>\ List[Tag]:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00118}00118\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ list\ of\ supported\ tags\ for\ each\ version\ specified\ in}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ \`{}versions\`{}.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00120}00120\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ :param\ version:\ a\ string\ version,\ of\ the\ form\ "{}33"{}\ or\ "{}32"{},}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00122}00122\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ or\ None.\ The\ version\ will\ be\ assumed\ to\ support\ our\ ABI.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00123}00123\ \textcolor{stringliteral}{\ \ \ \ :param\ platform:\ specify\ a\ list\ of\ platforms\ you\ want\ valid}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00124}00124\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ tags\ for,\ or\ None.\ If\ None,\ use\ the\ local\ system\ platform.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ :param\ impl:\ specify\ the\ exact\ implementation\ you\ want\ valid}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ tags\ for,\ or\ None.\ If\ None,\ use\ the\ local\ interpreter\ impl.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ :param\ abis:\ specify\ a\ list\ of\ abis\ you\ want\ valid}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ tags\ for,\ or\ None.\ If\ None,\ use\ the\ local\ interpreter\ abi.}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00130}00130\ \ \ \ \ supported:\ List[Tag]\ =\ []}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00132}00132\ \ \ \ \ python\_version:\ Optional[PythonVersion]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00133}00133\ \ \ \ \ \textcolor{keywordflow}{if}\ version\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ python\_version\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a7466faeb373118793b379d1b8bc372c7}{\_get\_python\_version}}(version)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00136}00136\ \ \ \ \ interpreter\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_ac4902f3e4e9b89e6c610c57f21100fcd}{\_get\_custom\_interpreter}}(impl,\ version)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00138}00138\ \ \ \ \ platforms\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compatibility__tags_a3afad85b169920664fe4dc251e7b3581}{\_expand\_allowed\_platforms}}(platforms)}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00140}00140\ \ \ \ \ is\_cpython\ =\ (impl\ \textcolor{keywordflow}{or}\ interpreter\_name())\ ==\ \textcolor{stringliteral}{"{}cp"{}}}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_cpython:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ supported.extend(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ cpython\_tags(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ python\_version=python\_version,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abis=abis,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ platforms=platforms,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00149}00149\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ supported.extend(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ generic\_tags(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interpreter=interpreter,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abis=abis,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ platforms=platforms,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00157}00157\ \ \ \ \ supported.extend(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ compatible\_tags(}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ python\_version=python\_version,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ interpreter=interpreter,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ platforms=platforms,}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00163}00163\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{compatibility__tags_8py_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{return}\ supported}
+
+\end{DoxyCode}

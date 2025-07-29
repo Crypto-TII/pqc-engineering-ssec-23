@@ -1,0 +1,52 @@
+\doxysection{wheel\+\_\+editable.\+py}
+\hypertarget{wheel__editable_8py_source}{}\label{wheel__editable_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel\_editable.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel\_editable.py}}
+\mbox{\hyperlink{wheel__editable_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Optional}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyproject__hooks}{pip.\_vendor.pyproject\_hooks}}\ \textcolor{keyword}{import}\ BuildBackendHookCaller,\ HookMissing}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1subprocess}{pip.\_internal.utils.subprocess}}\ \textcolor{keyword}{import}\ runner\_with\_spinner\_message}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a0b14e488ae28d98d262453f3e9cd6e4d}{00009}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a41594c7e504c394f9df80f95d9145c04}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a41594c7e504c394f9df80f95d9145c04}{build\_wheel\_editable}}(}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00013}00013\ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00014}00014\ \ \ \ \ backend:\ BuildBackendHookCaller,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00015}00015\ \ \ \ \ metadata\_directory:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00016}00016\ \ \ \ \ tempd:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00017}00017\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00018}00018\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ one\ InstallRequirement\ using\ the\ PEP\ 660\ build\ process.}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00019}00019\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Returns\ path\ to\ wheel\ if\ successfully\ built.\ Otherwise,\ returns\ None.}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{assert}\ metadata\_directory\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Destination\ directory:\ \%s"{}},\ tempd)}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ runner\ =\ runner\_with\_spinner\_message(}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Building\ editable\ for\ \{name\}\ (pyproject.toml)"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ backend.subprocess\_runner(runner):}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_name\ =\ backend.build\_editable(}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempd,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ metadata\_directory=metadata\_directory,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ HookMissing\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ build\ editable\ \%s\ because\ the\ build\ "{}}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}backend\ does\ not\ have\ the\ \%s\ hook"{}},}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e,}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ logger.error(\textcolor{stringliteral}{"{}Failed\ building\ editable\ for\ \%s"{}},\ name)}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{wheel__editable_8py_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(tempd,\ wheel\_name)}
+
+\end{DoxyCode}

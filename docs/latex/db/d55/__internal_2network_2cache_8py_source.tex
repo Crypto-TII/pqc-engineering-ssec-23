@@ -1,0 +1,75 @@
+\doxysection{cache.\+py}
+\hypertarget{__internal_2network_2cache_8py_source}{}\label{__internal_2network_2cache_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/cache.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/cache.py}}
+\mbox{\hyperlink{__internal_2network_2cache_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}HTTP\ cache\ implementation.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00002}00002\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00004}00004\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00005}00005\ \textcolor{keyword}{from}\ contextlib\ \textcolor{keyword}{import}\ contextmanager}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00006}00006\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Generator,\ Optional}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1cache}{pip.\_vendor.cachecontrol.cache}}\ \textcolor{keyword}{import}\ BaseCache}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1caches}{pip.\_vendor.cachecontrol.caches}}\ \textcolor{keyword}{import}\ FileCache}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models}{pip.\_vendor.requests.models}}\ \textcolor{keyword}{import}\ Response}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1filesystem}{pip.\_internal.utils.filesystem}}\ \textcolor{keyword}{import}\ adjacent\_tmp\_file,\ replace}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ ensure\_dir}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_a8df7d989ccb65974a7c6a4a923dea8da}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_a8df7d989ccb65974a7c6a4a923dea8da}{is\_from\_cache}}(response:\ Response)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(response,\ \textcolor{stringliteral}{"{}from\_cache"{}},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00020}00020\ \textcolor{preprocessor}{@contextmanager}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00021}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_ab56c0d718a997990eea8498e24d60432}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_ab56c0d718a997990eea8498e24d60432}{suppressed\_cache\_errors}}()\ -\/>\ Generator[None,\ None,\ None]:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}If\ we\ can't\ access\ the\ cache\ then\ we\ can\ just\ skip\ caching\ and\ process}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ requests\ as\ if\ caching\ wasn't\ enabled.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00031}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache}{00031}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache}{SafeFileCache}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1cache_1_1_base_cache}{BaseCache}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00032}00032\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ A\ file\ based\ cache\ which\ is\ safe\ to\ use\ even\ when\ the\ target\ directory\ may}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ not\ be\ accessible\ or\ writable.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ade38a60812c571140e71c30e14d17dbf}{00037}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ade38a60812c571140e71c30e14d17dbf}{\_\_init\_\_}}(self,\ directory:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ directory\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None},\ \textcolor{stringliteral}{"{}Cache\ directory\ must\ not\ be\ None."{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ade38a60812c571140e71c30e14d17dbf}{\_\_init\_\_}}()}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_aedf03b9517092eee7dae1588bbc00e19}{00040}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_aedf03b9517092eee7dae1588bbc00e19}{directory}}\ =\ directory}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00042}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ae3a422b85f56fa7271ed3d96be140c99}{00042}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ae3a422b85f56fa7271ed3d96be140c99}{\_get\_cache\_path}}(self,\ name:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ From\ cachecontrol.caches.file\_cache.FileCache.\_fn,\ brought\ into\ our}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ class\ for\ backwards-\/compatibility\ and\ to\ avoid\ using\ a\ non-\/public}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ method.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ hashed\ =\ FileCache.encode(name)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ parts\ =\ list(hashed[:5])\ +\ [hashed]}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_aedf03b9517092eee7dae1588bbc00e19}{directory}},\ *parts)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00050}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_a6cfd98ed2ee4c64d867b6fc41b7b999c}{00050}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_a6cfd98ed2ee4c64d867b6fc41b7b999c}{get}}(self,\ key:\ str)\ -\/>\ Optional[bytes]:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ path\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ae3a422b85f56fa7271ed3d96be140c99}{\_get\_cache\_path}}(key)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_ab56c0d718a997990eea8498e24d60432}{suppressed\_cache\_errors}}():}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(path,\ \textcolor{stringliteral}{"{}rb"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f.read()}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00056}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ade90222e01d6f92c3358c970236f3ec2}{00056}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ade90222e01d6f92c3358c970236f3ec2}{set}}(self,\ key:\ str,\ value:\ bytes,\ expires:\ Optional[int]\ =\ \textcolor{keywordtype}{None})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ path\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ae3a422b85f56fa7271ed3d96be140c99}{\_get\_cache\_path}}(key)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_ab56c0d718a997990eea8498e24d60432}{suppressed\_cache\_errors}}():}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ ensure\_dir(os.path.dirname(path))}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ adjacent\_tmp\_file(path)\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f.write(value)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ replace(f.name,\ path)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00066}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_abdc0d4bf30e9363f8b0350d234cb502e}{00066}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_abdc0d4bf30e9363f8b0350d234cb502e}{delete}}(self,\ key:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ path\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1cache_1_1_safe_file_cache_ae3a422b85f56fa7271ed3d96be140c99}{\_get\_cache\_path}}(key)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache_ab56c0d718a997990eea8498e24d60432}{suppressed\_cache\_errors}}():}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2cache_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ os.remove(path)}
+
+\end{DoxyCode}

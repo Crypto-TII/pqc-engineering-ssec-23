@@ -1,0 +1,330 @@
+\doxysection{subversion.\+py}
+\hypertarget{subversion_8py_source}{}\label{subversion_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/vcs/subversion.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/vcs/subversion.py}}
+\mbox{\hyperlink{subversion_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00003}00003\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00004}00004\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional,\ Tuple}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00007}00007\ \ \ \ \ HiddenText,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00008}00008\ \ \ \ \ display\_path,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00009}00009\ \ \ \ \ is\_console\_interactive,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00010}00010\ \ \ \ \ is\_installable\_dir,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00011}00011\ \ \ \ \ split\_auth\_from\_netloc,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00012}00012\ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1subprocess}{pip.\_internal.utils.subprocess}}\ \textcolor{keyword}{import}\ CommandArgs,\ make\_command}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1versioncontrol}{pip.\_internal.vcs.versioncontrol}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00015}00015\ \ \ \ \ AuthInfo,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00016}00016\ \ \ \ \ RemoteNotFoundError,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00017}00017\ \ \ \ \ RevOptions,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00018}00018\ \ \ \ \ VersionControl,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00019}00019\ \ \ \ \ vcs,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00020}00020\ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion_a0b14e488ae28d98d262453f3e9cd6e4d}{00022}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion_a2302d68daf9b4d054148fe9a9edff5bc}{00024}}\ \_svn\_xml\_url\_re\ =\ re.compile(\textcolor{stringliteral}{'url="{}([\string^"{}]+)"{}'})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00025}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion_a3bdddc8f01dae20ede49a79059965d8c}{00025}}\ \_svn\_rev\_re\ =\ re.compile(\textcolor{stringliteral}{r'committed-\/rev="{}(\(\backslash\)d+)"{}'})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion_a730fa1f7a389b499676c653d8551e6aa}{00026}}\ \_svn\_info\_xml\_rev\_re\ =\ re.compile(\textcolor{stringliteral}{r'\(\backslash\)s*revision="{}(\(\backslash\)d+)"{}'})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00027}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1subversion_ac1a3c305b011238e5b73c70631a83767}{00027}}\ \_svn\_info\_xml\_url\_re\ =\ re.compile(\textcolor{stringliteral}{r"{}<url>(.*)</url>"{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00030}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{00030}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{Subversion}}(\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control}{VersionControl}}):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00031}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{00031}}\ \ \ \ \ name\ =\ \textcolor{stringliteral}{"{}svn"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00032}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{00032}}\ \ \ \ \ dirname\ =\ \textcolor{stringliteral}{"{}.svn"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00033}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{00033}}\ \ \ \ \ repo\_name\ =\ \textcolor{stringliteral}{"{}checkout"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00034}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{00034}}\ \ \ \ \ schemes\ =\ (\textcolor{stringliteral}{"{}svn+ssh"{}},\ \textcolor{stringliteral}{"{}svn+http"{}},\ \textcolor{stringliteral}{"{}svn+https"{}},\ \textcolor{stringliteral}{"{}svn+svn"{}},\ \textcolor{stringliteral}{"{}svn+file"{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00036}00036\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a567f7c2a46f753145668af450810b4b8}{00037}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a567f7c2a46f753145668af450810b4b8}{should\_add\_vcs\_url\_prefix}}(cls,\ remote\_url:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00040}00040\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00041}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a16d7e464d16b8da4253133def49a175a}{00041}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a16d7e464d16b8da4253133def49a175a}{get\_base\_rev\_args}}(rev:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{stringliteral}{"{}-\/r"{}},\ rev]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00044}00044\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00045}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a9fc21d9c16ee10203886725b7fce0c2f}{00045}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a9fc21d9c16ee10203886725b7fce0c2f}{get\_revision}}(cls,\ location:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Return\ the\ maximum\ revision\ for\ all\ files\ under\ a\ given\ location}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Note:\ taken\ from\ setuptools.command.egg\_info}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ revision\ =\ 0}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ base,\ dirs,\ \_\ \textcolor{keywordflow}{in}\ os.walk(location):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{dirname}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ dirs:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dirs[:]\ =\ []}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}\ \ \textcolor{comment}{\#\ no\ sense\ walking\ uncontrolled\ subdirs}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ dirs.remove(cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{dirname}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ entries\_fn\ =\ os.path.join(base,\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{dirname}},\ \textcolor{stringliteral}{"{}entries"{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.exists(entries\_fn):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ FIXME:\ should\ we\ warn?}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ dirurl,\ localrev\ =\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ac5ebac493ef64bf74a254d2d53f0aa95}{\_get\_svn\_url\_rev}}(base)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ base\ ==\ location:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ dirurl\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base\ =\ dirurl\ +\ \textcolor{stringliteral}{"{}/"{}}\ \ \textcolor{comment}{\#\ save\ the\ root\ url}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ dirurl\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ dirurl.startswith(base):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dirs[:]\ =\ []}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}\ \ \textcolor{comment}{\#\ not\ part\ of\ the\ same\ svn\ tree,\ skip\ it}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ revision\ =\ max(revision,\ localrev)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str(revision)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00073}00073\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00074}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a1cfc669ebf2be2d1db04b8a292b0bbd2}{00074}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a1cfc669ebf2be2d1db04b8a292b0bbd2}{get\_netloc\_and\_auth}}(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ cls,\ netloc:\ str,\ scheme:\ str}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00076}00076\ \ \ \ \ )\ -\/>\ Tuple[str,\ Tuple[Optional[str],\ Optional[str]]]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00078}00078\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ override\ allows\ the\ auth\ information\ to\ be\ passed\ to\ svn\ via\ the}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00079}00079\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ -\/-\/username\ and\ -\/-\/password\ options\ instead\ of\ via\ the\ URL.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00080}00080\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ scheme\ ==\ \textcolor{stringliteral}{"{}ssh"{}}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ -\/-\/username\ and\ -\/-\/password\ options\ can't\ be\ used\ for}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ svn+ssh\ URLs,\ so\ keep\ the\ auth\ information\ in\ the\ URL.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ super().\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a1cfc669ebf2be2d1db04b8a292b0bbd2}{get\_netloc\_and\_auth}}(netloc,\ scheme)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ split\_auth\_from\_netloc(netloc)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00088}00088\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00089}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6aaf5748d8bf9f1796983c2ca98b8a8c}{00089}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6aaf5748d8bf9f1796983c2ca98b8a8c}{get\_url\_rev\_and\_auth}}(cls,\ url:\ str)\ -\/>\ Tuple[str,\ Optional[str],\ AuthInfo]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hotfix\ the\ URL\ scheme\ after\ removing\ svn+\ from\ svn+ssh://\ re-\/add\ it}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ url,\ rev,\ user\_pass\ =\ super().\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6aaf5748d8bf9f1796983c2ca98b8a8c}{get\_url\_rev\_and\_auth}}(url)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url.startswith(\textcolor{stringliteral}{"{}ssh://"{}}):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ \textcolor{stringliteral}{"{}svn+"{}}\ +\ url}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ url,\ rev,\ user\_pass}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00096}00096\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00097}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a8e806679ba7e30363c34d08de2e7f4b1}{00097}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a8e806679ba7e30363c34d08de2e7f4b1}{make\_rev\_args}}(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ username:\ Optional[str],\ password:\ Optional[HiddenText]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00099}00099\ \ \ \ \ )\ -\/>\ CommandArgs:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ extra\_args:\ CommandArgs\ =\ []}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ username:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_args\ +=\ [\textcolor{stringliteral}{"{}-\/-\/username"{}},\ username]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ password:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_args\ +=\ [\textcolor{stringliteral}{"{}-\/-\/password"{}},\ password]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ extra\_args}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00108}00108\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00109}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a9b85d9faa46a1287f3829586bba0b288}{00109}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a9b85d9faa46a1287f3829586bba0b288}{get\_remote\_url}}(cls,\ location:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ cases\ where\ the\ source\ is\ in\ a\ subdirectory,\ we\ have\ to\ look\ up\ in}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ location\ until\ we\ find\ a\ valid\ project\ root.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ orig\_location\ =\ location}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keywordflow}{not}\ is\_installable\_dir(location):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ last\_location\ =\ location}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =\ os.path.dirname(location)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ location\ ==\ last\_location:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We've\ traversed\ up\ to\ the\ root\ of\ the\ filesystem\ without}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ finding\ a\ Python\ project.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Could\ not\ find\ Python\ project\ for\ directory\ \%s\ (tried\ all\ "{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}parent\ directories)"{}},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orig\_location,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RemoteNotFoundError}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ url,\ \_rev\ =\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ac5ebac493ef64bf74a254d2d53f0aa95}{\_get\_svn\_url\_rev}}(location)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RemoteNotFoundError}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ url}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00132}00132\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00133}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ac5ebac493ef64bf74a254d2d53f0aa95}{00133}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ac5ebac493ef64bf74a254d2d53f0aa95}{\_get\_svn\_url\_rev}}(cls,\ location:\ str)\ -\/>\ Tuple[Optional[str],\ int]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ InstallationError}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ entries\_path\ =\ os.path.join(location,\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion}{dirname}},\ \textcolor{stringliteral}{"{}entries"{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(entries\_path):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(entries\_path)\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ f.read()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ subversion\ >=\ 1.7\ does\ not\ have\ the\ 'entries'\ file}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ url\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ data.startswith(\textcolor{stringliteral}{"{}8"{}})\ \textcolor{keywordflow}{or}\ data.startswith(\textcolor{stringliteral}{"{}9"{}})\ \textcolor{keywordflow}{or}\ data.startswith(\textcolor{stringliteral}{"{}10"{}}):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ entries\ =\ list(map(str.splitlines,\ data.split(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)x0c\(\backslash\)n"{}})))}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ del\ entries[0][0]\ \ \textcolor{comment}{\#\ get\ rid\ of\ the\ '8'}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ entries[0][3]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ revs\ =\ [int(d[9])\ \textcolor{keywordflow}{for}\ d\ \textcolor{keywordflow}{in}\ entries\ \textcolor{keywordflow}{if}\ len(d)\ >\ 9\ \textcolor{keywordflow}{and}\ d[9]]\ +\ [0]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ data.startswith(\textcolor{stringliteral}{"{}<?xml"{}}):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ match\ =\ \_svn\_xml\_url\_re.search(data)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ match:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(f\textcolor{stringliteral}{"{}Badly\ formatted\ data:\ \{data!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ match.group(1)\ \ \textcolor{comment}{\#\ get\ repository\ URL}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ revs\ =\ [int(m.group(1))\ \textcolor{keywordflow}{for}\ m\ \textcolor{keywordflow}{in}\ \_svn\_rev\_re.finditer(data)]\ +\ [0]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ subversion\ >=\ 1.7}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Note\ that\ using\ get\_remote\_call\_options\ is\ not\ necessary\ here}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ because\ \`{}svn\ info`\ is\ being\ run\ against\ a\ local\ directory.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ don't\ need\ to\ worry\ about\ making\ sure\ interactive\ mode}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ is\ being\ used\ to\ prompt\ for\ passwords,\ because\ passwords}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ are\ only\ potentially\ needed\ for\ remote\ server\ requests.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xml\ =\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}info"{}},\ \textcolor{stringliteral}{"{}-\/-\/xml"{}},\ location],}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ show\_stdout=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stdout\_only=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ match\ =\ \_svn\_info\_xml\_url\_re.search(xml)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ match\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ match.group(1)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ revs\ =\ [int(m.group(1))\ \textcolor{keywordflow}{for}\ m\ \textcolor{keywordflow}{in}\ \_svn\_info\_xml\_rev\_re.finditer(xml)]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ InstallationError:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url,\ revs\ =\ \textcolor{keywordtype}{None},\ []}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ revs:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ rev\ =\ max(revs)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ rev\ =\ 0}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ url,\ rev}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00182}00182\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00183}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_aa9fd1b97490dc424130a05eaccdc9eb4}{00183}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_aa9fd1b97490dc424130a05eaccdc9eb4}{is\_commit\_id\_equal}}(cls,\ dest:\ str,\ name:\ Optional[str])\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Always\ assume\ the\ versions\ don't\ match"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00187}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ab71df61540e83cb414bdff2429f99946}{00187}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ab71df61540e83cb414bdff2429f99946}{\_\_init\_\_}}(self,\ use\_interactive:\ Optional[bool]\ =\ \textcolor{keywordtype}{None})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ use\_interactive\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ use\_interactive\ =\ is\_console\_interactive()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00190}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0373a8d3ac58741a2977868f27f32a76}{00190}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0373a8d3ac58741a2977868f27f32a76}{use\_interactive}}\ =\ use\_interactive}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ member\ is\ used\ to\ cache\ the\ fetched\ version\ of\ the\ current}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \`{}\`{}svn``\ client.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ value\ definitions:}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ None:\ Not\ evaluated\ yet.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ Empty\ tuple:\ Could\ not\ parse\ version.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00197}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0f5a7ef29d0a78efa462d1c17e87011d}{00197}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0f5a7ef29d0a78efa462d1c17e87011d}{\_vcs\_version}}:\ Optional[Tuple[int,\ ...]]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ab71df61540e83cb414bdff2429f99946}{\_\_init\_\_}}()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00201}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6465901cec2b9ddc7e04e266e2fe86b2}{00201}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6465901cec2b9ddc7e04e266e2fe86b2}{call\_vcs\_version}}(self)\ -\/>\ Tuple[int,\ ...]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Query\ the\ version\ of\ the\ currently\ installed\ Subversion\ client.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00203}00203\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00204}00204\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ tuple\ containing\ the\ parts\ of\ the\ version\ information\ or}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00205}00205\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \`{}\`{}()\`{}\`{}\ if\ the\ version\ returned\ from\ \`{}\`{}svn\`{}\`{}\ could\ not\ be\ parsed.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises:\ BadCommand:\ If\ \`{}\`{}svn\`{}\`{}\ is\ not\ installed.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Example\ versions:}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ svn,\ version\ 1.10.3\ (r1842928)}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ compiled\ Feb\ 25\ 2019,\ 14:20:39\ on\ x86\_64-\/apple-\/darwin17.0.0}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ svn,\ version\ 1.7.14\ (r1542130)}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ compiled\ Mar\ 28\ 2018,\ 08:49:13\ on\ x86\_64-\/pc-\/linux-\/gnu}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ svn,\ version\ 1.12.0-\/SlikSvn\ (SlikSvn/1.12.0)}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ compiled\ May\ 28\ 2019,\ 13:44:56\ on\ x86\_64-\/microsoft-\/windows6.2}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ version\_prefix\ =\ \textcolor{stringliteral}{"{}svn,\ version\ "{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ version\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}([\textcolor{stringliteral}{"{}-\/-\/version"{}}],\ show\_stdout=\textcolor{keyword}{False},\ stdout\_only=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ version.startswith(version\_prefix):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ version\ =\ version[len(version\_prefix)\ :].split()[0]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ version\_list\ =\ version.partition(\textcolor{stringliteral}{"{}-\/"{}})[0].split(\textcolor{stringliteral}{"{}."{}})}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ parsed\_version\ =\ tuple(map(int,\ version\_list))}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parsed\_version}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00229}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_afbf049452f624a1a69bb4d63c127b490}{00229}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_afbf049452f624a1a69bb4d63c127b490}{get\_vcs\_version}}(self)\ -\/>\ Tuple[int,\ ...]:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ version\ of\ the\ currently\ installed\ Subversion\ client.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00231}00231\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00232}00232\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ the\ version\ of\ the\ Subversion\ client\ has\ already\ been\ queried,}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00233}00233\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ a\ cached\ value\ will\ be\ used.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00234}00234\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00235}00235\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ tuple\ containing\ the\ parts\ of\ the\ version\ information\ or}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \`{}\`{}()\`{}\`{}\ if\ the\ version\ returned\ from\ \`{}\`{}svn\`{}\`{}\ could\ not\ be\ parsed.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00237}00237\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises:\ BadCommand:\ If\ \`{}\`{}svn\`{}\`{}\ is\ not\ installed.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00238}00238\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0f5a7ef29d0a78efa462d1c17e87011d}{\_vcs\_version}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Use\ cached\ version,\ if\ available.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ parsing\ the\ version\ failed\ previously\ (empty\ tuple),}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ do\ not\ attempt\ to\ parse\ it\ again.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0f5a7ef29d0a78efa462d1c17e87011d}{\_vcs\_version}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ vcs\_version\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a6465901cec2b9ddc7e04e266e2fe86b2}{call\_vcs\_version}}()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0f5a7ef29d0a78efa462d1c17e87011d}{\_vcs\_version}}\ =\ vcs\_version}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vcs\_version}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00249}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a303d6117a195b2f8d52c9c426d6b3745}{00249}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a303d6117a195b2f8d52c9c426d6b3745}{get\_remote\_call\_options}}(self)\ -\/>\ CommandArgs:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ options\ to\ be\ used\ on\ calls\ to\ Subversion\ that\ contact\ the\ server.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00251}00251\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00252}00252\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ options\ are\ applicable\ for\ the\ following\ \`{}\`{}svn\`{}\`{}\ subcommands\ used}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ in\ this\ class.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00254}00254\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ -\/\ checkout}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ -\/\ switch}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00257}00257\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ -\/\ update}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00258}00258\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00259}00259\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ list\ of\ command\ line\ arguments\ to\ pass\ to\ \`{}\`{}svn\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00260}00260\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a0373a8d3ac58741a2977868f27f32a76}{use\_interactive}}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/non-\/interactive\ switch\ is\ available\ since\ Subversion\ 0.14.4.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Subversion\ <\ 1.8\ runs\ in\ interactive\ mode\ by\ default.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{stringliteral}{"{}-\/-\/non-\/interactive"{}}]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ svn\_version\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_afbf049452f624a1a69bb4d63c127b490}{get\_vcs\_version}}()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ By\ default,\ Subversion\ >=\ 1.8\ runs\ in\ non-\/interactive\ mode\ if}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ stdin\ is\ not\ a\ TTY.\ Since\ that\ is\ how\ pip\ invokes\ SVN,\ in}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ call\_subprocess(),\ pip\ must\ pass\ -\/-\/force-\/interactive\ to\ ensure}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ user\ can\ be\ prompted\ for\ a\ password,\ if\ required.}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ SVN\ added\ the\ -\/-\/force-\/interactive\ option\ in\ SVN\ 1.8.\ Since}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ e.g.\ RHEL/CentOS\ 7,\ which\ is\ supported\ until\ 2024,\ ships\ with}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ SVN\ 1.7,\ pip\ should\ continue\ to\ support\ SVN\ 1.7.\ Therefore,\ pip}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ can't\ safely\ add\ the\ option\ if\ the\ SVN\ version\ is\ <\ 1.8\ (or\ unknown).}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ svn\_version\ >=\ (1,\ 8):}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{stringliteral}{"{}-\/-\/force-\/interactive"{}}]}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ []}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00280}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_aa905ab521509960ac2424a5767b4e18e}{00280}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_aa905ab521509960ac2424a5767b4e18e}{fetch\_new}}(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions,\ verbosity:\ int}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00282}00282\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ rev\_display\ =\ rev\_options.to\_display()}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ logger.info(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Checking\ out\ \%s\%s\ to\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ url,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ rev\_display,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ display\_path(dest),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ verbosity\ <=\ 0:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ flag\ =\ \textcolor{stringliteral}{"{}-\/-\/quiet"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ flag\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}checkout"{}},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ flag,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a303d6117a195b2f8d52c9c426d6b3745}{get\_remote\_call\_options}}(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ rev\_options.to\_args(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ url,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ dest,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00304}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ace4f91cd9b42ae52423f5e7504f23da0}{00304}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ace4f91cd9b42ae52423f5e7504f23da0}{switch}}(self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}switch"{}},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a303d6117a195b2f8d52c9c426d6b3745}{get\_remote\_call\_options}}(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ rev\_options.to\_args(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ url,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ dest,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00314}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ace88fe2499a36fdedba9ccb46c6688e0}{00314}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_ace88fe2499a36fdedba9ccb46c6688e0}{update}}(self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}update"{}},}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1subversion_1_1_subversion_a303d6117a195b2f8d52c9c426d6b3745}{get\_remote\_call\_options}}(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ rev\_options.to\_args(),}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ dest,}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args)}
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{subversion_8py_source_l00324}00324\ vcs.register(Subversion)}
+
+\end{DoxyCode}

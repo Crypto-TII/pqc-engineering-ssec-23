@@ -1,0 +1,97 @@
+\doxysection{regexopt.\+py}
+\hypertarget{regexopt_8py_source}{}\label{regexopt_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pygments/regexopt.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pygments/regexopt.py}}
+\mbox{\hyperlink{regexopt_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00002}00002\ \textcolor{stringliteral}{\ \ \ \ pygments.regexopt}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00003}00003\ \textcolor{stringliteral}{\ \ \ \ \string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00005}00005\ \textcolor{stringliteral}{\ \ \ \ An\ algorithm\ that\ generates\ optimized\ regexes\ for\ matching\ long\ lists\ of}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00006}00006\ \textcolor{stringliteral}{\ \ \ \ literal\ strings.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00007}00007\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ :copyright:\ Copyright\ 2006-\/2023\ by\ the\ Pygments\ team,\ see\ AUTHORS.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00009}00009\ \textcolor{stringliteral}{\ \ \ \ :license:\ BSD,\ see\ LICENSE\ for\ details.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00010}00010\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00012}00012\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00013}00013\ \textcolor{keyword}{from}\ re\ \textcolor{keyword}{import}\ escape}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00014}00014\ \textcolor{keyword}{from}\ os.path\ \textcolor{keyword}{import}\ commonprefix}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00015}00015\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ groupby}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00016}00016\ \textcolor{keyword}{from}\ operator\ \textcolor{keyword}{import}\ itemgetter}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00018}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a88e226b1bdb82e2be2f96acdea471bd5}{00018}}\ CS\_ESCAPE\ =\ re.compile(\textcolor{stringliteral}{r'[\(\backslash\)[\(\backslash\)\string^\(\backslash\)\(\backslash\)\(\backslash\)-\/\(\backslash\)]]'})}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_ae51be02d6fb20a961abdb83f7bda54d4}{00019}}\ FIRST\_ELEMENT\ =\ itemgetter(0)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a91ae8884ac197ce4a9fa2e2c5bc1a733}{00022}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a91ae8884ac197ce4a9fa2e2c5bc1a733}{make\_charset}}(letters):}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'['}\ +\ CS\_ESCAPE.sub(\textcolor{keyword}{lambda}\ m:\ \textcolor{stringliteral}{'\(\backslash\)\(\backslash\)'}\ +\ m.group(),\ \textcolor{stringliteral}{''}.join(letters))\ +\ \textcolor{stringliteral}{']'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{00026}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(strings,\ open\_paren):}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00027}00027\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ regex\ that\ matches\ any\ string\ in\ the\ sorted\ list\ of\ strings."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00028}00028\ \ \ \ \ close\_paren\ =\ open\_paren\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{')'}\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00029}00029\ \ \ \ \ \textcolor{comment}{\#\ print\ strings,\ repr(open\_paren)}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ strings:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ nothing\ left'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00033}00033\ \ \ \ \ first\ =\ strings[0]}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{if}\ len(strings)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ only\ 1\ string'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ escape(first)\ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ first:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ first\ string\ empty'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(strings[1:],\ \textcolor{stringliteral}{'(?:'})\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{stringliteral}{'?'}\ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}\ len(first)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ multiple\ one-\/char\ strings?\ make\ a\ charset}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ oneletter\ =\ []}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ rest\ =\ []}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ strings:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(s)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oneletter.append(s)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rest.append(s)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(oneletter)\ >\ 1:\ \ \textcolor{comment}{\#\ do\ we\ have\ more\ than\ one\ oneletter\ string?}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rest:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ 1-\/character\ +\ rest'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(rest,\ \textcolor{stringliteral}{''})\ +\ \textcolor{stringliteral}{'|'}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a91ae8884ac197ce4a9fa2e2c5bc1a733}{make\_charset}}(oneletter)\ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ only\ 1-\/character'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a91ae8884ac197ce4a9fa2e2c5bc1a733}{make\_charset}}(oneletter)\ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00057}00057\ \ \ \ \ prefix\ =\ commonprefix(strings)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{if}\ prefix:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ plen\ =\ len(prefix)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ have\ a\ prefix\ for\ all\ strings}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ prefix:',\ prefix}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ escape(prefix)\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}([s[plen:]\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ strings],\ \textcolor{stringliteral}{'(?:'})\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00065}00065\ \ \ \ \ \textcolor{comment}{\#\ is\ there\ a\ suffix?}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00066}00066\ \ \ \ \ strings\_rev\ =\ [s[::-\/1]\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ strings]}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00067}00067\ \ \ \ \ suffix\ =\ commonprefix(strings\_rev)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}\ suffix:}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ slen\ =\ len(suffix)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ suffix:',\ suffix[::-\/1]}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(sorted(s[:-\/slen]\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ strings),\ \textcolor{stringliteral}{'(?:'})\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ +\ escape(suffix[::-\/1])\ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00074}00074\ \ \ \ \ \textcolor{comment}{\#\ recurse\ on\ common\ 1-\/string\ prefixes}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00075}00075\ \ \ \ \ \textcolor{comment}{\#\ print\ '-\/>\ last\ resort'}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{return}\ open\_paren\ +\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'|'}.join(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(list(group[1]),\ \textcolor{stringliteral}{''})}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ group\ \textcolor{keywordflow}{in}\ groupby(strings,\ \textcolor{keyword}{lambda}\ s:\ s[0]\ ==\ first[0]))\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ +\ close\_paren}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00082}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a98d1a0e0f826b20e4ac6b3632b729722}{00082}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a98d1a0e0f826b20e4ac6b3632b729722}{regex\_opt}}(strings,\ prefix='',\ suffix=''):}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00083}00083\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ compiled\ regex\ that\ matches\ any\ string\ in\ the\ given\ list.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00084}00084\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ \ \ The\ strings\ to\ match\ must\ be\ literal\ strings,\ not\ regexes.\ \ They\ will\ be}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00086}00086\ \textcolor{stringliteral}{\ \ \ \ regex-\/escaped.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00087}00087\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ *prefix*\ and\ *suffix*\ are\ pre-\/\ and\ appended\ to\ the\ final\ regex.}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00090}00090\ \ \ \ \ strings\ =\ sorted(strings)}
+\DoxyCodeLine{\Hypertarget{regexopt_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{return}\ prefix\ +\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1regexopt_a989e6183f0b3d58fabf8047dc7fb2ce9}{regex\_opt\_inner}}(strings,\ \textcolor{stringliteral}{'('})\ +\ suffix}
+
+\end{DoxyCode}

@@ -1,0 +1,100 @@
+\doxysection{\+\_\+asyncio.\+py}
+\hypertarget{__asyncio_8py_source}{}\label{__asyncio_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/\_asyncio.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/\_asyncio.py}}
+\mbox{\hyperlink{__asyncio_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1__asyncio}{00001}}\ \textcolor{comment}{\#\ Copyright\ 2016\ Étienne\ Bersac}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00002}00002\ \textcolor{comment}{\#\ Copyright\ 2016\ Julien\ Danjou}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ 2016\ Joshua\ Harlow}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00004}00004\ \textcolor{comment}{\#\ Copyright\ 2013-\/2014\ Ray\ Holder}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00005}00005\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00006}00006\ \textcolor{comment}{\#\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00007}00007\ \textcolor{comment}{\#\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00008}00008\ \textcolor{comment}{\#\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00009}00009\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00010}00010\ \textcolor{comment}{\#\ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00011}00011\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00012}00012\ \textcolor{comment}{\#\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00013}00013\ \textcolor{comment}{\#\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00014}00014\ \textcolor{comment}{\#\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00015}00015\ \textcolor{comment}{\#\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00016}00016\ \textcolor{comment}{\#\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00018}00018\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00019}00019\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00020}00020\ \textcolor{keyword}{import}\ typing\ \textcolor{keyword}{as}\ t}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00021}00021\ \textcolor{keyword}{from}\ asyncio\ \textcolor{keyword}{import}\ sleep}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ AttemptManager}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00024}00024\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ BaseRetrying}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00025}00025\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ DoAttempt}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00026}00026\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ DoSleep}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00027}00027\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ RetryCallState}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1__asyncio_a036742d83c310c47a19e18eacc29e38a}{00029}}\ WrappedFnReturnT\ =\ t.TypeVar(\textcolor{stringliteral}{"{}WrappedFnReturnT"{}})}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00030}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1__asyncio_ad4197f35759d95535252b6a793352a9c}{00030}}\ WrappedFn\ =\ t.TypeVar(\textcolor{stringliteral}{"{}WrappedFn"{}},\ bound=t.Callable[...,\ t.Awaitable[t.Any]])}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00033}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying}{00033}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying}{AsyncRetrying}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying}{BaseRetrying}}):}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00034}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying}{00034}}\ \ \ \ \ sleep:\ t.Callable[[float],\ t.Awaitable[t.Any]]}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00036}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aa2005dd5b1abfe9b0c844c97ec9714fb}{00036}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aa2005dd5b1abfe9b0c844c97ec9714fb}{\_\_init\_\_}}(self,\ sleep:\ t.Callable[[float],\ t.Awaitable[t.Any]]\ =\ sleep,\ **kwargs:\ t.Any)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aa2005dd5b1abfe9b0c844c97ec9714fb}{\_\_init\_\_}}(**kwargs)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}\ =\ sleep}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_a583418fd0a7d8844f59b61867c94ba5b}{00040}}\ \ \ \ \ \textcolor{keyword}{async\ def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_a583418fd0a7d8844f59b61867c94ba5b}{\_\_call\_\_}}(\ \ \textcolor{comment}{\#\ type:\ ignore[override]}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ self,\ fn:\ WrappedFn,\ *args:\ t.Any,\ **kwargs:\ t.Any}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00042}00042\ \ \ \ \ )\ -\/>\ WrappedFnReturnT:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{begin}}()}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ retry\_state\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{RetryCallState}}(retry\_object=self,\ fn=fn,\ args=args,\ kwargs=kwargs)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ do\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{iter}}(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(do,\ DoAttempt):}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ await\ fn(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ BaseException:\ \ \textcolor{comment}{\#\ noqa:\ B902}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.set\_exception(sys.exc\_info())\ \ \textcolor{comment}{\#\ type:\ ignore[arg-\/type]}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.set\_result(result)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(do,\ DoSleep):}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.prepare\_for\_next\_attempt()}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ await\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}(do)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ do\ \ \textcolor{comment}{\#\ type:\ ignore[no-\/any-\/return]}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00061}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aad8559cb4a15109a2b8be689838d6918}{00061}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aad8559cb4a15109a2b8be689838d6918}{\_\_iter\_\_}}(self)\ -\/>\ t.Generator[AttemptManager,\ None,\ None]:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(\textcolor{stringliteral}{"{}AsyncRetrying\ object\ is\ not\ iterable"{}})}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_ae66f4039c78f549acf08ded55267ad04}{00064}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_ae66f4039c78f549acf08ded55267ad04}{\_\_aiter\_\_}}(self)\ -\/>\ "{}AsyncRetrying"{}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{begin}}()}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00066}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aed98a1e8f11e961b13cfd24992cd9e12}{00066}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aed98a1e8f11e961b13cfd24992cd9e12}{\_retry\_state}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{RetryCallState}}(self,\ fn=\textcolor{keywordtype}{None},\ args=(),\ kwargs=\{\})}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00069}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_a91fdad9701960bdfe75f09216cc7d2bb}{00069}}\ \ \ \ \ \textcolor{keyword}{async\ def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_a91fdad9701960bdfe75f09216cc7d2bb}{\_\_anext\_\_}}(self)\ -\/>\ AttemptManager:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ do\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{iter}}(retry\_state=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aed98a1e8f11e961b13cfd24992cd9e12}{\_retry\_state}})}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ do\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ StopAsyncIteration}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(do,\ DoAttempt):}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager}{AttemptManager}}(retry\_state=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aed98a1e8f11e961b13cfd24992cd9e12}{\_retry\_state}})}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(do,\ DoSleep):}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aed98a1e8f11e961b13cfd24992cd9e12}{\_retry\_state}}.prepare\_for\_next\_attempt()}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ await\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}(do)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ StopAsyncIteration}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00082}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aaa33218b91c383be8fee92d178185951}{00082}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aaa33218b91c383be8fee92d178185951}{wraps}}(self,\ fn:\ WrappedFn)\ -\/>\ WrappedFn:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ fn\ =\ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying_aaa33218b91c383be8fee92d178185951}{wraps}}(fn)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ensure\ wrapper\ is\ recognized\ as\ a\ coroutine\ function.}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{preprocessor}{@functools.wraps(fn)}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{async\ def\ }async\_wrapped(*args:\ t.Any,\ **kwargs:\ t.Any)\ -\/>\ t.Any:}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ await\ fn(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Preserve\ attributes}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ async\_wrapped.retry\ =\ fn.retry\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ async\_wrapped.retry\_with\ =\ fn.retry\_with\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{__asyncio_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ async\_wrapped\ \ \textcolor{comment}{\#\ type:\ ignore[return-\/value]}}
+
+\end{DoxyCode}

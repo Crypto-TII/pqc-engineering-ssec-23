@@ -1,0 +1,261 @@
+\doxysection{windows.\+py}
+\hypertarget{windows_8py_source}{}\label{windows_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/platformdirs/windows.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/platformdirs/windows.py}}
+\mbox{\hyperlink{windows_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Windows."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00002}00002\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ annotations}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00004}00004\ \textcolor{keyword}{import}\ ctypes}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00005}00005\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00006}00006\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00007}00007\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ lru\_cache}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00008}00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00010}00010\ \textcolor{keyword}{from}\ .api\ \textcolor{keyword}{import}\ PlatformDirsABC}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00012}00012\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{from}\ collections.abc\ \textcolor{keyword}{import}\ Callable}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00016}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows}{00016}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows}{Windows}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c}{PlatformDirsABC}}):}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ \`{}MSDN\ on\ where\ to\ store\ app\ data\ files}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ <http://support.microsoft.com/default.aspx?scid=kb;en-\/us;310294\#XSLTH3194121123120121120120>\`{}\_.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Makes\ use\ of\ the}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ \`{}appname\ <platformdirs.api.PlatformDirsABC.appname>\`{},}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ \`{}appauthor\ <platformdirs.api.PlatformDirsABC.appauthor>\`{},}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ \`{}version\ <platformdirs.api.PlatformDirsABC.version>\`{},}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ \`{}roaming\ <platformdirs.api.PlatformDirsABC.roaming>\`{},}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ \`{}opinion\ <platformdirs.api.PlatformDirsABC.opinion>\`{},}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ \`{}ensure\_exists\ <platformdirs.api.PlatformDirsABC.ensure\_exists>\`{}.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00029}00029\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00030}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_ab030ff49924fda776deb9a60a49bb1e5}{00030}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ace0ea5afb056ef7fcab7706d4f08b7fd}{user\_data\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ data\ directory\ tied\ to\ the\ user,\ e.g.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)AppData\(\backslash\)\(\backslash\)Local\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\`{}\`{}\ (not\ roaming)\ or}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)AppData\(\backslash\)\(\backslash\)Roaming\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\`{}\`{}\ (roaming)}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ const\ =\ \textcolor{stringliteral}{"{}CSIDL\_APPDATA"{}}\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a756e36b590f34d6bc118859eb1a343d1}{roaming}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(const))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(path)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{00040}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(self,\ path:\ str,\ *,\ opinion\_value:\ str\ |\ \textcolor{keywordtype}{None}\ =\ \textcolor{keywordtype}{None})\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ params\ =\ []}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00042}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows}{00042}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_afc235ca4ceaf3d8e124d9e33cf8b4729}{appname}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a5ac995d4a840b3170e3ef83e740ac872}{appauthor}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keyword}{False}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ author\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a5ac995d4a840b3170e3ef83e740ac872}{appauthor}}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_afc235ca4ceaf3d8e124d9e33cf8b4729}{appname}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params.append(author)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ params.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_afc235ca4ceaf3d8e124d9e33cf8b4729}{appname}})}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00047}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows}{00047}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ opinion\_value\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a6700d870d284c0630cc003594ce8d182}{opinion}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params.append(opinion\_value)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00049}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows}{00049}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a4c7a521b8f1a0769c09bfa4a1fca7dab}{version}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a4c7a521b8f1a0769c09bfa4a1fca7dab}{version}})}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ path\ =\ os.path.join(path,\ *params)\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a2362db45e972b1b921cac2b2de210cb7}{\_optionally\_create\_directory}}(path)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00055}00055\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00056}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a46caec3de71b2e865f78c9fc9d35ab5d}{00056}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a1c1bb289de9ef4b81a1cd8fad3d76da8}{site\_data\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ data\ directory\ shared\ by\ users,\ e.g.\ \`{}\`{}C:\(\backslash\)\(\backslash\)ProgramData\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_COMMON\_APPDATA"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(path)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00061}00061\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00062}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a85b141f300ee2d98be4cbb4e5c1af197}{00062}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_aec65e959ca986cf39beaa84701469a0f}{user\_config\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ config\ directory\ tied\ to\ the\ user,\ same\ as\ \`{}user\_data\_dir\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ace0ea5afb056ef7fcab7706d4f08b7fd}{user\_data\_dir}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00066}00066\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00067}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a019bf4be1ed957f78ebf2b0153fa1a20}{00067}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a77f5a0b03c2632870198878f5c24cfac}{site\_config\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ config\ directory\ shared\ by\ the\ users,\ same\ as\ \`{}site\_data\_dir\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a1c1bb289de9ef4b81a1cd8fad3d76da8}{site\_data\_dir}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00071}00071\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a67af914ed205497b501bede118249736}{00072}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a15ef9634371d498196302f7a3992a36e}{user\_cache\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ cache\ directory\ tied\ to\ the\ user\ (if\ opinionated\ with\ \`{}\`{}Cache\`{}\`{}\ folder\ within\ \`{}\`{}\$appname\`{}\`{})\ e.g.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00075}00075\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)AppData\(\backslash\)\(\backslash\)Local\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\(\backslash\)\(\backslash\)Cache\(\backslash\)\(\backslash\)\$version\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00076}00076\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(path,\ opinion\_value=\textcolor{stringliteral}{"{}Cache"{}})}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00080}00080\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00081}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_afbf9bfb7baf0692b6645b234324175dc}{00081}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_aa388b232976774382db3ed5ce20e9543}{site\_cache\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ cache\ directory\ shared\ by\ users,\ e.g.\ \`{}\`{}C:\(\backslash\)\(\backslash\)ProgramData\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\(\backslash\)\(\backslash\)Cache\(\backslash\)\(\backslash\)\$version\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_COMMON\_APPDATA"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(path,\ opinion\_value=\textcolor{stringliteral}{"{}Cache"{}})}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00086}00086\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00087}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a74b1e895d3dcc927cacd11b7332b4a52}{00087}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ac0c71b2edcb130ed64be553d31bb5ef7}{user\_state\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ state\ directory\ tied\ to\ the\ user,\ same\ as\ \`{}user\_data\_dir\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ace0ea5afb056ef7fcab7706d4f08b7fd}{user\_data\_dir}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00091}00091\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00092}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a7726c2d53ab4ecdec0bde3b411762dcb}{00092}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a672ce4eed26ea784284a670187484924}{user\_log\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ log\ directory\ tied\ to\ the\ user,\ same\ as\ \`{}user\_data\_dir\`{}\ if\ not\ opinionated\ else\ \`{}\`{}Logs\`{}\`{}\ in\ it"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ path\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ace0ea5afb056ef7fcab7706d4f08b7fd}{user\_data\_dir}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a6700d870d284c0630cc003594ce8d182}{opinion}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.path.join(path,\ \textcolor{stringliteral}{"{}Logs"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a2362db45e972b1b921cac2b2de210cb7}{\_optionally\_create\_directory}}(path)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00100}00100\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00101}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_aa4df526b8bf6ad3771578b1b7296ea6e}{00101}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_acca84041df16d4dac2c2cc068479b878}{user\_documents\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ documents\ directory\ tied\ to\ the\ user\ e.g.\ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)Documents\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_PERSONAL"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00105}00105\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00106}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_ae4e23174607d58416d4303b5351cae72}{00106}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a8772c93dc139054ddc4182444d190eea}{user\_downloads\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ downloads\ directory\ tied\ to\ the\ user\ e.g.\ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)Downloads\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_DOWNLOADS"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00110}00110\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00111}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a9f8253d7656a78a317252c2dae58b7e5}{00111}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_a5bf7886aea69bfe39fe70cfafa3265b5}{user\_pictures\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ pictures\ directory\ tied\ to\ the\ user\ e.g.\ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)Pictures\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_MYPICTURES"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00115}00115\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00116}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a1e5ad64fd53bdd1d479c6e01b3ace557}{00116}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_acf22968d534ebaaf01a6cb937de048b9}{user\_videos\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ videos\ directory\ tied\ to\ the\ user\ e.g.\ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)Videos\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_MYVIDEO"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00120}00120\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00121}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_aceba109e9044f59bae16c27beff2c96d}{00121}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_aa39d5344f0f8797919c1a1b4c76de2f1}{user\_music\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}:return:\ music\ directory\ tied\ to\ the\ user\ e.g.\ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)Music\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_MYMUSIC"{}}))}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00125}00125\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a97f8df707b70360258dea9fe99def884}{00126}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1api_1_1_platform_dirs_a_b_c_ae31b0e4c825492b41562785f823e1f2e}{user\_runtime\_dir}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ runtime\ directory\ tied\ to\ the\ user,\ e.g.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \`{}\`{}\%USERPROFILE\%\(\backslash\)\(\backslash\)AppData\(\backslash\)\(\backslash\)Local\(\backslash\)\(\backslash\)Temp\(\backslash\)\(\backslash\)\$appauthor\(\backslash\)\(\backslash\)\$appname\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(os.path.join(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{get\_win\_folder}}(\textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}),\ \textcolor{stringliteral}{"{}Temp"{}}))\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1platformdirs_1_1windows_1_1_windows_a37e5b49db44bbc217ba04f2b95adb840}{\_append\_parts}}(path)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00135}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_ae8ce5c189eb6ab8d0bd31c9fd7effc5e}{00135}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_ae8ce5c189eb6ab8d0bd31c9fd7effc5e}{get\_win\_folder\_from\_env\_vars}}(csidl\_name:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00136}00136\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ folder\ from\ environment\ variables."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00137}00137\ \ \ \ \ result\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_ae958f10613ede2608decd58560b4f5b4}{get\_win\_folder\_if\_csidl\_name\_not\_env\_var}}(csidl\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00138}00138\ \ \ \ \ \textcolor{keywordflow}{if}\ result\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00141}00141\ \ \ \ \ env\_var\_name\ =\ \{}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}APPDATA"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_COMMON\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}ALLUSERSPROFILE"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}LOCALAPPDATA"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00145}00145\ \ \ \ \ \}.get(csidl\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00146}00146\ \ \ \ \ \textcolor{keywordflow}{if}\ env\_var\_name\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ msg\ =\ f\textcolor{stringliteral}{"{}Unknown\ CSIDL\ name:\ \{csidl\_name\}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(msg)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00149}00149\ \ \ \ \ result\ =\ os.environ.get(env\_var\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00150}00150\ \ \ \ \ \textcolor{keywordflow}{if}\ result\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ msg\ =\ f\textcolor{stringliteral}{"{}Unset\ environment\ variable:\ \{env\_var\_name\}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(msg)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00156}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_ae958f10613ede2608decd58560b4f5b4}{00156}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_ae958f10613ede2608decd58560b4f5b4}{get\_win\_folder\_if\_csidl\_name\_not\_env\_var}}(csidl\_name:\ str)\ -\/>\ str\ |\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00157}00157\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ folder\ for\ a\ CSIDL\ name\ that\ does\ not\ exist\ as\ an\ environment\ variable."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_PERSONAL"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(os.path.normpath(os.environ[\textcolor{stringliteral}{"{}USERPROFILE"{}}]),\ \textcolor{stringliteral}{"{}Documents"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_DOWNLOADS"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(os.path.normpath(os.environ[\textcolor{stringliteral}{"{}USERPROFILE"{}}]),\ \textcolor{stringliteral}{"{}Downloads"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00164}00164\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_MYPICTURES"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(os.path.normpath(os.environ[\textcolor{stringliteral}{"{}USERPROFILE"{}}]),\ \textcolor{stringliteral}{"{}Pictures"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00167}00167\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_MYVIDEO"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(os.path.normpath(os.environ[\textcolor{stringliteral}{"{}USERPROFILE"{}}]),\ \textcolor{stringliteral}{"{}Videos"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_MYMUSIC"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(os.path.normpath(os.environ[\textcolor{stringliteral}{"{}USERPROFILE"{}}]),\ \textcolor{stringliteral}{"{}Music"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00172}00172\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00175}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a6d06594a53478e3833301bf03aa95ec1}{00175}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a6d06594a53478e3833301bf03aa95ec1}{get\_win\_folder\_from\_registry}}(csidl\_name:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00176}00176\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ Get\ folder\ from\ the\ registry.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00178}00178\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ This\ is\ a\ fallback\ technique\ at\ best.\ I'm\ not\ sure\ if\ using\ the\ registry\ for\ these\ guarantees\ us\ the\ correct\ answer}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ for\ all\ CSIDL\_*\ names.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00182}00182\ \ \ \ \ shell\_folder\_name\ =\ \{}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}AppData"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_COMMON\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}Common\ AppData"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}:\ \textcolor{stringliteral}{"{}Local\ AppData"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_PERSONAL"{}}:\ \textcolor{stringliteral}{"{}Personal"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_DOWNLOADS"{}}:\ \textcolor{stringliteral}{"{}\{374DE290-\/123F-\/4565-\/9164-\/39C4925E467B\}"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYPICTURES"{}}:\ \textcolor{stringliteral}{"{}My\ Pictures"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYVIDEO"{}}:\ \textcolor{stringliteral}{"{}My\ Video"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYMUSIC"{}}:\ \textcolor{stringliteral}{"{}My\ Music"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00191}00191\ \ \ \ \ \}.get(csidl\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{if}\ shell\_folder\_name\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ msg\ =\ f\textcolor{stringliteral}{"{}Unknown\ CSIDL\ name:\ \{csidl\_name\}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(msg)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ !=\ \textcolor{stringliteral}{"{}win32"{}}:\ \ \textcolor{comment}{\#\ only\ needed\ for\ mypy\ type\ checker\ to\ know\ that\ this\ code\ runs\ only\ on\ Windows}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00197}00197\ \ \ \ \ \textcolor{keyword}{import}\ winreg}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00199}00199\ \ \ \ \ key\ =\ winreg.OpenKey(winreg.HKEY\_CURRENT\_USER,\ \textcolor{stringliteral}{r"{}Software\(\backslash\)Microsoft\(\backslash\)Windows\(\backslash\)CurrentVersion\(\backslash\)Explorer\(\backslash\)Shell\ Folders"{}})}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00200}00200\ \ \ \ \ directory,\ \_\ =\ winreg.QueryValueEx(key,\ shell\_folder\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{return}\ str(directory)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00204}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a160075166df86a3caa3f5419b3bbcc65}{00204}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a160075166df86a3caa3f5419b3bbcc65}{get\_win\_folder\_via\_ctypes}}(csidl\_name:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00205}00205\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ folder\ with\ ctypes."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00206}00206\ \ \ \ \ \textcolor{comment}{\#\ There\ is\ no\ 'CSIDL\_DOWNLOADS'.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00207}00207\ \ \ \ \ \textcolor{comment}{\#\ Use\ 'CSIDL\_PROFILE'\ (40)\ and\ append\ the\ default\ folder\ 'Downloads'\ instead.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00208}00208\ \ \ \ \ \textcolor{comment}{\#\ https://learn.microsoft.com/en-\/us/windows/win32/shell/knownfolderid}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00210}00210\ \ \ \ \ csidl\_const\ =\ \{}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_APPDATA"{}}:\ 26,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_COMMON\_APPDATA"{}}:\ 35,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_LOCAL\_APPDATA"{}}:\ 28,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_PERSONAL"{}}:\ 5,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYPICTURES"{}}:\ 39,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYVIDEO"{}}:\ 14,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_MYMUSIC"{}}:\ 13,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CSIDL\_DOWNLOADS"{}}:\ 40,}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00219}00219\ \ \ \ \ \}.get(csidl\_name)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_const\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ msg\ =\ f\textcolor{stringliteral}{"{}Unknown\ CSIDL\ name:\ \{csidl\_name\}"{}}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(msg)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00224}00224\ \ \ \ \ buf\ =\ ctypes.create\_unicode\_buffer(1024)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00225}00225\ \ \ \ \ windll\ =\ getattr(ctypes,\ \textcolor{stringliteral}{"{}windll"{}})\ \ \textcolor{comment}{\#\ noqa:\ B009\ \#\ using\ getattr\ to\ avoid\ false\ positive\ with\ mypy\ type\ checker}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00226}00226\ \ \ \ \ windll.shell32.SHGetFolderPathW(\textcolor{keywordtype}{None},\ csidl\_const,\ \textcolor{keywordtype}{None},\ 0,\ buf)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00228}00228\ \ \ \ \ \textcolor{comment}{\#\ Downgrade\ to\ short\ path\ name\ if\ it\ has\ highbit\ chars.}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ any(ord(c)\ >\ 255\ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ buf):\ \ \textcolor{comment}{\#\ noqa:\ PLR2004}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ buf2\ =\ ctypes.create\_unicode\_buffer(1024)}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ windll.kernel32.GetShortPathNameW(buf.value,\ buf2,\ 1024):}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ buf\ =\ buf2}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00234}00234\ \ \ \ \ \textcolor{keywordflow}{if}\ csidl\_name\ ==\ \textcolor{stringliteral}{"{}CSIDL\_DOWNLOADS"{}}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(buf.value,\ \textcolor{stringliteral}{"{}Downloads"{}})\ \ \textcolor{comment}{\#\ noqa:\ PTH118}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00237}00237\ \ \ \ \ \textcolor{keywordflow}{return}\ buf.value}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00240}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a5680993f76192eeef71f84da5b7e32d7}{00240}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a5680993f76192eeef71f84da5b7e32d7}{\_pick\_get\_win\_folder}}()\ -\/>\ Callable[[str],\ str]:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(ctypes,\ \textcolor{stringliteral}{"{}windll"{}}):}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_win\_folder\_via\_ctypes}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keyword}{import}\ winreg\ \ \textcolor{comment}{\#\ noqa:\ F401}}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00245}00245\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_win\_folder\_from\_env\_vars}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_win\_folder\_from\_registry}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00251}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a9ba86fd58144720d04008d3cd9fe98b6}{00251}}\ get\_win\_folder\ =\ lru\_cache(maxsize=\textcolor{keywordtype}{None})(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1platformdirs_1_1windows_a5680993f76192eeef71f84da5b7e32d7}{\_pick\_get\_win\_folder}}())}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00253}00253\ \_\_all\_\_\ =\ [}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00254}00254\ \ \ \ \ \textcolor{stringliteral}{"{}Windows"{}},}
+\DoxyCodeLine{\Hypertarget{windows_8py_source_l00255}00255\ ]}
+
+\end{DoxyCode}

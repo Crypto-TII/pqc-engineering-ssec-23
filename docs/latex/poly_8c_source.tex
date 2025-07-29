@@ -1,0 +1,1363 @@
+\doxysection{poly.\+c}
+\hypertarget{poly_8c_source}{}\label{poly_8c_source}\index{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/common/poly.c@{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/common/poly.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}mont.h"{}}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}poly.h"{}}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00008}00008\ \textcolor{preprocessor}{\#define\ UNCONST(type,\ var)\ (*(type*)\&(var))}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00010}00010\ \textcolor{keywordtype}{void}\ poly\_mul(fp\ *c,\textcolor{keyword}{const}\ fp\ *a,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ alen,\textcolor{keyword}{const}\ fp\ *b,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ blen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00012}00012\ \ \ \textcolor{keywordflow}{if}\ (alen\ <\ blen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00013}00013\ \ \ \ \ poly\_mul(c,b,blen,a,alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00014}00014\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00015}00015\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00016}00016\ \ \ \textcolor{keywordflow}{if}\ (!blen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00017}00017\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00019}00019\ \ \ \ \ \ \ fp\_mul3(\&c[i],\&a[i],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00020}00020\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00022}00022\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00024}00024\ \ \ \textcolor{comment}{/*\ now\ alen\ >=\ blen\ >=\ 2\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00026}00026\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00027}00027\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00028}00028\ \ \ \ \ fp\_mul3(\&c[2],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00030}00030\ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00031}00031\ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00032}00032\ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00033}00033\ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00034}00034\ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00036}00036\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00037}00037\ \textcolor{comment}{\ \ \ \ fp\_mul3(\&c[1],\&a[0],\&b[1]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00038}00038\ \textcolor{comment}{\ \ \ \ fp\ t;}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00039}00039\ \textcolor{comment}{\ \ \ \ fp\_mul3(\&t,\&a[1],\&b[0]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00040}00040\ \textcolor{comment}{\ \ \ \ fp\_add2(\&c[1],\&t);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00041}00041\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00043}00043\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00045}00045\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00047}00047\ \ \ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00048}00048\ \ \ \ \ \ \ fp\_mul3(\&c[2],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00049}00049\ \ \ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00050}00050\ \ \ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00051}00051\ \ \ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00052}00052\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00053}00053\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00054}00054\ \ \ \ \ \ \ fp\_mul3(\&c[3],\&a[2],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00055}00055\ \ \ \ \ \ \ fp\ a2b0;\ fp\_mul3(\&a2b0,\&a[2],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00056}00056\ \ \ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a2b0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00057}00057\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 4)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00060}00060\ \ \ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00061}00061\ \ \ \ \ \ \ fp\_mul3(\&c[2],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00062}00062\ \ \ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00063}00063\ \ \ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00064}00064\ \ \ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00065}00065\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00066}00066\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00068}00068\ \ \ \ \ \ \ fp\ mid;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00069}00069\ \ \ \ \ \ \ fp\_mul3(\&mid,\&a[2],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00070}00070\ \ \ \ \ \ \ fp\_mul3(\&c[4],\&a[3],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00071}00071\ \ \ \ \ \ \ fp\ a23;\ fp\_add3(\&a23,\&a[2],\&a[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00072}00072\ \ \ \ \ \ \ fp\_mul3(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&a23,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00073}00073\ \ \ \ \ \ \ fp\_sub2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&mid);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00074}00074\ \ \ \ \ \ \ fp\_sub2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&c[4]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00075}00075\ \ \ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&mid);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00077}00077\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00078}00078\ \textcolor{comment}{\ \ \ \ \ \ fp\_mul3(\&c[3],\&a[2],\&b[1]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00079}00079\ \textcolor{comment}{\ \ \ \ \ \ fp\ a2b0;\ fp\_mul3(\&a2b0,\&a[2],\&b[0]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00080}00080\ \textcolor{comment}{\ \ \ \ \ \ fp\_add2(\&c[2],\&a2b0);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00081}00081\ \textcolor{comment}{\ \ \ \ \ \ fp\_mul3(\&c[4],\&a[3],\&b[1]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00082}00082\ \textcolor{comment}{\ \ \ \ \ \ fp\ a3b0;\ fp\_mul3(\&a3b0,\&a[3],\&b[0]);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00083}00083\ \textcolor{comment}{\ \ \ \ \ \ fp\_add2(\&c[3],\&a3b0);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00084}00084\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00085}00085\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00086}00086\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00087}00087\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00089}00089\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ <=\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00091}00091\ \ \ \ \ \ \ \textcolor{comment}{/*\ see\ eprint\ 2015/1247\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00092}00092\ \ \ \ \ \ \ \textcolor{comment}{/*\ XXX:\ toom\ instead?\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00093}00093\ \ \ \ \ \ \ fp\ a10;\ fp\_sub3(\&a10,\&a[1],\&a[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00094}00094\ \ \ \ \ \ \ fp\ b01;\ fp\_sub3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00095}00095\ \ \ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a10,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00096}00096\ \ \ \ \ \ \ fp\ a20;\ fp\_sub3(\&a20,\&a[2],\&a[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00097}00097\ \ \ \ \ \ \ fp\ b02;\ fp\_sub3(\&b02,\&b[0],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00098}00098\ \ \ \ \ \ \ fp\_mul3(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a20,(\textcolor{keyword}{const}\ fp*)\ \&b02);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00099}00099\ \ \ \ \ \ \ fp\ a21;\ fp\_sub3(\&a21,\&a[2],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00100}00100\ \ \ \ \ \ \ fp\ b12;\ fp\_sub3(\&b12,\&b[1],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00101}00101\ \ \ \ \ \ \ fp\_mul3(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&a21,(\textcolor{keyword}{const}\ fp*)\ \&b12);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00102}00102\ \ \ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00103}00103\ \ \ \ \ \ \ fp\_mul3(\&c[4],\&a[2],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00104}00104\ \ \ \ \ \ \ fp\ a1b1;\ fp\_mul3(\&a1b1,\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00105}00105\ \ \ \ \ \ \ fp\ t;\ fp\_add3(\&t,(\textcolor{keyword}{const}\ fp*)\ \&a1b1,(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00106}00106\ \ \ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00107}00107\ \ \ \ \ \ \ fp\_add3(\&t,(\textcolor{keyword}{const}\ fp*)\ \&a1b1,(\textcolor{keyword}{const}\ fp*)\ \&c[4]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00108}00108\ \ \ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00109}00109\ \ \ \ \ \ \ fp\_add2(\&t,(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00110}00110\ \ \ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00112}00112\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ >=\ 4)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ fp\_mul3(\&t,\&a[3],\&b[0]);\ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ fp\_mul3(\&t,\&a[3],\&b[1]);\ fp\_add2(\&c[4],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ fp\_mul3(\&c[5],\&a[3],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00116}00116\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00117}00117\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ >=\ 5)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ would\ be\ same\ mults,\ more\ adds:}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a0b0}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a1-\/a0)(b0-\/b1)\ +\ a0b0\ +\ a1b1}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a2-\/a0)(b0-\/b2)\ +\ a0b0\ +\ a1b1\ +\ a2b2}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a2-\/a1)(b1-\/b2)\ +\ a1b1\ +\ a2b2\ +\ a3b0}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a4-\/a2)(b0-\/b2)\ +\ a2b0\ +\ a3b1\ +\ a4b2}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a4-\/a3)(b1-\/b2)\ +\ a3b1\ +\ a4b2}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a4b2}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00126}00126\ \ \ \ \ \ \ \ \ fp\_mul3(\&t,\&a[4],\&b[0]);\ fp\_add2(\&c[4],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00127}00127\ \ \ \ \ \ \ \ \ fp\_mul3(\&t,\&a[4],\&b[1]);\ fp\_add2(\&c[5],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00128}00128\ \ \ \ \ \ \ \ \ fp\_mul3(\&c[6],\&a[4],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00129}00129\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00130}00130\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00131}00131\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00132}00132\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00134}00134\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ kara\ =\ (alen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00135}00135\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ a1len\ =\ alen-\/kara;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00137}00137\ \ \ \textcolor{keywordflow}{if}\ (blen\ <=\ kara)\ \{\ \textcolor{comment}{/*\ XXX:\ figure\ out\ best\ cutoff\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00138}00138\ \ \ \ \ fp\ c1[a1len+blen-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00139}00139\ \ \ \ \ poly\_mul(c,a,kara,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00140}00140\ \ \ \ \ poly\_mul(c1,a+kara,a1len,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ blen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00142}00142\ \ \ \ \ \ \ fp\_add2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00143}00143\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ blen-\/1;i\ <\ a1len+blen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00144}00144\ \ \ \ \ \textcolor{comment}{//\ \ \ c[i+kara]\ =\ c1[i];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00145}00145\ \ \ \ \ \ \ fp\_copy(c[i+kara],\ c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00146}00146\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00147}00147\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00149}00149\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ b1len\ =\ blen-\/kara;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00151}00151\ \ \ fp\ a01[kara];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00152}00152\ \ \ fp\ b01[kara];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00154}00154\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ a1len;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00155}00155\ \ \ \ \ fp\_add3(\&a01[i],\&a[i],\&a[i+kara]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00156}00156\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ a1len;i\ <\ kara;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00157}00157\ \ \ \ \ \textcolor{comment}{//\ a01[i]\ =\ a[i];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00158}00158\ \ \ \ \ fp\_copy(a01[i],\ a[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00160}00160\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ b1len;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00161}00161\ \ \ \ \ fp\_add3(\&b01[i],\&b[i],\&b[i+kara]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00162}00162\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ b1len;i\ <\ kara;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00163}00163\ \ \ \ \ fp\_copy(b01[i],\ b[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00165}00165\ \ \ fp\ c01[kara+kara-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00166}00166\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ c1len\ =\ a1len+b1len-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00167}00167\ \ \ fp\ c1[c1len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00169}00169\ \ \ poly\_mul(c,a,kara,b,kara);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00170}00170\ \ \ poly\_mul(c01,(\textcolor{keyword}{const}\ fp*)\ a01,kara,(\textcolor{keyword}{const}\ fp*)\ b01,kara);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00171}00171\ \ \ poly\_mul(c1,a+kara,a1len,b+kara,b1len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00173}00173\ \ \ fp\ mix;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00175}00175\ \ \ \textcolor{keywordflow}{if}\ (c1len\ <\ kara)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00176}00176\ \ \ \ \ fp\_sub3(\&c[kara+kara-\/1],(\textcolor{keyword}{const}\ fp*)\ \&c01[kara-\/1],(\textcolor{keyword}{const}\ fp*)\ \&c[kara-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c1len;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00178}00178\ \ \ \ \ \ \ fp\_sub3(\&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[kara+i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00179}00179\ \ \ \ \ \ \ fp\_sub3(\&c[i+2*kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00180}00180\ \ \ \ \ \ \ fp\_sub3(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00181}00181\ \ \ \ \ \ \ fp\_add2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00182}00182\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ c1len;i\ <\ kara-\/1;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00184}00184\ \ \ \ \ \ \ fp\_sub3(\&c[i+2*kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c[i+kara]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00185}00185\ \ \ \ \ \ \ fp\_sub2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00186}00186\ \ \ \ \ \ \ fp\_add2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00187}00187\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00189}00189\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00191}00191\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c1len-\/kara;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00192}00192\ \ \ \ \ fp\_sub3(\&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[kara+i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00193}00193\ \ \ \ \ fp\_sub3(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00194}00194\ \ \ \ \ fp\_add2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00195}00195\ \ \ \ \ fp\_sub3(\&c[i+2*kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00196}00196\ \ \ \ \ fp\_sub2(\&c[i+2*kara],(\textcolor{keyword}{const}\ fp*)\ \&c1[i+kara]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00197}00197\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00198}00198\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ c1len-\/kara;i\ <\ kara-\/1;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00199}00199\ \ \ \ \ fp\_sub3(\&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[kara+i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00200}00200\ \ \ \ \ fp\_sub3(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix,(\textcolor{keyword}{const}\ fp*)\ \&c[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00201}00201\ \ \ \ \ fp\_add2(\&c[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00202}00202\ \ \ \ \ fp\_sub3(\&c[i+2*kara],(\textcolor{keyword}{const}\ fp*)\ \&c01[i+kara],(\textcolor{keyword}{const}\ fp*)\ \&mix);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00203}00203\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00204}00204\ \ \ fp\_sub3(\&c[kara+kara-\/1],(\textcolor{keyword}{const}\ fp*)\ \&c01[kara-\/1],(\textcolor{keyword}{const}\ fp*)\ \&c[kara-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00205}00205\ \ \ fp\_sub2(\&c[kara+kara-\/1],(\textcolor{keyword}{const}\ fp*)\ \&c1[kara-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00206}00206\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ kara-\/1;i\ <\ c1len;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00207}00207\ \ \ \ \ \textcolor{comment}{//\ c[i+2*kara]\ =\ c1[i];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00208}00208\ \ \ \ \ fp\_copy(c[i+2*kara],\ c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00210}00210\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00211}00211\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00213}00213\ \textcolor{keywordtype}{void}\ poly\_mul\_low(fp\ *c,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ clen,\textcolor{keyword}{const}\ fp\ *a,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ alen,\textcolor{keyword}{const}\ fp\ *b,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ blen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00214}00214\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00215}00215\ \ \ \textcolor{keywordflow}{if}\ (!alen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00216}00216\ \ \ \textcolor{keywordflow}{if}\ (!blen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00217}00217\ \ \ \textcolor{keywordflow}{if}\ (!clen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00219}00219\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ alen+blen-\/1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00220}00220\ \ \ \ \ poly\_mul(c,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00221}00221\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00222}00222\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00223}00223\ \ \ \textcolor{keywordflow}{if}\ (clen*4\ >=\ 3*(alen+blen-\/1))\ \{\ \textcolor{comment}{/*\ XXX:\ tune\ cutoff\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00224}00224\ \ \ \ \ fp\ ab[alen+blen-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00225}00225\ \ \ \ \ poly\_mul(ab,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00227}00227\ \ \ \ \ \ \ fp\_copy(c[i],\ ab[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00229}00229\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00231}00231\ \ \ \textcolor{keywordflow}{if}\ (alen\ <\ blen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00232}00232\ \ \ \ \ \textcolor{keyword}{const}\ fp\ *t\ =\ a;\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ tlen\ =\ alen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00233}00233\ \ \ \ \ a\ =\ b;\ alen\ =\ blen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00234}00234\ \ \ \ \ b\ =\ t;\ blen\ =\ tlen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00235}00235\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00236}00236\ \ \ \textcolor{keywordflow}{if}\ (alen\ >\ clen)\ alen\ =\ clen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00237}00237\ \ \ \textcolor{keywordflow}{if}\ (blen\ >\ clen)\ blen\ =\ clen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00239}00239\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00241}00241\ \ \ \ \ \ \ fp\_mul3(\&c[i],\&a[i],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00243}00243\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00245}00245\ \ \ assert(2\ <=\ blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00246}00246\ \ \ assert(blen\ <=\ alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00247}00247\ \ \ assert(alen\ <=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00248}00248\ \ \ assert(clen\ <=\ alen+blen-\/2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00250}00250\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00251}00251\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00252}00252\ \ \ \ \ fp\_mul3(\&c[1],\&a[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00253}00253\ \ \ \ \ fp\ t;\ fp\_mul3(\&t,\&a[1],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00254}00254\ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00255}00255\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00256}00256\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00258}00258\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00259}00259\ \ \ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00260}00260\ \ \ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00261}00261\ \ \ \ \ \ \ fp\_mul3(\&c[2],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00262}00262\ \ \ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00263}00263\ \ \ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00264}00264\ \ \ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00265}00265\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00266}00266\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00267}00267\ \ \ \ \ \ \ fp\ a2b0;\ fp\_mul3(\&a2b0,\&a[2],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00268}00268\ \ \ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a2b0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00269}00269\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00270}00270\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00271}00271\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00273}00273\ \ \ \textcolor{keywordflow}{if}(1)\ \{\ \textcolor{comment}{/*\ XXX:\ tune\ this\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00274}00274\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ a1len\ =\ alen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ a0len\ =\ alen-\/a1len;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00276}00276\ \ \ \ \ fp\ a0[a0len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00277}00277\ \ \ \ \ fp\ a1[a1len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00278}00278\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ a0len;++i)\ fp\_copy(a0[i],\ a[2*i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ a1len;++i)\ fp\_copy(a1[i],\ a[2*i+1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00280}00280\ \ \ \ \ \textcolor{comment}{/*\ a\ =\ a0(x\string^2)\ +\ x\ a1(x\string^2)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00282}00282\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ b1len\ =\ blen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00283}00283\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ b0len\ =\ blen-\/b1len;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00284}00284\ \ \ \ \ fp\ b0[b0len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00285}00285\ \ \ \ \ fp\ b1[b1len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00286}00286\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ b0len;++i)\ fp\_copy(b0[i],\ b[2*i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ b1len;++i)\ fp\_copy(b1[i],\ b[2*i+1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00288}00288\ \ \ \ \ \textcolor{comment}{/*\ b\ =\ b0(x\string^2)\ +\ x\ b1(x\string^2)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00290}00290\ \ \ \ \ fp\ a01[a0len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ a1len;++i)\ fp\_add3(\&a01[i],(\textcolor{keyword}{const}\ fp*)\ \&a0[i],(\textcolor{keyword}{const}\ fp*)\ \&a1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{if}\ (a1len\ <\ a0len)\ fp\_copy(a01[a1len],\ a0[a1len]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00294}00294\ \ \ \ \ fp\ b01[b0len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ b1len;++i)\ fp\_add3(\&b01[i],(\textcolor{keyword}{const}\ fp*)\ \&b0[i],(\textcolor{keyword}{const}\ fp*)\ \&b1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{if}\ (b1len\ <\ b0len)\ fp\_copy(b01[b1len],\ b0[b1len]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00298}00298\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ c0len\ =\ a0len+b0len-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00299}00299\ \ \ \ \ \textcolor{keywordflow}{if}\ (c0len\ >\ (clen+1)/2)\ c0len\ =\ (clen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00301}00301\ \ \ \ \ fp\ c0[c0len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00302}00302\ \ \ \ \ poly\_mul\_low(c0,c0len,(\textcolor{keyword}{const}\ fp*)\ a0,a0len,(\textcolor{keyword}{const}\ fp*)\ b0,b0len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00304}00304\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ c01len\ =\ a0len+b0len-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00305}00305\ \ \ \ \ \textcolor{keywordflow}{if}\ (c01len\ >\ clen/2)\ c01len\ =\ clen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00307}00307\ \ \ \ \ fp\ c01[c01len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00308}00308\ \ \ \ \ poly\_mul\_low(c01,c01len,(\textcolor{keyword}{const}\ fp*)\ a01,a0len,(\textcolor{keyword}{const}\ fp*)\ b01,b0len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00310}00310\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ c1len\ =\ a1len+b1len-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{if}\ (c1len\ >\ clen/2)\ c1len\ =\ clen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00313}00313\ \ \ \ \ fp\ c1[c1len];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00314}00314\ \ \ \ \ poly\_mul\_low(c1,c1len,(\textcolor{keyword}{const}\ fp*)\ a1,a1len,(\textcolor{keyword}{const}\ fp*)\ b1,b1len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00316}00316\ \ \ \ \ \textcolor{comment}{/*\ XXX:\ use\ refined\ karatsuba\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00318}00318\ \ \ \ \ assert(c0len\ >=\ c01len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c01len;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00320}00320\ \ \ \ \ \ \ fp\_sub2(\&c01[i],(\textcolor{keyword}{const}\ fp*)\ \&c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00322}00322\ \ \ \ \ assert(c1len\ <=\ c01len);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c1len;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00324}00324\ \ \ \ \ \ \ fp\_sub2(\&c01[i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00326}00326\ \ \ \ \ \textcolor{comment}{/*\ ab\ =\ c0(x\string^2)\ +\ x\ c01(x\string^2)\ +\ x\string^2\ c1(x\string^2)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00328}00328\ \ \ \ \ assert(2*(c0len-\/1)\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00329}00329\ \ \ \ \ assert(2*c0len\ >=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00330}00330\ \ \ \ \ assert(2*(c01len-\/1)+1\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00331}00331\ \ \ \ \ assert(2*c01len+1\ >=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c0len;++i)\ fp\_copy(c[2*i],\ c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c01len;++i)\ fp\_copy(c[2*i+1],\ c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00335}00335\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ c1len-\/1;++i)\ fp\_add2(\&c[2*i+2],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00336}00336\ \ \ \ \ \textcolor{keywordflow}{if}\ (2*c1len\ <\ clen)\ fp\_add2(\&c[2*c1len],(\textcolor{keyword}{const}\ fp*)\ \&c1[c1len-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00339}00339\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00342}00342\ \ \ \textcolor{comment}{/*\ XXX:\ try\ mulders\ split\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00344}00344\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ split\ =\ (alen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00346}00346\ \ \ \textcolor{keywordflow}{if}\ (split+split\ <\ clen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00347}00347\ \ \ \ \ fp\ ab[alen+blen-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00348}00348\ \ \ \ \ poly\_mul(ab,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00349}00349\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00350}00350\ \ \ \ \ \ \ fp\_copy(c[i],\ ab[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00351}00351\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00352}00352\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00354}00354\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ a1len\ =\ alen-\/split;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00356}00356\ \ \ \textcolor{keywordflow}{if}\ (blen\ <=\ split)\ \{\ \textcolor{comment}{/*\ XXX:\ figure\ out\ best\ cutoff\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00357}00357\ \ \ \ \ assert(split+blen-\/1\ <=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00358}00358\ \ \ \ \ assert(a1len+blen-\/1\ >=\ clen-\/split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00359}00359\ \ \ \ \ fp\ c1[clen-\/split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00360}00360\ \ \ \ \ poly\_mul(c,a,split,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00361}00361\ \ \ \ \ poly\_mul\_low(c1,clen-\/split,a+split,a1len,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00362}00362\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ blen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00363}00363\ \ \ \ \ \ \ fp\_add2(\&c[i+split],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00364}00364\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ blen-\/1;i+split\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00365}00365\ \ \ \ \ \ \ fp\_copy(c[i+split],\ c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00366}00366\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00367}00367\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00369}00369\ \ \ assert(split+split\ >=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00370}00370\ \ \ assert(split\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00372}00372\ \ \ \textcolor{keywordflow}{if}\ (clen\ <\ split+split)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00373}00373\ \ \ \ \ poly\_mul\_low(c,clen,a,split,b,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00374}00374\ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00375}00375\ \ \ \ \ assert(clen\ ==\ split+split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00376}00376\ \ \ \ \ poly\_mul(c,a,split,b,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00377}00377\ \ \ \ \ fp\_copy(c[clen-\/1],\ fp\_0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00378}00378\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00380}00380\ \ \ fp\ c01[clen-\/split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00381}00381\ \ \ poly\_mul\_low(c01,clen-\/split,a,split,b+split,blen-\/split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00383}00383\ \ \ fp\ c10[clen-\/split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00384}00384\ \ \ poly\_mul\_low(c10,clen-\/split,a+split,alen-\/split,b,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00386}00386\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen-\/split;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00387}00387\ \ \ \ \ fp\_add2(\&c[i+split],(\textcolor{keyword}{const}\ fp*)\ \&c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00388}00388\ \ \ \ \ fp\_add2(\&c[i+split],(\textcolor{keyword}{const}\ fp*)\ \&c10[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00389}00389\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00391}00391\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00392}00392\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00394}00394\ \textcolor{keywordtype}{void}\ poly\_mul\_selfreciprocal(fp\ *c,\textcolor{keyword}{const}\ fp\ *a,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ alen,\textcolor{keyword}{const}\ fp\ *b,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ blen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00395}00395\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00396}00396\ \ \ \textcolor{keywordflow}{if}\ (!alen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00397}00397\ \ \ \textcolor{keywordflow}{if}\ (!blen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00399}00399\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 1\ \&\&\ blen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00400}00400\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00401}00401\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00402}00402\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00404}00404\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 2\ \&\&\ blen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00405}00405\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00406}00406\ \ \ \ \ fp\_add3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[0],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00407}00407\ \ \ \ \ fp\_copy(c[2],\ c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00409}00409\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00411}00411\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 3\ \&\&\ blen\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00412}00412\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00413}00413\ \ \ \ \ fp\_mul3(\&c[2],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00414}00414\ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00415}00415\ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00416}00416\ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00417}00417\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00418}00418\ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00419}00419\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00420}00420\ \ \ \ \ fp\_copy(c[3],\ c[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00421}00421\ \ \ \ \ fp\_copy(c[4],\ c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00423}00423\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00425}00425\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 4\ \&\&\ blen\ ==\ 4)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00426}00426\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00427}00427\ \ \ \ \ fp\_mul3(\&c[3],\&a[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00428}00428\ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00429}00429\ \ \ \ \ fp\ b01;\ fp\_add3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00430}00430\ \ \ \ \ fp\_mul3(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00431}00431\ \ \ \ \ fp\_sub2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00432}00432\ \ \ \ \ fp\_sub3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&c[2],(\textcolor{keyword}{const}\ fp*)\ \&c[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00433}00433\ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00434}00434\ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&c[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00435}00435\ \ \ \ \ fp\_copy(c[4],\ c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00436}00436\ \ \ \ \ fp\_copy(c[5],\ c[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00437}00437\ \ \ \ \ fp\_copy(c[6],\ c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00439}00439\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00441}00441\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ 5\ \&\&\ blen\ ==\ 5)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00442}00442\ \ \ \ \ \textcolor{comment}{/*\ XXX:\ toom\ instead?\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00443}00443\ \ \ \ \ fp\ a10;\ fp\_sub3(\&a10,\&a[1],\&a[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00444}00444\ \ \ \ \ fp\ b01;\ fp\_sub3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00445}00445\ \ \ \ \ fp\_mul3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a10,(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00446}00446\ \ \ \ \ fp\ a20;\ fp\_sub3(\&a20,\&a[2],\&a[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00447}00447\ \ \ \ \ fp\ b02;\ fp\_sub3(\&b02,\&b[0],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00448}00448\ \ \ \ \ fp\_mul3(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a20,(\textcolor{keyword}{const}\ fp*)\ \&b02);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00449}00449\ \ \ \ \ fp\ a21;\ fp\_sub3(\&a21,(\textcolor{keyword}{const}\ fp*)\ \&a[2],(\textcolor{keyword}{const}\ fp*)\ \&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00450}00450\ \ \ \ \ fp\ b12;\ fp\_sub3(\&b12,(\textcolor{keyword}{const}\ fp*)\ \&b[1],(\textcolor{keyword}{const}\ fp*)\ \&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00451}00451\ \ \ \ \ fp\_mul3(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&a21,(\textcolor{keyword}{const}\ fp*)\ \&b12);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00452}00452\ \ \ \ \ fp\_mul3(\&c[0],\&a[0],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00453}00453\ \ \ \ \ fp\ a1b1;\ fp\_mul3(\&a1b1,(\textcolor{keyword}{const}\ fp*)\ \&a[1],(\textcolor{keyword}{const}\ fp*)\ \&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00454}00454\ \ \ \ \ fp\ a2b2;\ fp\_mul3(\&a2b2,(\textcolor{keyword}{const}\ fp*)\ \&a[2],(\textcolor{keyword}{const}\ fp*)\ \&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00456}00456\ \ \ \ \ fp\ t;\ fp\_add3(\&t,(\textcolor{keyword}{const}\ fp*)\ \&a1b1,(\textcolor{keyword}{const}\ fp*)\ \&c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00457}00457\ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00458}00458\ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&c[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00459}00459\ \ \ \ \ fp\_add3(\&c[4],(\textcolor{keyword}{const}\ fp*)\ \&t,(\textcolor{keyword}{const}\ fp*)\ \&a2b2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00460}00460\ \ \ \ \ fp\_add2(\&c[4],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00461}00461\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00462}00462\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&a2b2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00463}00463\ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&a1b1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00464}00464\ \ \ \ \ fp\_add2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&a2b2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00465}00465\ \ \ \ \ fp\_copy(c[5],\ c[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00466}00466\ \ \ \ \ fp\_copy(c[6],\ c[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00467}00467\ \ \ \ \ fp\_copy(c[7],\ c[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00468}00468\ \ \ \ \ fp\_copy(c[8],\ c[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00469}00469\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00470}00470\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00472}00472\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ blen\ \&\&\ (alen\&1))\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00473}00473\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ len0\ =\ (alen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00474}00474\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ len1\ =\ alen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00475}00475\ \ \ \ \ fp\ a0[len0];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00476}00476\ \ \ \ \ fp\ b0[len0];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00477}00477\ \ \ \ \ fp\ a1[len1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00478}00478\ \ \ \ \ fp\ b1[len1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00479}00479\ \ \ \ \ fp\ c0[len0+len0-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00480}00480\ \ \ \ \ fp\ c01[len0+len0-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00481}00481\ \ \ \ \ fp\ c1[len1+len1-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00483}00483\ \ \ \ \ assert(2*(len0-\/1)\ <\ alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00484}00484\ \ \ \ \ assert(2*(len1-\/1)+1\ <\ alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00485}00485\ \ \ \ \ assert(len1\ <\ len0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00486}00486\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00487}00487\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len0;++i)\ fp\_copy(a0[i],\ a[2*i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00488}00488\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len0;++i)\ fp\_copy(b0[i],\ b[2*i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00489}00489\ \ \ \ \ poly\_mul\_selfreciprocal(c0,(\textcolor{keyword}{const}\ fp*)\ a0,len0,(\textcolor{keyword}{const}\ fp*)\ b0,len0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00491}00491\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_copy(a1[i],\ a[2*i+1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00492}00492\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_copy(b1[i],\ b[2*i+1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00493}00493\ \ \ \ \ poly\_mul\_selfreciprocal(c1,(\textcolor{keyword}{const}\ fp*)\ a1,len1,(\textcolor{keyword}{const}\ fp*)\ b1,len1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00495}00495\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_add2(\&a0[i],(\textcolor{keyword}{const}\ fp*)\ \&a1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00496}00496\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_add2(\&b0[i],(\textcolor{keyword}{const}\ fp*)\ \&b1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00497}00497\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_add2(\&a0[i+1],(\textcolor{keyword}{const}\ fp*)\ \&a1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00498}00498\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1;++i)\ fp\_add2(\&b0[i+1],(\textcolor{keyword}{const}\ fp*)\ \&b1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00499}00499\ \ \ \ \ poly\_mul\_selfreciprocal(c01,(\textcolor{keyword}{const}\ fp*)\ a0,len0,(\textcolor{keyword}{const}\ fp*)\ b0,len0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00501}00501\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len0+len0-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00502}00502\ \ \ \ \ \ \ fp\_sub2(\&c01[i],(\textcolor{keyword}{const}\ fp*)\ \&c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00503}00503\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1+len1-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00504}00504\ \ \ \ \ \ \ fp\_sub2(\&c01[i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00505}00505\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1+len1-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00506}00506\ \ \ \ \ \ \ fp\_sub2(\&c01[i+1],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00507}00507\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1+len1-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00508}00508\ \ \ \ \ \ \ fp\_sub2(\&c01[i+1],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1+len1-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00510}00510\ \ \ \ \ \ \ fp\_sub2(\&c01[i+2],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00512}00512\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 1;i\ <\ len0+len0-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00513}00513\ \ \ \ \ \ \ fp\_sub2(\&c01[i],(\textcolor{keyword}{const}\ fp*)\ \&c01[i-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00515}00515\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ clen\ =\ alen+blen-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00516}00516\ \ \ \ \ assert(2*(len0+len0-\/2)\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00517}00517\ \ \ \ \ assert(2*(len0+len0-\/3)+1\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00518}00518\ \ \ \ \ assert(2*(len1+len1-\/2)+2\ <\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00519}00519\ \ \ \ \ (void)clen;\ \ \textcolor{comment}{//\ Suppress\ unused\ varible\ warning}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00520}00520\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len0+len0-\/1;++i)\ fp\_copy(c[2*i],\ c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00521}00521\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len0+len0-\/2;++i)\ fp\_copy(c[2*i+1],\ c01[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00522}00522\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ len1+len1-\/1;++i)\ fp\_add2(\&c[2*i+2],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00523}00523\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00524}00524\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00526}00526\ \ \ \textcolor{keywordflow}{if}\ (alen\ ==\ blen\ \&\&\ !(alen\&1))\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00527}00527\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ half\ =\ alen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00528}00528\ \ \ \ \ fp\ c0[alen-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00529}00529\ \ \ \ \ fp\ c1[alen-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00531}00531\ \ \ \ \ poly\_mul(c0,a,half,b,half);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00532}00532\ \ \ \ \ poly\_mul(c1,a,half,b+half,half);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00533}00533\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00534}00534\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen+alen-\/1;++i)\ fp\_copy(c[i],\ fp\_0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00536}00536\ \ \ \ \ \ \ fp\_add2(\&c[i],(\textcolor{keyword}{const}\ fp*)\ \&c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00537}00537\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00538}00538\ \ \ \ \ \ \ fp\_add2(\&c[alen+alen-\/2-\/i],(\textcolor{keyword}{const}\ fp*)\ \&c0[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00539}00539\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00540}00540\ \ \ \ \ \ \ fp\_add2(\&c[half+i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00541}00541\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00542}00542\ \ \ \ \ \ \ fp\_add2(\&c[alen+half-\/2-\/i],(\textcolor{keyword}{const}\ fp*)\ \&c1[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00543}00543\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00544}00544\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00545}00545\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00546}00546\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ clen\ =\ alen+blen-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00547}00547\ \ \ poly\_mul\_low(c,(clen+1)/2,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00548}00548\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ (clen+1)/2;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00549}00549\ \ \ \ \ fp\_copy(c[i],\ c[clen-\/1-\/i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00550}00550\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00551}00551\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00552}00552\ \textcolor{keywordtype}{void}\ poly\_mul\_high(fp\ *c,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ cstart,\textcolor{keyword}{const}\ fp\ *a,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ alen,\textcolor{keyword}{const}\ fp\ *b,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ blen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00553}00553\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00554}00554\ \ \ \textcolor{keywordflow}{if}\ (alen\ <\ blen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00555}00555\ \ \ \ \ poly\_mul\_high(c,cstart,b,blen,a,alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00557}00557\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00558}00558\ \ \ \textcolor{keywordflow}{if}\ (blen\ <=\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00560}00560\ \ \ assert(cstart\ >=\ 0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00561}00561\ \ \ assert(cstart\ <=\ alen+blen-\/1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00563}00563\ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ alen+blen-\/1)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00565}00565\ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00566}00566\ \ \ \ \ poly\_mul(c,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00567}00567\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00568}00568\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00569}00569\ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ alen+blen-\/2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00570}00570\ \ \ \ \ fp\_mul3(\&c[0],\&a[alen-\/1],\&b[blen-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00571}00571\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00572}00572\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00573}00573\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00574}00574\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ cstart;i\ <\ alen+blen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00575}00575\ \ \ \ \ \ \ fp\_mul3(\&c[i-\/cstart],\&a[i],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00576}00576\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00577}00577\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00578}00578\ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ alen+blen-\/3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00579}00579\ \ \ \ \ fp\_mul3(\&c[0],\&a[alen-\/2],\&b[blen-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00580}00580\ \ \ \ \ fp\ t;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00581}00581\ \ \ \ \ fp\_mul3(\&t,\&a[alen-\/1],\&b[blen-\/2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00582}00582\ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00583}00583\ \ \ \ \ fp\_mul3(\&c[1],\&a[alen-\/1],\&b[blen-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00584}00584\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00585}00585\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00586}00586\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00587}00587\ \ \ fp\ arev[alen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00588}00588\ \ \ fp\ brev[blen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00589}00589\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ alen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00590}00590\ \ \ \ \ fp\_copy(arev[alen-\/1-\/i],\ a[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00591}00591\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ blen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00592}00592\ \ \ \ \ fp\_copy(brev[blen-\/1-\/i],\ b[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00594}00594\ \ \ fp\ crev[alen+blen-\/1-\/cstart];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00595}00595\ \ \ poly\_mul\_low(crev,alen+blen-\/1-\/cstart,(\textcolor{keyword}{const}\ fp*)\ arev,alen,(\textcolor{keyword}{const}\ fp*)\ brev,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00596}00596\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ cstart;i\ <\ alen+blen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00597}00597\ \ \ \ \ fp\_copy(c[i-\/cstart],\ crev[alen+blen-\/2-\/i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00599}00599\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00600}00600\ \textcolor{comment}{\ \ fp\ ab[alen+blen-\/1];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00601}00601\ \textcolor{comment}{\ \ poly\_mul(ab,a,alen,b,blen);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00602}00602\ \textcolor{comment}{\ \ for\ (long\ long\ i\ =\ cstart;i\ <\ alen+blen-\/1;++i)}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00603}00603\ \textcolor{comment}{\ \ \ \ c[i-\/cstart]\ =\ ab[i];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00604}00604\ \textcolor{comment}{\ \ return;}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00605}00605\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00606}00606\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00608}00608\ \textcolor{keywordtype}{void}\ poly\_mul\_mid(fp\ *c,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ cstart,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ clen,\textcolor{keyword}{const}\ fp\ *a,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ alen,\textcolor{keyword}{const}\ fp\ *b,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ blen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00609}00609\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00610}00610\ \ \ \textcolor{keywordflow}{if}\ (!alen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00611}00611\ \ \ \textcolor{keywordflow}{if}\ (!blen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00612}00612\ \ \ assert(0\ <=\ cstart);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00613}00613\ \ \ assert(0\ <=\ clen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00614}00614\ \ \ assert(cstart+clen\ <=\ alen+blen-\/1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00615}00615\ \ \ \textcolor{keywordflow}{if}\ (!clen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00616}00616\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00617}00617\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00618}00618\ \ \ \ \ fp\_copy(c[0],\ fp\_0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00619}00619\ \ \ \ \ \textcolor{keywordflow}{if}\ (alen\ >\ cstart)\ alen\ =\ cstart+1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00620}00620\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00621}00621\ \ \ \ \ \textcolor{keywordflow}{if}\ (blen\ <=\ cstart)\ i\ =\ cstart-\/blen+1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00622}00622\ \ \ \ \ \textcolor{keywordflow}{for}\ (;i\ <\ alen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00623}00623\ \ \ \ \ \ \ fp\ t;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00624}00624\ \ \ \ \ \ \ fp\_mul3(\&t,\&a[i],\&b[cstart-\/i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00625}00625\ \ \ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00626}00626\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00627}00627\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00628}00628\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00629}00629\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00630}00630\ \ \ \textcolor{keywordflow}{if}\ (blen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00631}00631\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00632}00632\ \ \ \ \ \ \ fp\_mul3(\&c[i],\&a[cstart+i],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00633}00633\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00634}00634\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00636}00636\ \ \ \textcolor{keywordflow}{if}\ (cstart\ >\ 0\ \&\&\ cstart+clen\ <=\ alen\ \&\&\ (blen\ \&\ 1))\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00637}00637\ \ \ \ \ poly\_mul\_mid(c,cstart-\/1,clen,a,alen-\/1,b+1,blen-\/1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00638}00638\ \ \ \ \ fp\ t;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00639}00639\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00640}00640\ \ \ \ \ \ \ fp\_mul3(\&t,\&a[cstart+i],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00641}00641\ \ \ \ \ \ \ fp\_add2(\&c[i],(\textcolor{keyword}{const}\ fp*)\ \&t);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00642}00642\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00643}00643\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00644}00644\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00645}00645\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00646}00646\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00647}00647\ \ \ \ \ \textcolor{comment}{//\ basic\ plan:}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00648}00648\ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ a[0]*b[cstart]+a[1]*b[cstart-\/1]+a[2]*b[cstart-\/2]+...}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00649}00649\ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ a[0]*b[cstart+1]+a[1]*b[cstart]+a[2]*b[cstart-\/1]+...}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00651}00651\ \ \ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ 1\ \&\&\ alen\ >=\ 3\ \&\&\ blen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00652}00652\ \ \ \ \ \ \ \textcolor{comment}{//\ transposed\ karatsuba\ from\ hanrot-\/-\/quercia-\/-\/zimmermann}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00653}00653\ \ \ \ \ \ \ \textcolor{comment}{//\ delta\ =\ a[1]*(b[0]-\/b[1])}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00654}00654\ \ \ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ (a[0]+a[1])*b[1]+delta}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00655}00655\ \ \ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ (a[1]+a[2])*b[0]-\/delta}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00656}00656\ \ \ \ \ \ \ fp\ delta;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00657}00657\ \ \ \ \ \ \ fp\_sub3(\&delta,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00658}00658\ \ \ \ \ \ \ fp\_mul2(\&delta,\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00659}00659\ \ \ \ \ \ \ fp\_add3(\&c[0],\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00660}00660\ \ \ \ \ \ \ fp\_mul2(\&c[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00661}00661\ \ \ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&delta);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00662}00662\ \ \ \ \ \ \ fp\_add3(\&c[1],\&a[1],\&a[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00663}00663\ \ \ \ \ \ \ fp\_mul2(\&c[1],\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00664}00664\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&delta);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00665}00665\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00666}00666\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{if}\ (cstart\ ==\ 3\ \&\&\ alen\ >=\ 5\ \&\&\ blen\ ==\ 4)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00668}00668\ \ \ \ \ \ \ \textcolor{comment}{//\ delta\ =\ a[1]*(b[2]-\/b[3])+a[3]*(b[0]-\/b[1])}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00669}00669\ \ \ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ (a[0]+a[1])*b[3]+(a[2]+a[3])*b[1]+delta}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00670}00670\ \ \ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ (a[1]+a[2])*b[2]+(a[3]+a[4])*b[0]-\/delta}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00671}00671\ \ \ \ \ \ \ fp\ b01;\ fp\_sub3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00672}00672\ \ \ \ \ \ \ fp\ b23;\ fp\_sub3(\&b23,\&b[2],\&b[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00673}00673\ \ \ \ \ \ \ fp\ a1b23;\ fp\_mul3(\&a1b23,\&a[1],(\textcolor{keyword}{const}\ fp*)\ \&b23);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00674}00674\ \ \ \ \ \ \ fp\ a3b01;\ fp\_mul3(\&a3b01,\&a[3],(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00675}00675\ \ \ \ \ \ \ fp\ delta;\ fp\_add3(\&delta,(\textcolor{keyword}{const}\ fp*)\ \&a1b23,(\textcolor{keyword}{const}\ fp*)\ \&a3b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00676}00676\ \ \ \ \ \ \ fp\ a01;\ fp\_add3(\&a01,\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00677}00677\ \ \ \ \ \ \ fp\ a12;\ fp\_add3(\&a12,\&a[1],\&a[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00678}00678\ \ \ \ \ \ \ fp\ a23;\ fp\_add3(\&a23,\&a[2],\&a[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00679}00679\ \ \ \ \ \ \ fp\ a34;\ fp\_add3(\&a34,\&a[3],\&a[4]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00680}00680\ \ \ \ \ \ \ fp\_mul2(\&a01,\&b[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00681}00681\ \ \ \ \ \ \ fp\_mul2(\&a12,\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00682}00682\ \ \ \ \ \ \ fp\_mul2(\&a23,\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00683}00683\ \ \ \ \ \ \ fp\_mul2(\&a34,\&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00684}00684\ \ \ \ \ \ \ fp\_add3(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&a01,(\textcolor{keyword}{const}\ fp*)\ \&a23);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00685}00685\ \ \ \ \ \ \ fp\_add3(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&a12,(\textcolor{keyword}{const}\ fp*)\ \&a34);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00686}00686\ \ \ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&delta);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00687}00687\ \ \ \ \ \ \ fp\_sub2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&delta);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00688}00688\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00689}00689\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00690}00690\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00692}00692\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 3\ \&\&\ cstart\ ==\ 1\ \&\&\ blen\ ==\ 2\ \&\&\ alen\ >=\ 4)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00693}00693\ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ a[0]*b[1]+a[1]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00694}00694\ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ a[1]*b[1]+a[2]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00695}00695\ \ \ \ \ \textcolor{comment}{//\ c[2]\ =\ a[2]*b[1]+a[3]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00696}00696\ \ \ \ \ fp\ b01;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00697}00697\ \ \ \ \ fp\_sub3(\&b01,\&b[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00698}00698\ \ \ \ \ fp\ delta0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00699}00699\ \ \ \ \ fp\_mul3(\&delta0,\&a[1],(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00700}00700\ \ \ \ \ fp\ delta1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00701}00701\ \ \ \ \ fp\_mul3(\&delta1,\&a[2],(\textcolor{keyword}{const}\ fp*)\ \&b01);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00702}00702\ \ \ \ \ fp\_add3(\&c[0],\&a[0],\&a[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00703}00703\ \ \ \ \ fp\_add3(\&c[1],\&a[1],\&a[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00704}00704\ \ \ \ \ fp\_add3(\&c[2],\&a[2],\&a[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00705}00705\ \ \ \ \ fp\_mul2(\&c[0],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00706}00706\ \ \ \ \ fp\_mul2(\&c[1],\&b[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00707}00707\ \ \ \ \ fp\_mul2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&b[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00708}00708\ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&delta0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00709}00709\ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&delta1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00710}00710\ \ \ \ \ fp\_sub2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&delta1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00711}00711\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00712}00712\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00714}00714\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 4\ \&\&\ cstart\ ==\ 5\ \&\&\ blen\ ==\ 6\ \&\&\ alen\ >=\ 9)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00715}00715\ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ a[0]*b[5]+a[1]*b[4]+a[2]*b[3]+a[3]*b[2]+a[4]*b[1]+a[5]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00716}00716\ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ a[1]*b[5]+a[2]*b[4]+a[3]*b[3]+a[4]*b[2]+a[5]*b[1]+a[6]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00717}00717\ \ \ \ \ \textcolor{comment}{//\ c[2]\ =\ a[2]*b[5]+a[3]*b[4]+a[4]*b[3]+a[5]*b[2]+a[6]*b[1]+a[7]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00718}00718\ \ \ \ \ \textcolor{comment}{//\ c[3]\ =\ a[3]*b[5]+a[4]*b[4]+a[5]*b[3]+a[6]*b[2]+a[7]*b[1]+a[8]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00719}00719\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00720}00720\ \ \ \ \ fp\ a01[6];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00721}00721\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ 6;++i)\ fp\_add3(\&a01[i],\&a[i],\&a[i+3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00723}00723\ \ \ \ \ fp\ b01[3];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00724}00724\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ 3;++i)\ fp\_sub3(\&b01[i],\&b[i],\&b[i+3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00725}00725\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00726}00726\ \ \ \ \ poly\_mul\_mid(c,2,3,(\textcolor{keyword}{const}\ fp*)\ a01,5,b+3,3);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00727}00727\ \ \ \ \ poly\_mul\_mid(c+3,2,1,(\textcolor{keyword}{const}\ fp*)\ a01+3,3,b,3);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00729}00729\ \ \ \ \ fp\ delta[3];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00730}00730\ \ \ \ \ poly\_mul\_mid(delta,2,3,a+3,5,(\textcolor{keyword}{const}\ fp*)\ b01,3);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00731}00731\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00732}00732\ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&delta[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00733}00733\ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&delta[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00734}00734\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&delta[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00735}00735\ \ \ \ \ fp\_sub2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&delta[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00736}00736\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00737}00737\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00738}00738\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00739}00739\ \ \ \textcolor{keywordflow}{if}\ (clen\ ==\ 5\ \&\&\ cstart\ ==\ 3\ \&\&\ blen\ ==\ 4\ \&\&\ alen\ >=\ 8)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00740}00740\ \ \ \ \ \textcolor{comment}{//\ c[0]\ =\ a[0]*b[3]+a[1]*b[2]+a[2]*b[1]+a[3]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00741}00741\ \ \ \ \ \textcolor{comment}{//\ c[1]\ =\ a[1]*b[3]+a[2]*b[2]+a[3]*b[1]+a[4]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00742}00742\ \ \ \ \ \textcolor{comment}{//\ c[2]\ =\ a[2]*b[3]+a[3]*b[2]+a[4]*b[1]+a[5]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00743}00743\ \ \ \ \ \textcolor{comment}{//\ c[3]\ =\ a[3]*b[3]+a[4]*b[2]+a[5]*b[1]+a[6]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00744}00744\ \ \ \ \ \textcolor{comment}{//\ c[4]\ =\ a[4]*b[3]+a[5]*b[2]+a[6]*b[1]+a[7]*b[0]}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00746}00746\ \ \ \ \ fp\ a01[6];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00747}00747\ \ \ \ \ fp\_add3(\&a01[0],\&a[0],\&a[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00748}00748\ \ \ \ \ fp\_add3(\&a01[1],\&a[1],\&a[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00749}00749\ \ \ \ \ fp\_add3(\&a01[2],\&a[2],\&a[4]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00750}00750\ \ \ \ \ fp\_add3(\&a01[3],\&a[3],\&a[5]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00751}00751\ \ \ \ \ fp\_add3(\&a01[4],\&a[4],\&a[6]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00752}00752\ \ \ \ \ fp\_add3(\&a01[5],\&a[5],\&a[7]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00754}00754\ \ \ \ \ fp\ b01[2];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00755}00755\ \ \ \ \ fp\_sub3(\&b01[0],\&b[0],\&b[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00756}00756\ \ \ \ \ fp\_sub3(\&b01[1],\&b[1],\&b[3]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00757}00757\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00758}00758\ \ \ \ \ poly\_mul\_mid(c,1,3,(\textcolor{keyword}{const}\ fp*)\ a01,4,b+2,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00759}00759\ \ \ \ \ poly\_mul\_mid(c+3,1,2,(\textcolor{keyword}{const}\ fp*)\ a01+3,3,b,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00760}00760\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00761}00761\ \ \ \ \ fp\ delta[3];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00762}00762\ \ \ \ \ poly\_mul\_mid(delta,1,3,a+2,4,(\textcolor{keyword}{const}\ fp*)\ b01,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00764}00764\ \ \ \ \ fp\_add2(\&c[0],(\textcolor{keyword}{const}\ fp*)\ \&delta[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00765}00765\ \ \ \ \ fp\_add2(\&c[1],(\textcolor{keyword}{const}\ fp*)\ \&delta[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00766}00766\ \ \ \ \ fp\_add2(\&c[2],(\textcolor{keyword}{const}\ fp*)\ \&delta[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00767}00767\ \ \ \ \ fp\_sub2(\&c[3],(\textcolor{keyword}{const}\ fp*)\ \&delta[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00768}00768\ \ \ \ \ fp\_sub2(\&c[4],(\textcolor{keyword}{const}\ fp*)\ \&delta[2]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00769}00769\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00770}00770\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00771}00771\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00772}00772\ \ \ \textcolor{keywordflow}{if}\ ((clen\&1)\ \&\&\ cstart\ ==\ clen\ \&\&\ blen\ ==\ clen+1\ \&\&\ alen\ >=\ cstart+clen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00773}00773\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ split\ =\ (clen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00774}00774\ \ \ \ \ assert(2*split\ ==\ clen+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00775}00775\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00776}00776\ \ \ \ \ fp\ a01[3*split-\/2];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00777}00777\ \ \ \ \ assert(3*split-\/2+split\ <=\ alen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00778}00778\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ 3*split-\/2;++i)\ fp\_add3(\&a01[i],\&a[i],\&a[i+split]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00779}00779\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00780}00780\ \ \ \ \ fp\ b01[split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00781}00781\ \ \ \ \ assert(2*split\ ==\ blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00782}00782\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ split;++i)\ fp\_sub3(\&b01[i],\&b[i],\&b[i+split]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00783}00783\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00784}00784\ \ \ \ \ assert(clen\ <=\ 3*split-\/2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00785}00785\ \ \ \ \ poly\_mul\_mid(c,split-\/1,split,(\textcolor{keyword}{const}\ fp*)\ a01,clen,b+split,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00787}00787\ \ \ \ \ assert(clen-\/1+split\ <=\ 3*split-\/2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00788}00788\ \ \ \ \ poly\_mul\_mid(c+split,split-\/1,split-\/1,(\textcolor{keyword}{const}\ fp*)\ a01+split,clen-\/1,b,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00789}00789\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00790}00790\ \ \ \ \ fp\ delta[split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00791}00791\ \ \ \ \ poly\_mul\_mid(delta,split-\/1,split,a+split,clen,(\textcolor{keyword}{const}\ fp*)\ b01,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00792}00792\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00793}00793\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ split;++i)\ fp\_add2(\&c[i],(\textcolor{keyword}{const}\ fp*)\ \&delta[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00794}00794\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ split-\/1;++i)\ fp\_sub2(\&c[i+split],(\textcolor{keyword}{const}\ fp*)\ \&delta[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00795}00795\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00796}00796\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00798}00798\ \ \ \textcolor{keywordflow}{if}\ (!(clen\&1)\ \&\&\ cstart\ ==\ clen-\/1\ \&\&\ blen\ ==\ clen\ \&\&\ alen\ >=\ cstart+clen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00799}00799\ \ \ \ \ \textcolor{comment}{//\ again\ transposed\ karatsuba\ from\ hanrot-\/-\/quercia-\/-\/zimmermann}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00800}00800\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ split\ =\ clen/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00801}00801\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00802}00802\ \ \ \ \ fp\ a01[3*split-\/1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00803}00803\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ 3*split-\/1;++i)\ fp\_add3(\&a01[i],\&a[i],\&a[i+split]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00805}00805\ \ \ \ \ fp\ b01[split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00806}00806\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ split;++i)\ fp\_sub3(\&b01[i],\&b[i],\&b[i+split]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00808}00808\ \ \ \ \ poly\_mul\_mid(c,split-\/1,split,(\textcolor{keyword}{const}\ fp*)\ a01,2*split-\/1,b+split,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00809}00809\ \ \ \ \ poly\_mul\_mid(c+split,split-\/1,split,(\textcolor{keyword}{const}\ fp*)\ a01+split,2*split-\/1,b,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00810}00810\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00811}00811\ \ \ \ \ fp\ delta[split];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00812}00812\ \ \ \ \ poly\_mul\_mid(delta,split-\/1,split,a+split,2*split-\/1,(\textcolor{keyword}{const}\ fp*)\ b01,split);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00814}00814\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ split;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00815}00815\ \ \ \ \ \ \ fp\_add2(\&c[i],(\textcolor{keyword}{const}\ fp*)\ \&delta[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00816}00816\ \ \ \ \ \ \ fp\_sub2(\&c[split+i],(\textcolor{keyword}{const}\ fp*)\ \&delta[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00817}00817\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00818}00818\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00819}00819\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00820}00820\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00821}00821\ \ \ \textcolor{keywordflow}{if}\ (cstart+cstart+clen\ <\ alen+blen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00822}00822\ \ \ \ \ fp\ ab[cstart+clen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00823}00823\ \ \ \ \ poly\_mul\_low(ab,cstart+clen,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00824}00824\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00825}00825\ \ \ \ \ \ \ fp\_copy(c[i],\ ab[cstart+i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00826}00826\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00827}00827\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00829}00829\ \ \ fp\ ab[alen+blen-\/1-\/cstart];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00830}00830\ \ \ poly\_mul\_high(ab,cstart,a,alen,b,blen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00831}00831\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ clen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00832}00832\ \ \ \ \ fp\_copy(c[i],\ ab[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00833}00833\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00834}00834\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00835}00835\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00836}00836\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_tree1size(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00837}00837\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00838}00838\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 1)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00839}00839\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)\ \textcolor{keywordflow}{return}\ 3;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00840}00840\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)\ \textcolor{keywordflow}{return}\ 7;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00841}00841\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00842}00842\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00843}00843\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1size(m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00844}00844\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1size(n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00845}00845\ \ \ \textcolor{keywordflow}{return}\ left+right+n+1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00846}00846\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00847}00847\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00848}00848\ \textcolor{comment}{/*\ input:\ P[0...2n-\/1]\ has\ n\ 2-\/coeff\ polys\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00849}00849\ \textcolor{comment}{/*\ output:\ number\ of\ coeffs\ in\ product\ tree\ (minus\ n)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00850}00850\ \textcolor{comment}{/*\ tree\ itself\ (without\ P)\ is\ stored\ in\ T\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00851}00851\ \textcolor{comment}{/*\ for\ n>=2,\ product\ is\ stored\ in\ final\ n+1\ coeffs\ of\ T\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00852}00852\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_tree1(fp\ *T,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00853}00853\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00854}00854\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 1)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00856}00856\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00857}00857\ \ \ \ \ poly\_mul(T,P,2,P+2,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00858}00858\ \ \ \ \ \textcolor{keywordflow}{return}\ 3;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00859}00859\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00861}00861\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00862}00862\ \ \ \ \ poly\_mul(T,P,2,P+2,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00863}00863\ \ \ \ \ poly\_mul(T+3,(\textcolor{keyword}{const}\ fp*)\ T,3,P+4,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00864}00864\ \ \ \ \ \textcolor{keywordflow}{return}\ 7;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00865}00865\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00866}00866\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00867}00867\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00868}00868\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1(T,P,m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00869}00869\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1(T+left,P+2*m,n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00870}00870\ \ \ poly\_mul(T+left+right,(\textcolor{keyword}{const}\ fp*)\ T+left-\/(m+1),m+1,(\textcolor{keyword}{const}\ fp*)\ T+left+right-\/(n-\/m+1),n-\/m+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00871}00871\ \ \ \textcolor{keywordflow}{return}\ left+right+n+1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00872}00872\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00873}00873\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00874}00874\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_eval\_precomputesize(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00875}00875\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00876}00876\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ 2)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00877}00877\ \ \ \textcolor{keywordflow}{return}\ flen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00878}00878\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00879}00879\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00880}00880\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_eval\_precompute(fp\ *precomp,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *P)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00881}00881\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00882}00882\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ 2)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00883}00883\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00884}00884\ \ \ fp\ pxpow[flen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00885}00885\ \ \ fp\ pzpow[flen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00886}00886\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00887}00887\ \ \ fp\_copy(pxpow[1],\ P-\/>x);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00888}00888\ \ \ fp\_copy(pzpow[1],\ P-\/>z);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00889}00889\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 2;i\ <\ flen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00890}00890\ \ \ \ \ fp\_mul3(\&pxpow[i],(\textcolor{keyword}{const}\ fp*)\ \&pxpow[i-\/1],\&P-\/>x);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00891}00891\ \ \ \ \ fp\_mul3(\&pzpow[i],(\textcolor{keyword}{const}\ fp*)\ \&pzpow[i-\/1],\&P-\/>z);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00892}00892\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00893}00893\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00894}00894\ \ \ fp\_copy(precomp[0],\ pzpow[flen-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00895}00895\ \ \ fp\_copy(precomp[flen-\/1],\ pxpow[flen-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00896}00896\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 1;i\ <\ flen-\/1;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00897}00897\ \ \ \ \ fp\_mul3(\&precomp[i],(\textcolor{keyword}{const}\ fp*)\ \&pxpow[i],(\textcolor{keyword}{const}\ fp*)\ \&pzpow[flen-\/1-\/i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00898}00898\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00899}00899\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00900}00900\ \textcolor{comment}{/*\ assumes\ flen\ >\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00901}00901\ \textcolor{comment}{/*\ output:\ v\ =\ f[p]\ =\ f[0]+f[1]p+...+f[flen-\/1]p\string^(flen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00902}00902\ \textcolor{comment}{/*\ i.e.:\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00903}00903\ \textcolor{comment}{/*\ v\ =\ f[0]pz\string^(flen-\/1)+f[1]px\ pz\string^(flen-\/2)+...+f[flen-\/1]px\string^(flen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00904}00904\ \textcolor{comment}{/*\ implicitly\ divided\ by\ pz\string^(flen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00905}00905\ \textcolor{comment}{/*\ denominators\ are\ eliminated\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00906}00906\ \textcolor{comment}{/*\ \ \ since\ application\ always\ computes\ ratios\ of\ two\ values\ at\ some\ points\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00907}00907\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_eval\_postcompute(fp\ *v,\textcolor{keyword}{const}\ fp\ *f,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *P,\textcolor{keyword}{const}\ fp\ *precomp)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00908}00908\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00909}00909\ \ \ assert(flen\ >\ 0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00910}00910\ \ \ \textcolor{keywordflow}{if}\ (flen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00911}00911\ \ \ \ \ fp\_copy(*v,\ f[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00912}00912\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00913}00913\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00914}00914\ \ \ \textcolor{keywordflow}{if}\ (flen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00915}00915\ \ \ \ \ fp\ tmp;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00916}00916\ \ \ \ \ fp\_mul3(v,\&f[0],\&P-\/>z);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00917}00917\ \ \ \ \ fp\_mul3(\&tmp,\&f[1],\&P-\/>x);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00918}00918\ \ \ \ \ fp\_add2(v,(\textcolor{keyword}{const}\ fp*)\ \&tmp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00919}00919\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00920}00920\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00921}00921\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00922}00922\ \ \ fp\_mul3(v,\&f[0],\&precomp[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00923}00923\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00924}00924\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 1;i\ <\ flen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00925}00925\ \ \ \ \ fp\ tmp;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00926}00926\ \ \ \ \ fp\_mul3(\&tmp,\&f[i],\&precomp[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00927}00927\ \ \ \ \ fp\_add2(v,(\textcolor{keyword}{const}\ fp*)\ \&tmp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00928}00928\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00929}00929\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00930}00930\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00931}00931\ \textcolor{comment}{//\ static\ void\ poly\_eval(fp\ *v,const\ fp\ *f,long\ long\ flen,const\ proj\ *P)}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00932}00932\ \textcolor{comment}{//\ \{}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00933}00933\ \textcolor{comment}{//\ \ \ long\ long\ precompsize\ =\ poly\_eval\_precomputesize(flen);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00934}00934\ \textcolor{comment}{//\ \ \ fp\ precomp[precompsize];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00935}00935\ \textcolor{comment}{//\ \ \ poly\_eval\_precompute(precomp,flen,P);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00936}00936\ \textcolor{comment}{//\ \ \ poly\_eval\_postcompute(v,f,flen,P,precomp);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00937}00937\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00938}00938\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00939}00939\ \textcolor{comment}{/*\ assuming\ rlen\ >=\ 1,\ mdeg\ >=\ 0:\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00940}00940\ \textcolor{comment}{/*\ input:\ m[0]+m[1]x+...+m[mdeg]x\string^mdeg\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00941}00941\ \textcolor{comment}{/*\ output:\ pseudo-\/reciprocal\ r[0]+r[1]x+...+r[rlen-\/1]x\string^(rlen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00942}00942\ \textcolor{comment}{/*\ \ \ and\ d\ =\ positive\ power\ of\ m[mdeg]\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00943}00943\ \textcolor{comment}{/*\ conventional\ reciprocal\ floor(x\string^(mdeg+rlen-\/1)/m)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00944}00944\ \textcolor{comment}{/*\ \ \ is\ pseudo-\/reciprocal\ divided\ by\ d\ (if\ d\ is\ nonzero)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00945}00945\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_pseudoreciprocal(fp\ *d,fp\ *r,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ rlen,\textcolor{keyword}{const}\ fp\ *m,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ mdeg)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00946}00946\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00947}00947\ \ \ \textcolor{keywordflow}{if}\ (mdeg\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00948}00948\ \ \ \ \ fp\_copy(r[rlen-\/1],\ fp\_1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00949}00949\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ rlen-\/1;++i)\ fp\_copy(r[i],\ fp\_0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00950}00950\ \ \ \ \ fp\_copy(*d,\ m[mdeg]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00951}00951\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00952}00952\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00953}00953\ \ \ \textcolor{keywordflow}{if}\ (rlen\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00954}00954\ \ \ \ \ fp\_copy(r[0],\ fp\_1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00955}00955\ \ \ \ \ fp\_copy(*d,\ m[mdeg]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00956}00956\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00957}00957\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00958}00958\ \ \ \textcolor{keywordflow}{if}\ (rlen\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00959}00959\ \ \ \ \ \textcolor{comment}{/*\ can\ absorb\ into\ general\ case\ below\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00960}00960\ \ \ \ \ fp\_copy(r[1],\ m[mdeg]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00961}00961\ \ \ \ \ fp\_neg2(\&r[0],\&m[mdeg-\/1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00962}00962\ \ \ \ \ fp\_sq2(d,\&m[mdeg]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00963}00963\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00964}00964\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00965}00965\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00966}00966\ \ \ \textcolor{comment}{/*\ apply\ simpson\ recursive\ method\ for\ division\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00967}00967\ \ \ \textcolor{comment}{/*\ (often\ miscredited\ to\ newton)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00968}00968\ \ \ \textcolor{comment}{/*\ XXX:\ remove\ redundancies\ as\ per\ harvey\ et\ al.\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00969}00969\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00970}00970\ \ \ \textcolor{keywordflow}{if}\ (mdeg\ >=\ rlen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00971}00971\ \ \ \ \ \textcolor{comment}{/*\ divide\ m\ by\ x\string^(mdeg-\/(rlen-\/1))\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00972}00972\ \ \ \ \ \textcolor{comment}{/*\ and\ truncate,\ which\ cannot\ affect\ result\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00973}00973\ \ \ \ \ m\ +=\ mdeg-\/(rlen-\/1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00974}00974\ \ \ \ \ mdeg\ =\ rlen-\/1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00975}00975\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00976}00976\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00977}00977\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ top\ =\ (rlen+1)/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00978}00978\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ bot\ =\ rlen-\/top;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00979}00979\ \ \ fp\ s[top];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00980}00980\ \ \ poly\_pseudoreciprocal(d,s,top,m,mdeg);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00981}00981\ \ \ \textcolor{comment}{/*\ s/d\ is\ floor(x\string^(mdeg+top-\/1)/m)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00982}00982\ \ \ \textcolor{comment}{/*\ i.e.\ s/d\ is\ x\string^(mdeg+top-\/1)/m+O(1/x)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00983}00983\ \ \ \textcolor{comment}{/*\ i.e.\ ms\ is\ dx\string^(mdeg+top-\/1)+eps\ with\ eps\ in\ O(x\string^(mdeg-\/1))\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00984}00984\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00985}00985\ \ \ fp\ eps[mdeg];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00986}00986\ \ \ poly\_mul\_low(eps,mdeg,m,mdeg+1,(\textcolor{keyword}{const}\ fp*)\ s,top);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00987}00987\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00988}00988\ \ \ \textcolor{comment}{/*\ ms(dx\string^(mdeg+top-\/1)-\/eps)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00989}00989\ \ \ \textcolor{comment}{/*\ \ \ =\ d\string^2x\string^(2*mdeg+2*top-\/2)-\/eps\string^2\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00990}00990\ \ \ \textcolor{comment}{/*\ \ \ with\ eps\string^2\ in\ O(x\string^(2*mdeg-\/2))\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00991}00991\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00992}00992\ \ \ \textcolor{comment}{/*\ sdx\string^bot\ -\/\ s\ eps/x\string^(mdeg+2*top-\/1-\/rlen)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00993}00993\ \ \ \textcolor{comment}{/*\ =\ s(dx\string^(mdeg+top-\/1)-\/eps)/x\string^(mdeg+2*top-\/1-\/rlen)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00994}00994\ \ \ \textcolor{comment}{/*\ \ \ =\ desired\ d\string^2\ x\string^(mdeg+rlen-\/1)/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00995}00995\ \ \ \textcolor{comment}{/*\ \ \ -\/\ undesired\ eps\string^2/mx\string^(mdeg+2*top-\/1-\/rlen)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00996}00996\ \ \ \textcolor{comment}{/*\ \ \ with\ the\ undesired\ part\ in\ O(1/x)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00997}00997\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00998}00998\ \ \ fp\ epss[bot];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l00999}00999\ \ \ poly\_mul\_high(epss,mdeg+top-\/bot-\/1,(\textcolor{keyword}{const}\ fp*)\ eps,mdeg,(\textcolor{keyword}{const}\ fp*)\ s,top);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01000}01000\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01001}01001\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ bot;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01002}01002\ \ \ \ \ fp\_neg2(\&r[i],(\textcolor{keyword}{const}\ fp*)\ \&epss[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01003}01003\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ top;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01004}01004\ \ \ \ \ fp\_mul3(\&r[i+bot],(\textcolor{keyword}{const}\ fp*)\ \&s[i],(\textcolor{keyword}{const}\ fp*)\ d);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01005}01005\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01006}01006\ \ \ fp\_sq1(d);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01007}01007\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01008}01008\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01009}01009\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_pseudoremainder\_precomputesize(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ glen,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01010}01010\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01011}01011\ \ \ assert(flen\ >=\ glen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01012}01012\ \ \ \textcolor{keywordflow}{if}\ (flen\ ==\ glen)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01013}01013\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ vlen\ =\ flen-\/glen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01014}01014\ \ \ \textcolor{keywordflow}{return}\ vlen+1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01015}01015\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01016}01016\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01017}01017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_pseudoremainder\_precompute(fp\ *precomp,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ glen,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *m)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01018}01018\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01019}01019\ \ \ assert(flen\ >=\ glen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01020}01020\ \ \ \textcolor{keywordflow}{if}\ (flen\ ==\ glen)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01021}01021\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ vlen\ =\ flen-\/glen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01022}01022\ \ \ fp\ *d\ =\ precomp;\ \textcolor{comment}{/*\ length\ 1\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01023}01023\ \ \ fp\ *v\ =\ precomp+1;\ \textcolor{comment}{/*\ length\ vlen\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01024}01024\ \ \ poly\_pseudoreciprocal(d,v,vlen,m,glen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01025}01025\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01026}01026\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01027}01027\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_pseudoremainder\_postcompute(fp\ *g,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ glen,\textcolor{keyword}{const}\ fp\ *f,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *m,\textcolor{keyword}{const}\ fp\ *precomp)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01028}01028\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01029}01029\ \ \ assert(flen\ >=\ glen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01030}01030\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01031}01031\ \ \ \textcolor{keywordflow}{if}\ (flen\ ==\ glen)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01032}01032\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ glen;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01033}01033\ \ \ \ \ \ \ fp\_copy(g[i],\ f[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01034}01034\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01035}01035\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01036}01036\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01037}01037\ \ \ \textcolor{comment}{/*\ simplified\ version\ when\ m[glen]\ =\ 1:\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01038}01038\ \ \ \textcolor{comment}{/*\ v\ =\ floor(x\string^(flen-\/1)/m)\ is\ within\ O(1/x)\ of\ x\string^(flen-\/1)/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01039}01039\ \ \ \textcolor{comment}{/*\ v*f\ is\ within\ O(x\string^(flen-\/2))\ of\ x\string^(flen-\/1)f/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01040}01040\ \ \ \textcolor{comment}{/*\ v*f/x\string^(flen-\/1)\ is\ within\ O(1/x)\ of\ f/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01041}01041\ \ \ \textcolor{comment}{/*\ q\ =\ floor(v*f/x\string^(flen-\/1))\ is\ within\ O(1/x)\ of\ f/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01042}01042\ \ \ \textcolor{comment}{/*\ q*m\ is\ within\ O(x\string^(glen-\/1))\ of\ f\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01043}01043\ \ \ \textcolor{comment}{/*\ finally,\ define\ g\ =\ f-\/q*m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01044}01044\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01045}01045\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ vlen\ =\ flen-\/glen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01046}01046\ \ \ \textcolor{keyword}{const}\ fp\ *d\ =\ precomp;\ \textcolor{comment}{/*\ length\ 1\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01047}01047\ \ \ \textcolor{keyword}{const}\ fp\ *v\ =\ precomp+1;\ \textcolor{comment}{/*\ length\ vlen\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01048}01048\ \ \ \textcolor{comment}{/*\ floor(x\string^(flen-\/1)/m)\ =\ v/d\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01049}01049\ \ \ \textcolor{comment}{/*\ i.e.,\ v\ is\ within\ O(1/x)\ of\ dx\string^(flen-\/1)/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01050}01050\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01051}01051\ \ \ \textcolor{comment}{/*\ vf\ is\ within\ O(x\string^(flen-\/2))\ of\ dx\string^(flen-\/1)f/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01052}01052\ \ \ \textcolor{comment}{/*\ vf/x\string^(flen-\/1)\ is\ within\ O(1/x)\ of\ df/m\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01053}01053\ \ \ \textcolor{comment}{/*\ mvf/x\string^(flen-\/1)\ is\ within\ O(x\string^(glen-\/1))\ of\ df\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01054}01054\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01055}01055\ \ \ fp\ vf[vlen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01056}01056\ \ \ poly\_mul\_high(vf,flen-\/1,v,vlen,f,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01057}01057\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01058}01058\ \ \ fp\ qm[glen];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01059}01059\ \ \ poly\_mul\_low(qm,glen,(\textcolor{keyword}{const}\ fp*)\ vf,vlen,m,glen+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01060}01060\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01061}01061\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ glen;++i)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01062}01062\ \ \ \ \ fp\_mul3(\&g[i],\&f[i],d);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01063}01063\ \ \ \ \ fp\_sub2(\&g[i],\ (\textcolor{keyword}{const}\ fp*)\ \&qm[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01064}01064\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01065}01065\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01066}01066\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01067}01067\ \textcolor{comment}{/*\ assuming\ flen\ >=\ glen\ >=\ 1:\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01068}01068\ \textcolor{comment}{/*\ reduce\ f[0]+f[1]x+f[2]x\string^2+...+f[flen-\/1]x\string^(flen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01069}01069\ \textcolor{comment}{/*\ modulo\ m[0]+m[1]x+...+m[glen]x\string^glen\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01070}01070\ \textcolor{comment}{/*\ to\ obtain\ pseudo-\/remainder\ g[0]+g[1]x+...+g[glen-\/1]x\string^(glen-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01071}01071\ \textcolor{comment}{/*\ and\ denominator\ d\ =\ m[glen]\string^(some\ nonnegative\ exponent)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01072}01072\ \textcolor{comment}{/*\ conventional\ remainder\ is\ pseudo-\/remainder\ divided\ by\ d\ (if\ d\ is\ nonzero)\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01073}01073\ \textcolor{comment}{/*\ d\ is\ not\ returned\ since\ application\ eliminates\ denominators\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01074}01074\ \textcolor{comment}{//\ static\ void\ poly\_pseudoremainder(fp\ *g,long\ long\ glen,const\ fp\ *f,long\ long\ flen,const\ fp\ *m)}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01075}01075\ \textcolor{comment}{//\ \{}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01076}01076\ \textcolor{comment}{//\ \ \ long\ long\ precompsize\ =\ poly\_pseudoremainder\_precomputesize(glen,flen);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01077}01077\ \textcolor{comment}{//\ \ \ fp\ precomp[precompsize];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01078}01078\ \textcolor{comment}{//\ \ \ poly\_pseudoremainder\_precompute(precomp,glen,flen,m);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01079}01079\ \textcolor{comment}{//\ \ \ poly\_pseudoremainder\_postcompute(g,glen,f,flen,m,precomp);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01080}01080\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01081}01081\ \textcolor{comment}{//\ \ \ /*\ XXX:\ try\ non-\/precomputation\ version\ too\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01082}01082\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01083}01083\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01084}01084\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_multieval\_unscaled\_precomputesize(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01085}01085\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01086}01086\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 0)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01087}01087\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01088}01088\ \ \ \ \ \textcolor{keywordflow}{return}\ poly\_eval\_precomputesize(flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01089}01089\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01090}01090\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01091}01091\ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01092}01092\ \ \ \ \ \ \ poly\_multieval\_unscaled\_precomputesize(m,flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01093}01093\ \ \ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(n-\/m,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01094}01094\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01095}01095\ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01096}01096\ \ \ \ \ \ \ poly\_pseudoremainder\_precomputesize(n,flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01097}01097\ \ \ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(1,n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01098}01098\ \ \ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(1,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01099}01099\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01100}01100\ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01101}01101\ \ \ \ \ \ \ poly\_pseudoremainder\_precomputesize(n,flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01102}01102\ \ \ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(2,n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01103}01103\ \ \ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(1,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01104}01104\ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01105}01105\ \ \ \ \ poly\_pseudoremainder\_precomputesize(n,flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01106}01106\ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(m,n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01107}01107\ \ \ \ \ +\ poly\_multieval\_unscaled\_precomputesize(n-\/m,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01108}01108\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01109}01109\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01110}01110\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_multieval\_unscaled\_precompute(fp\ *precomp,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01111}01111\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01112}01112\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01113}01113\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01114}01114\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01115}01115\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Pp;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01116}01116\ \ \ \ \ fp\_neg2(\&Pp.x,\&P[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01117}01117\ \ \ \ \ fp\_copy(Pp.z,\ P[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01118}01118\ \ \ \ \ poly\_eval\_precompute(precomp,flen,\&Pp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01119}01119\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01120}01120\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01121}01121\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01122}01122\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01123}01123\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1size(m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01124}01124\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ n)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01125}01125\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,m,flen,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01126}01126\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(m,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01127}01127\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,n-\/m,flen,P+2*m,T+left);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01128}01128\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01129}01129\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01130}01130\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01131}01131\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01132}01132\ \ \ \ \ poly\_pseudoremainder\_precompute(precomp,n,flen,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01133}01133\ \ \ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01134}01134\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,1,n,P,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01135}01135\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(1,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01136}01136\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,1,n,P+2,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01137}01137\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01138}01138\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01139}01139\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01140}01140\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01141}01141\ \ \ \ \ poly\_pseudoremainder\_precompute(precomp,n,flen,T+3);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01142}01142\ \ \ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01143}01143\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,2,n,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01144}01144\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(2,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01145}01145\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,1,n,P+4,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01146}01146\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01147}01147\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01148}01148\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01149}01149\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1size(n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01150}01150\ \ \ poly\_pseudoremainder\_precompute(precomp,n,flen,T+left+right);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01151}01151\ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01152}01152\ \ \ poly\_multieval\_unscaled\_precompute(precomp,m,n,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01153}01153\ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(m,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01154}01154\ \ \ poly\_multieval\_unscaled\_precompute(precomp,n-\/m,n,P+2*m,T+left);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01155}01155\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01156}01156\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01157}01157\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_multieval\_unscaled\_postcompute(fp\ *v,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keyword}{const}\ fp\ *f,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T,\textcolor{keyword}{const}\ fp\ *precomp)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01158}01158\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01159}01159\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01160}01160\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01161}01161\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01162}01162\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Pp;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01163}01163\ \ \ \ \ fp\_neg2(\&Pp.x,\&P[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01164}01164\ \ \ \ \ fp\_copy(Pp.z,\ P[1]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01165}01165\ \ \ \ \ poly\_eval\_postcompute(v,f,flen,\&Pp,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01166}01166\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01167}01167\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01168}01168\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01169}01169\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01170}01170\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1size(m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01171}01171\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ n)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01172}01172\ \ \ \ \ \textcolor{comment}{/*\ must\ do\ this\ if\ flen\ <=\ n\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01173}01173\ \ \ \ \ \textcolor{comment}{/*\ can\ do\ this\ even\ for\ larger\ flen\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01174}01174\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v,m,f,flen,P,T,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01175}01175\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(m,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01176}01176\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v+m,n-\/m,f,flen,P+2*m,T+left,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01177}01177\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01178}01178\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01179}01179\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01180}01180\ \ \ fp\ g[n];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01181}01181\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01182}01182\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01183}01183\ \ \ \ \ poly\_pseudoremainder\_postcompute(g,n,f,flen,T,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01184}01184\ \ \ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01185}01185\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v,1,(\textcolor{keyword}{const}\ fp*)\ g,n,P,0,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01186}01186\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(1,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01187}01187\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v+1,1,(\textcolor{keyword}{const}\ fp*)\ g,n,P+2,0,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01188}01188\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01189}01189\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01190}01190\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01191}01191\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01192}01192\ \ \ \ \ poly\_pseudoremainder\_postcompute(g,n,f,flen,T+3,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01193}01193\ \ \ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01194}01194\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v,2,(\textcolor{keyword}{const}\ fp*)\ g,n,P,T,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01195}01195\ \ \ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(2,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01196}01196\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v+2,1,(\textcolor{keyword}{const}\ fp*)\ g,n,P+4,0,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01197}01197\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01198}01198\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01199}01199\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01200}01200\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1size(n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01201}01201\ \ \ poly\_pseudoremainder\_postcompute(g,n,f,flen,T+left+right,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01202}01202\ \ \ precomp\ +=\ poly\_pseudoremainder\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01203}01203\ \ \ poly\_multieval\_unscaled\_postcompute(v,m,(\textcolor{keyword}{const}\ fp*)\ g,n,P,T,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01204}01204\ \ \ precomp\ +=\ poly\_multieval\_unscaled\_precomputesize(m,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01205}01205\ \ \ poly\_multieval\_unscaled\_postcompute(v+m,n-\/m,(\textcolor{keyword}{const}\ fp*)\ g,n,P+2*m,T+left,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01206}01206\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01207}01207\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01208}01208\ \textcolor{comment}{//\ static\ void\ poly\_multieval\_unscaled(fp\ *v,long\ long\ n,const\ fp\ *f,long\ long\ flen,const\ fp\ *P,const\ fp\ *T)}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01209}01209\ \textcolor{comment}{//\ \{}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01210}01210\ \textcolor{comment}{//\ \ \ long\ long\ precompsize\ =\ poly\_multieval\_unscaled\_precomputesize(n,flen);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01211}01211\ \textcolor{comment}{//\ \ \ fp\ precomp[precompsize];}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01212}01212\ \textcolor{comment}{//\ \ \ poly\_multieval\_unscaled\_precompute(precomp,n,flen,P,T);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01213}01213\ \textcolor{comment}{//\ \ \ poly\_multieval\_unscaled\_postcompute(v,n,f,flen,P,T,precomp);}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01214}01214\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01215}01215\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01216}01216\ \textcolor{comment}{/*\ same\ API\ as\ poly\_multieval\_unscaled\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01217}01217\ \textcolor{comment}{/*\ except\ for\ a\ different\ input\ representation:\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01218}01218\ \textcolor{comment}{/*\ r[0]/x\string^n+r[1]/x\string^(n-\/1)+...+r[n-\/1]/x\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01219}01219\ \textcolor{comment}{/*\ is\ the\ scaled\ representation\ of\ f\ mod\ root\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01220}01220\ \textcolor{comment}{/*\ where\ root\ is\ the\ product\ of\ the\ polys\ in\ P\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01221}01221\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ poly\_multieval\_scaled(fp\ *v,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keyword}{const}\ fp\ *r,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01222}01222\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01223}01223\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01224}01224\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01225}01225\ \ \ \ \ fp\_copy(v[0],\ r[0]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01226}01226\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01227}01227\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01228}01228\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01229}01229\ \ \ \ \ fp\ g[1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01230}01230\ \ \ \ \ poly\_mul\_mid(g,1,1,r,2,P+2,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01231}01231\ \ \ \ \ poly\_multieval\_scaled(v,1,(\textcolor{keyword}{const}\ fp*)\ g,P,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01232}01232\ \ \ \ \ poly\_mul\_mid(g,1,1,r,2,P,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01233}01233\ \ \ \ \ poly\_multieval\_scaled(v+1,1,(\textcolor{keyword}{const}\ fp*)\ g,P+2,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01234}01234\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01235}01235\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01236}01236\ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ 3)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01237}01237\ \ \ \ \ fp\ g[2];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01238}01238\ \ \ \ \ poly\_mul\_mid(g,1,2,r,3,P+4,2);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01239}01239\ \ \ \ \ poly\_multieval\_scaled(v,2,(\textcolor{keyword}{const}\ fp*)\ g,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01240}01240\ \ \ \ \ poly\_mul\_mid(g,2,1,r,3,T,3);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01241}01241\ \ \ \ \ poly\_multieval\_scaled(v+2,1,(\textcolor{keyword}{const}\ fp*)\ g,P+4,0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01242}01242\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01243}01243\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01244}01244\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01245}01245\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01246}01246\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1size(m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01247}01247\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1size(n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01248}01248\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01249}01249\ \ \ fp\ g[n-\/m];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01250}01250\ \ \ poly\_mul\_mid(g,n-\/m,m,r,n,T+left+right-\/(n-\/m+1),n-\/m+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01251}01251\ \ \ poly\_multieval\_scaled(v,m,(\textcolor{keyword}{const}\ fp*)\ g,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01252}01252\ \ \ poly\_mul\_mid(g,m,n-\/m,r,n,T+left-\/(m+1),m+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01253}01253\ \ \ poly\_multieval\_scaled(v+m,n-\/m,(\textcolor{keyword}{const}\ fp*)\ g,P+2*m,T+left);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01254}01254\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01255}01255\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01256}01256\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_multieval\_chooseunscaled(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01257}01257\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01258}01258\ \ \ \textcolor{comment}{/*\ XXX:\ tune\ this\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01259}01259\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 1)\ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01260}01260\ \ \ \textcolor{keywordflow}{if}\ (flen\ <=\ 1)\ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01261}01261\ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01262}01262\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01263}01263\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01264}01264\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ poly\_multieval\_precomputesize(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01265}01265\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01266}01266\ \ \ \textcolor{keywordflow}{if}\ (poly\_multieval\_chooseunscaled(n,flen))}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01267}01267\ \ \ \ \ \textcolor{keywordflow}{return}\ poly\_multieval\_unscaled\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01268}01268\ \ \ \textcolor{keywordflow}{if}\ (flen\ <\ n)\ flen\ =\ n;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01269}01269\ \ \ \textcolor{keywordflow}{return}\ flen;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01270}01270\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01271}01271\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01272}01272\ \textcolor{keywordtype}{void}\ poly\_multieval\_precompute(fp\ *precomp,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01273}01273\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01274}01274\ \ \ \textcolor{keywordflow}{if}\ (poly\_multieval\_chooseunscaled(n,flen))\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01275}01275\ \ \ \ \ poly\_multieval\_unscaled\_precompute(precomp,n,flen,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01276}01276\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01277}01277\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01278}01278\ \ \ \textcolor{keywordflow}{if}\ (flen\ <\ n)\ flen\ =\ n;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01279}01279\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01280}01280\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ left\ =\ poly\_tree1size(m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01281}01281\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ right\ =\ poly\_tree1size(n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01282}01282\ \ \ fp\ denom;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01283}01283\ \ \ poly\_pseudoreciprocal(\&denom,precomp,flen,T+left+right,n);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01284}01284\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01285}01285\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01286}01286\ \textcolor{keywordtype}{void}\ poly\_multieval\_postcompute(fp\ *v,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keyword}{const}\ fp\ *f,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T,\textcolor{keyword}{const}\ fp\ *precomp)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01287}01287\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01288}01288\ \ \ \textcolor{keywordflow}{if}\ (poly\_multieval\_chooseunscaled(n,flen))\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01289}01289\ \ \ \ \ poly\_multieval\_unscaled\_postcompute(v,n,f,flen,P,T,precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01290}01290\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01291}01291\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01292}01292\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01293}01293\ \ \ \textcolor{comment}{/*\ now\ use\ scaled\ remainder\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01294}01294\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01295}01295\ \ \ fp\ fcopy[n];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01296}01296\ \ \ \textcolor{keywordflow}{if}\ (flen\ <\ n)\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01297}01297\ \ \ \ \ \textcolor{comment}{/*\ XXX:\ or\ split\ n\ into\ smaller\ trees?\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01298}01298\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ flen;++i)\ fp\_copy(fcopy[i],\ f[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01299}01299\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ flen;i\ <\ n;++i)\ fp\_copy(fcopy[i],\ fp\_0);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01300}01300\ \ \ \ \ \textcolor{comment}{//\ f\ =\ fcopy;}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01301}01301\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <\ n;++i)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01302}01302\ \ \ \ \ \ \ \ \ fp\_copy(UNCONST(fp,\ f[i]),\ fcopy[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01303}01303\ \ \ \ \ flen\ =\ n;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01304}01304\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01305}01305\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01306}01306\ \ \ \textcolor{keyword}{const}\ fp\ *rootinv\ =\ precomp;\ \textcolor{comment}{/*\ first\ flen\ entries\ are\ polynomial\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01307}01307\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01308}01308\ \ \ \textcolor{comment}{/*\ rootinv/denom\ is\ within\ O(1/x)\ of\ x\string^(n+flen-\/1)/root\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01309}01309\ \ \ \textcolor{comment}{/*\ frootinv/(denom*x\string^(flen-\/1))\ is\ within\ O(1/x)\ of\ f\ x\string^n/root\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01310}01310\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01311}01311\ \ \ fp\ frootinv[n];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01312}01312\ \ \ poly\_mul\_mid(frootinv,flen-\/1,n,f,flen,rootinv,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01313}01313\ \ \ poly\_multieval\_scaled(v,n,(\textcolor{keyword}{const}\ fp*)\ frootinv,(\textcolor{keyword}{const}\ fp*)\ P,(\textcolor{keyword}{const}\ fp*)\ T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01314}01314\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01315}01315\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01316}01316\ \textcolor{comment}{/*\ same\ API\ as\ poly\_multieval\_unscaled\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01317}01317\ \textcolor{keywordtype}{void}\ poly\_multieval(fp\ *v,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n,\textcolor{keyword}{const}\ fp\ *f,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ flen,\textcolor{keyword}{const}\ fp\ *P,\textcolor{keyword}{const}\ fp\ *T)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01318}01318\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01319}01319\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ precompsize\ =\ poly\_multieval\_precomputesize(n,flen);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01320}01320\ \ \ fp\ precomp[precompsize];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01321}01321\ \ \ poly\_multieval\_precompute(precomp,n,flen,P,T);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01322}01322\ \ \ poly\_multieval\_postcompute(v,n,f,flen,P,T,(\textcolor{keyword}{const}\ fp*)\ precomp);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01323}01323\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01324}01324\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01325}01325\ \textcolor{keywordtype}{void}\ poly\_multiprod2(fp\ *T,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01326}01326\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01327}01327\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 1)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01328}01328\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01329}01329\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01330}01330\ \ \ poly\_multiprod2(T,m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01331}01331\ \ \ poly\_multiprod2(T+3*m,n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01332}01332\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01333}01333\ \ \ fp\ X[2*n+1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01334}01334\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01335}01335\ \ \ \textcolor{comment}{/*\ T[0..2m]\ is\ left\ product\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01336}01336\ \ \ \textcolor{comment}{/*\ T[3m...2n+m]\ is\ right\ product\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01337}01337\ \ \ poly\_mul(X,(\textcolor{keyword}{const}\ fp*)\ T,2*m+1,(\textcolor{keyword}{const}\ fp*)\ T+3*m,2*(n-\/m)+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01338}01338\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01339}01339\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <=\ 2*n;++i)\ fp\_copy(T[i],\ X[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01340}01340\ \}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01341}01341\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01342}01342\ \textcolor{keywordtype}{void}\ poly\_multiprod2\_selfreciprocal(fp\ *T,\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ n)}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01343}01343\ \{}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01344}01344\ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 1)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01345}01345\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01346}01346\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ m\ =\ n/2;}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01347}01347\ \ \ poly\_multiprod2\_selfreciprocal(T,m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01348}01348\ \ \ poly\_multiprod2\_selfreciprocal(T+3*m,n-\/m);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01349}01349\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01350}01350\ \ \ fp\ X[2*n+1];}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01351}01351\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01352}01352\ \ \ \textcolor{comment}{/*\ T[0..2m]\ is\ left\ product\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01353}01353\ \ \ \textcolor{comment}{/*\ T[3m...2n+m]\ is\ right\ product\ */}}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01354}01354\ \ \ poly\_mul\_selfreciprocal(X,(\textcolor{keyword}{const}\ fp*)\ T,2*m+1,(\textcolor{keyword}{const}\ fp*)\ T+3*m,2*(n-\/m)+1);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01355}01355\ }
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01356}01356\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;i\ <=\ 2*n;++i)\ fp\_copy(T[i],\ X[i]);}
+\DoxyCodeLine{\Hypertarget{poly_8c_source_l01357}01357\ \}}
+
+\end{DoxyCode}

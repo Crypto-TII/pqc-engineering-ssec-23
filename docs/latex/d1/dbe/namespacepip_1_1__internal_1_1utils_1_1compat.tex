@@ -1,0 +1,146 @@
+\doxysection{pip.\+\_\+internal.\+utils.\+compat Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat}{}\label{namespacepip_1_1__internal_1_1utils_1_1compat}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat_a0135c835c2982ba6aa20d6186787d584}{has\+\_\+tls}} ()
+\item 
+int \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat_a0011c38959453b4672631a09b2b1a544}{get\+\_\+path\+\_\+uid}} (str path)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat_a0b14e488ae28d98d262453f3e9cd6e4d}{logger}} = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\item 
+dict \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat_ab0955f8330766936feea6fc9d08dc710}{stdlib\+\_\+pkgs}} = \{"{}python"{}, "{}wsgiref"{}, "{}argparse"{}\}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat_af031b3d5d462a60f68093338343aa4b0}{WINDOWS}} = sys.\+platform.\+startswith("{}win"{}) or (sys.\+platform == "{}cli"{} and os.\+name == "{}nt"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Stuff that differs in different Python versions and platform
+distributions.\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_a0011c38959453b4672631a09b2b1a544}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}!get\_path\_uid@{get\_path\_uid}}
+\index{get\_path\_uid@{get\_path\_uid}!pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection{\texorpdfstring{get\_path\_uid()}{get\_path\_uid()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1compat_a0011c38959453b4672631a09b2b1a544} 
+ int get\+\_\+path\+\_\+uid (\begin{DoxyParamCaption}\item[{str}]{path}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Return path's uid.
+
+Does not follow symlinks:
+    https://github.com/pypa/pip/pull/935#discussion_r5307003
+
+Placed this function in compat due to differences on AIX and
+Jython, that should eventually go away.
+
+:raises OSError: When path is a symlink or can't be read.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2compat_8py_source_l00027}{27}} of file \mbox{\hyperlink{__internal_2utils_2compat_8py_source}{compat.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00027\ \textcolor{keyword}{def\ }get\_path\_uid(path:\ str)\ -\/>\ int:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00029\ \textcolor{stringliteral}{\ \ \ \ Return\ path's\ uid.}}
+\DoxyCodeLine{00030\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00031\ \textcolor{stringliteral}{\ \ \ \ Does\ not\ follow\ symlinks:}}
+\DoxyCodeLine{00032\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ https://github.com/pypa/pip/pull/935\#discussion\_r5307003}}
+\DoxyCodeLine{00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00034\ \textcolor{stringliteral}{\ \ \ \ Placed\ this\ function\ in\ compat\ due\ to\ differences\ on\ AIX\ and}}
+\DoxyCodeLine{00035\ \textcolor{stringliteral}{\ \ \ \ Jython,\ that\ should\ eventually\ go\ away.}}
+\DoxyCodeLine{00036\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00037\ \textcolor{stringliteral}{\ \ \ \ :raises\ OSError:\ When\ path\ is\ a\ symlink\ or\ can't\ be\ read.}}
+\DoxyCodeLine{00038\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(os,\ \textcolor{stringliteral}{"{}O\_NOFOLLOW"{}}):}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ fd\ =\ os.open(path,\ os.O\_RDONLY\ |\ os.O\_NOFOLLOW)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ file\_uid\ =\ os.fstat(fd).st\_uid}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ os.close(fd)}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ AIX\ and\ Jython}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ WARNING:\ time\ of\ check\ vulnerability,\ but\ best\ we\ can\ do\ w/o\ NOFOLLOW}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.islink(path):}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ older\ versions\ of\ Jython\ don't\ have\ \`{}os.fstat`}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ file\_uid\ =\ os.stat(path).st\_uid}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ raise\ OSError\ for\ parity\ with\ os.O\_NOFOLLOW\ above}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ OSError(f\textcolor{stringliteral}{"{}\{path\}\ is\ a\ symlink;\ Will\ not\ return\ uid\ for\ symlinks"{}})}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{return}\ file\_uid}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{\#\ packages\ in\ the\ stdlib\ that\ may\ have\ installation\ metadata,\ but\ should\ not\ be}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\#\ considered\ 'installed'.\ \ this\ theoretically\ could\ be\ determined\ based\ on}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\#\ dist.location\ (py27:`sysconfig.get\_paths()['stdlib']`,}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\#\ py26:sysconfig.get\_config\_vars('LIBDEST')),\ but\ fear\ platform\ variation\ may}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\#\ make\ this\ ineffective,\ so\ hard-\/coding}}
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_a0135c835c2982ba6aa20d6186787d584}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}!has\_tls@{has\_tls}}
+\index{has\_tls@{has\_tls}!pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection{\texorpdfstring{has\_tls()}{has\_tls()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1compat_a0135c835c2982ba6aa20d6186787d584} 
+ bool has\+\_\+tls (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2compat_8py_source_l00014}{14}} of file \mbox{\hyperlink{__internal_2utils_2compat_8py_source}{compat.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00014\ \textcolor{keyword}{def\ }has\_tls()\ -\/>\ bool:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{import}\ \_ssl\ \ \textcolor{comment}{\#\ noqa:\ F401\ \ \#\ ignore\ unused}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util}{pip.\_vendor.urllib3.util}}\ \textcolor{keyword}{import}\ IS\_PYOPENSSL}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{return}\ IS\_PYOPENSSL}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_a0b14e488ae28d98d262453f3e9cd6e4d}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}!logger@{logger}}
+\index{logger@{logger}!pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection{\texorpdfstring{logger}{logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1compat_a0b14e488ae28d98d262453f3e9cd6e4d} 
+logger = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2compat_8py_source_l00011}{11}} of file \mbox{\hyperlink{__internal_2utils_2compat_8py_source}{compat.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_ab0955f8330766936feea6fc9d08dc710}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}!stdlib\_pkgs@{stdlib\_pkgs}}
+\index{stdlib\_pkgs@{stdlib\_pkgs}!pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection{\texorpdfstring{stdlib\_pkgs}{stdlib\_pkgs}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1compat_ab0955f8330766936feea6fc9d08dc710} 
+dict stdlib\+\_\+pkgs = \{"{}python"{}, "{}wsgiref"{}, "{}argparse"{}\}}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2compat_8py_source_l00059}{59}} of file \mbox{\hyperlink{__internal_2utils_2compat_8py_source}{compat.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1compat_af031b3d5d462a60f68093338343aa4b0}\index{pip.\_internal.utils.compat@{pip.\_internal.utils.compat}!WINDOWS@{WINDOWS}}
+\index{WINDOWS@{WINDOWS}!pip.\_internal.utils.compat@{pip.\_internal.utils.compat}}
+\doxysubsubsection{\texorpdfstring{WINDOWS}{WINDOWS}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1compat_af031b3d5d462a60f68093338343aa4b0} 
+WINDOWS = sys.\+platform.\+startswith("{}win"{}) or (sys.\+platform == "{}cli"{} and os.\+name == "{}nt"{})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2compat_8py_source_l00063}{63}} of file \mbox{\hyperlink{__internal_2utils_2compat_8py_source}{compat.\+py}}.
+

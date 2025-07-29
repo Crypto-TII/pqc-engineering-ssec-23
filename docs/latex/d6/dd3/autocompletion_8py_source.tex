@@ -1,0 +1,177 @@
+\doxysection{autocompletion.\+py}
+\hypertarget{autocompletion_8py_source}{}\label{autocompletion_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/cli/autocompletion.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/cli/autocompletion.py}}
+\mbox{\hyperlink{autocompletion_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Logic\ that\ powers\ autocompletion\ installed\ by\ \`{}\`{}pip\ completion\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00002}00002\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00004}00004\ \textcolor{keyword}{import}\ optparse}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00005}00005\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00006}00006\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00007}00007\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ chain}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00008}00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Iterable,\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1main__parser}{pip.\_internal.cli.main\_parser}}\ \textcolor{keyword}{import}\ create\_main\_parser}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands}{pip.\_internal.commands}}\ \textcolor{keyword}{import}\ commands\_dict,\ create\_command}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ get\_default\_environment}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a6b43e9e15591029eb9523bffafedbcad}{00015}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a6b43e9e15591029eb9523bffafedbcad}{autocomplete}}()\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Entry\ Point\ for\ completion\ of\ main\ and\ subcommand\ options."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00017}00017\ \ \ \ \ \textcolor{comment}{\#\ Don't\ complete\ if\ user\ hasn't\ sourced\ bash\_completion\ file.}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}PIP\_AUTO\_COMPLETE"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ os.environ:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00020}00020\ \ \ \ \ cwords\ =\ os.environ[\textcolor{stringliteral}{"{}COMP\_WORDS"{}}].split()[1:]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00021}00021\ \ \ \ \ cword\ =\ int(os.environ[\textcolor{stringliteral}{"{}COMP\_CWORD"{}}])}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ current\ =\ cwords[cword\ -\/\ 1]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{except}\ IndexError:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ current\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00027}00027\ \ \ \ \ parser\ =\ create\_main\_parser()}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00028}00028\ \ \ \ \ subcommands\ =\ list(commands\_dict)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00029}00029\ \ \ \ \ options\ =\ []}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00031}00031\ \ \ \ \ \textcolor{comment}{\#\ subcommand}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00032}00032\ \ \ \ \ subcommand\_name:\ Optional[str]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{for}\ word\ \textcolor{keywordflow}{in}\ cwords:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ word\ \textcolor{keywordflow}{in}\ subcommands:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ subcommand\_name\ =\ word}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00037}00037\ \ \ \ \ \textcolor{comment}{\#\ subcommand\ options}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{if}\ subcommand\_name\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ special\ case:\ 'help'\ subcommand\ has\ no\ options}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ subcommand\_name\ ==\ \textcolor{stringliteral}{"{}help"{}}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ special\ case:\ list\ locally\ installed\ dists\ for\ show\ and\ uninstall}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ should\_list\_installed\ =\ \textcolor{keywordflow}{not}\ current.startswith(\textcolor{stringliteral}{"{}-\/"{}})\ \textcolor{keywordflow}{and}\ subcommand\_name\ \textcolor{keywordflow}{in}\ [}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}show"{}},}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}uninstall"{}},}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ should\_list\_installed:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ env\ =\ get\_default\_environment()}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ lc\ =\ current.lower()}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ installed\ =\ [}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist.canonical\_name}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ env.iter\_installed\_distributions(local\_only=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dist.canonical\_name.startswith(lc)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ dist.canonical\_name\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ cwords[1:]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ there\ are\ no\ dists\ installed,\ fall\ back\ to\ option\ completion}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ installed:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ installed:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print(dist)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ should\_list\_installables\ =\ (}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ current.startswith(\textcolor{stringliteral}{"{}-\/"{}})\ \textcolor{keywordflow}{and}\ subcommand\_name\ ==\ \textcolor{stringliteral}{"{}install"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ should\_list\_installables:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_ad16ab02b8e1f8451e5245e7d5b1926b3}{auto\_complete\_paths}}(current,\ \textcolor{stringliteral}{"{}path"{}}):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print(path)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ subcommand\ =\ create\_command(subcommand\_name)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ opt\ \textcolor{keywordflow}{in}\ subcommand.parser.option\_list\_all:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ opt.help\ !=\ optparse.SUPPRESS\_HELP:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ opt\_str\ \textcolor{keywordflow}{in}\ opt.\_long\_opts\ +\ opt.\_short\_opts:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.append((opt\_str,\ opt.nargs))}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ filter\ out\ previously\ specified\ options\ from\ available\ options}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ prev\_opts\ =\ [x.split(\textcolor{stringliteral}{"{}="{}})[0]\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ cwords[1\ :\ cword\ -\/\ 1]]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ options\ =\ [(x,\ v)\ \textcolor{keywordflow}{for}\ (x,\ v)\ \textcolor{keywordflow}{in}\ options\ \textcolor{keywordflow}{if}\ x\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ prev\_opts]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ filter\ options\ by\ current\ input}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ options\ =\ [(k,\ v)\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ options\ \textcolor{keywordflow}{if}\ k.startswith(current)]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\ completion\ type\ given\ cwords\ and\ available\ subcommand\ options}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ completion\_type\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a3998bab638515e8ef66b17e1cdeba051}{get\_path\_completion\_type}}(}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ cwords,}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ cword,}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ subcommand.parser.option\_list\_all,}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\ completion\ files\ and\ directories\ if\ \`{}\`{}completion\_type``\ is}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \`{}\`{}<file>``,\ \`{}\`{}<dir>``\ or\ \`{}\`{}<path>``}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ completion\_type:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ paths\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_ad16ab02b8e1f8451e5245e7d5b1926b3}{auto\_complete\_paths}}(current,\ completion\_type)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ options\ =\ [(path,\ 0)\ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ paths]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ option\ \textcolor{keywordflow}{in}\ options:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ opt\_label\ =\ option[0]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ append\ '='\ to\ options\ which\ require\ args}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option[1]\ \textcolor{keywordflow}{and}\ option[0][:2]\ ==\ \textcolor{stringliteral}{"{}-\/-\/"{}}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ opt\_label\ +=\ \textcolor{stringliteral}{"{}="{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ print(opt\_label)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ show\ main\ parser\ options\ only\ when\ necessary}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ opts\ =\ [i.option\_list\ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ parser.option\_groups]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ opts.append(parser.option\_list)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ flattened\_opts\ =\ chain.from\_iterable(opts)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ current.startswith(\textcolor{stringliteral}{"{}-\/"{}}):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ opt\ \textcolor{keywordflow}{in}\ flattened\_opts:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ opt.help\ !=\ optparse.SUPPRESS\_HELP:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ subcommands\ +=\ opt.\_long\_opts\ +\ opt.\_short\_opts}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\ completion\ type\ given\ cwords\ and\ all\ available\ options}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ completion\_type\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a3998bab638515e8ef66b17e1cdeba051}{get\_path\_completion\_type}}(cwords,\ cword,\ flattened\_opts)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ completion\_type:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ subcommands\ =\ list(\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_ad16ab02b8e1f8451e5245e7d5b1926b3}{auto\_complete\_paths}}(current,\ completion\_type))}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}\ "{}}.join([x\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ subcommands\ \textcolor{keywordflow}{if}\ x.startswith(current)]))}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00116}00116\ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00119}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a3998bab638515e8ef66b17e1cdeba051}{00119}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_a3998bab638515e8ef66b17e1cdeba051}{get\_path\_completion\_type}}(}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00120}00120\ \ \ \ \ cwords:\ List[str],\ cword:\ int,\ opts:\ Iterable[Any]}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00121}00121\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00122}00122\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ type\ of\ path\ completion\ (\`{}\`{}file\`{}\`{},\ \`{}\`{}dir\`{}\`{},\ \`{}\`{}path\`{}\`{}\ or\ None)}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00123}00123\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00124}00124\ \textcolor{stringliteral}{\ \ \ \ :param\ cwords:\ same\ as\ the\ environmental\ variable\ \`{}\`{}COMP\_WORDS\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ :param\ cword:\ same\ as\ the\ environmental\ variable\ \`{}\`{}COMP\_CWORD\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ :param\ opts:\ The\ available\ options\ to\ check}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ :return:\ path\ completion\ type\ (\`{}\`{}file\`{}\`{},\ \`{}\`{}dir\`{}\`{},\ \`{}\`{}path\`{}\`{}\ or\ None)}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{if}\ cword\ <\ 2\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ cwords[cword\ -\/\ 2].startswith(\textcolor{stringliteral}{"{}-\/"{}}):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{for}\ opt\ \textcolor{keywordflow}{in}\ opts:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ opt.help\ ==\ optparse.SUPPRESS\_HELP:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ o\ \textcolor{keywordflow}{in}\ str(opt).split(\textcolor{stringliteral}{"{}/"{}}):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cwords[cword\ -\/\ 2].split(\textcolor{stringliteral}{"{}="{}})[0]\ ==\ o:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ opt.metavar\ \textcolor{keywordflow}{or}\ any(}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}path"{}},\ \textcolor{stringliteral}{"{}file"{}},\ \textcolor{stringliteral}{"{}dir"{}})\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ opt.metavar.split(\textcolor{stringliteral}{"{}/"{}})}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ opt.metavar}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00140}00140\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00143}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_ad16ab02b8e1f8451e5245e7d5b1926b3}{00143}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1autocompletion_ad16ab02b8e1f8451e5245e7d5b1926b3}{auto\_complete\_paths}}(current:\ str,\ completion\_type:\ str)\ -\/>\ Iterable[str]:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00144}00144\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}If\ \`{}\`{}completion\_type\`{}\`{}\ is\ \`{}\`{}file\`{}\`{}\ or\ \`{}\`{}path\`{}\`{},\ list\ all\ regular\ files}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ and\ directories\ starting\ with\ \`{}\`{}current\`{}\`{};\ otherwise\ only\ list\ directories}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ starting\ with\ \`{}\`{}current\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00147}00147\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00148}00148\ \textcolor{stringliteral}{\ \ \ \ :param\ current:\ The\ word\ to\ be\ completed}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00149}00149\ \textcolor{stringliteral}{\ \ \ \ :param\ completion\_type:\ path\ completion\ type(\`{}\`{}file\`{}\`{},\ \`{}\`{}path\`{}\`{}\ or\ \`{}\`{}dir\`{}\`{})}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ :return:\ A\ generator\ of\ regular\ files\ and/or\ directories}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00152}00152\ \ \ \ \ directory,\ filename\ =\ os.path.split(current)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00153}00153\ \ \ \ \ current\_path\ =\ os.path.abspath(directory)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00154}00154\ \ \ \ \ \textcolor{comment}{\#\ Don't\ complete\ paths\ if\ they\ can't\ be\ accessed}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00155}00155\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.access(current\_path,\ os.R\_OK):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00157}00157\ \ \ \ \ filename\ =\ os.path.normcase(filename)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00158}00158\ \ \ \ \ \textcolor{comment}{\#\ list\ all\ files\ that\ start\ with\ \`{}\`{}filename``}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00159}00159\ \ \ \ \ file\_list\ =\ (}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ x\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ os.listdir(current\_path)\ \textcolor{keywordflow}{if}\ os.path.normcase(x).startswith(filename)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00161}00161\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{for}\ f\ \textcolor{keywordflow}{in}\ file\_list:}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ opt\ =\ os.path.join(current\_path,\ f)}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ comp\_file\ =\ os.path.normcase(os.path.join(directory,\ f))}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ complete\ regular\ files\ when\ there\ is\ not\ \`{}\`{}<dir>``\ after\ option}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ complete\ directories\ when\ there\ is\ \`{}\`{}<file>``,\ \`{}\`{}<path>``\ or}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \`{}\`{}<dir>``after\ option}}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ completion\_type\ !=\ \textcolor{stringliteral}{"{}dir"{}}\ \textcolor{keywordflow}{and}\ os.path.isfile(opt):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ comp\_file}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ os.path.isdir(opt):}
+\DoxyCodeLine{\Hypertarget{autocompletion_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ os.path.join(comp\_file,\ \textcolor{stringliteral}{"{}"{}})}
+
+\end{DoxyCode}

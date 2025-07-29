@@ -1,0 +1,108 @@
+\doxysection{wheel\+\_\+legacy.\+py}
+\hypertarget{wheel__legacy_8py_source}{}\label{wheel__legacy_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel\_legacy.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel\_legacy.py}}
+\mbox{\hyperlink{wheel__legacy_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1spinners}{pip.\_internal.cli.spinners}}\ \textcolor{keyword}{import}\ open\_spinner}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1setuptools__build}{pip.\_internal.utils.setuptools\_build}}\ \textcolor{keyword}{import}\ make\_setuptools\_bdist\_wheel\_args}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1subprocess}{pip.\_internal.utils.subprocess}}\ \textcolor{keyword}{import}\ call\_subprocess,\ format\_command\_args}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a0b14e488ae28d98d262453f3e9cd6e4d}{00009}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a0ffc023ac34db735ce1d754c5d60676a}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a0ffc023ac34db735ce1d754c5d60676a}{format\_command\_result}}(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00013}00013\ \ \ \ \ command\_args:\ List[str],}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00014}00014\ \ \ \ \ command\_output:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00015}00015\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Format\ command\ information\ for\ logging."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00017}00017\ \ \ \ \ command\_desc\ =\ format\_command\_args(command\_args)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00018}00018\ \ \ \ \ text\ =\ f\textcolor{stringliteral}{"{}Command\ arguments:\ \{command\_desc\}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ command\_output:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ text\ +=\ \textcolor{stringliteral}{"{}Command\ output:\ None"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{elif}\ logger.getEffectiveLevel()\ >\ logging.DEBUG:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ text\ +=\ \textcolor{stringliteral}{"{}Command\ output:\ [use\ -\/-\/verbose\ to\ show]"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ command\_output.endswith(\textcolor{stringliteral}{"{}\(\backslash\)n"{}}):}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ command\_output\ +=\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ text\ +=\ f\textcolor{stringliteral}{"{}Command\ output:\(\backslash\)n\{command\_output\}"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{return}\ text}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00032}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a3598faa8e1f04a804267caa30907b641}{00032}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a3598faa8e1f04a804267caa30907b641}{get\_legacy\_build\_wheel\_path}}(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00033}00033\ \ \ \ \ names:\ List[str],}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00034}00034\ \ \ \ \ temp\_dir:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00035}00035\ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00036}00036\ \ \ \ \ command\_args:\ List[str],}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00037}00037\ \ \ \ \ command\_output:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00038}00038\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00039}00039\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ path\ to\ the\ wheel\ in\ the\ temporary\ build\ directory."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00040}00040\ \ \ \ \ \textcolor{comment}{\#\ Sort\ for\ determinism.}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00041}00041\ \ \ \ \ names\ =\ sorted(names)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ names:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ msg\ =\ (\textcolor{stringliteral}{"{}Legacy\ build\ of\ wheel\ for\ \{!r\}\ created\ no\ files.\(\backslash\)n"{}}).format(name)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ msg\ +=\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a0ffc023ac34db735ce1d754c5d60676a}{format\_command\_result}}(command\_args,\ command\_output)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ logger.warning(msg)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{if}\ len(names)\ >\ 1:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Legacy\ build\ of\ wheel\ for\ \{!r\}\ created\ more\ than\ one\ file.\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Filenames\ (choosing\ first):\ \{\}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ ).format(name,\ names)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ msg\ +=\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a0ffc023ac34db735ce1d754c5d60676a}{format\_command\_result}}(command\_args,\ command\_output)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ logger.warning(msg)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(temp\_dir,\ names[0])}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00059}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a5544fff278011ba207bdb55b746e3b65}{00059}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a5544fff278011ba207bdb55b746e3b65}{build\_wheel\_legacy}}(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00060}00060\ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00061}00061\ \ \ \ \ setup\_py\_path:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00062}00062\ \ \ \ \ source\_dir:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00063}00063\ \ \ \ \ global\_options:\ List[str],}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00064}00064\ \ \ \ \ build\_options:\ List[str],}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00065}00065\ \ \ \ \ tempd:\ str,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00066}00066\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00067}00067\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ one\ unpacked\ package\ using\ the\ "{}legacy"{}\ build\ process.}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00068}00068\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ Returns\ path\ to\ wheel\ if\ successfully\ built.\ Otherwise,\ returns\ None.}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00071}00071\ \ \ \ \ wheel\_args\ =\ make\_setuptools\_bdist\_wheel\_args(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ setup\_py\_path,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ global\_options=global\_options,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ build\_options=build\_options,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ destination\_dir=tempd,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00076}00076\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00078}00078\ \ \ \ \ spin\_message\ =\ f\textcolor{stringliteral}{"{}Building\ wheel\ for\ \{name\}\ (setup.py)"{}}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00079}00079\ \ \ \ \ \textcolor{keyword}{with}\ open\_spinner(spin\_message)\ \textcolor{keyword}{as}\ spinner:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Destination\ directory:\ \%s"{}},\ tempd)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ output\ =\ call\_subprocess(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_args,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ command\_desc=\textcolor{stringliteral}{"{}python\ setup.py\ bdist\_wheel"{}},}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cwd=source\_dir,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spinner=spinner,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ spinner.finish(\textcolor{stringliteral}{"{}error"{}})}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(\textcolor{stringliteral}{"{}Failed\ building\ wheel\ for\ \%s"{}},\ name)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ names\ =\ os.listdir(tempd)}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ wheel\_path\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__legacy_a3598faa8e1f04a804267caa30907b641}{get\_legacy\_build\_wheel\_path}}(}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ names=names,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ temp\_dir=tempd,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ name=name,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ command\_args=wheel\_args,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ command\_output=output,}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{wheel__legacy_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ wheel\_path}
+
+\end{DoxyCode}

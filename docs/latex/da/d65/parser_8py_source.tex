@@ -1,0 +1,300 @@
+\doxysection{parser.\+py}
+\hypertarget{parser_8py_source}{}\label{parser_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/cli/parser.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/cli/parser.py}}
+\mbox{\hyperlink{parser_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1parser}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Base\ option\ parser\ setup"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00003}00003\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00004}00004\ \textcolor{keyword}{import}\ optparse}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00005}00005\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00006}00006\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00007}00007\ \textcolor{keyword}{import}\ textwrap}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00008}00008\ \textcolor{keyword}{from}\ contextlib\ \textcolor{keyword}{import}\ suppress}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00009}00009\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Dict,\ Generator,\ List,\ Tuple}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ UNKNOWN\_ERROR}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1configuration}{pip.\_internal.configuration}}\ \textcolor{keyword}{import}\ Configuration,\ ConfigurationError}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ redact\_auth\_from\_url,\ strtobool}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1parser_a0b14e488ae28d98d262453f3e9cd6e4d}{00015}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00018}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter}{00018}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter}{PrettyHelpFormatter}}(optparse.IndentedHelpFormatter):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00019}00019\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ prettier/less\ verbose\ help\ formatter\ for\ optparse."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00021}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a2ff536c981001f2f8269a2cb2b3c7209}{00021}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a2ff536c981001f2f8269a2cb2b3c7209}{\_\_init\_\_}}(self,\ *args:\ Any,\ **kwargs:\ Any)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ help\ position\ must\ be\ aligned\ with\ \_\_init\_\_.parseopts.description}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ kwargs[\textcolor{stringliteral}{"{}max\_help\_position"{}}]\ =\ 30}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ kwargs[\textcolor{stringliteral}{"{}indent\_increment"{}}]\ =\ 1}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ kwargs[\textcolor{stringliteral}{"{}width"{}}]\ =\ shutil.get\_terminal\_size()[0]\ -\/\ 2}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a2ff536c981001f2f8269a2cb2b3c7209}{\_\_init\_\_}}(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00028}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a7aea0e53e52ffd55d99194bff1c8a36e}{00028}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a7aea0e53e52ffd55d99194bff1c8a36e}{format\_option\_strings}}(self,\ option:\ optparse.Option)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a4d2ab292ba01253bfe9466767835ffc0}{\_format\_option\_strings}}(option)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00031}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a4d2ab292ba01253bfe9466767835ffc0}{00031}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a4d2ab292ba01253bfe9466767835ffc0}{\_format\_option\_strings}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ self,\ option:\ optparse.Option,\ mvarfmt:\ str\ =\ \textcolor{stringliteral}{"{}\ <\{\}>"{}},\ optsep:\ str\ =\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00033}00033\ \ \ \ \ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Return\ a\ comma-\/separated\ list\ of\ option\ strings\ and\ metavars.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00036}00036\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ option:\ \ tuple\ of\ (short\ opt,\ long\ opt),\ e.g:\ ('-\/f',\ '-\/-\/format')}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ mvarfmt:\ metavar\ format\ string}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ optsep:\ \ separator}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ opts\ =\ []}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option.\_short\_opts:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ opts.append(option.\_short\_opts[0])}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option.\_long\_opts:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ opts.append(option.\_long\_opts[0])}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(opts)\ >\ 1:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ opts.insert(1,\ optsep)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option.takes\_value():}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ option.dest\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ metavar\ =\ option.metavar\ \textcolor{keywordflow}{or}\ option.dest.lower()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ opts.append(mvarfmt.format(metavar.lower()))}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(opts)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00057}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a92e28c78fbecc652a3d5fc9e370e346c}{00057}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a92e28c78fbecc652a3d5fc9e370e346c}{format\_heading}}(self,\ heading:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ heading\ ==\ \textcolor{stringliteral}{"{}Options"{}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ heading\ +\ \textcolor{stringliteral}{"{}:\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00062}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_ae6702c9251b093a99e6af817702275f8}{00062}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_ae6702c9251b093a99e6af817702275f8}{format\_usage}}(self,\ usage:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Ensure\ there\ is\ only\ one\ newline\ between\ usage\ and\ the\ first\ heading}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ there\ is\ no\ description.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ msg\ =\ \textcolor{stringliteral}{"{}\(\backslash\)nUsage:\ \{\}\(\backslash\)n"{}}.format(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a79b3da3b80de2b52e5d889598ebb73f0}{indent\_lines}}(textwrap.dedent(usage),\ \textcolor{stringliteral}{"{}\ \ "{}}))}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ msg}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00070}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a6c0031833a9b646c088e9526ea707490}{00070}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a6c0031833a9b646c088e9526ea707490}{format\_description}}(self,\ description:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ leave\ full\ control\ over\ description\ to\ us}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ description:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00073}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{00073}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}},\ \textcolor{stringliteral}{"{}main"{}}):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ label\ =\ \textcolor{stringliteral}{"{}Commands"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ label\ =\ \textcolor{stringliteral}{"{}Description"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ some\ doc\ strings\ have\ initial\ newlines,\ some\ don't}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ description\ =\ description.lstrip(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ some\ doc\ strings\ have\ final\ newlines\ and\ spaces,\ some\ don't}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ description\ =\ description.rstrip()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ dedent,\ then\ reindent}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ description\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a79b3da3b80de2b52e5d889598ebb73f0}{indent\_lines}}(textwrap.dedent(description),\ \textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ description\ =\ f\textcolor{stringliteral}{"{}\{label\}:\(\backslash\)n\{description\}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ description}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00088}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_ad67b8a51116b9173bf422f0c7569fd63}{00088}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_ad67b8a51116b9173bf422f0c7569fd63}{format\_epilog}}(self,\ epilog:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ leave\ full\ control\ over\ epilog\ to\ us}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ epilog:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ epilog}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00095}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a79b3da3b80de2b52e5d889598ebb73f0}{00095}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a79b3da3b80de2b52e5d889598ebb73f0}{indent\_lines}}(self,\ text:\ str,\ indent:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ new\_lines\ =\ [indent\ +\ line\ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ text.split(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})]}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}.join(new\_lines)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00100}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter}{00100}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter}{UpdatingDefaultsHelpFormatter}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter}{PrettyHelpFormatter}}):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00101}00101\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Custom\ help\ formatter\ for\ use\ in\ ConfigOptionParser.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00102}00102\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00103}00103\ \textcolor{stringliteral}{\ \ \ \ This\ is\ updates\ the\ defaults\ before\ expanding\ them,\ allowing}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00104}00104\ \textcolor{stringliteral}{\ \ \ \ them\ to\ show\ up\ correctly\ in\ the\ help\ listing.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00105}00105\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00106}00106\ \textcolor{stringliteral}{\ \ \ \ Also\ redact\ auth\ from\ url\ type\ options}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00107}00107\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00109}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter_aca628d883ccb419a5e3c4afcd4d08e3f}{00109}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter_aca628d883ccb419a5e3c4afcd4d08e3f}{expand\_default}}(self,\ option:\ optparse.Option)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ default\_values\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00112}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter}{00112}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}},\ ConfigOptionParser)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.\_update\_defaults(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.defaults)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ option.dest\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ default\_values\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_pretty_help_formatter_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.defaults.get(option.dest)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ help\_text\ =\ super().\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_updating_defaults_help_formatter_aca628d883ccb419a5e3c4afcd4d08e3f}{expand\_default}}(option)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ default\_values\ \textcolor{keywordflow}{and}\ option.metavar\ ==\ \textcolor{stringliteral}{"{}URL"{}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(default\_values,\ str):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_values\ =\ [default\_values]}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ its\ not\ a\ list,\ we\ should\ abort\ and\ just\ return\ the\ help\ text}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(default\_values,\ list):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_values\ =\ []}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ val\ \textcolor{keywordflow}{in}\ default\_values:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ help\_text\ =\ help\_text.replace(val,\ redact\_auth\_from\_url(val))}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ help\_text}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00132}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser}{00132}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser}{CustomOptionParser}}(optparse.OptionParser):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00133}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_ae4689c5068cb7f6bc708fdcb2477036e}{00133}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_ae4689c5068cb7f6bc708fdcb2477036e}{insert\_option\_group}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ self,\ idx:\ int,\ *args:\ Any,\ **kwargs:\ Any}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00135}00135\ \ \ \ \ )\ -\/>\ optparse.OptionGroup:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Insert\ an\ OptionGroup\ at\ a\ given\ position."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ group\ =\ self.add\_option\_group(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_a5579cb612cb71bed51c9a04b3e677204}{option\_groups}}.pop()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_a5579cb612cb71bed51c9a04b3e677204}{option\_groups}}.insert(idx,\ group)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ group}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00144}00144\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00145}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_ad8c1475a99f83151b8ff714523577cae}{00145}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_ad8c1475a99f83151b8ff714523577cae}{option\_list\_all}}(self)\ -\/>\ List[optparse.Option]:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ a\ list\ of\ all\ options,\ including\ those\ in\ option\ groups."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ res\ =\ self.option\_list[:]}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00148}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_a5579cb612cb71bed51c9a04b3e677204}{00148}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser_a5579cb612cb71bed51c9a04b3e677204}{option\_groups}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ res.extend(i.option\_list)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser}{00154}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser}{ConfigOptionParser}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_custom_option_parser}{CustomOptionParser}}):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00155}00155\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Custom\ option\ parser\ which\ updates\ its\ defaults\ by\ checking\ the}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00156}00156\ \textcolor{stringliteral}{\ \ \ \ configuration\ files\ and\ environmental\ variables"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00158}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab60211008dbeca48bcf3e3e880e9fab3}{00158}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab60211008dbeca48bcf3e3e880e9fab3}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ *args:\ Any,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ isolated:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ **kwargs:\ Any,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00164}00164\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00165}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab74e6bf80237ddc4109968cedc58c151}{00165}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab74e6bf80237ddc4109968cedc58c151}{name}}\ =\ name}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00166}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ad2256458892609d0533df5d72a7257ad}{00166}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ad2256458892609d0533df5d72a7257ad}{config}}\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1configuration_1_1_configuration}{Configuration}}(isolated)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab74e6bf80237ddc4109968cedc58c151}{name}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab60211008dbeca48bcf3e3e880e9fab3}{\_\_init\_\_}}(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00171}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a44bd75d654e2f2eb2327200d56b99aee}{00171}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a44bd75d654e2f2eb2327200d56b99aee}{check\_default}}(self,\ option:\ optparse.Option,\ key:\ str,\ val:\ Any)\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ option.check\_value(key,\ val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ optparse.OptionValueError\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}An\ error\ occurred\ during\ configuration:\ \{exc\}"{}})}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ sys.exit(3)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00178}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a510d13cddc7e8a7fd7fa1d9a849bb6af}{00178}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a510d13cddc7e8a7fd7fa1d9a849bb6af}{\_get\_ordered\_configuration\_items}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00180}00180\ \ \ \ \ )\ -\/>\ Generator[Tuple[str,\ Any],\ None,\ None]:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Configuration\ gives\ keys\ in\ an\ unordered\ manner.\ Order\ them.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ override\_order\ =\ [\textcolor{stringliteral}{"{}global"{}},\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ab74e6bf80237ddc4109968cedc58c151}{name}},\ \textcolor{stringliteral}{"{}:env:"{}}]}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Pool\ the\ options\ into\ different\ groups}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ section\_items:\ Dict[str,\ List[Tuple[str,\ Any]]]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ name:\ []\ \textcolor{keywordflow}{for}\ name\ \textcolor{keywordflow}{in}\ override\_order}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ section\_key,\ val\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ad2256458892609d0533df5d72a7257ad}{config}}.items():}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ignore\ empty\ values}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ val:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.debug(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Ignoring\ configuration\ key\ '\%s'\ as\ it's\ value\ is\ empty."{}},}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ section\_key,}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ section,\ key\ =\ section\_key.split(\textcolor{stringliteral}{"{}."{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ section\ \textcolor{keywordflow}{in}\ override\_order:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ section\_items[section].append((key,\ val))}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Yield\ each\ group\ in\ their\ override\ order}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ section\ \textcolor{keywordflow}{in}\ override\_order:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ val\ \textcolor{keywordflow}{in}\ section\_items[section]:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ key,\ val}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00206}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a705e1b02e3761bf8c7fba965d076a62f}{00206}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a705e1b02e3761bf8c7fba965d076a62f}{\_update\_defaults}}(self,\ defaults:\ Dict[str,\ Any])\ -\/>\ Dict[str,\ Any]:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Updates\ the\ given\ defaults\ with\ values\ from\ the\ config\ files\ and}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ environ.\ Does\ a\ little\ special\ handling\ for\ certain\ types\ of}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ options\ (lists)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Accumulate\ complex\ default\ state.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00212}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7b6bc2414e0cc8dd1cb020560e19ad4f}{00212}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7b6bc2414e0cc8dd1cb020560e19ad4f}{values}}\ =\ optparse.Values(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7cafc845c45c84cbda0408f57a7f0dd2}{defaults}})}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ late\_eval\ =\ set()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Then\ set\ the\ options\ with\ those\ values}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ val\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a510d13cddc7e8a7fd7fa1d9a849bb6af}{\_get\_ordered\_configuration\_items}}():}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ '-\/-\/'\ because\ configuration\ supports\ only\ long\ names}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ option\ =\ self.get\_option(\textcolor{stringliteral}{"{}-\/-\/"{}}\ +\ key)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ignore\ options\ not\ present\ in\ this\ parser.\ E.g.\ non-\/globals\ put}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ [global]\ by\ users\ that\ want\ them\ to\ apply\ to\ all\ applicable}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ commands.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ option.dest\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option.action\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}store\_true"{}},\ \textcolor{stringliteral}{"{}store\_false"{}}):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ strtobool(val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a849ac2e702fe505317792bdb6dc1e2c4}{error}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\}\ is\ not\ a\ valid\ value\ for\ \{\}\ option,\ "{}}\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}please\ specify\ a\ boolean\ value\ like\ yes/no,\ "{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}true/false\ or\ 1/0\ instead."{}}.format(val,\ key)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ option.action\ ==\ \textcolor{stringliteral}{"{}count"{}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ suppress(ValueError):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ strtobool(val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ suppress(ValueError):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ int(val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(val,\ int)\ \textcolor{keywordflow}{or}\ val\ <\ 0:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a849ac2e702fe505317792bdb6dc1e2c4}{error}}(}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\}\ is\ not\ a\ valid\ value\ for\ \{\}\ option,\ "{}}\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}please\ instead\ specify\ either\ a\ non-\/negative\ integer\ "{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}or\ a\ boolean\ value\ like\ yes/no\ or\ false/true\ "{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}which\ is\ equivalent\ to\ 1/0."{}}.format(val,\ key)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ option.action\ ==\ \textcolor{stringliteral}{"{}append"{}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ val.split()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ [self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a44bd75d654e2f2eb2327200d56b99aee}{check\_default}}(option,\ key,\ v)\ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ val]}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ option.action\ ==\ \textcolor{stringliteral}{"{}callback"{}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ option.callback\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ late\_eval.add(option.dest)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ opt\_str\ =\ option.get\_opt\_string()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ option.convert\_value(opt\_str,\ val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ From\ take\_action}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ args\ =\ option.callback\_args\ \textcolor{keywordflow}{or}\ ()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kwargs\ =\ option.callback\_kwargs\ \textcolor{keywordflow}{or}\ \{\}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ option.callback(option,\ opt\_str,\ val,\ self,\ *args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a44bd75d654e2f2eb2327200d56b99aee}{check\_default}}(option,\ key,\ val)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ defaults[option.dest]\ =\ val}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ late\_eval:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ defaults[key]\ =\ getattr(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7b6bc2414e0cc8dd1cb020560e19ad4f}{values}},\ key)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7b6bc2414e0cc8dd1cb020560e19ad4f}{values}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ defaults}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00270}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a2000c314126de59105c0c3851c61f3c0}{00270}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a2000c314126de59105c0c3851c61f3c0}{get\_default\_values}}(self)\ -\/>\ optparse.Values:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Overriding\ to\ make\ updating\ the\ defaults\ after\ instantiation\ of}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00272}00272\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ option\ parser\ possible,\ \_update\_defaults()\ does\ the\ dirty\ work."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00273}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a72eff52b4b52c2b1cda2e1e1596bdd89}{00273}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a72eff52b4b52c2b1cda2e1e1596bdd89}{process\_default\_values}}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Old,\ pre-\/Optik\ 1.5\ behaviour.}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00275}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7cafc845c45c84cbda0408f57a7f0dd2}{00275}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ optparse.Values(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7cafc845c45c84cbda0408f57a7f0dd2}{defaults}})}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Load\ the\ configuration,\ or\ error\ out\ in\ case\ of\ an\ error}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_ad2256458892609d0533df5d72a7257ad}{config}}.load()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ConfigurationError\ \textcolor{keyword}{as}\ err:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ self.exit(UNKNOWN\_ERROR,\ str(err))}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ defaults\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a705e1b02e3761bf8c7fba965d076a62f}{\_update\_defaults}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a7cafc845c45c84cbda0408f57a7f0dd2}{defaults}}.copy())\ \ \textcolor{comment}{\#\ ours}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ option\ \textcolor{keywordflow}{in}\ self.\_get\_all\_options():}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ option.dest\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ default\ =\ defaults.get(option.dest)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(default,\ str):}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ opt\_str\ =\ option.get\_opt\_string()}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defaults[option.dest]\ =\ option.check\_value(opt\_str,\ default)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ optparse.Values(defaults)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00292}\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a849ac2e702fe505317792bdb6dc1e2c4}{00292}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1parser_1_1_config_option_parser_a849ac2e702fe505317792bdb6dc1e2c4}{error}}(self,\ msg:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ self.print\_usage(sys.stderr)}
+\DoxyCodeLine{\Hypertarget{parser_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ self.exit(UNKNOWN\_ERROR,\ f\textcolor{stringliteral}{"{}\{msg\}\(\backslash\)n"{}})}
+
+\end{DoxyCode}

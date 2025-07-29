@@ -1,0 +1,113 @@
+\doxysection{response.\+py}
+\hypertarget{util_2response_8py_source}{}\label{util_2response_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/response.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/response.py}}
+\mbox{\hyperlink{util_2response_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00003}00003\ \textcolor{keyword}{from}\ email.errors\ \textcolor{keyword}{import}\ MultipartInvariantViolationDefect,\ StartBoundaryNotFoundDefect}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00005}00005\ \textcolor{keyword}{from}\ ..exceptions\ \textcolor{keyword}{import}\ HeaderParsingError}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00006}00006\ \textcolor{keyword}{from}\ ..packages.six.moves\ \textcolor{keyword}{import}\ http\_client\ \textcolor{keyword}{as}\ httplib}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_a33762a57a4106a0668ced93e0464b45b}{00009}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_a33762a57a4106a0668ced93e0464b45b}{is\_fp\_closed}}(obj):}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00010}00010\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ Checks\ whether\ a\ given\ file-\/like\ object\ is\ closed.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00012}00012\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ :param\ obj:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00014}00014\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ file-\/like\ object\ to\ check.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00015}00015\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00018}00018\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ \`{}isclosed()`\ first,\ in\ case\ Python3\ doesn't\ set\ \`{}closed`.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ GH\ Issue\ \#928}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.isclosed()}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ via\ the\ official\ file-\/like-\/object\ way.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.closed}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ if\ the\ object\ is\ a\ container\ for\ another\ file-\/like\ object\ that}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ gets\ released\ on\ exhaustion\ (e.g.\ HTTPResponse).}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.fp\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Unable\ to\ determine\ whether\ fp\ is\ closed."{}})}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00040}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ab98def5b105c07bdb5845c1a0ad3f55b}{00040}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ab98def5b105c07bdb5845c1a0ad3f55b}{assert\_header\_parsing}}(headers):}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00041}00041\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ Asserts\ whether\ all\ headers\ have\ been\ successfully\ parsed.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ Extracts\ encountered\ errors\ from\ the\ result\ of\ parsing\ headers.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00044}00044\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ Only\ works\ on\ Python\ 3.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00046}00046\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ :param\ http.client.HTTPMessage\ headers:\ Headers\ to\ verify.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00048}00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ :raises\ urllib3.exceptions.HeaderParsingError:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ parsing\ errors\ are\ found.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00053}00053\ \ \ \ \ \textcolor{comment}{\#\ This\ will\ fail\ silently\ if\ we\ pass\ in\ the\ wrong\ kind\ of\ parameter.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00054}00054\ \ \ \ \ \textcolor{comment}{\#\ To\ make\ debugging\ easier\ add\ an\ explicit\ check.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(headers,\ httplib.HTTPMessage):}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(\textcolor{stringliteral}{"{}expected\ httplib.Message,\ got\ \{0\}."{}}.format(type(headers)))}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00058}00058\ \ \ \ \ defects\ =\ getattr(headers,\ \textcolor{stringliteral}{"{}defects"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00059}00059\ \ \ \ \ get\_payload\ =\ getattr(headers,\ \textcolor{stringliteral}{"{}get\_payload"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00061}00061\ \ \ \ \ unparsed\_data\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{if}\ get\_payload:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\_payload\ is\ actually\ email.message.Message.get\_payload;}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we're\ only\ interested\ in\ the\ result\ if\ it's\ not\ a\ multipart\ message}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ headers.is\_multipart():}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ get\_payload()}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(payload,\ (bytes,\ str)):}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unparsed\_data\ =\ payload}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ defects:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ httplib\ is\ assuming\ a\ response\ body\ is\ available}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ when\ parsing\ headers\ even\ when\ httplib\ only\ sends}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ header\ data\ to\ parse\_headers()\ This\ results\ in}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ defects\ on\ multipart\ responses\ in\ particular.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ See:\ https://github.com/urllib3/urllib3/issues/800}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ So\ we\ ignore\ the\ following\ defects:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ StartBoundaryNotFoundDefect:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ The\ claimed\ start\ boundary\ was\ never\ found.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ MultipartInvariantViolationDefect:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ A\ message\ claimed\ to\ be\ a\ multipart\ but\ no\ subparts\ were\ found.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ defects\ =\ [}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ defect}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ defect\ \textcolor{keywordflow}{in}\ defects}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defect,\ (StartBoundaryNotFoundDefect,\ MultipartInvariantViolationDefect)}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ defects\ \textcolor{keywordflow}{or}\ unparsed\_data:}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_header_parsing_error}{HeaderParsingError}}(defects=defects,\ unparsed\_data=unparsed\_data)}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00094}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ac6b625dccb11e74aceba4fb07c407293}{00094}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ac6b625dccb11e74aceba4fb07c407293}{is\_response\_to\_head}}(response):}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00095}00095\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ Checks\ whether\ the\ request\ of\ a\ response\ has\ been\ a\ HEAD-\/request.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00097}00097\ \textcolor{stringliteral}{\ \ \ \ Handles\ the\ quirks\ of\ AppEngine.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00098}00098\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00099}00099\ \textcolor{stringliteral}{\ \ \ \ :param\ http.client.HTTPResponse\ response:}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00100}00100\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Response\ to\ check\ if\ the\ originating\ request}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00101}00101\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ used\ 'HEAD'\ as\ a\ method.}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00102}00102\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00103}00103\ \ \ \ \ \textcolor{comment}{\#\ FIXME:\ Can\ we\ do\ this\ somehow\ without\ accessing\ private\ httplib\ \_method?}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00104}00104\ \ \ \ \ method\ =\ response.\_method}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(method,\ int):\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Appengine}}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ method\ ==\ 3}
+\DoxyCodeLine{\Hypertarget{util_2response_8py_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{return}\ method.upper()\ ==\ \textcolor{stringliteral}{"{}HEAD"{}}}
+
+\end{DoxyCode}

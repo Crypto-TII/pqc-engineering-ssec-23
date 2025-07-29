@@ -1,0 +1,140 @@
+\doxysection{macromanprober.\+py}
+\hypertarget{macromanprober_8py_source}{}\label{macromanprober_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/chardet/macromanprober.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/chardet/macromanprober.py}}
+\mbox{\hyperlink{macromanprober_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober}{00001}}\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00031}00031\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Union}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00033}00033\ \textcolor{keyword}{from}\ .charsetprober\ \textcolor{keyword}{import}\ CharSetProber}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00034}00034\ \textcolor{keyword}{from}\ .enums\ \textcolor{keyword}{import}\ ProbingState}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_ac8f8f5985765d732ac728ad22ef74a5d}{00036}}\ FREQ\_CAT\_NUM\ =\ 4}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a889d9b76cd9b1cc250de75742e70809e}{00038}}\ UDF\ =\ 0\ \ \textcolor{comment}{\#\ undefined}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00039}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a1428e46d22b556c77b30b8f1dd7166e4}{00039}}\ OTH\ =\ 1\ \ \textcolor{comment}{\#\ other}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00040}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a27b92d83b71e265990fcc28b1128a9f8}{00040}}\ ASC\ =\ 2\ \ \textcolor{comment}{\#\ ascii\ capital\ letter}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00041}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a595151b156d09a9b8fdcd4b66e64e3ee}{00041}}\ ASS\ =\ 3\ \ \textcolor{comment}{\#\ ascii\ small\ letter}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00042}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a1461d4982e93ddca455912db90aed029}{00042}}\ ACV\ =\ 4\ \ \textcolor{comment}{\#\ accent\ capital\ vowel}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a4b75ac65ebfba80169afb67b78ee5c07}{00043}}\ ACO\ =\ 5\ \ \textcolor{comment}{\#\ accent\ capital\ other}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00044}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_acf61ee78f8a9e074255e867a707034a2}{00044}}\ ASV\ =\ 6\ \ \textcolor{comment}{\#\ accent\ small\ vowel}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00045}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a783e1a5a833845248c1b30d2b65ebd4c}{00045}}\ ASO\ =\ 7\ \ \textcolor{comment}{\#\ accent\ small\ other}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00046}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a2cb78455182b0f57b2aeeadcb7f13181}{00046}}\ ODD\ =\ 8\ \ \textcolor{comment}{\#\ character\ that\ is\ unlikely\ to\ appear}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00047}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a55fb70c77935db683eec41809a4851cd}{00047}}\ CLASS\_NUM\ =\ 9\ \ \textcolor{comment}{\#\ total\ classes}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00049}00049\ \textcolor{comment}{\#\ The\ change\ from\ Latin1\ is\ that\ we\ explicitly\ look\ for\ extended\ characters}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00050}00050\ \textcolor{comment}{\#\ that\ are\ infrequently-\/occurring\ symbols,\ and\ consider\ them\ to\ always\ be}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00051}00051\ \textcolor{comment}{\#\ improbable.\ This\ should\ let\ MacRoman\ get\ out\ of\ the\ way\ of\ more\ likely}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00052}00052\ \textcolor{comment}{\#\ encodings\ in\ most\ situations.}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00054}00054\ \textcolor{comment}{\#\ fmt:\ off}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00055}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_a626345c94d8d408a400361481fcee326}{00055}}\ MacRoman\_CharToClass\ =\ (}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00056}00056\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 00\ -\/\ 07}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00057}00057\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 08\ -\/\ 0F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00058}00058\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 10\ -\/\ 17}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00059}00059\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 18\ -\/\ 1F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00060}00060\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 20\ -\/\ 27}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00061}00061\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 28\ -\/\ 2F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00062}00062\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 30\ -\/\ 37}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00063}00063\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 38\ -\/\ 3F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00064}00064\ \ \ \ \ OTH,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ \ \textcolor{comment}{\#\ 40\ -\/\ 47}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00065}00065\ \ \ \ \ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ \ \textcolor{comment}{\#\ 48\ -\/\ 4F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00066}00066\ \ \ \ \ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ ASC,\ \ \textcolor{comment}{\#\ 50\ -\/\ 57}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00067}00067\ \ \ \ \ ASC,\ ASC,\ ASC,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 58\ -\/\ 5F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00068}00068\ \ \ \ \ OTH,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ \ \textcolor{comment}{\#\ 60\ -\/\ 67}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00069}00069\ \ \ \ \ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ \ \textcolor{comment}{\#\ 68\ -\/\ 6F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00070}00070\ \ \ \ \ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ ASS,\ \ \textcolor{comment}{\#\ 70\ -\/\ 77}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00071}00071\ \ \ \ \ ASS,\ ASS,\ ASS,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ 78\ -\/\ 7F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00072}00072\ \ \ \ \ ACV,\ ACV,\ ACO,\ ACV,\ ACO,\ ACV,\ ACV,\ ASV,\ \ \textcolor{comment}{\#\ 80\ -\/\ 87}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00073}00073\ \ \ \ \ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASO,\ ASV,\ ASV,\ \ \textcolor{comment}{\#\ 88\ -\/\ 8F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00074}00074\ \ \ \ \ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASO,\ ASV,\ \ \textcolor{comment}{\#\ 90\ -\/\ 97}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00075}00075\ \ \ \ \ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ ASV,\ \ \textcolor{comment}{\#\ 98\ -\/\ 9F}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00076}00076\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ ASO,\ \ \textcolor{comment}{\#\ A0\ -\/\ A7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00077}00077\ \ \ \ \ OTH,\ OTH,\ ODD,\ ODD,\ OTH,\ OTH,\ ACV,\ ACV,\ \ \textcolor{comment}{\#\ A8\ -\/\ AF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00078}00078\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ B0\ -\/\ B7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00079}00079\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ ASV,\ ASV,\ \ \textcolor{comment}{\#\ B8\ -\/\ BF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00080}00080\ \ \ \ \ OTH,\ OTH,\ ODD,\ OTH,\ ODD,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ C0\ -\/\ C7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00081}00081\ \ \ \ \ OTH,\ OTH,\ OTH,\ ACV,\ ACV,\ ACV,\ ACV,\ ASV,\ \ \textcolor{comment}{\#\ C8\ -\/\ CF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00082}00082\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ ODD,\ \ \textcolor{comment}{\#\ D0\ -\/\ D7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00083}00083\ \ \ \ \ ASV,\ ACV,\ ODD,\ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ \ \textcolor{comment}{\#\ D8\ -\/\ DF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00084}00084\ \ \ \ \ OTH,\ OTH,\ OTH,\ OTH,\ OTH,\ ACV,\ ACV,\ ACV,\ \ \textcolor{comment}{\#\ E0\ -\/\ E7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00085}00085\ \ \ \ \ ACV,\ ACV,\ ACV,\ ACV,\ ACV,\ ACV,\ ACV,\ ACV,\ \ \textcolor{comment}{\#\ E8\ -\/\ EF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00086}00086\ \ \ \ \ ODD,\ ACV,\ ACV,\ ACV,\ ACV,\ ASV,\ ODD,\ ODD,\ \ \textcolor{comment}{\#\ F0\ -\/\ F7}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00087}00087\ \ \ \ \ ODD,\ ODD,\ ODD,\ ODD,\ ODD,\ ODD,\ ODD,\ ODD,\ \ \textcolor{comment}{\#\ F8\ -\/\ FF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00088}00088\ )}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00090}00090\ \textcolor{comment}{\#\ 0\ :\ illegal}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00091}00091\ \textcolor{comment}{\#\ 1\ :\ very\ unlikely}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00092}00092\ \textcolor{comment}{\#\ 2\ :\ normal}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00093}00093\ \textcolor{comment}{\#\ 3\ :\ very\ likely}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00094}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1macromanprober_ad891d93fae296afa6c4b2ab95cef114a}{00094}}\ MacRomanClassModel\ =\ (}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00095}00095\ \textcolor{comment}{\#\ UDF\ OTH\ ASC\ ASS\ ACV\ ACO\ ASV\ ASO\ ODD}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00096}00096\ \ \ \ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ \textcolor{comment}{\#\ UDF}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00097}00097\ \ \ \ \ 0,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ OTH}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00098}00098\ \ \ \ \ 0,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ ASC}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00099}00099\ \ \ \ \ 0,\ \ 3,\ \ 3,\ \ 3,\ \ 1,\ \ 1,\ \ 3,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ ASS}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00100}00100\ \ \ \ \ 0,\ \ 3,\ \ 3,\ \ 3,\ \ 1,\ \ 2,\ \ 1,\ \ 2,\ \ 1,\ \ \textcolor{comment}{\#\ ACV}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00101}00101\ \ \ \ \ 0,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ ACO}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00102}00102\ \ \ \ \ 0,\ \ 3,\ \ 1,\ \ 3,\ \ 1,\ \ 1,\ \ 1,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ ASV}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00103}00103\ \ \ \ \ 0,\ \ 3,\ \ 1,\ \ 3,\ \ 1,\ \ 1,\ \ 3,\ \ 3,\ \ 1,\ \ \textcolor{comment}{\#\ ASO}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00104}00104\ \ \ \ \ 0,\ \ 1,\ \ 1,\ \ 1,\ \ 1,\ \ 1,\ \ 1,\ \ 1,\ \ 1,\ \ \textcolor{comment}{\#\ ODD}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00105}00105\ )}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00106}00106\ \textcolor{comment}{\#\ fmt:\ on}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00109}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{00109}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{MacRomanProber}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1charsetprober_1_1_char_set_prober}{CharSetProber}}):}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00110}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_abc1b785959b47505de72feabab160402}{00110}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_abc1b785959b47505de72feabab160402}{\_\_init\_\_}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_abc1b785959b47505de72feabab160402}{\_\_init\_\_}}()}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00112}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a5dfd6938a4192aa2377dcbc62554c8f6}{00112}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a5dfd6938a4192aa2377dcbc62554c8f6}{\_last\_char\_class}}\ =\ OTH}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00113}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{00113}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}:\ List[int]\ =\ []}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1charsetprober_1_1_char_set_prober_a89732d4380ef53ab0394d237458376f7}{reset}}()}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00116}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a89732d4380ef53ab0394d237458376f7}{00116}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a89732d4380ef53ab0394d237458376f7}{reset}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a5dfd6938a4192aa2377dcbc62554c8f6}{\_last\_char\_class}}\ =\ OTH}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}\ =\ [0]\ *\ FREQ\_CAT\_NUM}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ express\ the\ prior\ that\ MacRoman\ is\ a\ somewhat\ rare\ encoding;}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ this\ can\ be\ done\ by\ starting\ out\ in\ a\ slightly\ improbable\ state}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ must\ be\ overcome}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}[2]\ =\ 10}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a89732d4380ef53ab0394d237458376f7}{reset}}()}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00127}00127\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00128}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a57223038b0d139e653784d16dad326cb}{00128}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a57223038b0d139e653784d16dad326cb}{charset\_name}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}MacRoman"{}}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00131}00131\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00132}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ac304154d1db7aa491241bf75b49c0ea6}{00132}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ac304154d1db7aa491241bf75b49c0ea6}{language}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00135}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_aeb3f335e0b9b871fc912efd7445da4cb}{00135}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_aeb3f335e0b9b871fc912efd7445da4cb}{feed}}(self,\ byte\_str:\ Union[bytes,\ bytearray])\ -\/>\ ProbingState:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ byte\_str\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1charsetprober_1_1_char_set_prober_aaa710eb061687e67324142e4cea3132b}{remove\_xml\_tags}}(byte\_str)}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ byte\_str:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ char\_class\ =\ MacRoman\_CharToClass[c]}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ freq\ =\ MacRomanClassModel[(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a5dfd6938a4192aa2377dcbc62554c8f6}{\_last\_char\_class}}\ *\ CLASS\_NUM)\ +\ char\_class]}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ freq\ ==\ 0:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00141}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{00141}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1charsetprober_1_1_char_set_prober_af2c68ba768ed9c8eb4d3d419b5ab3065}{\_state}}\ =\ ProbingState.NOT\_ME}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}[freq]\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_a5dfd6938a4192aa2377dcbc62554c8f6}{\_last\_char\_class}}\ =\ char\_class}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{state}}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00148}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ae35c0d480bbdf6846eaa8db1e638d235}{00148}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ae35c0d480bbdf6846eaa8db1e638d235}{get\_confidence}}(self)\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00149}\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{00149}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober}{state}}\ ==\ ProbingState.NOT\_ME:}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.01}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ total\ =\ sum(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}})}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ confidence\ =\ (}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ 0.0}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ total\ <\ 0.01}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}[3]\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober_ab9f7f0d7e1661934277a360e8e039d12}{\_freq\_counter}}[1]\ *\ 20.0)\ /\ total}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ confidence\ =\ max(confidence,\ 0.0)}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ lower\ the\ confidence\ of\ MacRoman\ so\ that\ other\ more\ accurate}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ detector\ can\ take\ priority.}}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ confidence\ *=\ 0.73}
+\DoxyCodeLine{\Hypertarget{macromanprober_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ confidence}
+
+\end{DoxyCode}

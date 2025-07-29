@@ -1,0 +1,78 @@
+\doxysection{egg\+\_\+link.\+py}
+\hypertarget{egg__link_8py_source}{}\label{egg__link_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/egg\_link.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/egg\_link.py}}
+\mbox{\hyperlink{egg__link_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link}{00001}}\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00002}00002\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00003}00003\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00004}00004\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations}{pip.\_internal.locations}}\ \textcolor{keyword}{import}\ site\_packages,\ user\_site}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv}{pip.\_internal.utils.virtualenv}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00008}00008\ \ \ \ \ running\_under\_virtualenv,}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00009}00009\ \ \ \ \ virtualenv\_no\_global,}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00010}00010\ )}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00012}00012\ \_\_all\_\_\ =\ [}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00013}00013\ \ \ \ \ \textcolor{stringliteral}{"{}egg\_link\_path\_from\_sys\_path"{}},}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00014}00014\ \ \ \ \ \textcolor{stringliteral}{"{}egg\_link\_path\_from\_location"{}},}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00015}00015\ ]}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00018}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_aeac22d30ce5cb3a7510312160f762ee8}{00018}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_aeac22d30ce5cb3a7510312160f762ee8}{\_egg\_link\_name}}(raw\_name:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00019}00019\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Convert\ a\ Name\ metadata\ value\ to\ a\ .egg-\/link\ name,\ by\ applying}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ the\ same\ substitution\ as\ pkg\_resources's\ safe\_name\ function.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ Note:\ we\ cannot\ use\ canonicalize\_name\ because\ it\ has\ a\ different\ logic.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{return}\ re.sub(\textcolor{stringliteral}{"{}[\string^A-\/Za-\/z0-\/9.]+"{}},\ \textcolor{stringliteral}{"{}-\/"{}},\ raw\_name)\ +\ \textcolor{stringliteral}{"{}.egg-\/link"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00027}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_a63973fa7d7d1b5064bdd7785aa61f044}{00027}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_a63973fa7d7d1b5064bdd7785aa61f044}{egg\_link\_path\_from\_sys\_path}}(raw\_name:\ str)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ Look\ for\ a\ .egg-\/link\ file\ for\ project\ name,\ by\ walking\ sys.path.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00031}00031\ \ \ \ \ egg\_link\_name\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_aeac22d30ce5cb3a7510312160f762ee8}{\_egg\_link\_name}}(raw\_name)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{for}\ path\_item\ \textcolor{keywordflow}{in}\ sys.path:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ egg\_link\ =\ os.path.join(path\_item,\ egg\_link\_name)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isfile(egg\_link):}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ egg\_link}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00039}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_a468fa53672a0e9d9506a22a74258b1f3}{00039}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_a468fa53672a0e9d9506a22a74258b1f3}{egg\_link\_path\_from\_location}}(raw\_name:\ str)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ Return\ the\ path\ for\ the\ .egg-\/link\ file\ if\ it\ exists,\ otherwise,\ None.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00042}00042\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ There's\ 3\ scenarios:}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ 1)\ not\ in\ a\ virtualenv}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ \ \ \ try\ to\ find\ in\ site.USER\_SITE,\ then\ site\_packages}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ 2)\ in\ a\ no-\/global\ virtualenv}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ \ \ \ try\ to\ find\ in\ site\_packages}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ 3)\ in\ a\ yes-\/global\ virtualenv}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ \ \ \ try\ to\ find\ in\ site\_packages,\ then\ site.USER\_SITE}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ (don't\ look\ in\ global\ location)}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00051}00051\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ For\ \#1\ and\ \#3,\ there\ could\ be\ odd\ cases,\ where\ there's\ an\ egg-\/link\ in\ 2}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ locations.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00054}00054\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ This\ method\ will\ just\ return\ the\ first\ one\ found.}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00057}00057\ \ \ \ \ sites:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{if}\ running\_under\_virtualenv():}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ sites.append(site\_packages)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ virtualenv\_no\_global()\ \textcolor{keywordflow}{and}\ user\_site:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ sites.append(user\_site)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ user\_site:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ sites.append(user\_site)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ sites.append(site\_packages)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00067}00067\ \ \ \ \ egg\_link\_name\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1egg__link_aeac22d30ce5cb3a7510312160f762ee8}{\_egg\_link\_name}}(raw\_name)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{for}\ site\ \textcolor{keywordflow}{in}\ sites:}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ egglink\ =\ os.path.join(site,\ egg\_link\_name)}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isfile(egglink):}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ egglink}
+\DoxyCodeLine{\Hypertarget{egg__link_8py_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+
+\end{DoxyCode}

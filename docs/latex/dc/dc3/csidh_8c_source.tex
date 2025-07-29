@@ -1,0 +1,135 @@
+\doxysection{csidh.\+c}
+\hypertarget{csidh_8c_source}{}\label{csidh_8c_source}\index{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/main/csidh.c@{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/main/csidh.c}}
+\mbox{\hyperlink{csidh_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00001}00001\ \textcolor{preprocessor}{\#undef\ NDEBUG}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00002}00002\ \textcolor{preprocessor}{\#include<time.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <secsidh/secsidh.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{d_c_t_i_d_h_2main_2cycle_8h}{cycle.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fp-counters_8h}{fp-\/counters.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}csidh.h"{}}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}csidh\_api.h"{}}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <inttypes.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00014}00014\ \textcolor{preprocessor}{\#if\ GLOBAL\_COUNTERS\ !=\ 0}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00015}00015\ \textcolor{preprocessor}{\#define\ cprintf(...)\ printf(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00016}00016\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00017}\mbox{\hyperlink{csidh_8c_ae4d99178ccab2ade1065c8785e448450}{00017}}\ \textcolor{preprocessor}{\#define\ cprintf(...)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00018}00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00020}00020\ \textcolor{preprocessor}{\#ifndef\ BITS}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00021}\mbox{\hyperlink{csidh_8c_a9d2a7c69bd3fabc41e1ee87df2f283b3}{00021}}\ \textcolor{preprocessor}{\#define\ BITS\ 2047d221}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00022}00022\ \textcolor{preprocessor}{\#error\ BITS\ not\ defined}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00023}00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00025}\mbox{\hyperlink{csidh_8c_ab916a63b03fabdce364c51ab7940a749}{00025}}\ \textcolor{preprocessor}{\#define\ CPASTER(x,\ y)\ SECSIDH\_CSIDH\#\#x\#\#\_\#\#y}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00026}\mbox{\hyperlink{csidh_8c_a9c11336f780632dc79ac17cdba4ba78b}{00026}}\ \textcolor{preprocessor}{\#define\ CEVALUATOR(x,\ y)\ \ CPASTER(x,\ y)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00027}\mbox{\hyperlink{csidh_8c_a39e461aaf6eff833654b9e9a00f69be6}{00027}}\ \textcolor{preprocessor}{\#define\ CONSTNAMESPACE(name)\ \ CEVALUATOR(BITS,\ name)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00028}\mbox{\hyperlink{csidh_8c_a0ac6b84919e806b7f277338f51171d7a}{00028}}\ \textcolor{preprocessor}{\#define\ SK\_SIZE\ \ \ \ \ CONSTNAMESPACE(SK\_SIZE)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00029}\mbox{\hyperlink{csidh_8c_a2f348addee0da69245a826e336aa2d00}{00029}}\ \textcolor{preprocessor}{\#define\ PK\_SIZE\ \ \ \ \ CONSTNAMESPACE(PK\_SIZE)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00030}\mbox{\hyperlink{csidh_8c_a55f8cdefcb282d492790f1f7e6a9c624}{00030}}\ \textcolor{preprocessor}{\#define\ SS\_SIZE\ \ \ \ \ CONSTNAMESPACE(SS\_SIZE)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00032}\mbox{\hyperlink{csidh_8c_adf8cf904e11bc37eaf8a6f7f58866d8a}{00032}}\ \textcolor{preprocessor}{\#define\ FPASTER(x,\ y)\ secsidh\_CSIDH\#\#x\#\#\_\#\#y}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00033}\mbox{\hyperlink{csidh_8c_a637a992e77be8508dffc7316c90ba6f2}{00033}}\ \textcolor{preprocessor}{\#define\ FEVALUATOR(x,\ y)\ \ FPASTER(x,\ y)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00034}\mbox{\hyperlink{csidh_8c_ab11d295ba49ad6effa4ce66f2d75066a}{00034}}\ \textcolor{preprocessor}{\#define\ FNAMESPACE(name)\ \ FEVALUATOR(BITS,\ name)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00036}\mbox{\hyperlink{csidh_8c_a7f5e57f9e8ed5b3ac65e71bf439280c0}{00036}}\ \textcolor{preprocessor}{\#define\ keygen\ FNAMESPACE(keygen)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00037}\mbox{\hyperlink{csidh_8c_a324ca3991299a9bf4fbab794a413b8e4}{00037}}\ \textcolor{preprocessor}{\#define\ derive\ FNAMESPACE(derive)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00039}\mbox{\hyperlink{csidh_8c_a84c2198df4890fe1c577f95f4973acc8}{00039}}\ \textcolor{preprocessor}{\#define\ pk\_size\ FNAMESPACE(pk\_size)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00040}\mbox{\hyperlink{csidh_8c_a37bcc87bb8bbaf62391e2b316a6f4e46}{00040}}\ \textcolor{preprocessor}{\#define\ sk\_size\ FNAMESPACE(sk\_size)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00041}\mbox{\hyperlink{csidh_8c_adbf884e13d080103f808d372685eb9eb}{00041}}\ \textcolor{preprocessor}{\#define\ ss\_size\ FNAMESPACE(ss\_size)}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00043}00043\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ss\_print(\textcolor{keyword}{const}\ uint8\_t*\ ss,\ \textcolor{keywordtype}{char}\ *c,\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00044}00044\ \{}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00045}00045\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s\ :=\ 0x"{}},\ c);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00046}00046\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}};}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{for}(\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}=size-\/1;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ >\ -\/1;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}-\/-\/)}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%02"{}}\ PRIX8\ \textcolor{stringliteral}{"{}"{}},\ ss[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}]);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00049}00049\ \ \ \ \ printf(\textcolor{stringliteral}{"{};\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00052}00052\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ dumb\_fp\_isequal(\textcolor{keyword}{const}\ uint8\_t*\ \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}},\ \textcolor{keyword}{const}\ uint8\_t*\ b,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{return}\ memcmp(\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}},\ b,\ size)\ ==\ 0;}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00056}\mbox{\hyperlink{csidh_8c_a840291bc02cba5474a4cb46a9b9566fe}{00056}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{csidh_8c_a840291bc02cba5474a4cb46a9b9566fe}{main}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00057}00057\ \{}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00058}00058\ \ \ \ \ ticks\ cc0,\ cc1;\ \textcolor{comment}{//\ for\ measuringthe\ clock\ cycles}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00059}00059\ \ \ \ \ printf(\textcolor{stringliteral}{"{}PK\_SIZE\ =\ \%d\ and\ pk\_size\ =\ \%d\(\backslash\)n"{}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_a84c2198df4890fe1c577f95f4973acc8}{pk\_size}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00060}00060\ \ \ \ \ printf(\textcolor{stringliteral}{"{}SK\_SIZE\ =\ \%d\ and\ sk\_size\ =\ \%d\(\backslash\)n"{}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_a0ac6b84919e806b7f277338f51171d7a}{SK\_SIZE}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_a37bcc87bb8bbaf62391e2b316a6f4e46}{sk\_size}});\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00061}00061\ \ \ \ \ printf(\textcolor{stringliteral}{"{}SS\_SIZE\ =\ \%d\ and\ ss\_size\ =\ \%d\(\backslash\)n"{}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}},\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{checkct_8c_adbf884e13d080103f808d372685eb9eb}{ss\_size}});\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00062}00062\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}}\ ==\ \mbox{\hyperlink{checkct_8c_a84c2198df4890fe1c577f95f4973acc8}{pk\_size}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00063}00063\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\mbox{\hyperlink{checkct_8c_a0ac6b84919e806b7f277338f51171d7a}{SK\_SIZE}}\ ==\ \mbox{\hyperlink{checkct_8c_a37bcc87bb8bbaf62391e2b316a6f4e46}{sk\_size}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00064}00064\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}}\ ==\ \mbox{\hyperlink{checkct_8c_adbf884e13d080103f808d372685eb9eb}{ss\_size}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00066}00066\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00067}00067\ \ \ \ \ \textcolor{comment}{//\ Key\ generation}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00068}00068\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)033[0;33m//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00069}00069\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)033[0;33m//\ Key\ generation\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00071}00071\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ Alice}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00073}00073\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;35m//\ Alice\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00074}00074\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}[\mbox{\hyperlink{checkct_8c_a0ac6b84919e806b7f277338f51171d7a}{SK\_SIZE}}],\ A[\mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}}],\ ss\_a[\mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}}];}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00075}00075\ \ \ \ \ cc0\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00076}00076\ \ \ \ \ \mbox{\hyperlink{csidh_8c_a7f5e57f9e8ed5b3ac65e71bf439280c0}{keygen}}(A,\ \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00077}00077\ \ \ \ \ cc1\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00078}00078\ \ \ \ \ \textcolor{comment}{//ss\_print(a,\ "{}sk\_a"{},\ SK\_SIZE);}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00079}00079\ \ \ \ \ ss\_print(A,\ \textcolor{stringliteral}{"{}pk\_a"{}},\ \mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00080}00080\ \ \ \ \ \mbox{\hyperlink{csidh_8c_ae4d99178ccab2ade1065c8785e448450}{cprintf}}(\textcolor{stringliteral}{"{}Running-\/time\ (millions):\ \%2.03lfM\ +\ \%2.03lfS\ +\ \%2.03lfa\ =\ \(\backslash\)033[1;35m\%2.03lfM\(\backslash\)033[0m\(\backslash\)n"{}},\ (1.0\ *\ fpmul)\ /\ 1000000.0,\ (1.0\ *\ fpsqr)\ /\ 1000000.0,\ (1.0\ *\ fpadd)\ /\ 1000000.0,\ (1.0\ *\ (fpmul\ +\ fpsqr))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00081}00081\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Clock\ cycles\ (millions):\ \(\backslash\)033[1;35m\%7.03lf\(\backslash\)033[0m\(\backslash\)n"{}},\ (\ 1.0\ *\ (cc1\ -\/\ cc0))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00083}00083\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00084}00084\ \ \ \ \ \textcolor{comment}{//\ Bob}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00085}00085\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;34m//\ Bob\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00086}00086\ \ \ \ \ uint8\_t\ b[\mbox{\hyperlink{checkct_8c_a0ac6b84919e806b7f277338f51171d7a}{SK\_SIZE}}],\ B[\mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}}],\ ss\_b[\mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}}];}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00087}00087\ \ \ \ \ cc0\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00088}00088\ \ \ \ \ \mbox{\hyperlink{csidh_8c_a7f5e57f9e8ed5b3ac65e71bf439280c0}{keygen}}(B,\ b);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00089}00089\ \ \ \ \ cc1\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00090}00090\ \ \ \ \ \textcolor{comment}{//ss\_print(b,\ "{}sk\_b"{},\ SK\_SIZE);}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00091}00091\ \ \ \ \ ss\_print(B,\ \textcolor{stringliteral}{"{}pk\_b"{}},\ \mbox{\hyperlink{checkct_8c_a2f348addee0da69245a826e336aa2d00}{PK\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00092}00092\ \ \ \ \ \mbox{\hyperlink{csidh_8c_ae4d99178ccab2ade1065c8785e448450}{cprintf}}(\textcolor{stringliteral}{"{}Running-\/time\ (millions):\ \%2.03lfM\ +\ \%2.03lfS\ +\ \%2.03lfa\ =\ \(\backslash\)033[1;34m\%2.03lfM\(\backslash\)033[0m\(\backslash\)n"{}},\ (1.0\ *\ fpmul)\ /\ 1000000.0,\ (1.0\ *\ fpsqr)\ /\ 1000000.0,\ (1.0\ *\ fpadd)\ /\ 1000000.0,\ (1.0\ *\ (fpmul\ +\ fpsqr))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00093}00093\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Clock\ cycles\ (millions):\ \(\backslash\)033[1;34m\%7.03lf\(\backslash\)033[0m\(\backslash\)n"{}},\ (\ 1.0\ *\ (cc1\ -\/\ cc0))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00095}00095\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ Secret\ sharing\ derivation}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00097}00097\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;33m//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00098}00098\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)033[0;33m//\ Secret\ sharing\ generation\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00100}00100\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00101}00101\ \ \ \ \ \textcolor{comment}{//\ Alice}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00102}00102\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;35m//\ Alice\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00103}00103\ \ \ \ \ cc0\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00104}00104\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\mbox{\hyperlink{csidh_8c_a324ca3991299a9bf4fbab794a413b8e4}{derive}}(ss\_a,\ B,\ \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}})\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00105}00105\ \ \ \ \ cc1\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00106}00106\ \ \ \ \ ss\_print(ss\_a,\ \textcolor{stringliteral}{"{}ss\_a"{}},\ \mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00107}00107\ \ \ \ \ \mbox{\hyperlink{csidh_8c_ae4d99178ccab2ade1065c8785e448450}{cprintf}}(\textcolor{stringliteral}{"{}Running-\/time\ (millions)\ [without\ validation]:\ \%2.03lfM\ +\ \%2.03lfS\ +\ \%2.03lfa\ =\ \(\backslash\)033[1;35m\%2.03lfM\(\backslash\)033[0m\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ (1.0\ *\ fpmul)\ /\ 1000000.0,\ (1.0\ *\ fpsqr)\ /\ 1000000.0,\ (1.0\ *\ fpadd)\ /\ 1000000.0,\ (1.0\ *\ (fpmul\ +\ fpsqr))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00109}00109\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Clock\ cycles\ (millions)\ [including\ validation]:\ \(\backslash\)033[1;35m\%7.03lf\(\backslash\)033[0m\(\backslash\)n"{}},\ (\ 1.0\ *\ (cc1\ -\/\ cc0))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00111}00111\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00112}00112\ \ \ \ \ \textcolor{comment}{//\ Bob}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00113}00113\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;34m//\ Bob\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00114}00114\ \ \ \ \ cc0\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00115}00115\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\mbox{\hyperlink{csidh_8c_a324ca3991299a9bf4fbab794a413b8e4}{derive}}(ss\_b,\ A,\ b)\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00116}00116\ \ \ \ \ cc1\ =\ getticks();}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00117}00117\ \ \ \ \ ss\_print(ss\_b,\ \textcolor{stringliteral}{"{}ss\_b"{}},\ \mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00118}00118\ \ \ \ \ \mbox{\hyperlink{csidh_8c_ae4d99178ccab2ade1065c8785e448450}{cprintf}}(\textcolor{stringliteral}{"{}Running-\/time\ (millions)\ [without\ validation]:\ \%2.03lfM\ +\ \%2.03lfS\ +\ \%2.03lfa\ =\ \(\backslash\)033[1;34m\%2.03lfM\(\backslash\)033[0m\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ (1.0\ *\ fpmul)\ /\ 1000000.0,\ (1.0\ *\ fpsqr)\ /\ 1000000.0,\ (1.0\ *\ fpadd)\ /\ 1000000.0,\ (1.0\ *\ (fpmul\ +\ fpsqr))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00120}00120\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Clock\ cycles\ (millions)\ [including\ validation]:\ \(\backslash\)033[1;34m\%7.03lf\(\backslash\)033[0m\(\backslash\)n"{}},\ (\ 1.0\ *\ (cc1\ -\/\ cc0))\ /\ 1000000.0);}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00122}00122\ \ \ \ \ \textcolor{comment}{//\ =============================}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00123}00123\ \ \ \ \ \textcolor{comment}{//\ Verifying\ same\ secret\ sharing}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00124}00124\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\ dumb\_fp\_isequal(ss\_a,\ ss\_b,\ \mbox{\hyperlink{checkct_8c_a55f8cdefcb282d492790f1f7e6a9c624}{SS\_SIZE}})\ );}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00126}00126\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00127}00127\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)033[0;32m//\ Successfully\ secret\ sharing\ computation!\(\backslash\)033[0m\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00128}00128\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{csidh_8c_source_l00129}00129\ \}}
+
+\end{DoxyCode}

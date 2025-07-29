@@ -1,0 +1,80 @@
+\doxysection{pip.\+\_\+internal.\+operations.\+build.\+wheel\+\_\+editable Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable}{}\label{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable}\index{pip.\_internal.operations.build.wheel\_editable@{pip.\_internal.operations.build.wheel\_editable}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Optional\mbox{[}str\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a41594c7e504c394f9df80f95d9145c04}{build\+\_\+wheel\+\_\+editable}} (str name, \mbox{\hyperlink{classpip_1_1__vendor_1_1pyproject__hooks_1_1__impl_1_1_build_backend_hook_caller}{Build\+Backend\+Hook\+Caller}} backend, str metadata\+\_\+directory, str tempd)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a0b14e488ae28d98d262453f3e9cd6e4d}{logger}} = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a41594c7e504c394f9df80f95d9145c04}\index{pip.\_internal.operations.build.wheel\_editable@{pip.\_internal.operations.build.wheel\_editable}!build\_wheel\_editable@{build\_wheel\_editable}}
+\index{build\_wheel\_editable@{build\_wheel\_editable}!pip.\_internal.operations.build.wheel\_editable@{pip.\_internal.operations.build.wheel\_editable}}
+\doxysubsubsection{\texorpdfstring{build\_wheel\_editable()}{build\_wheel\_editable()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a41594c7e504c394f9df80f95d9145c04} 
+ Optional\mbox{[}str\mbox{]} build\+\_\+wheel\+\_\+editable (\begin{DoxyParamCaption}\item[{str}]{name}{, }\item[{\mbox{\hyperlink{classpip_1_1__vendor_1_1pyproject__hooks_1_1__impl_1_1_build_backend_hook_caller}{Build\+Backend\+Hook\+Caller}}}]{backend}{, }\item[{str}]{metadata\+\_\+directory}{, }\item[{str}]{tempd}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Build one InstallRequirement using the PEP 660 build process.
+
+Returns path to wheel if successfully built. Otherwise, returns None.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{wheel__editable_8py_source_l00012}{12}} of file \mbox{\hyperlink{wheel__editable_8py_source}{wheel\+\_\+editable.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00017\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ one\ InstallRequirement\ using\ the\ PEP\ 660\ build\ process.}}
+\DoxyCodeLine{00019\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00020\ \textcolor{stringliteral}{\ \ \ \ Returns\ path\ to\ wheel\ if\ successfully\ built.\ Otherwise,\ returns\ None.}}
+\DoxyCodeLine{00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{assert}\ metadata\_directory\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Destination\ directory:\ \%s"{}},\ tempd)}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ runner\ =\ runner\_with\_spinner\_message(}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Building\ editable\ for\ \{name\}\ (pyproject.toml)"{}}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ backend.subprocess\_runner(runner):}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_name\ =\ backend.build\_editable(}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempd,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ metadata\_directory=metadata\_directory,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ HookMissing\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ build\ editable\ \%s\ because\ the\ build\ "{}}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}backend\ does\ not\ have\ the\ \%s\ hook"{}},}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ logger.error(\textcolor{stringliteral}{"{}Failed\ building\ editable\ for\ \%s"{}},\ name)}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(tempd,\ wheel\_name)}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a0b14e488ae28d98d262453f3e9cd6e4d}\index{pip.\_internal.operations.build.wheel\_editable@{pip.\_internal.operations.build.wheel\_editable}!logger@{logger}}
+\index{logger@{logger}!pip.\_internal.operations.build.wheel\_editable@{pip.\_internal.operations.build.wheel\_editable}}
+\doxysubsubsection{\texorpdfstring{logger}{logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel__editable_a0b14e488ae28d98d262453f3e9cd6e4d} 
+logger = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{wheel__editable_8py_source_l00009}{9}} of file \mbox{\hyperlink{wheel__editable_8py_source}{wheel\+\_\+editable.\+py}}.
+

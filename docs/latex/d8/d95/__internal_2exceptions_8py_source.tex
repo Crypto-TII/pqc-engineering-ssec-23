@@ -1,0 +1,739 @@
+\doxysection{exceptions.\+py}
+\hypertarget{__internal_2exceptions_8py_source}{}\label{__internal_2exceptions_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/exceptions.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/exceptions.py}}
+\mbox{\hyperlink{__internal_2exceptions_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Exceptions\ used\ throughout\ package.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00002}00002\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00003}00003\ \textcolor{stringliteral}{This\ module\ MUST\ NOT\ try\ to\ import\ from\ anything\ within\ \`{}pip.\_internal\`{}\ to}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00004}00004\ \textcolor{stringliteral}{operate.\ This\ is\ expected\ to\ be\ importable\ from\ any/all\ files\ within\ the}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00005}00005\ \textcolor{stringliteral}{subpackage\ and,\ thus,\ should\ not\ depend\ on\ them.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00008}00008\ \textcolor{keyword}{import}\ configparser}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00009}00009\ \textcolor{keyword}{import}\ contextlib}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00010}00010\ \textcolor{keyword}{import}\ locale}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00011}00011\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00012}00012\ \textcolor{keyword}{import}\ pathlib}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00013}00013\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00014}00014\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00015}00015\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ chain,\ groupby,\ repeat}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00016}00016\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING,\ Dict,\ Iterator,\ List,\ Optional,\ Union}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models}{pip.\_vendor.requests.models}}\ \textcolor{keyword}{import}\ Request,\ Response}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00019}00019\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1console}{pip.\_vendor.rich.console}}\ \textcolor{keyword}{import}\ Console,\ ConsoleOptions,\ RenderResult}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00020}00020\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1markup}{pip.\_vendor.rich.markup}}\ \textcolor{keyword}{import}\ escape}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00021}00021\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1text}{pip.\_vendor.rich.text}}\ \textcolor{keyword}{import}\ Text}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00023}00023\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00024}00024\ \ \ \ \ \textcolor{keyword}{from}\ hashlib\ \textcolor{keyword}{import}\ \_Hash}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00025}00025\ \ \ \ \ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Literal}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00027}00027\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ BaseDistribution}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req_1_1req__install}{pip.\_internal.req.req\_install}}\ \textcolor{keyword}{import}\ InstallRequirement}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00030}\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a0b14e488ae28d98d262453f3e9cd6e4d}{00030}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00033}00033\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00034}00034\ \textcolor{comment}{\#\ Scaffolding}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00035}00035\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a9746fdd985a67ad9341d74a2a3234f00}{00036}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a9746fdd985a67ad9341d74a2a3234f00}{\_is\_kebab\_case}}(s:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{return}\ re.match(\textcolor{stringliteral}{r"{}\string^[a-\/z]+(-\/[a-\/z]+)*\$"{}},\ s)\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00040}\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{00040}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00041}00041\ \ \ \ \ s:\ Union[Text,\ str],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00042}00042\ \ \ \ \ console:\ Console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00043}00043\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00044}00044\ \ \ \ \ prefix:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00045}00045\ \ \ \ \ indent:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00046}00046\ )\ -\/>\ Text:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(s,\ Text):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ text\ =\ s}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ text\ =\ console.render\_str(s)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{return}\ console.render\_str(prefix,\ overflow=\textcolor{stringliteral}{"{}ignore"{}})\ +\ console.render\_str(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\(\backslash\)n\{indent\}"{}},\ overflow=\textcolor{stringliteral}{"{}ignore"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00054}00054\ \ \ \ \ ).join(text.split(allow\_blank=\textcolor{keyword}{True}))}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00057}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{00057}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}(Exception):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00058}00058\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}The\ base\ pip\ error."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00061}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error}{00061}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error}{DiagnosticPipError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00062}00062\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}An\ error,\ that\ presents\ diagnostic\ information\ to\ the\ user.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00063}00063\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ This\ contains\ a\ bunch\ of\ logic,\ to\ enable\ pretty\ presentation\ of\ our\ error}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ messages.\ Each\ error\ gets\ a\ unique\ reference.\ Each\ error\ can\ also\ include}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ additional\ context,\ a\ hint\ and/or\ a\ note\ -\/-\/\ which\ are\ presented\ with\ the}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ main\ error\ message\ in\ a\ consistent\ style.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00068}00068\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ This\ is\ adapted\ from\ the\ error\ output\ styling\ in\ \`{}sphinx-\/theme-\/builder\`{}.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00072}00072\ \ \ \ \ reference:\ str}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00074}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab510453553adba8702905ffe4395c049}{00074}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab510453553adba8702905ffe4395c049}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ kind:\ \textcolor{stringliteral}{'Literal["{}error"{},\ "{}warning"{}]'}\ =\ \textcolor{stringliteral}{"{}error"{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ reference:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ message:\ Union[str,\ Text],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ context:\ Optional[Union[str,\ Text]],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ hint\_stmt:\ Optional[Union[str,\ Text]],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ note\_stmt:\ Optional[Union[str,\ Text]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ link:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00084}00084\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ensure\ a\ proper\ reference\ is\ provided.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reference\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ hasattr(self,\ \textcolor{stringliteral}{"{}reference"{}}),\ \textcolor{stringliteral}{"{}error\ reference\ not\ provided!"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ reference\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_af0951ec6952272d3dec9c26634ad6b73}{reference}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a9746fdd985a67ad9341d74a2a3234f00}{\_is\_kebab\_case}}(reference),\ \textcolor{stringliteral}{"{}error\ reference\ must\ be\ kebab-\/case!"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00091}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_aaf25ee7e2306d78c74ec7bc48f092e81}{00091}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_aaf25ee7e2306d78c74ec7bc48f092e81}{kind}}\ =\ kind}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00092}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_af0951ec6952272d3dec9c26634ad6b73}{00092}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_af0951ec6952272d3dec9c26634ad6b73}{reference}}\ =\ reference}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00094}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab8140947611504abcb64a4c277effcf5}{00094}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab8140947611504abcb64a4c277effcf5}{message}}\ =\ message}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00095}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{00095}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{context}}\ =\ context}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00097}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a863f8257304f5c1f109915bea6660603}{00097}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a863f8257304f5c1f109915bea6660603}{note\_stmt}}\ =\ note\_stmt}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00098}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a1ab5a7597c9e9c65b999f0f0e75afc6a}{00098}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a1ab5a7597c9e9c65b999f0f0e75afc6a}{hint\_stmt}}\ =\ hint\_stmt}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00100}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_acd3424c52c115fc00144c6679816c819}{00100}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_acd3424c52c115fc00144c6679816c819}{link}}\ =\ link}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab510453553adba8702905ffe4395c049}{\_\_init\_\_}}(f\textcolor{stringliteral}{"{}<\{self.\_\_class\_\_.\_\_name\_\_\}:\ \{self.reference\}>"{}})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00104}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_aea815b0c6c23fc48a11ee0404b782c7a}{00104}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}<\{self.\_\_class\_\_.\_\_name\_\_\}("{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}reference=\{self.reference!r\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}message=\{self.message!r\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}context=\{self.context!r\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}note\_stmt=\{self.note\_stmt!r\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}hint\_stmt=\{self.hint\_stmt!r\}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{})>"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00115}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a893253b4123f84b615b62f8cfd4e4aa6}{00115}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a893253b4123f84b615b62f8cfd4e4aa6}{\_\_rich\_console\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ console:\ Console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ options:\ ConsoleOptions,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00119}00119\ \ \ \ \ )\ -\/>\ RenderResult:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ colour\ =\ \textcolor{stringliteral}{"{}red"{}}\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_aaf25ee7e2306d78c74ec7bc48f092e81}{kind}}\ ==\ \textcolor{stringliteral}{"{}error"{}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}yellow"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ f\textcolor{stringliteral}{"{}[\{colour\}\ bold]\{self.kind\}[/]:\ [bold]\{self.reference\}[/]"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.ascii\_only:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Present\ the\ main\ message,\ with\ relevant\ context\ indented.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{context}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab8140947611504abcb64a4c277effcf5}{message}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=f\textcolor{stringliteral}{"{}[\{colour\}]×[/]\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent=f\textcolor{stringliteral}{"{}[\{colour\}]│[/]\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{context}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=f\textcolor{stringliteral}{"{}[\{colour\}]╰─>[/]\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent=f\textcolor{stringliteral}{"{}[\{colour\}]\ \ \ [/]\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab8140947611504abcb64a4c277effcf5}{message}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=\textcolor{stringliteral}{"{}[red]×[/]\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent=\textcolor{stringliteral}{"{}\ \ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_ab8140947611504abcb64a4c277effcf5}{message}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{context}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a261f9f58ccbeaa962c4e675e4212c9cc}{context}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a863f8257304f5c1f109915bea6660603}{note\_stmt}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a1ab5a7597c9e9c65b999f0f0e75afc6a}{hint\_stmt}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a863f8257304f5c1f109915bea6660603}{note\_stmt}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a863f8257304f5c1f109915bea6660603}{note\_stmt}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=\textcolor{stringliteral}{"{}[magenta\ bold]note[/]:\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent=\textcolor{stringliteral}{"{}\ \ \ \ \ \ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a1ab5a7597c9e9c65b999f0f0e75afc6a}{hint\_stmt}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a5cc29aebb3e7c201ac3113d65c689b5d}{\_prefix\_with\_indent}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_a1ab5a7597c9e9c65b999f0f0e75afc6a}{hint\_stmt}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=\textcolor{stringliteral}{"{}[cyan\ bold]hint[/]:\ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent=\textcolor{stringliteral}{"{}\ \ \ \ \ \ "{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error_acd3424c52c115fc00144c6679816c819}{link}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ f\textcolor{stringliteral}{"{}Link:\ \{self.link\}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00176}00176\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00177}00177\ \textcolor{comment}{\#\ Actual\ Errors}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00178}00178\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00179}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_error}{00179}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_error}{ConfigurationError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00180}00180\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}General\ exception\ in\ configuration"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00183}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{00183}}\ \textcolor{keyword}{class\ }InstallationError(PipError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00184}00184\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}General\ exception\ during\ installation"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00187}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_uninstallation_error}{00187}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_uninstallation_error}{UninstallationError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00188}00188\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}General\ exception\ during\ uninstallation"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00191}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires}{00191}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires}{MissingPyProjectBuildRequires}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error}{DiagnosticPipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00192}00192\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ pyproject.toml\ has\ \`{}build-\/system\`{},\ but\ no\ \`{}build-\/system.requires\`{}."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00194}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires}{00194}}\ \ \ \ \ reference\ =\ \textcolor{stringliteral}{"{}missing-\/pyproject-\/build-\/system-\/requires"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00196}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires_a609aecd85cd977c7662148a4f8abb11b}{00196}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires_a609aecd85cd977c7662148a4f8abb11b}{\_\_init\_\_}}(self,\ *,\ package:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_missing_py_project_build_requires_a609aecd85cd977c7662148a4f8abb11b}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ message=f\textcolor{stringliteral}{"{}Can\ not\ process\ \{escape(package)\}"{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ context=\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}This\ package\ has\ an\ invalid\ pyproject.toml\ file.\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ [build-\/system]\ table\ is\ missing\ the\ mandatory\ \`{}requires`\ key."{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ note\_stmt=\textcolor{stringliteral}{"{}This\ is\ an\ issue\ with\ the\ package\ mentioned\ above,\ not\ pip."{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ hint\_stmt=\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(\textcolor{stringliteral}{"{}See\ PEP\ 518\ for\ the\ detailed\ specification."{}}),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00208}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires}{00208}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires}{InvalidPyProjectBuildRequires}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_diagnostic_pip_error}{DiagnosticPipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00209}00209\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ pyproject.toml\ an\ invalid\ \`{}build-\/system.requires\`{}."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00211}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires}{00211}}\ \ \ \ \ reference\ =\ \textcolor{stringliteral}{"{}invalid-\/pyproject-\/build-\/system-\/requires"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00213}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires_a6205fc5e8b1c541a78227554f84f4f03}{00213}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires_a6205fc5e8b1c541a78227554f84f4f03}{\_\_init\_\_}}(self,\ *,\ package:\ str,\ reason:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_py_project_build_requires_a6205fc5e8b1c541a78227554f84f4f03}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ message=f\textcolor{stringliteral}{"{}Can\ not\ process\ \{escape(package)\}"{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ context=\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}This\ package\ has\ an\ invalid\ \`{}build-\/system.requires`\ key\ in\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}pyproject.toml.\(\backslash\)n\{reason\}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ note\_stmt=\textcolor{stringliteral}{"{}This\ is\ an\ issue\ with\ the\ package\ mentioned\ above,\ not\ pip."{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ hint\_stmt=\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(\textcolor{stringliteral}{"{}See\ PEP\ 518\ for\ the\ detailed\ specification."{}}),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00225}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error}{00225}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error}{NoneMetadataError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00226}00226\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ accessing\ a\ Distribution's\ "{}METADATA"{}\ or\ "{}PKG-\/INFO"{}.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00227}00227\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00228}00228\ \textcolor{stringliteral}{\ \ \ \ This\ signifies\ an\ inconsistency,\ when\ the\ Distribution\ claims\ to\ have}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00229}00229\ \textcolor{stringliteral}{\ \ \ \ the\ metadata\ file\ (if\ not,\ raise\ \`{}\`{}FileNotFoundError\`{}\`{}\ instead),\ but\ is}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00230}00230\ \textcolor{stringliteral}{\ \ \ \ not\ actually\ able\ to\ produce\ its\ content.\ This\ may\ be\ due\ to\ permission}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00231}00231\ \textcolor{stringliteral}{\ \ \ \ errors.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00232}00232\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00234}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_ab51fdb5128498b0660322af509a82af6}{00234}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_ab51fdb5128498b0660322af509a82af6}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ dist:\ \textcolor{stringliteral}{"{}BaseDistribution"{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ metadata\_name:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00238}00238\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00240}00240\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ dist:\ A\ Distribution\ object.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00241}00241\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ metadata\_name:\ The\ name\ of\ the\ metadata\ being\ accessed}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00242}00242\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ (can\ be\ "{}METADATA"{}\ or\ "{}PKG-\/INFO"{}).}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00244}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_a93606e6aea9563f73484a536c9c5636d}{00244}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_a93606e6aea9563f73484a536c9c5636d}{dist}}\ =\ dist}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00245}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_aadd386d26209b66d80a3277969e4c3b1}{00245}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_aadd386d26209b66d80a3277969e4c3b1}{metadata\_name}}\ =\ metadata\_name}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00247}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_ae07f7930f92d3591c93e2381cd5be285}{00247}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Use\ \`{}dist`\ in\ the\ error\ message\ because\ its\ stringification}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ includes\ more\ information,\ like\ the\ version\ and\ location.}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}None\ \{\}\ metadata\ found\ for\ distribution:\ \{\}"{}}.format(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_aadd386d26209b66d80a3277969e4c3b1}{metadata\_name}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_none_metadata_error_a93606e6aea9563f73484a536c9c5636d}{dist}},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00256}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_user_installation_invalid}{00256}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_user_installation_invalid}{UserInstallationInvalid}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00257}00257\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ -\/-\/user\ install\ is\ requested\ on\ an\ environment\ without\ user\ site."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00259}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_user_installation_invalid_ae07f7930f92d3591c93e2381cd5be285}{00259}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_user_installation_invalid_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}User\ base\ directory\ is\ not\ specified"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00263}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination}{00263}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination}{InvalidSchemeCombination}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00264}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination_ae07f7930f92d3591c93e2381cd5be285}{00264}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ before\ =\ \textcolor{stringliteral}{"{},\ "{}}.join(str(a)\ \textcolor{keywordflow}{for}\ a\ \textcolor{keywordflow}{in}\ self.args[:-\/1])}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}Cannot\ set\ \{before\}\ and\ \{self.args[-\/1]\}\ together"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00269}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_distribution_not_found}{00269}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_distribution_not_found}{DistributionNotFound}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00270}00270\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ a\ distribution\ cannot\ be\ found\ to\ satisfy\ a\ requirement"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00273}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_requirements_file_parse_error}{00273}}\ \textcolor{keyword}{class\ }RequirementsFileParseError(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00274}00274\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ a\ general\ error\ occurs\ parsing\ a\ requirements\ file\ line."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00277}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_best_version_already_installed}{00277}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_best_version_already_installed}{BestVersionAlreadyInstalled}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00278}00278\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ the\ most\ up-\/to-\/date\ version\ of\ a\ package\ is\ already}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00279}00279\ \textcolor{stringliteral}{\ \ \ \ installed."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00282}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_bad_command}{00282}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_bad_command}{BadCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00283}00283\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ virtualenv\ or\ a\ command\ is\ not\ found"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{00286}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00287}00287\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ there\ is\ an\ error\ in\ command-\/line\ arguments"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00290}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_previous_build_dir_error}{00290}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_previous_build_dir_error}{PreviousBuildDirError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00291}00291\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raised\ when\ there's\ a\ previous\ conflicting\ build\ directory"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00294}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error}{00294}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error}{NetworkConnectionError}}(\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_pip_error}{PipError}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00295}00295\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}HTTP\ connection\ error"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00296}00296\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00297}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error_a31eacae2b7143d5f0d0a67587723361d}{00297}}\ \textcolor{stringliteral}{\ \ \ \ def\ \_\_init\_\_(}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00298}00298\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ self,}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00299}00299\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ error\_msg:\ str,}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00300}00300\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response:\ Optional[Response]\ =\ None,}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00301}00301\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request:\ Optional[Request]\ =\ None,}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00302}00302\ \textcolor{stringliteral}{\ \ \ \ )\ -\/>\ None:}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00303}00303\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ Initialize\ NetworkConnectionError\ with\ \ \`{}request\`{}\ and\ \`{}response\`{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ objects.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00307}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error_a8ab7bcb35ce5bba05608c72da6b4a0d3}{00307}}\ \ \ \ \ \ \ \ \ self.response\ =\ response}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00308}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error_a51e6a0d2bcb8531a5e5adcd66a77aa3b}{00308}}\ \ \ \ \ \ \ \ \ self.request\ =\ request}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00309}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error_ae0549c92d2964ebe92c6dde85d5c292b}{00309}}\ \ \ \ \ \ \ \ \ self.error\_msg\ =\ error\_msg}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ if\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ self.response\ is\ not\ None}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ and\ not\ self.request}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ and\ hasattr(response,\ "{}request"{})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ self.request\ =\ self.response.request}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ super().\_\_init\_\_(error\_msg,\ response,\ request)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00318}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error_ae07f7930f92d3591c93e2381cd5be285}{00318}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ return\ str(self.error\_msg)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00322}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel_filename}{00322}}\ class\ InvalidWheelFilename(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00323}00323\ \ \ \ \ "{}"{}"{}Invalid\ wheel\ filename."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00326}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_unsupported_wheel}{00326}}\ class\ UnsupportedWheel(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00327}00327\ \ \ \ \ "{}"{}"{}Unsupported\ wheel."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00330}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel}{00330}}\ class\ InvalidWheel(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00331}00331\ \ \ \ \ "{}"{}"{}Invalid\ (e.g.\ corrupt)\ wheel."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00333}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel_ad325fdcad2a8f04a0dbd0df31e60c396}{00333}}\ \ \ \ \ def\ \_\_init\_\_(self,\ location:\ str,\ name:\ str):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00334}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel_a5f269c22e6d9d32b0b0ad7e6166854df}{00334}}\ \ \ \ \ \ \ \ \ self.location\ =\ location}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00335}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel_ab74e6bf80237ddc4109968cedc58c151}{00335}}\ \ \ \ \ \ \ \ \ self.name\ =\ name}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00337}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel_ae07f7930f92d3591c93e2381cd5be285}{00337}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ return\ f"{}Wheel\ '\{self.name\}'\ located\ at\ \{self.location\}\ is\ invalid."{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00341}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent}{00341}}\ class\ MetadataInconsistent(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00342}00342\ \ \ \ \ "{}"{}"{}Built\ metadata\ contains\ inconsistent\ information.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00344}00344\ \ \ \ \ This\ is\ raised\ when\ the\ metadata\ contains\ values\ (e.g.\ name\ and\ version)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00345}00345\ \ \ \ \ that\ do\ not\ match\ the\ information\ previously\ obtained\ from\ sdist\ filename,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00346}00346\ \ \ \ \ user-\/supplied\ \`{}\`{}\#egg=\`{}\`{}\ value,\ or\ an\ install\ requirement\ name.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00347}00347\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00349}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_a47ed85b04a41517af0bad3e8e4cb6805}{00349}}\ \ \ \ \ def\ \_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ self,\ ireq:\ "{}InstallRequirement"{},\ field:\ str,\ f\_val:\ str,\ m\_val:\ str}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00351}00351\ \ \ \ \ )\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00352}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_a6c04cb6ba428701163d9067de017ab16}{00352}}\ \ \ \ \ \ \ \ \ self.ireq\ =\ ireq}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00353}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_ad62af17df5486963eef933792624216d}{00353}}\ \ \ \ \ \ \ \ \ self.field\ =\ field}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00354}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_a19cb09c7a12e60b50315481df3666077}{00354}}\ \ \ \ \ \ \ \ \ self.f\_val\ =\ f\_val}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00355}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_ad2241bb9831b3540bd6efe498629a2c5}{00355}}\ \ \ \ \ \ \ \ \ self.m\_val\ =\ m\_val}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00357}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_inconsistent_ae07f7930f92d3591c93e2381cd5be285}{00357}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ return\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ f"{}Requested\ \{self.ireq\}\ has\ inconsistent\ \{self.field\}:\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ f"{}expected\ \{self.f\_val!r\},\ but\ metadata\ has\ \{self.m\_val!r\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00364}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error}{00364}}\ class\ InstallationSubprocessError(DiagnosticPipError,\ InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00365}00365\ \ \ \ \ "{}"{}"{}A\ subprocess\ call\ failed."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00367}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error}{00367}}\ \ \ \ \ reference\ =\ "{}subprocess-\/exited-\/with-\/error"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00369}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error_a864d314eba8c55e52508f6886ed3ee39}{00369}}\ \ \ \ \ def\ \_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ command\_description:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ exit\_code:\ int,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ output\_lines:\ Optional[List[str]],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00375}00375\ \ \ \ \ )\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ if\ output\_lines\ is\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ output\_prompt\ =\ Text("{}See\ above\ for\ output."{})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ output\_prompt\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Text.from\_markup(f"{}[red][\{len(output\_lines)\}\ lines\ of\ output][/]\(\backslash\)n"{})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ Text("{}"{}.join(output\_lines))}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ Text.from\_markup(R"{}[red]\(\backslash\)[end\ of\ output][/]"{})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ super().\_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ message=(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f"{}[green]\{escape(command\_description)\}[/]\ did\ not\ run\ successfully.\(\backslash\)n"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f"{}exit\ code:\ \{exit\_code\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ context=output\_prompt,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ hint\_stmt=None,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ note\_stmt=(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}This\ error\ originates\ from\ a\ subprocess,\ and\ is\ likely\ not\ a\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}problem\ with\ pip."{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00398}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error_abf3814ae2c95674209132d1f74b12bc9}{00398}}\ \ \ \ \ \ \ \ \ self.command\_description\ =\ command\_description}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00399}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error_ab45d8ea6639edac36ac747cbf562be9a}{00399}}\ \ \ \ \ \ \ \ \ self.exit\_code\ =\ exit\_code}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00401}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_subprocess_error_ae07f7930f92d3591c93e2381cd5be285}{00401}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ return\ f"{}\{self.command\_description\}\ exited\ with\ \{self.exit\_code\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00405}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_generation_failed}{00405}}\ class\ MetadataGenerationFailed(InstallationSubprocessError,\ InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00406}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_generation_failed}{00406}}\ \ \ \ \ reference\ =\ "{}metadata-\/generation-\/failed"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00408}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_generation_failed_a87d394732fff4b4539e1b0993786501c}{00408}}\ \ \ \ \ def\ \_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ package\_details:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00412}00412\ \ \ \ \ )\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ super(InstallationSubprocessError,\ self).\_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ message="{}Encountered\ error\ while\ generating\ package\ metadata."{},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ context=escape(package\_details),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ hint\_stmt="{}See\ above\ for\ details."{},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ note\_stmt="{}This\ is\ an\ issue\ with\ the\ package\ mentioned\ above,\ not\ pip."{},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00420}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_metadata_generation_failed_ae07f7930f92d3591c93e2381cd5be285}{00420}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ return\ "{}metadata\ generation\ failed"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00423}00423\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00424}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors}{00424}}\ class\ HashErrors(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00425}00425\ \ \ \ \ "{}"{}"{}Multiple\ HashError\ instances\ rolled\ into\ one\ for\ reporting"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00427}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_abc1b785959b47505de72feabab160402}{00427}}\ \ \ \ \ def\ \_\_init\_\_(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00428}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_acc42076253600be964e110149b458971}{00428}}\ \ \ \ \ \ \ \ \ self.errors:\ List["{}HashError"{}]\ =\ []}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00429}00429\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00430}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_aa3e7e799dad8f5b46b0fe9143ea830a2}{00430}}\ \ \ \ \ def\ append(self,\ error:\ "{}HashError"{})\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ self.errors.append(error)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00433}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_ae07f7930f92d3591c93e2381cd5be285}{00433}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ lines\ =\ []}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ self.errors.sort(key=lambda\ e:\ e.order)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ for\ cls,\ errors\_of\_cls\ in\ groupby(self.errors,\ lambda\ e:\ e.\_\_class\_\_):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00437}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_a434acd167ada209c34621739b6b8c583}{00437}}\ \ \ \ \ \ \ \ \ \ \ \ \ lines.append(cls.head)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ lines.extend(e.body()\ for\ e\ in\ errors\_of\_cls)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ if\ lines:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ return\ "{}\(\backslash\)n"{}.join(lines)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ return\ "{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00443}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_errors_af466df7f15887a199aa900cbe8542937}{00443}}\ \ \ \ \ def\ \_\_bool\_\_(self)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ return\ bool(self.errors)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00447}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error}{00447}}\ class\ HashError(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00448}00448\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00449}00449\ \ \ \ \ A\ failure\ to\ verify\ a\ package\ against\ known-\/good\ hashes}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00451}00451\ \ \ \ \ :cvar\ order:\ An\ int\ sorting\ hash\ exception\ classes\ by\ difficulty\ of}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ recovery\ (lower\ being\ harder),\ so\ the\ user\ doesn't\ bother\ fretting}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ about\ unpinned\ packages\ when\ he\ has\ deeper\ issues,\ like\ VCS}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ dependencies,\ to\ deal\ with.\ Also\ keeps\ error\ reports\ in\ a}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ deterministic\ order.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00456}00456\ \ \ \ \ :cvar\ head:\ A\ section\ heading\ for\ display\ above\ potentially\ many}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ exceptions\ of\ this\ kind}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00458}00458\ \ \ \ \ :ivar\ req:\ The\ InstallRequirement\ that\ triggered\ this\ error.\ This\ is}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00459}00459\ \ \ \ \ \ \ \ \ pasted\ on\ after\ the\ exception\ is\ instantiated,\ because\ it's\ not}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ typically\ available\ earlier.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00461}00461\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00462}00462\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00464}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_a39ac91986a3ac2f4c37e6511275a27cf}{00464}}\ \ \ \ \ req:\ Optional["{}InstallRequirement"{}]\ =\ None}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00465}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_a26784f4565c1232194373306b740bf43}{00465}}\ \ \ \ \ head\ =\ "{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00466}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_ac85d5511fdb8d162a7278bfb440ae420}{00466}}\ \ \ \ \ order:\ int\ =\ -\/1}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00468}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_a97c4a757e69c23b75ecef37df70b7cb6}{00468}}\ \ \ \ \ def\ body(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ "{}"{}"{}Return\ a\ summary\ of\ me\ for\ display\ under\ the\ heading.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ This\ default\ implementation\ simply\ prints\ a\ description\ of\ the}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ triggering\ requirement.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00474}00474\ \ \ \ \ \ \ \ \ :param\ req:\ The\ InstallRequirement\ that\ provoked\ this\ error,\ with}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ its\ link\ already\ populated\ by\ the\ resolver's\ \_populate\_link().}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ return\ f"{}\ \ \ \ \{self.\_requirement\_name()\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00480}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_ae07f7930f92d3591c93e2381cd5be285}{00480}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ return\ f"{}\{self.head\}\(\backslash\)n\{self.body()\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00483}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_error_a31c2fdc88433ba8d057ce09164686bef}{00483}}\ \ \ \ \ def\ \_requirement\_name(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ "{}"{}"{}Return\ a\ description\ of\ the\ requirement\ that\ triggered\ me.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ This\ default\ implementation\ returns\ long\ description\ of\ the\ req,\ with}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ line\ numbers}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ return\ str(self.req)\ if\ self.req\ else\ "{}unknown\ package"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00493}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_vcs_hash_unsupported}{00493}}\ class\ VcsHashUnsupported(HashError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00494}00494\ \ \ \ \ "{}"{}"{}A\ hash\ was\ provided\ for\ a\ version-\/control-\/system-\/based\ requirement,\ but}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00495}00495\ \ \ \ \ we\ don't\ have\ a\ method\ for\ hashing\ those."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00497}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_vcs_hash_unsupported}{00497}}\ \ \ \ \ order\ =\ 0}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00498}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_vcs_hash_unsupported}{00498}}\ \ \ \ \ head\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ "{}Can't\ verify\ hashes\ for\ these\ requirements\ because\ we\ don't\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ "{}have\ a\ way\ to\ hash\ version\ control\ repositories:"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00501}00501\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00504}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_directory_url_hash_unsupported}{00504}}\ class\ DirectoryUrlHashUnsupported(HashError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00505}00505\ \ \ \ \ "{}"{}"{}A\ hash\ was\ provided\ for\ a\ version-\/control-\/system-\/based\ requirement,\ but}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00506}00506\ \ \ \ \ we\ don't\ have\ a\ method\ for\ hashing\ those."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00508}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_directory_url_hash_unsupported}{00508}}\ \ \ \ \ order\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00509}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_directory_url_hash_unsupported}{00509}}\ \ \ \ \ head\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ "{}Can't\ verify\ hashes\ for\ these\ file://\ requirements\ because\ they\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ "{}point\ to\ directories:"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00512}00512\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00515}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing}{00515}}\ class\ HashMissing(HashError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00516}00516\ \ \ \ \ "{}"{}"{}A\ hash\ was\ needed\ for\ a\ requirement\ but\ is\ absent."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00518}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing}{00518}}\ \ \ \ \ order\ =\ 2}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00519}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing}{00519}}\ \ \ \ \ head\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ "{}Hashes\ are\ required\ in\ -\/-\/require-\/hashes\ mode,\ but\ they\ are\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ "{}missing\ from\ some\ requirements.\ Here\ is\ a\ list\ of\ those\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ "{}requirements\ along\ with\ the\ hashes\ their\ downloaded\ archives\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ "{}actually\ had.\ Add\ lines\ like\ these\ to\ your\ requirements\ files\ to\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ "{}prevent\ tampering.\ (If\ you\ did\ not\ enable\ -\/-\/require-\/hashes\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ "{}manually,\ note\ that\ it\ turns\ on\ automatically\ when\ any\ package\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ "{}has\ a\ hash.)"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00527}00527\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00529}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing_a878b69d6a0abd09fef5b5895dbbbad6f}{00529}}\ \ \ \ \ def\ \_\_init\_\_(self,\ gotten\_hash:\ str)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00530}00530\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ :param\ gotten\_hash:\ The\ hash\ of\ the\ (possibly\ malicious)\ archive\ we}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ just\ downloaded}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00534}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing_a70db2c8d22465e6a7904b6e17e4ac408}{00534}}\ \ \ \ \ \ \ \ \ self.gotten\_hash\ =\ gotten\_hash}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00536}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing_a97c4a757e69c23b75ecef37df70b7cb6}{00536}}\ \ \ \ \ def\ body(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \#\ Dodge\ circular\ import.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ from\ pip.\_internal.utils.hashes\ import\ FAVORITE\_HASH}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ package\ =\ None}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00541}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_missing}{00541}}\ \ \ \ \ \ \ \ \ if\ self.req:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ In\ the\ case\ of\ URL-\/based\ requirements,\ display\ the\ original\ URL}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ seen\ in\ the\ requirements\ file\ rather\ than\ the\ package\ name,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ so\ the\ output\ can\ be\ directly\ copied\ into\ the\ requirements\ file.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ package\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.req.original\_link}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ self.req.is\_direct}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ In\ case\ someone\ feeds\ something\ downright\ stupid}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ to\ InstallRequirement's\ constructor.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ else\ getattr(self.req,\ "{}req"{},\ None)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ return\ "{}\ \ \ \ \{\}\ -\/-\/hash=\{\}:\{\}"{}.format(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ package\ or\ "{}unknown\ package"{},\ FAVORITE\_HASH,\ self.gotten\_hash}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00555}00555\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00556}00556\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00557}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_unpinned}{00557}}\ class\ HashUnpinned(HashError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00558}00558\ \ \ \ \ "{}"{}"{}A\ requirement\ had\ a\ hash\ specified\ but\ was\ not\ pinned\ to\ a\ specific}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00559}00559\ \ \ \ \ version."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00561}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_unpinned}{00561}}\ \ \ \ \ order\ =\ 3}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00562}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_unpinned}{00562}}\ \ \ \ \ head\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ "{}In\ -\/-\/require-\/hashes\ mode,\ all\ requirements\ must\ have\ their\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00564}00564\ \ \ \ \ \ \ \ \ "{}versions\ pinned\ with\ ==.\ These\ do\ not:"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00565}00565\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00567}00567\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00568}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch}{00568}}\ class\ HashMismatch(HashError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00569}00569\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00570}00570\ \ \ \ \ Distribution\ file\ hash\ values\ don't\ match.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00572}00572\ \ \ \ \ :ivar\ package\_name:\ The\ name\ of\ the\ package\ that\ triggered\ the\ hash}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00573}00573\ \ \ \ \ \ \ \ \ mismatch.\ Feel\ free\ to\ write\ to\ this\ after\ the\ exception\ is\ raise\ to}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ improve\ its\ error\ message.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00576}00576\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00578}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch}{00578}}\ \ \ \ \ order\ =\ 4}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00579}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch}{00579}}\ \ \ \ \ head\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ "{}THESE\ PACKAGES\ DO\ NOT\ MATCH\ THE\ HASHES\ FROM\ THE\ REQUIREMENTS\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ "{}FILE.\ If\ you\ have\ updated\ the\ package\ versions,\ please\ update\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ "{}the\ hashes.\ Otherwise,\ examine\ the\ package\ contents\ carefully;\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ "{}someone\ may\ have\ tampered\ with\ them."{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00584}00584\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00585}00585\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00586}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch_a43445d7bc4fc848fd5cd27f6297e8715}{00586}}\ \ \ \ \ def\ \_\_init\_\_(self,\ allowed:\ Dict[str,\ List[str]],\ gots:\ Dict[str,\ "{}\_Hash"{}])\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ :param\ allowed:\ A\ dict\ of\ algorithm\ names\ pointing\ to\ lists\ of\ allowed}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ hex\ digests}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00590}00590\ \ \ \ \ \ \ \ \ :param\ gots:\ A\ dict\ of\ algorithm\ names\ pointing\ to\ hashes\ we}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ actually\ got\ from\ the\ files\ under\ suspicion}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00593}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch_a2e76ffdc20a6698cff2072443655b230}{00593}}\ \ \ \ \ \ \ \ \ self.allowed\ =\ allowed}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00594}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch_a75958927d3b52e2e515ac319775850ab}{00594}}\ \ \ \ \ \ \ \ \ self.gots\ =\ gots}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00595}00595\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00596}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch_a97c4a757e69c23b75ecef37df70b7cb6}{00596}}\ \ \ \ \ def\ body(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00597}00597\ \ \ \ \ \ \ \ \ return\ "{}\ \ \ \ \{\}:\(\backslash\)n\{\}"{}.format(self.\_requirement\_name(),\ self.\_hash\_comparison())}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00599}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_hash_mismatch_a8afd26d358a0d5340b0897c6f9b66d2c}{00599}}\ \ \ \ \ def\ \_hash\_comparison(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00601}00601\ \ \ \ \ \ \ \ \ Return\ a\ comparison\ of\ actual\ and\ expected\ hash\ values.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00602}00602\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00603}00603\ \ \ \ \ \ \ \ \ Example::}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Expected\ sha256\ abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ 123451234512345123451234512345123451234512345}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Got\ \ \ \ \ \ \ \ bcdefbcdefbcdefbcdefbcdefbcdefbcdefbcdefbcdef}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00608}00608\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00610}00610\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ def\ hash\_then\_or(hash\_name:\ str)\ -\/>\ "{}chain[str]"{}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ For\ now,\ all\ the\ decent\ hashes\ have\ 6-\/char\ names,\ so\ we\ can\ get}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ away\ with\ hard-\/coding\ space\ literals.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ return\ chain([hash\_name],\ repeat("{}\ \ \ \ or"{}))}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00615}00615\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ lines:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00617}00617\ \ \ \ \ \ \ \ \ for\ hash\_name,\ expecteds\ in\ self.allowed.items():}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00618}00618\ \ \ \ \ \ \ \ \ \ \ \ \ prefix\ =\ hash\_then\_or(hash\_name)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ lines.extend(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ("{}\ \ \ \ \ \ \ \ Expected\ \{\}\ \{\}"{}.format(next(prefix),\ e))\ for\ e\ in\ expecteds}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ lines.append(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}\ \ \ \ \ \ \ \ \ \ \ \ \ Got\ \ \ \ \ \ \ \ \{\}\(\backslash\)n"{}.format(self.gots[hash\_name].hexdigest())}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00625}00625\ \ \ \ \ \ \ \ \ return\ "{}\(\backslash\)n"{}.join(lines)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00626}00626\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00627}00627\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00628}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_unsupported_python_version}{00628}}\ class\ UnsupportedPythonVersion(InstallationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00629}00629\ \ \ \ \ "{}"{}"{}Unsupported\ python\ version\ according\ to\ Requires-\/Python\ package}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00630}00630\ \ \ \ \ metadata."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00631}00631\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00632}00632\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00633}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded}{00633}}\ class\ ConfigurationFileCouldNotBeLoaded(ConfigurationError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00634}00634\ \ \ \ \ "{}"{}"{}When\ there\ are\ errors\ while\ loading\ a\ configuration\ file"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00636}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded_a571ab63b165c06981aae86be2f55b138}{00636}}\ \ \ \ \ def\ \_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00637}00637\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00638}00638\ \ \ \ \ \ \ \ \ reason:\ str\ =\ "{}could\ not\ be\ loaded"{},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00639}00639\ \ \ \ \ \ \ \ \ fname:\ Optional[str]\ =\ None,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00640}00640\ \ \ \ \ \ \ \ \ error:\ Optional[configparser.Error]\ =\ None,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00641}00641\ \ \ \ \ )\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00642}00642\ \ \ \ \ \ \ \ \ super().\_\_init\_\_(error)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00643}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded_a144a3f0ab0553569e546510e66e93766}{00643}}\ \ \ \ \ \ \ \ \ self.reason\ =\ reason}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00644}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded_a887f167c51f79cfdfcb696078f4dab27}{00644}}\ \ \ \ \ \ \ \ \ self.fname\ =\ fname}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00645}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded_af10dacfa214e2575bb2e0ee407c242e0}{00645}}\ \ \ \ \ \ \ \ \ self.error\ =\ error}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00646}00646\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00647}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_configuration_file_could_not_be_loaded_ae07f7930f92d3591c93e2381cd5be285}{00647}}\ \ \ \ \ def\ \_\_str\_\_(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00648}00648\ \ \ \ \ \ \ \ \ if\ self.fname\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ \ \ \ \ message\_part\ =\ f"{}\ in\ \{self.fname\}."{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00650}00650\ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ assert\ self.error\ is\ not\ None}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ message\_part\ =\ f"{}.\(\backslash\)n\{self.error\}\(\backslash\)n"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00653}00653\ \ \ \ \ \ \ \ \ return\ f"{}Configuration\ file\ \{self.reason\}\{message\_part\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00654}00654\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00656}\mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions_a26038942f3347b376077e51afeee8d20}{00656}}\ \_DEFAULT\_EXTERNALLY\_MANAGED\_ERROR\ =\ f"{}"{}"{}\(\backslash\)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00657}00657\ The\ Python\ environment\ under\ \{sys.prefix\}\ is\ managed\ externally,\ and\ may\ not\ be}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00658}00658\ manipulated\ by\ the\ user.\ Please\ use\ specific\ tooling\ from\ the\ distributor\ of}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00659}00659\ the\ Python\ installation\ to\ interact\ with\ this\ environment\ instead.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00660}00660\ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00663}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_externally_managed_environment}{00663}}\ class\ ExternallyManagedEnvironment(DiagnosticPipError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00664}00664\ \ \ \ \ "{}"{}"{}The\ current\ environment\ is\ externally\ managed.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00665}00665\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00666}00666\ \ \ \ \ This\ is\ raised\ when\ the\ current\ environment\ is\ externally\ managed,\ as}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00667}00667\ \ \ \ \ defined\ by\ \`{}PEP\ 668\`{}\_.\ The\ \`{}\`{}EXTERNALLY-\/MANAGED\`{}\`{}\ configuration\ is\ checked}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00668}00668\ \ \ \ \ and\ displayed\ when\ the\ error\ is\ bubbled\ up\ to\ the\ user.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00669}00669\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00670}00670\ \ \ \ \ :param\ error:\ The\ error\ message\ read\ from\ \`{}\`{}EXTERNALLY-\/MANAGED\`{}\`{}.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00671}00671\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00673}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_externally_managed_environment}{00673}}\ \ \ \ \ reference\ =\ "{}externally-\/managed-\/environment"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00674}00674\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00675}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_externally_managed_environment_ab0026ad10b117d0f93f7e3f55039f095}{00675}}\ \ \ \ \ def\ \_\_init\_\_(self,\ error:\ Optional[str])\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00676}00676\ \ \ \ \ \ \ \ \ if\ error\ is\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ context\ =\ Text(\_DEFAULT\_EXTERNALLY\_MANAGED\_ERROR)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00678}00678\ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ context\ =\ Text(error)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00680}00680\ \ \ \ \ \ \ \ \ super().\_\_init\_\_(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ message="{}This\ environment\ is\ externally\ managed"{},}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ context=context,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ note\_stmt=(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}If\ you\ believe\ this\ is\ a\ mistake,\ please\ contact\ your\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Python\ installation\ or\ OS\ distribution\ provider.\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}You\ can\ override\ this,\ at\ the\ risk\ of\ breaking\ your\ Python\ "{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}installation\ or\ OS,\ by\ passing\ -\/-\/break-\/system-\/packages."{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ hint\_stmt=Text("{}See\ PEP\ 668\ for\ the\ detailed\ specification."{}),}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00692}00692\ \ \ \ \ @staticmethod}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00693}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_externally_managed_environment_a15c97dbe43ecd8afb48cb775afda29ba}{00693}}\ \ \ \ \ def\ \_iter\_externally\_managed\_error\_keys()\ -\/>\ Iterator[str]:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ \#\ LC\_MESSAGES\ is\ in\ POSIX,\ but\ not\ the\ C\ standard.\ The\ most\ common}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00695}00695\ \ \ \ \ \ \ \ \ \#\ platform\ that\ does\ not\ implement\ this\ category\ is\ Windows,\ where}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \#\ using\ other\ categories\ for\ console\ message\ localization\ is\ equally}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ \#\ unreliable,\ so\ we\ fall\ back\ to\ the\ locale-\/less\ vendor\ message.\ This}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00698}00698\ \ \ \ \ \ \ \ \ \#\ can\ always\ be\ re-\/evaluated\ when\ a\ vendor\ proposes\ a\ new\ alternative.}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00700}00700\ \ \ \ \ \ \ \ \ \ \ \ \ category\ =\ locale.LC\_MESSAGES}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00701}00701\ \ \ \ \ \ \ \ \ except\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00702}00702\ \ \ \ \ \ \ \ \ \ \ \ \ lang:\ Optional[str]\ =\ None}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00704}00704\ \ \ \ \ \ \ \ \ \ \ \ \ lang,\ \_\ =\ locale.getlocale(category)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00705}00705\ \ \ \ \ \ \ \ \ if\ lang\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00706}00706\ \ \ \ \ \ \ \ \ \ \ \ \ yield\ f"{}Error-\/\{lang\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ \ \ \ \ for\ sep\ in\ ("{}-\/"{},\ "{}\_"{}):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ before,\ found,\ \_\ =\ lang.partition(sep)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ not\ found:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00710}00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ continue}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yield\ f"{}Error-\/\{before\}"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ yield\ "{}Error"{}}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00714}00714\ \ \ \ \ @classmethod}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00715}\mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_externally_managed_environment_a823b7f838dd0d717d55924c70996af1c}{00715}}\ \ \ \ \ def\ from\_config(}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00716}00716\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00717}00717\ \ \ \ \ \ \ \ \ config:\ Union[pathlib.Path,\ str],}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00718}00718\ \ \ \ \ )\ -\/>\ "{}ExternallyManagedEnvironment"{}:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00719}00719\ \ \ \ \ \ \ \ \ parser\ =\ configparser.ConfigParser(interpolation=None)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00720}00720\ \ \ \ \ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ parser.read(config,\ encoding="{}utf-\/8"{})}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ section\ =\ parser["{}externally-\/managed"{}]}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ for\ key\ in\ cls.\_iter\_externally\_managed\_error\_keys():}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ with\ contextlib.suppress(KeyError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ cls(section[key])}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ except\ KeyError:}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ pass}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00728}00728\ \ \ \ \ \ \ \ \ except\ (OSError,\ UnicodeDecodeError,\ configparser.ParsingError):}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ from\ pip.\_internal.utils.\_log\ import\ VERBOSE}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00730}00730\ }
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ exc\_info\ =\ logger.isEnabledFor(VERBOSE)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning("{}Failed\ to\ read\ \%s"{},\ config,\ exc\_info=exc\_info)}
+\DoxyCodeLine{\Hypertarget{__internal_2exceptions_8py_source_l00733}00733\ \ \ \ \ \ \ \ \ return\ cls(None)}
+
+\end{DoxyCode}

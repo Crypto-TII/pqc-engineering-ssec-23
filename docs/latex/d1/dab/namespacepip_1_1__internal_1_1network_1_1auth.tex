@@ -1,0 +1,142 @@
+\doxysection{pip.\+\_\+internal.\+network.\+auth Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1network_1_1auth}{}\label{namespacepip_1_1__internal_1_1network_1_1auth}\index{pip.\_internal.network.auth@{pip.\_internal.network.auth}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_credentials}{Credentials}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_base_provider}{Key\+Ring\+Base\+Provider}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_cli_provider}{Key\+Ring\+Cli\+Provider}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_null_provider}{Key\+Ring\+Null\+Provider}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_python_provider}{Key\+Ring\+Python\+Provider}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_multi_domain_basic_auth}{Multi\+Domain\+Basic\+Auth}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_base_provider}{Key\+Ring\+Base\+Provider}} \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1auth_ae671b19b9a9569c59d04ed0d7c10d6ab}{get\+\_\+keyring\+\_\+provider}} (str provider)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1auth_a0b14e488ae28d98d262453f3e9cd6e4d}{logger}} = get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\item 
+bool \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1auth_abb10d30d46d453a1a3760fc10fe36a45}{KEYRING\+\_\+\+DISABLED}} = False
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Network Authentication Helpers
+
+Contains interface (MultiDomainBasicAuth) and associated glue code for
+providing credentials in the context of network requests.
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1auth_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1auth_ae671b19b9a9569c59d04ed0d7c10d6ab}\index{pip.\_internal.network.auth@{pip.\_internal.network.auth}!get\_keyring\_provider@{get\_keyring\_provider}}
+\index{get\_keyring\_provider@{get\_keyring\_provider}!pip.\_internal.network.auth@{pip.\_internal.network.auth}}
+\doxysubsubsection{\texorpdfstring{get\_keyring\_provider()}{get\_keyring\_provider()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1auth_ae671b19b9a9569c59d04ed0d7c10d6ab} 
+ \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1auth_1_1_key_ring_base_provider}{Key\+Ring\+Base\+Provider}} get\+\_\+keyring\+\_\+provider (\begin{DoxyParamCaption}\item[{str}]{provider}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2network_2auth_8py_source_l00162}{162}} of file \mbox{\hyperlink{__internal_2network_2auth_8py_source}{auth.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00162\ \textcolor{keyword}{def\ }get\_keyring\_provider(provider:\ str)\ -\/>\ KeyRingBaseProvider:}
+\DoxyCodeLine{00163\ \ \ \ \ logger.verbose(\textcolor{stringliteral}{"{}Keyring\ provider\ requested:\ \%s"{}},\ provider)}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{\#\ keyring\ has\ previously\ failed\ and\ been\ disabled}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordflow}{if}\ KEYRING\_DISABLED:}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ provider\ =\ \textcolor{stringliteral}{"{}disabled"{}}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordflow}{if}\ provider\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}import"{}},\ \textcolor{stringliteral}{"{}auto"{}}]:}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ impl\ =\ KeyRingPythonProvider()}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ logger.verbose(\textcolor{stringliteral}{"{}Keyring\ provider\ set:\ import"{}})}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ the\ event\ of\ an\ unexpected\ exception}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ should\ warn\ the\ user}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ msg\ =\ \textcolor{stringliteral}{"{}Installed\ copy\ of\ keyring\ fails\ with\ exception\ \%s"{}}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ provider\ ==\ \textcolor{stringliteral}{"{}auto"{}}:}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ msg\ =\ msg\ +\ \textcolor{stringliteral}{"{},\ trying\ to\ find\ a\ keyring\ executable\ as\ a\ fallback"{}}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(msg,\ exc,\ exc\_info=logger.isEnabledFor(logging.DEBUG))}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordflow}{if}\ provider\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}subprocess"{}},\ \textcolor{stringliteral}{"{}auto"{}}]:}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ cli\ =\ shutil.which(\textcolor{stringliteral}{"{}keyring"{}})}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cli\ \textcolor{keywordflow}{and}\ cli.startswith(sysconfig.get\_path(\textcolor{stringliteral}{"{}scripts"{}})):}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ all\ code\ within\ this\ function\ is\ stolen\ from\ shutil.which\ implementation}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{preprocessor}{@typing.no\_type\_check}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }PATH\_as\_shutil\_which\_determines\_it()\ -\/>\ str:}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.environ.get(\textcolor{stringliteral}{"{}PATH"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.confstr(\textcolor{stringliteral}{"{}CS\_PATH"{}})}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (AttributeError,\ ValueError):}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ os.confstr()\ or\ CS\_PATH\ is\ not\ available}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.defpath}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ bpo-\/35755:\ Don't\ use\ os.defpath\ if\ the\ PATH\ environment\ variable\ is}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ set\ to\ an\ empty\ string}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ scripts\ =\ Path(sysconfig.get\_path(\textcolor{stringliteral}{"{}scripts"{}}))}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ paths\ =\ []}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ PATH\_as\_shutil\_which\_determines\_it().split(os.pathsep):}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ Path(path)}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ p.samefile(scripts):}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ paths.append(path)}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ FileNotFoundError:}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.pathsep.join(paths)}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ cli\ =\ shutil.which(\textcolor{stringliteral}{"{}keyring"{}},\ path=path)}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cli:}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ logger.verbose(\textcolor{stringliteral}{"{}Keyring\ provider\ set:\ subprocess\ with\ executable\ \%s"{}},\ cli)}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ KeyRingCliProvider(cli)}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ logger.verbose(\textcolor{stringliteral}{"{}Keyring\ provider\ set:\ disabled"{}})}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordflow}{return}\ KeyRingNullProvider()}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ }
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1auth_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1auth_abb10d30d46d453a1a3760fc10fe36a45}\index{pip.\_internal.network.auth@{pip.\_internal.network.auth}!KEYRING\_DISABLED@{KEYRING\_DISABLED}}
+\index{KEYRING\_DISABLED@{KEYRING\_DISABLED}!pip.\_internal.network.auth@{pip.\_internal.network.auth}}
+\doxysubsubsection{\texorpdfstring{KEYRING\_DISABLED}{KEYRING\_DISABLED}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1auth_abb10d30d46d453a1a3760fc10fe36a45} 
+bool KEYRING\+\_\+\+DISABLED = False}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2network_2auth_8py_source_l00035}{35}} of file \mbox{\hyperlink{__internal_2network_2auth_8py_source}{auth.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1auth_a0b14e488ae28d98d262453f3e9cd6e4d}\index{pip.\_internal.network.auth@{pip.\_internal.network.auth}!logger@{logger}}
+\index{logger@{logger}!pip.\_internal.network.auth@{pip.\_internal.network.auth}}
+\doxysubsubsection{\texorpdfstring{logger}{logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1auth_a0b14e488ae28d98d262453f3e9cd6e4d} 
+logger = get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2network_2auth_8py_source_l00033}{33}} of file \mbox{\hyperlink{__internal_2network_2auth_8py_source}{auth.\+py}}.
+

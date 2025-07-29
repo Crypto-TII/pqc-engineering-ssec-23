@@ -1,0 +1,114 @@
+\doxysection{core.\+py}
+\hypertarget{certifi_2core_8py_source}{}\label{certifi_2core_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/certifi/core.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/certifi/core.py}}
+\mbox{\hyperlink{certifi_2core_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00002}00002\ \textcolor{stringliteral}{certifi.py}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00003}00003\ \textcolor{stringliteral}{\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00005}00005\ \textcolor{stringliteral}{This\ module\ returns\ the\ installation\ location\ of\ cacert.pem\ or\ its\ contents.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00007}00007\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00010}00010\ \textcolor{keywordflow}{if}\ sys.version\_info\ >=\ (3,\ 11):}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{from}\ importlib.resources\ \textcolor{keyword}{import}\ as\_file,\ files}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00014}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a5701c539bc96feb8ce7d4bc1e504112b}{00014}}\ \ \ \ \ \_CACERT\_CTX\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a1d0249e88aa2d79e018ddad227b8c03f}{00015}}\ \ \ \ \ \_CACERT\_PATH\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00017}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a97de19db64538cf69af6bfa1c8d94b1e}{00017}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a97de19db64538cf69af6bfa1c8d94b1e}{where}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00018}00018\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ slightly\ terrible,\ but\ we\ want\ to\ delay\ extracting\ the\ file}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ cases\ where\ we're\ inside\ of\ a\ zipimport\ situation\ until\ someone}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ actually\ calls\ where(),\ but\ we\ don't\ want\ to\ re-\/extract\ the\ file}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ on\ every\ call\ of\ where(),\ so\ we'll\ do\ it\ once\ then\ store\ it\ in\ a}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ global\ variable.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{keyword}{global}\ \_CACERT\_CTX}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \textcolor{keyword}{global}\ \_CACERT\_PATH}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_CACERT\_PATH\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ slightly\ janky,\ the\ importlib.resources\ API\ wants\ you\ to}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ manage\ the\ cleanup\ of\ this\ file,\ so\ it\ doesn't\ actually\ return\ a}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ path,\ it\ returns\ a\ context\ manager\ that\ will\ give\ you\ the\ path}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ when\ you\ enter\ it\ and\ will\ do\ any\ cleanup\ when\ you\ leave\ it.\ In}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ common\ case\ of\ not\ needing\ a\ temporary\ file,\ it\ will\ just}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ return\ the\ file\ system\ location\ and\ the\ \_\_exit\_\_()\ is\ a\ no-\/op.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ also\ have\ to\ hold\ onto\ the\ actual\ context\ manager,\ because}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ will\ do\ the\ cleanup\ whenever\ it\ gets\ garbage\ collected,\ so}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ will\ also\ store\ that\ at\ the\ global\ level\ as\ well.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \_CACERT\_CTX\ =\ as\_file(files(\textcolor{stringliteral}{"{}pip.\_vendor.certifi"{}}).joinpath(\textcolor{stringliteral}{"{}cacert.pem"{}}))}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \_CACERT\_PATH\ =\ str(\_CACERT\_CTX.\_\_enter\_\_())}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_CACERT\_PATH}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00041}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_aba1d6f326ba729ad5b728b0d3fe0d059}{00041}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_aba1d6f326ba729ad5b728b0d3fe0d059}{contents}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ files(\textcolor{stringliteral}{"{}pip.\_vendor.certifi"{}}).joinpath(\textcolor{stringliteral}{"{}cacert.pem"{}}).\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_ac97848eeef1109b7722014bdd3b55a34}{read\_text}}(encoding=\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00044}00044\ \textcolor{keywordflow}{elif}\ sys.version\_info\ >=\ (3,\ 7):}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{from}\ importlib.resources\ \textcolor{keyword}{import}\ path\ \textcolor{keyword}{as}\ get\_path,\ read\_text}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00048}00048\ \ \ \ \ \_CACERT\_CTX\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00049}00049\ \ \ \ \ \_CACERT\_PATH\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a97de19db64538cf69af6bfa1c8d94b1e}{where}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ slightly\ terrible,\ but\ we\ want\ to\ delay\ extracting\ the}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file\ in\ cases\ where\ we're\ inside\ of\ a\ zipimport\ situation\ until}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ someone\ actually\ calls\ where(),\ but\ we\ don't\ want\ to\ re-\/extract}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ file\ on\ every\ call\ of\ where(),\ so\ we'll\ do\ it\ once\ then\ store}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ in\ a\ global\ variable.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{global}\ \_CACERT\_CTX}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{global}\ \_CACERT\_PATH}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_CACERT\_PATH\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ slightly\ janky,\ the\ importlib.resources\ API\ wants\ you}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ manage\ the\ cleanup\ of\ this\ file,\ so\ it\ doesn't\ actually}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ return\ a\ path,\ it\ returns\ a\ context\ manager\ that\ will\ give}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ you\ the\ path\ when\ you\ enter\ it\ and\ will\ do\ any\ cleanup\ when}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ you\ leave\ it.\ In\ the\ common\ case\ of\ not\ needing\ a\ temporary}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file,\ it\ will\ just\ return\ the\ file\ system\ location\ and\ the}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \_\_exit\_\_()\ is\ a\ no-\/op.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ also\ have\ to\ hold\ onto\ the\ actual\ context\ manager,\ because}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ will\ do\ the\ cleanup\ whenever\ it\ gets\ garbage\ collected,\ so}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ will\ also\ store\ that\ at\ the\ global\ level\ as\ well.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \_CACERT\_CTX\ =\ get\_path(\textcolor{stringliteral}{"{}pip.\_vendor.certifi"{}},\ \textcolor{stringliteral}{"{}cacert.pem"{}})}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \_CACERT\_PATH\ =\ str(\_CACERT\_CTX.\_\_enter\_\_())}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_CACERT\_PATH}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00076}00076\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_aba1d6f326ba729ad5b728b0d3fe0d059}{contents}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_ac97848eeef1109b7722014bdd3b55a34}{read\_text}}(\textcolor{stringliteral}{"{}pip.\_vendor.certifi"{}},\ \textcolor{stringliteral}{"{}cacert.pem"{}},\ encoding=\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00079}00079\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00080}00080\ \ \ \ \ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00081}00081\ \ \ \ \ \textcolor{keyword}{import}\ types}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00082}00082\ \ \ \ \ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Union}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00084}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a1f6d1842edeebd449a74173c8c83f8ca}{00084}}\ \ \ \ \ Package\ =\ Union[types.ModuleType,\ str]}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00085}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_acf246a87e41f47012fc7628989d3fe95}{00085}}\ \ \ \ \ Resource\ =\ Union[str,\ \textcolor{stringliteral}{"{}os.PathLike"{}}]}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00087}00087\ \ \ \ \ \textcolor{comment}{\#\ This\ fallback\ will\ work\ for\ Python\ versions\ prior\ to\ 3.7\ that\ lack\ the}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00088}00088\ \ \ \ \ \textcolor{comment}{\#\ importlib.resources\ module\ but\ relies\ on\ the\ existing\ \`{}where`\ function}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00089}00089\ \ \ \ \ \textcolor{comment}{\#\ so\ won't\ address\ issues\ with\ environments\ like\ PyOxidizer\ that\ don't\ set}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00090}00090\ \ \ \ \ \textcolor{comment}{\#\ \_\_file\_\_\ on\ modules.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00091}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_ac97848eeef1109b7722014bdd3b55a34}{00091}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_ac97848eeef1109b7722014bdd3b55a34}{read\_text}}(}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ package:\ Package,}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ resource:\ Resource,}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ encoding:\ str\ =\ \textcolor{stringliteral}{'utf-\/8'},}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ errors:\ str\ =\ \textcolor{stringliteral}{'strict'}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00096}00096\ \ \ \ \ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a97de19db64538cf69af6bfa1c8d94b1e}{where}}(),\ encoding=encoding)\ \textcolor{keyword}{as}\ data:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data.read()}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00100}00100\ \ \ \ \ \textcolor{comment}{\#\ If\ we\ don't\ have\ importlib.resources,\ then\ we\ will\ just\ do\ the\ old\ logic}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00101}00101\ \ \ \ \ \textcolor{comment}{\#\ of\ assuming\ we're\ on\ the\ filesystem\ and\ munge\ the\ path\ directly.}}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00102}00102\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_a97de19db64538cf69af6bfa1c8d94b1e}{where}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ f\ =\ os.path.dirname(\_\_file\_\_)}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(f,\ \textcolor{stringliteral}{"{}cacert.pem"{}})}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00107}00107\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_aba1d6f326ba729ad5b728b0d3fe0d059}{contents}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{certifi_2core_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1certifi_1_1core_ac97848eeef1109b7722014bdd3b55a34}{read\_text}}(\textcolor{stringliteral}{"{}pip.\_vendor.certifi"{}},\ \textcolor{stringliteral}{"{}cacert.pem"{}},\ encoding=\textcolor{stringliteral}{"{}ascii"{}})}
+
+\end{DoxyCode}

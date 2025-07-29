@@ -1,0 +1,89 @@
+\doxysection{E\+:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/common/hal-\/cortexa.c File Reference}
+\hypertarget{hal-cortexa_8c}{}\label{hal-cortexa_8c}\index{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/common/hal-\/cortexa.c@{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/common/hal-\/cortexa.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include "{}hal.\+h"{}}\newline
+Include dependency graph for hal-\/cortexa.c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=241pt]{da/d18/hal-cortexa_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{hal-cortexa_8c_aed47d05233b969bbe62e4e4ac5df64d9}{hal\+\_\+setup}} (const enum \mbox{\hyperlink{hal_8h_a9c5e28a0d822727f503f0c9c6f8ab359}{clock\+\_\+mode}} clock)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{hal-cortexa_8c_a3ad78a3c9f87ef9974ed422d12068bb3}{hal\+\_\+get\+\_\+time}} ()
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{hal-cortexa_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{hal-cortexa_8c_a3ad78a3c9f87ef9974ed422d12068bb3}\index{hal-\/cortexa.c@{hal-\/cortexa.c}!hal\_get\_time@{hal\_get\_time}}
+\index{hal\_get\_time@{hal\_get\_time}!hal-\/cortexa.c@{hal-\/cortexa.c}}
+\doxysubsubsection{\texorpdfstring{hal\_get\_time()}{hal\_get\_time()}}
+{\footnotesize\ttfamily \label{hal-cortexa_8c_a3ad78a3c9f87ef9974ed422d12068bb3} 
+uint64\+\_\+t hal\+\_\+get\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{hal-cortexa_8c_source_l00010}{10}} of file \mbox{\hyperlink{hal-cortexa_8c_source}{hal-\/cortexa.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#if\ defined(AARCH64) }}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ uint64\_t\ t;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}mrs\ \%0,\ PMCCNTR\_EL0"{}}:\textcolor{stringliteral}{"{}=r"{}}(t));}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordflow}{return}\ t;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(ARMV7l) }}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ this\ is\ actually\ a\ 32-\/bit\ counter,\ so\ it\ won't\ work\ for\ very\ long\ running\ schemes}}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ need\ to\ figure\ out\ a\ way\ to\ get\ a\ 64-\/bit\ cycle\ counter}}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ cc;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}mrc\ p15,\ 0,\ \%0,\ c9,\ c13,\ 0"{}}\ :\ \textcolor{stringliteral}{"{}=r"{}}(cc));}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{return}\ cc;}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(x8664) }}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ uint64\_t\ t\ =\ 0;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ t;}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#else }}
+\DoxyCodeLine{00029\ \ \ \ \ uint64\_t\ t\ =\ 0;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ t;}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif }}
+\DoxyCodeLine{00032\ \}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{fips202_8c_source_l00370}{cshake128\+\_\+simple()}}, \mbox{\hyperlink{fips202_8c_source_l00320}{cshake128\+\_\+simple\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00357}{cshake128\+\_\+simple\+\_\+squeezeblocks()}}, \mbox{\hyperlink{fips202_8c_source_l00829}{cshake256\+\_\+simple()}}, \mbox{\hyperlink{fips202_8c_source_l00783}{cshake256\+\_\+simple\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00816}{cshake256\+\_\+simple\+\_\+squeezeblocks()}}, \mbox{\hyperlink{fips202_8c_source_l00563}{sha3\+\_\+256()}}, \mbox{\hyperlink{fips202_8c_source_l00593}{sha3\+\_\+256\+\_\+inc\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00604}{sha3\+\_\+256\+\_\+inc\+\_\+finalize()}}, \mbox{\hyperlink{fips202_8c_source_l00582}{sha3\+\_\+256\+\_\+inc\+\_\+init()}}, \mbox{\hyperlink{fips202_8c_source_l00687}{sha3\+\_\+384()}}, \mbox{\hyperlink{fips202_8c_source_l00641}{sha3\+\_\+384\+\_\+inc\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00652}{sha3\+\_\+384\+\_\+inc\+\_\+finalize()}}, \mbox{\hyperlink{fips202_8c_source_l00630}{sha3\+\_\+384\+\_\+inc\+\_\+init()}}, \mbox{\hyperlink{fips202_8c_source_l00714}{sha3\+\_\+512()}}, \mbox{\hyperlink{fips202_8c_source_l00744}{sha3\+\_\+512\+\_\+inc\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00755}{sha3\+\_\+512\+\_\+inc\+\_\+finalize()}}, \mbox{\hyperlink{fips202_8c_source_l00733}{sha3\+\_\+512\+\_\+inc\+\_\+init()}}, \mbox{\hyperlink{fips202_8c_source_l00456}{shake128()}}, \mbox{\hyperlink{fips202_8c_source_l00417}{shake128\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00225}{shake128\+\_\+inc\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00236}{shake128\+\_\+inc\+\_\+finalize()}}, \mbox{\hyperlink{fips202_8c_source_l00214}{shake128\+\_\+inc\+\_\+init()}}, \mbox{\hyperlink{fips202_8c_source_l00247}{shake128\+\_\+inc\+\_\+squeeze()}}, \mbox{\hyperlink{fips202_8c_source_l00444}{shake128\+\_\+squeezeblocks()}}, \mbox{\hyperlink{fips202_8c_source_l00523}{shake256()}}, \mbox{\hyperlink{fips202_8c_source_l00484}{shake256\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00277}{shake256\+\_\+inc\+\_\+absorb()}}, \mbox{\hyperlink{fips202_8c_source_l00288}{shake256\+\_\+inc\+\_\+finalize()}}, \mbox{\hyperlink{fips202_8c_source_l00266}{shake256\+\_\+inc\+\_\+init()}}, \mbox{\hyperlink{fips202_8c_source_l00299}{shake256\+\_\+inc\+\_\+squeeze()}}, and \mbox{\hyperlink{fips202_8c_source_l00501}{shake256\+\_\+squeezeblocks()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{d2/dc3/hal-cortexa_8c_a3ad78a3c9f87ef9974ed422d12068bb3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{hal-cortexa_8c_aed47d05233b969bbe62e4e4ac5df64d9}\index{hal-\/cortexa.c@{hal-\/cortexa.c}!hal\_setup@{hal\_setup}}
+\index{hal\_setup@{hal\_setup}!hal-\/cortexa.c@{hal-\/cortexa.c}}
+\doxysubsubsection{\texorpdfstring{hal\_setup()}{hal\_setup()}}
+{\footnotesize\ttfamily \label{hal-cortexa_8c_aed47d05233b969bbe62e4e4ac5df64d9} 
+void hal\+\_\+setup (\begin{DoxyParamCaption}\item[{const enum \mbox{\hyperlink{hal_8h_a9c5e28a0d822727f503f0c9c6f8ab359}{clock\+\_\+mode}}}]{clock}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{hal-cortexa_8c_source_l00004}{4}} of file \mbox{\hyperlink{hal-cortexa_8c_source}{hal-\/cortexa.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ (void)clock;}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{comment}{//TODO\ figure\ out\ if\ we\ need\ to\ do\ someting\ here}}
+\DoxyCodeLine{00008\ \}}
+
+\end{DoxyCode}

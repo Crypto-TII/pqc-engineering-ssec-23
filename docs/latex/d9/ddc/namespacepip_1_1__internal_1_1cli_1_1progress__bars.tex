@@ -1,0 +1,106 @@
+\doxysection{pip.\+\_\+internal.\+cli.\+progress\+\_\+bars Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars}{}\label{namespacepip_1_1__internal_1_1cli_1_1progress__bars}\index{pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Generator\mbox{[}bytes, None, None\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a7ada9bb8703296c887f280c21b24e7bd}{\+\_\+rich\+\_\+progress\+\_\+bar}} (Iterable\mbox{[}bytes\mbox{]} iterable, \texorpdfstring{$\ast$}{*}, str bar\+\_\+type, int size)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a63897747716c6fda75d02a47174b77ec}{Download\+Progress\+Renderer}} \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a36fcb99b8afd54cd9e51c1c8dc272607}{get\+\_\+download\+\_\+progress\+\_\+renderer}} (\texorpdfstring{$\ast$}{*}, str bar\+\_\+type, Optional\mbox{[}int\mbox{]} size=None)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a63897747716c6fda75d02a47174b77ec}{Download\+Progress\+Renderer}} = Callable\mbox{[}\mbox{[}Iterable\mbox{[}bytes\mbox{]}\mbox{]}, Iterator\mbox{[}bytes\mbox{]}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a7ada9bb8703296c887f280c21b24e7bd}\index{pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}!\_rich\_progress\_bar@{\_rich\_progress\_bar}}
+\index{\_rich\_progress\_bar@{\_rich\_progress\_bar}!pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}}
+\doxysubsubsection{\texorpdfstring{\_rich\_progress\_bar()}{\_rich\_progress\_bar()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a7ada9bb8703296c887f280c21b24e7bd} 
+ Generator\mbox{[}bytes, None, None\mbox{]} \+\_\+rich\+\_\+progress\+\_\+bar (\begin{DoxyParamCaption}\item[{Iterable\mbox{[}bytes\mbox{]}}]{iterable}{, }\item[{\texorpdfstring{$\ast$}{*}}]{}{, }\item[{str}]{bar\+\_\+type}{, }\item[{int}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{progress__bars_8py_source_l00022}{22}} of file \mbox{\hyperlink{progress__bars_8py_source}{progress\+\_\+bars.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00027\ )\ -\/>\ Generator[bytes,\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{assert}\ bar\_type\ ==\ \textcolor{stringliteral}{"{}on"{}},\ \textcolor{stringliteral}{"{}This\ should\ only\ be\ used\ in\ the\ default\ mode."{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ size:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ total\ =\ float(\textcolor{stringliteral}{"{}inf"{}})}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ columns:\ Tuple[ProgressColumn,\ ...]\ =\ (}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ TextColumn(\textcolor{stringliteral}{"{}[progress.description]\{task.description\}"{}}),}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ SpinnerColumn(\textcolor{stringliteral}{"{}line"{}},\ speed=1.5),}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ FileSizeColumn(),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ TransferSpeedColumn(),}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ TimeElapsedColumn(),}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ total\ =\ size}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ columns\ =\ (}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ TextColumn(\textcolor{stringliteral}{"{}[progress.description]\{task.description\}"{}}),}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ BarColumn(),}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ DownloadColumn(),}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ TransferSpeedColumn(),}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ TextColumn(\textcolor{stringliteral}{"{}eta"{}}),}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ TimeRemainingColumn(),}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ progress\ =\ Progress(*columns,\ refresh\_per\_second=30)}
+\DoxyCodeLine{00051\ \ \ \ \ task\_id\ =\ progress.add\_task(\textcolor{stringliteral}{"{}\ "{}}\ *\ (get\_indentation()\ +\ 2),\ total=total)}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{with}\ progress:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ iterable:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ progress.update(task\_id,\ advance=len(chunk))}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a36fcb99b8afd54cd9e51c1c8dc272607}\index{pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}!get\_download\_progress\_renderer@{get\_download\_progress\_renderer}}
+\index{get\_download\_progress\_renderer@{get\_download\_progress\_renderer}!pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}}
+\doxysubsubsection{\texorpdfstring{get\_download\_progress\_renderer()}{get\_download\_progress\_renderer()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a36fcb99b8afd54cd9e51c1c8dc272607} 
+ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a63897747716c6fda75d02a47174b77ec}{Download\+Progress\+Renderer}} get\+\_\+download\+\_\+progress\+\_\+renderer (\begin{DoxyParamCaption}\item[{\texorpdfstring{$\ast$}{*}}]{}{, }\item[{str}]{bar\+\_\+type}{, }\item[{Optional\mbox{[}int\mbox{]} }]{size}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get an object that can be used to render the download progress.
+
+Returns a callable, that takes an iterable to "wrap".
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{progress__bars_8py_source_l00058}{58}} of file \mbox{\hyperlink{progress__bars_8py_source}{progress\+\_\+bars.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00060\ )\ -\/>\ DownloadProgressRenderer:}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ an\ object\ that\ can\ be\ used\ to\ render\ the\ download\ progress.}}
+\DoxyCodeLine{00062\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00063\ \textcolor{stringliteral}{\ \ \ \ Returns\ a\ callable,\ that\ takes\ an\ iterable\ to\ "{}wrap"{}.}}
+\DoxyCodeLine{00064\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{if}\ bar\_type\ ==\ \textcolor{stringliteral}{"{}on"{}}:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ functools.partial(\_rich\_progress\_bar,\ bar\_type=bar\_type,\ size=size)}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ iter\ \ \textcolor{comment}{\#\ no-\/op,\ when\ passed\ an\ iterator}}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a63897747716c6fda75d02a47174b77ec}\index{pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}!DownloadProgressRenderer@{DownloadProgressRenderer}}
+\index{DownloadProgressRenderer@{DownloadProgressRenderer}!pip.\_internal.cli.progress\_bars@{pip.\_internal.cli.progress\_bars}}
+\doxysubsubsection{\texorpdfstring{DownloadProgressRenderer}{DownloadProgressRenderer}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1cli_1_1progress__bars_a63897747716c6fda75d02a47174b77ec} 
+Download\+Progress\+Renderer = Callable\mbox{[}\mbox{[}Iterable\mbox{[}bytes\mbox{]}\mbox{]}, Iterator\mbox{[}bytes\mbox{]}\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{progress__bars_8py_source_l00019}{19}} of file \mbox{\hyperlink{progress__bars_8py_source}{progress\+\_\+bars.\+py}}.
+

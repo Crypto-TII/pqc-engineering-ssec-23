@@ -1,0 +1,112 @@
+\doxysection{random\+\_\+walks3.\+py}
+\hypertarget{random__walks3_8py_source}{}\label{random__walks3_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/high-\/level-\/scripts/random\_walks3.py@{E:/pqc-\/engineering-\/ssec-\/23/high-\/level-\/scripts/random\_walks3.py}}
+\mbox{\hyperlink{random__walks3_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00001}\mbox{\hyperlink{namespacerandom__walks3}{00001}}\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00002}00002\ \textcolor{keyword}{from}\ numpy\ \textcolor{keyword}{import}\ base\_repr}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00003}00003\ \textcolor{keyword}{from}\ copy\ \textcolor{keyword}{import}\ deepcopy}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00005}00005\ \textcolor{comment}{\#\ SageMath\ imports}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacesage_1_1all}{sage.all}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00007}00007\ \ \ \ \ log,}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00008}00008\ \ \ \ \ floor,}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00009}00009\ \ \ \ \ EllipticCurve,}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00010}00010\ )}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00013}\mbox{\hyperlink{namespacerandom__walks3_ab0c173965820047642a38a1448e27e80}{00013}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacerandom__walks3_ab0c173965820047642a38a1448e27e80}{to\_model}}(A,\ xP):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00014}00014\ \ \ \ \ a1\ =\ (3\ *\ xP**2\ +\ 2\ *\ A\ *\ xP\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00015}00015\ \ \ \ \ a3\ =\ 2\ *\ (xP**3\ +\ A\ *\ xP**2\ +\ xP)**2}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{return}\ a1,\ a3}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00020}\mbox{\hyperlink{namespacerandom__walks3_ae8b799974981fa8ea8c713bf1a54242f}{00020}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacerandom__walks3_ae8b799974981fa8ea8c713bf1a54242f}{isogeny3}}(alpha,\ a1,\ a3):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00021}00021\ \ \ \ \ \_a1\ =\ -\/6\ *\ alpha\ +\ a1}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00022}00022\ \ \ \ \ \_a3\ =\ 3\ *\ a1\ *\ alpha**2\ -\/\ a1**2\ *\ alpha\ +\ 9\ *\ a3}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{return}\ \_a1,\ \_a3}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00027}\mbox{\hyperlink{namespacerandom__walks3_adeed5b167d438222ecbc133dc27df8a0}{00027}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacerandom__walks3_adeed5b167d438222ecbc133dc27df8a0}{random\_walk3}}(a1,\ a3,\ path,\ setup):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00028}00028\ \ \ \ \ \textcolor{comment}{\#\ This\ function\ assumes\ the\ input\ and\ output\ determines\ elliptic}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00029}00029\ \ \ \ \ \textcolor{comment}{\#\ curves\ of\ form\ y²\ +\ a₁xy\ +\ a₃y\ =\ x³\ −\ 5a₁a₃x\ −\ (a₁³)a₃\ −\ 7(a₃)²}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00030}00030\ \ \ \ \ Fq\ =\ setup[\textcolor{stringliteral}{'Fq'}]}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00031}00031\ \ \ \ \ a1\_\ =\ deepcopy(a1)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00032}00032\ \ \ \ \ a3\_\ =\ deepcopy(a3)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ range(0,\ len(path),\ 1):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ alpha\ =\ [Fq(1),\ setup[\textcolor{stringliteral}{'ζ₃'}],\ setup[\textcolor{stringliteral}{'ζ₃'}]**2][path[k]]\ *\ setup[\textcolor{stringliteral}{'curt'}](-\/a3\_)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ alpha**3\ ==\ -\/a3\_}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ a1\_,\ a3\_\ =\ \mbox{\hyperlink{namespacerandom__walks3_ae8b799974981fa8ea8c713bf1a54242f}{isogeny3}}(alpha,\ a1\_,\ a3\_)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{return}\ a1\_,\ a3\_}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00042}\mbox{\hyperlink{namespacerandom__walks3_ae1cceae2fe64bcaea38ca80ab20ad63a}{00042}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacerandom__walks3_ae1cceae2fe64bcaea38ca80ab20ad63a}{get\_order3\_points}}(A,\ setup):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00043}00043\ \ \ \ \ Fq\ =\ setup[\textcolor{stringliteral}{'Fq'}]}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00044}00044\ \ \ \ \ \textcolor{comment}{\#\ Constants}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00045}00045\ \ \ \ \ one\_half\ =\ 1\ /\ Fq(2)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00046}00046\ \ \ \ \ one\_third\ =\ 1\ /\ Fq(3)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00047}00047\ \ \ \ \ one\_ninth\ =\ one\_third**2}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00048}00048\ \ \ \ \ one\_by\_27\ =\ one\_third\ *\ one\_ninth}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00049}00049\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00050}00050\ \ \ \ \ A\_times\_one\_third\ =\ A\ *\ one\_third\ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00051}00051\ \ \ \ \ A\_squared\ =\ A**2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ S\ }}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00052}00052\ \ \ \ \ t\ =\ (Fq(3)\ -\/\ A\_squared)\ *\ one\_ninth\ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ \ A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00053}00053\ \ \ \ \ r\ =\ 16\ *\ (A\_squared\ *\ A)\ *\ one\_by\_27\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ M\ \ \ \ +\ M𝒸\ +\ 4A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00054}00054\ \ \ \ \ s\ =\ 8\ *\ A\_times\_one\_third\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 3A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00055}00055\ \ \ \ \ u\ =\ r\ -\/\ s\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00056}00056\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00057}00057\ \ \ \ \ y\ =\ t\ +\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ one\_third\ *\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ setup[\textcolor{stringliteral}{'curt'}](-\/2\ *\ A\_squared\ +\ 8)\ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ 3A\ +\ CURT}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00060}00060\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00061}00061\ \ \ \ \ r\ =\ 2\ *\ y\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00062}00062\ \ \ \ \ s\ =\ 6\ *\ t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 3A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00063}00063\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00064}00064\ \ \ \ \ s0\ =\ setup[\textcolor{stringliteral}{'sqrt'}](r\ -\/\ s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ A\ +\ \ \ \ \ \ \ \ SQRT}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00065}00065\ \ \ \ \ i0\ =\ 1\ /\ s0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ I}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00066}00066\ \ \ \ \ v\ =\ -\/(r\ +\ s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00067}00067\ \ \ \ \ s1\ =\ setup[\textcolor{stringliteral}{'sqrt'}](v\ +\ u\ *\ i0)\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ M\ \ \ \ \ \ \ \ \ +\ \ A\ +\ \ \ \ \ \ \ \ SQRT}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00068}00068\ \ \ \ \ s2\ =\ setup[\textcolor{stringliteral}{'sqrt'}](v\ -\/\ u\ *\ i0)\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ M\ \ \ \ \ \ \ \ \ +\ \ A\ +\ \ \ \ \ \ \ \ SQRT}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00069}00069\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00070}00070\ \ \ \ \ z\ =\ []}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00071}00071\ \ \ \ \ z.append((-\/s0\ +\ s1)\ *\ one\_half)\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ \ A\ \ }}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00072}00072\ \ \ \ \ z.append((-\/s0\ -\/\ s1)\ *\ one\_half)\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ 2A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00073}00073\ \ \ \ \ z.append((s0\ +\ s2)\ *\ one\_half)\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ \ A\ }}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00074}00074\ \ \ \ \ z.append((s0\ -\/\ s2)\ *\ one\_half)\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ M𝒸\ +\ \ A\ }}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00075}00075\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00076}00076\ \ \ \ \ x\ =\ [zk-\/A\_times\_one\_third\ \textcolor{keywordflow}{for}\ zk\ \textcolor{keywordflow}{in}\ z]\ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4A}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{return}\ x\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Total\ cost:\ I\ +\ 3M\ +\ S\ +\ 8M𝒸\ +\ 30A\ +\ CURT\ +\ 3SQRT}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00078}00078\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00079}00079\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00081}\mbox{\hyperlink{namespacerandom__walks3_a6795174e351fd2f620b6b9bf458c961d}{00081}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacerandom__walks3_a6795174e351fd2f620b6b9bf458c961d}{cgl\_hash3}}(message,\ setup,\ verbose=True):}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00082}00082\ \ \ \ \ p\ =\ setup[\textcolor{stringliteral}{'Fq'}].characteristic()}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00084}00084\ \ \ \ \ \textcolor{comment}{\#\ SHAKE\_256\ algorithm\ from\ the\ hashlib\ module.}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00085}00085\ \ \ \ \ s\ =\ hashlib.shake\_256()}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00086}00086\ \ \ \ \ s.update(message)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00087}00087\ \ \ \ \ length\ =\ int(floor((p.bit\_length()\ /\ log(3,\ 2))\ +\ 0.5))}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00088}00088\ \ \ \ \ digest\ =\ s.hexdigest(p.bit\_length()\ //\ 8)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00089}00089\ \ \ \ \ path\ =\ base\_repr(int(digest,\ 16),\ base=3)[:length]}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{if}\ verbose:}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{'\(\backslash\)nCGL\ Hash\ function\ over\ the\ 3-\/isogeny\ graph\ (CGLHash3)'})}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Symmetric\ primitive:\(\backslash\)t\{s.name\}'})}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Message\ digest\ size:\(\backslash\)t\{len(digest)\ //\ 2\}\ bytes'})}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Random\ path\ of\ size:\(\backslash\)t\{len(path)\}\ steps'})}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00097}00097\ \ \ \ \ P\ =\ \mbox{\hyperlink{namespacerandom__walks3_ae1cceae2fe64bcaea38ca80ab20ad63a}{get\_order3\_points}}(setup[\textcolor{stringliteral}{'A'}],\ setup)\ \textcolor{comment}{\#\ We\ determinstically\ take\ the\ first\ order-\/3\ point}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{for}\ xP\ \textcolor{keywordflow}{in}\ P:}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(\textcolor{keywordflow}{not}\ (xP**2\ *\ (3\ *\ xP**2\ +\ 4\ *\ setup[\textcolor{stringliteral}{'A'}]\ *\ xP\ +\ 6)\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00100}00100\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00101}00101\ \ \ \ \ \textcolor{comment}{\#\ Recall,\ input\ and\ output\ of\ random\_walk3()\ determines\ elliptic\ curves\ }}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00102}00102\ \ \ \ \ \textcolor{comment}{\#\ of\ the\ form\ y²\ +\ a₁xy\ +\ a₃y\ =\ x³\ −\ 5a₁a₃x\ −\ (a₁³)a₃\ −\ 7(a₃)²}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00103}00103\ \ \ \ \ xP\ =\ P[0]\ \textcolor{comment}{\#\ We\ determinstically\ take\ the\ first\ x-\/coordinate\ point}}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00104}00104\ \ \ \ \ a1,\ a3\ =\ \mbox{\hyperlink{namespacerandom__walks3_ab0c173965820047642a38a1448e27e80}{to\_model}}(setup[\textcolor{stringliteral}{'A'}],\ xP)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00105}00105\ \ \ \ \ a1,\ a3\ =\ \mbox{\hyperlink{namespacerandom__walks3_adeed5b167d438222ecbc133dc27df8a0}{random\_walk3}}(a1,\ a3,\ [\ int(b)\ \textcolor{keywordflow}{for}\ b\ \textcolor{keywordflow}{in}\ path\ ],\ setup)}
+\DoxyCodeLine{\Hypertarget{random__walks3_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{return}\ EllipticCurve(setup[\textcolor{stringliteral}{'Fq'}],\ [a1,\ 0,\ a3,\ -\/5\ *\ a1\ *\ a3,\ -\/a1**3\ *\ a3\ -\/\ 7\ *\ a3**2]).j\_invariant()}
+
+\end{DoxyCode}

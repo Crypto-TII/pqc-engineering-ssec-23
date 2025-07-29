@@ -1,0 +1,118 @@
+\doxysection{bazaar.\+py}
+\hypertarget{bazaar_8py_source}{}\label{bazaar_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/vcs/bazaar.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/vcs/bazaar.py}}
+\mbox{\hyperlink{bazaar_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1bazaar}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00002}00002\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional,\ Tuple}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00004}00004\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ HiddenText,\ display\_path}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1subprocess}{pip.\_internal.utils.subprocess}}\ \textcolor{keyword}{import}\ make\_command}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1urls}{pip.\_internal.utils.urls}}\ \textcolor{keyword}{import}\ path\_to\_url}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1versioncontrol}{pip.\_internal.vcs.versioncontrol}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00008}00008\ \ \ \ \ AuthInfo,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00009}00009\ \ \ \ \ RemoteNotFoundError,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00010}00010\ \ \ \ \ RevOptions,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00011}00011\ \ \ \ \ VersionControl,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00012}00012\ \ \ \ \ vcs,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00013}00013\ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__internal_1_1vcs_1_1bazaar_a0b14e488ae28d98d262453f3e9cd6e4d}{00015}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00018}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{00018}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{Bazaar}}(\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control}{VersionControl}}):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00019}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{00019}}\ \ \ \ \ name\ =\ \textcolor{stringliteral}{"{}bzr"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00020}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{00020}}\ \ \ \ \ dirname\ =\ \textcolor{stringliteral}{"{}.bzr"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00021}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{00021}}\ \ \ \ \ repo\_name\ =\ \textcolor{stringliteral}{"{}branch"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00022}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar}{00022}}\ \ \ \ \ schemes\ =\ (}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+http"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+https"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+ssh"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+sftp"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+ftp"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+lp"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bzr+file"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00030}00030\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00032}00032\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00033}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a16d7e464d16b8da4253133def49a175a}{00033}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a16d7e464d16b8da4253133def49a175a}{get\_base\_rev\_args}}(rev:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{stringliteral}{"{}-\/r"{}},\ rev]}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00036}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_aa905ab521509960ac2424a5767b4e18e}{00036}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_aa905ab521509960ac2424a5767b4e18e}{fetch\_new}}(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions,\ verbosity:\ int}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00038}00038\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ rev\_display\ =\ rev\_options.to\_display()}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ logger.info(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Checking\ out\ \%s\%s\ to\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ url,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ rev\_display,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ display\_path(dest),}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ verbosity\ <=\ 0:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ flag\ =\ \textcolor{stringliteral}{"{}-\/-\/quiet"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ verbosity\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ flag\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ flag\ =\ f\textcolor{stringliteral}{"{}-\/\{'v'*verbosity\}"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}checkout"{}},\ \textcolor{stringliteral}{"{}-\/-\/lightweight"{}},\ flag,\ rev\_options.to\_args(),\ url,\ dest}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00057}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_ace4f91cd9b42ae52423f5e7504f23da0}{00057}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_ace4f91cd9b42ae52423f5e7504f23da0}{switch}}(self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(make\_command(\textcolor{stringliteral}{"{}switch"{}},\ url),\ cwd=dest)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00060}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_ace88fe2499a36fdedba9ccb46c6688e0}{00060}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_ace88fe2499a36fdedba9ccb46c6688e0}{update}}(self,\ dest:\ str,\ url:\ HiddenText,\ rev\_options:\ RevOptions)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ output\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ make\_command(\textcolor{stringliteral}{"{}info"{}}),\ show\_stdout=\textcolor{keyword}{False},\ stdout\_only=\textcolor{keyword}{True},\ cwd=dest}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ output.startswith(\textcolor{stringliteral}{"{}Standalone\ "{}}):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Older\ versions\ of\ pip\ used\ to\ create\ standalone\ branches.}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Convert\ the\ standalone\ branch\ to\ a\ checkout\ by\ calling\ "{}bzr\ bind"{}.}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(\textcolor{stringliteral}{"{}bind"{}},\ \textcolor{stringliteral}{"{}-\/q"{}},\ url)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args,\ cwd=dest)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ cmd\_args\ =\ make\_command(\textcolor{stringliteral}{"{}update"{}},\ \textcolor{stringliteral}{"{}-\/q"{}},\ rev\_options.to\_args())}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(cmd\_args,\ cwd=dest)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00073}00073\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00074}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a6aaf5748d8bf9f1796983c2ca98b8a8c}{00074}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a6aaf5748d8bf9f1796983c2ca98b8a8c}{get\_url\_rev\_and\_auth}}(cls,\ url:\ str)\ -\/>\ Tuple[str,\ Optional[str],\ AuthInfo]:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hotfix\ the\ URL\ scheme\ after\ removing\ bzr+\ from\ bzr+ssh://\ re-\/add\ it}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ url,\ rev,\ user\_pass\ =\ super().\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a6aaf5748d8bf9f1796983c2ca98b8a8c}{get\_url\_rev\_and\_auth}}(url)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url.startswith(\textcolor{stringliteral}{"{}ssh://"{}}):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ \textcolor{stringliteral}{"{}bzr+"{}}\ +\ url}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ url,\ rev,\ user\_pass}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00081}00081\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00082}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a9b85d9faa46a1287f3829586bba0b288}{00082}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a9b85d9faa46a1287f3829586bba0b288}{get\_remote\_url}}(cls,\ location:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ urls\ =\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}info"{}}],\ show\_stdout=\textcolor{keyword}{False},\ stdout\_only=\textcolor{keyword}{True},\ cwd=location}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ urls.splitlines():}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ line.strip()}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}checkout\ of\ branch:\ "{}},\ \textcolor{stringliteral}{"{}parent\ branch:\ "{}}):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line.startswith(x):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ repo\ =\ line.split(x)[1]}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ab886fba655aa827ef903002977ff1d84}{\_is\_local\_repository}}(repo):}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path\_to\_url(repo)}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repo}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RemoteNotFoundError}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00096}00096\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00097}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a9fc21d9c16ee10203886725b7fce0c2f}{00097}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_a9fc21d9c16ee10203886725b7fce0c2f}{get\_revision}}(cls,\ location:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ revision\ =\ cls.\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1_version_control_ade7dbccedf65d20ab37d5f4c10ffecde}{run\_command}}(}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}revno"{}}],}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ show\_stdout=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ stdout\_only=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ cwd=location,}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ revision.splitlines()[-\/1]}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00106}00106\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_aa9fd1b97490dc424130a05eaccdc9eb4}{00107}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1vcs_1_1bazaar_1_1_bazaar_aa9fd1b97490dc424130a05eaccdc9eb4}{is\_commit\_id\_equal}}(cls,\ dest:\ str,\ name:\ Optional[str])\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Always\ assume\ the\ versions\ don't\ match"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{bazaar_8py_source_l00112}00112\ vcs.register(Bazaar)}
+
+\end{DoxyCode}

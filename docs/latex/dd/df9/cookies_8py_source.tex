@@ -1,0 +1,567 @@
+\doxysection{cookies.\+py}
+\hypertarget{cookies_8py_source}{}\label{cookies_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/cookies.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/cookies.py}}
+\mbox{\hyperlink{cookies_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00002}00002\ \textcolor{stringliteral}{requests.cookies}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00003}00003\ \textcolor{stringliteral}{\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00005}00005\ \textcolor{stringliteral}{Compatibility\ code\ to\ be\ able\ to\ use\ \`{}cookielib.CookieJar\`{}\ with\ requests.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00007}00007\ \textcolor{stringliteral}{requests.utils\ imports\ from\ here,\ so\ be\ careful\ with\ imports.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00008}00008\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00010}00010\ \textcolor{keyword}{import}\ calendar}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00011}00011\ \textcolor{keyword}{import}\ copy}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00012}00012\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00014}00014\ \textcolor{keyword}{from}\ .\_internal\_utils\ \textcolor{keyword}{import}\ to\_native\_string}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00015}00015\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ Morsel,\ MutableMapping,\ cookielib,\ urlparse,\ urlunparse}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00017}00017\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{import}\ threading}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00019}00019\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00020}00020\ \ \ \ \ \textcolor{keyword}{import}\ dummy\_threading\ \textcolor{keyword}{as}\ threading}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request}{00023}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request}{MockRequest}}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wraps\ a\ \`{}requests.Request\`{}\ to\ mimic\ a\ \`{}urllib2.Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ The\ code\ in\ \`{}cookielib.CookieJar\`{}\ expects\ this\ interface\ in\ order\ to\ correctly}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ manage\ cookie\ policies,\ i.e.,\ determine\ whether\ a\ cookie\ can\ be\ set,\ given\ the}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ domains\ of\ the\ request\ and\ the\ cookie.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00029}00029\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ The\ original\ request\ object\ is\ read-\/only.\ The\ client\ is\ responsible\ for\ collecting}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ the\ new\ headers\ via\ \`{}get\_new\_headers()\`{}\ and\ interpreting\ them\ appropriately.\ You}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ probably\ want\ \`{}get\_cookie\_header\`{},\ defined\ below.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00035}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_adee7a1a972a66602fdeb5c67c30ea038}{00035}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_adee7a1a972a66602fdeb5c67c30ea038}{\_\_init\_\_}}(self,\ request):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00036}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{00036}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}\ =\ request}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{00037}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{\_new\_headers}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00038}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a7aead736a07eaf25623ad7bfa1f0ee2d}{00038}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a7aead736a07eaf25623ad7bfa1f0ee2d}{type}}\ =\ urlparse(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.url).scheme}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a590d9b3a3a5f4c4dd9bcc422adf30f20}{00040}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a590d9b3a3a5f4c4dd9bcc422adf30f20}{get\_type}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a7aead736a07eaf25623ad7bfa1f0ee2d}{type}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00043}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a427720d8f633f57b377079eee2c13298}{00043}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a427720d8f633f57b377079eee2c13298}{get\_host}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ urlparse(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.url).netloc}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a9a5c1fd33f2a1b716280c2d0efae142b}{00046}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a9a5c1fd33f2a1b716280c2d0efae142b}{get\_origin\_req\_host}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a427720d8f633f57b377079eee2c13298}{get\_host}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00049}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_abc6f1119fc59b84dc4081ad5b3f2b800}{00049}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_abc6f1119fc59b84dc4081ad5b3f2b800}{get\_full\_url}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Only\ return\ the\ response's\ URL\ if\ the\ user\ hadn't\ set\ the\ Host}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ header}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.headers.get(\textcolor{stringliteral}{"{}Host"{}}):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.url}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ they\ did\ set\ it,\ retrieve\ it\ and\ reconstruct\ the\ expected\ domain}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ host\ =\ to\_native\_string(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.headers[\textcolor{stringliteral}{"{}Host"{}}],\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ parsed\ =\ urlparse(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.url)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Reconstruct\ the\ URL\ as\ we\ expect\ it}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ urlunparse(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.scheme,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ host,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.path,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.params,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.query,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.fragment,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00069}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_adfc33ab4ba37e05ee2240cbc3d14d3d9}{00069}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_adfc33ab4ba37e05ee2240cbc3d14d3d9}{is\_unverifiable}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ab05cc98e3100507d686e0ce97e016a3d}{00072}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ab05cc98e3100507d686e0ce97e016a3d}{has\_header}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ name\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.headers\ \textcolor{keywordflow}{or}\ name\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{\_new\_headers}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00075}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ae6da99d97055f0e71470c503d5ff17fb}{00075}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ae6da99d97055f0e71470c503d5ff17fb}{get\_header}}(self,\ name,\ default=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a534f1213ce1f5c76412701ec7a918961}{\_r}}.headers.get(name,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{\_new\_headers}}.get(name,\ default))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00078}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a77e22a5a1a135de7d84c7d2789fbf491}{00078}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a77e22a5a1a135de7d84c7d2789fbf491}{add\_header}}(self,\ key,\ val):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}cookielib\ has\ no\ legitimate\ use\ for\ this\ method;\ add\ it\ back\ if\ you\ find\ one."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cookie\ headers\ should\ be\ added\ with\ add\_unredirected\_header()"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00084}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a6998b31e23c7c2127f791d4775a29f3d}{00084}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a6998b31e23c7c2127f791d4775a29f3d}{add\_unredirected\_header}}(self,\ name,\ value):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{\_new\_headers}}[name]\ =\ value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00087}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_aa194dacf78579847c23ff77077ee8871}{00087}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_aa194dacf78579847c23ff77077ee8871}{get\_new\_headers}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_ade17d44b66685b90ae74fc8afc427e41}{\_new\_headers}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00090}00090\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00091}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a4a6b599cd70f4d1993db7adb8c5daae6}{00091}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a4a6b599cd70f4d1993db7adb8c5daae6}{unverifiable}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_adfc33ab4ba37e05ee2240cbc3d14d3d9}{is\_unverifiable}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00094}00094\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00095}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a248b1728936e84e871c909ed90d5ddfb}{00095}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a248b1728936e84e871c909ed90d5ddfb}{origin\_req\_host}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a9a5c1fd33f2a1b716280c2d0efae142b}{get\_origin\_req\_host}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00098}00098\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00099}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a013a3ebb6ec540afc316c53c8d4d51c1}{00099}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a013a3ebb6ec540afc316c53c8d4d51c1}{host}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request_a427720d8f633f57b377079eee2c13298}{get\_host}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response}{00103}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response}{MockResponse}}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00104}00104\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wraps\ a\ \`{}httplib.HTTPMessage\`{}\ to\ mimic\ a\ \`{}urllib.addinfourl\`{}.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00105}00105\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00106}00106\ \textcolor{stringliteral}{\ \ \ \ ...what?\ Basically,\ expose\ the\ parsed\ HTTP\ headers\ from\ the\ server\ response}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00107}00107\ \textcolor{stringliteral}{\ \ \ \ the\ way\ \`{}cookielib\`{}\ expects\ to\ see\ them.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00108}00108\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00110}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a2c2ae107baee47e36456906ca662f362}{00110}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a2c2ae107baee47e36456906ca662f362}{\_\_init\_\_}}(self,\ headers):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Make\ a\ MockResponse\ for\ \`{}cookielib\`{}\ to\ read.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00112}00112\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ headers:\ a\ httplib.HTTPMessage\ or\ analogous\ carrying\ the\ headers}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00115}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a3533ddb8f447c061e547d5773b082175}{00115}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a3533ddb8f447c061e547d5773b082175}{\_headers}}\ =\ headers}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00117}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_aab6c18345789b6fb257827515b81fe38}{00117}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_aab6c18345789b6fb257827515b81fe38}{info}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a3533ddb8f447c061e547d5773b082175}{\_headers}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00120}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_adb6afe2603e8d43813c9c1ef64c84392}{00120}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_adb6afe2603e8d43813c9c1ef64c84392}{getheaders}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_a3533ddb8f447c061e547d5773b082175}{\_headers}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response_adb6afe2603e8d43813c9c1ef64c84392}{getheaders}}(name)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00124}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_ac6547c9219eb8297a149df896aec9ce9}{00124}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_ac6547c9219eb8297a149df896aec9ce9}{extract\_cookies\_to\_jar}}(jar,\ request,\ response):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00125}00125\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Extract\ the\ cookies\ from\ the\ response\ into\ a\ CookieJar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00126}00126\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ :param\ jar:\ cookielib.CookieJar\ (not\ necessarily\ a\ RequestsCookieJar)}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ :param\ request:\ our\ own\ requests.Request\ object}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ :param\ response:\ urllib3.HTTPResponse\ object}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ (hasattr(response,\ \textcolor{stringliteral}{"{}\_original\_response"{}})\ \textcolor{keywordflow}{and}\ response.\_original\_response):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00133}00133\ \ \ \ \ \textcolor{comment}{\#\ the\ \_original\_response\ field\ is\ the\ wrapped\ httplib.HTTPResponse\ object,}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00134}00134\ \ \ \ \ req\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request}{MockRequest}}(request)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00135}00135\ \ \ \ \ \textcolor{comment}{\#\ pull\ out\ the\ HTTPMessage\ with\ the\ headers\ and\ put\ it\ in\ the\ mock:}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00136}00136\ \ \ \ \ res\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response}{MockResponse}}(response.\_original\_response.msg)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00137}00137\ \ \ \ \ jar.extract\_cookies(res,\ req)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00140}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_afe79d40897048606e2dc174b4b522189}{00140}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_afe79d40897048606e2dc174b4b522189}{get\_cookie\_header}}(jar,\ request):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00141}00141\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ Produce\ an\ appropriate\ Cookie\ header\ string\ to\ be\ sent\ with\ \`{}request\`{},\ or\ None.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00143}00143\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ :rtype:\ str}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00146}00146\ \ \ \ \ r\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request}{MockRequest}}(request)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00147}00147\ \ \ \ \ jar.add\_cookie\_header(r)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{return}\ r.get\_new\_headers().get(\textcolor{stringliteral}{"{}Cookie"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00151}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_af62909db6a16e9ca3e552bed3b88421e}{00151}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_af62909db6a16e9ca3e552bed3b88421e}{remove\_cookie\_by\_name}}(cookiejar,\ name,\ domain=None,\ path=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00152}00152\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Unsets\ a\ cookie\ by\ name,\ by\ default\ over\ all\ domains\ and\ paths.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00153}00153\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00154}00154\ \textcolor{stringliteral}{\ \ \ \ Wraps\ CookieJar.clear(),\ is\ O(n).}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00155}00155\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00156}00156\ \ \ \ \ clearables\ =\ []}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ cookiejar:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.name\ !=\ name:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ domain\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ domain\ !=\ cookie.domain:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ path\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ path\ !=\ cookie.path:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ clearables.append((cookie.domain,\ cookie.path,\ cookie.name))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{for}\ domain,\ path,\ name\ \textcolor{keywordflow}{in}\ clearables:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ cookiejar.clear(domain,\ path,\ name)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00170}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_cookie_conflict_error}{00170}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_cookie_conflict_error}{CookieConflictError}}(RuntimeError):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00171}00171\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}There\ are\ two\ cookies\ that\ meet\ the\ criteria\ specified\ in\ the\ cookie\ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ Use\ .get\ and\ .set\ and\ include\ domain\ and\ path\ args\ in\ order\ to\ be\ more\ specific.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00176}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar}{00176}}\ \textcolor{keyword}{class\ }RequestsCookieJar(cookielib.CookieJar,\ MutableMapping):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00177}00177\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Compatibility\ class;\ is\ a\ cookielib.CookieJar,\ but\ exposes\ a\ dict}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00178}00178\ \textcolor{stringliteral}{\ \ \ \ interface.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00179}00179\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ This\ is\ the\ CookieJar\ we\ create\ by\ default\ for\ requests\ and\ sessions\ that}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ don't\ specify\ one,\ since\ some\ clients\ may\ expect\ response.cookies\ and}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00182}00182\ \textcolor{stringliteral}{\ \ \ \ session.cookies\ to\ support\ dict\ operations.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00183}00183\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ \ \ Requests\ does\ not\ use\ the\ dict\ interface\ internally;\ it's\ just\ for}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00185}00185\ \textcolor{stringliteral}{\ \ \ \ compatibility\ with\ external\ client\ code.\ All\ requests\ code\ should\ work}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00186}00186\ \textcolor{stringliteral}{\ \ \ \ out\ of\ the\ box\ with\ externally\ provided\ instances\ of\ \`{}\`{}CookieJar\`{}\`{},\ e.g.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ \`{}\`{}LWPCookieJar\`{}\`{}\ and\ \`{}\`{}FileCookieJar\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00188}00188\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00189}00189\ \textcolor{stringliteral}{\ \ \ \ Unlike\ a\ regular\ CookieJar,\ this\ class\ is\ pickleable.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00190}00190\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00191}00191\ \textcolor{stringliteral}{\ \ \ \ ..\ warning::\ dictionary\ operations\ that\ are\ normally\ O(1)\ may\ be\ O(n).}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00192}00192\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00194}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a97c13138ceacb3c8b3cc027a480d4c88}{00194}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a97c13138ceacb3c8b3cc027a480d4c88}{get}}(self,\ name,\ default=None,\ domain=None,\ path=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ get()\ that\ also\ supports\ optional\ domain\ and\ path\ args\ in}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ order\ to\ resolve\ naming\ collisions\ from\ using\ one\ cookie\ jar\ over}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ multiple\ domains.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00198}00198\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00199}00199\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ warning::\ operation\ is\ O(n),\ not\ O(1).}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aff035d2c60967c1e0e69339f9cf83c52}{\_find\_no\_duplicates}}(name,\ domain,\ path)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ default}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00206}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a28960dff3960238ca2b31b9ceacb4d8a}{00206}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a28960dff3960238ca2b31b9ceacb4d8a}{set}}(self,\ name,\ value,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ set()\ that\ also\ supports\ optional\ domain\ and\ path\ args\ in}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ order\ to\ resolve\ naming\ collisions\ from\ using\ one\ cookie\ jar\ over}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ multiple\ domains.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00210}00210\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ support\ client\ code\ that\ unsets\ cookies\ by\ assignment\ of\ a\ None\ value:}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_af62909db6a16e9ca3e552bed3b88421e}{remove\_cookie\_by\_name}}(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self,\ name,\ domain=kwargs.get(\textcolor{stringliteral}{"{}domain"{}}),\ path=kwargs.get(\textcolor{stringliteral}{"{}path"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(value,\ Morsel):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a879f2714165d14f40234b1dcac9becdb}{morsel\_to\_cookie}}(value)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a3a92b391170f2af1ac9dc0a53c1d00a2}{create\_cookie}}(name,\ value,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3fb3db39b2f85c5275054cff45aac8c7}{set\_cookie}}(c)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00225}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a51ea1720621fb66f02f658f970fb4b36}{00225}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a51ea1720621fb66f02f658f970fb4b36}{iterkeys}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ iterkeys()\ that\ returns\ an\ iterator\ of\ names\ of\ cookies}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00227}00227\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ from\ the\ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00228}00228\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00229}00229\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ itervalues()\ and\ iteritems().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00230}00230\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ cookie.name}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00234}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a7dc6ff243f026d67a4280ae665d87faa}{00234}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a7dc6ff243f026d67a4280ae665d87faa}{keys}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ keys()\ that\ returns\ a\ list\ of\ names\ of\ cookies\ from\ the}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00237}00237\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00238}00238\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ values()\ and\ items().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00239}00239\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ list(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a51ea1720621fb66f02f658f970fb4b36}{iterkeys}}())}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00242}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_af33844dead7e4f19b18f1f7d437e1a03}{00242}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_af33844dead7e4f19b18f1f7d437e1a03}{itervalues}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ itervalues()\ that\ returns\ an\ iterator\ of\ values\ of\ cookies}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00244}00244\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ from\ the\ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00245}00245\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ iterkeys()\ and\ iteritems().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00247}00247\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ cookie.value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00251}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a9db7c03a03ea6e5c8b6e7b4cf0873223}{00251}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a9db7c03a03ea6e5c8b6e7b4cf0873223}{values}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ values()\ that\ returns\ a\ list\ of\ values\ of\ cookies\ from\ the}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00254}00254\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ keys()\ and\ items().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ list(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_af33844dead7e4f19b18f1f7d437e1a03}{itervalues}}())}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00259}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aafd61ef26235c6f3e7202c421d29b7f8}{00259}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aafd61ef26235c6f3e7202c421d29b7f8}{iteritems}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ iteritems()\ that\ returns\ an\ iterator\ of\ name-\/value\ tuples}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00261}00261\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ from\ the\ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00262}00262\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00263}00263\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ iterkeys()\ and\ itervalues().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00264}00264\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ cookie.name,\ cookie.value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00268}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ac0f2ca0f86f99878588482b3b0ca92fa}{00268}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ac0f2ca0f86f99878588482b3b0ca92fa}{items}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ items()\ that\ returns\ a\ list\ of\ name-\/value\ tuples\ from\ the}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00270}00270\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ jar.\ Allows\ client-\/code\ to\ call\ \`{}\`{}dict(RequestsCookieJar)\`{}\`{}\ and\ get\ a}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00271}00271\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ vanilla\ python\ dict\ of\ key\ value\ pairs.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00272}00272\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00273}00273\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ seealso::\ keys()\ and\ values().}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00274}00274\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ list(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aafd61ef26235c6f3e7202c421d29b7f8}{iteritems}}())}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00277}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ac86f910d611f30a35a004914d12e821c}{00277}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ac86f910d611f30a35a004914d12e821c}{list\_domains}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Utility\ method\ to\ list\ all\ the\ domains\ in\ the\ jar."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ domains\ =\ []}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.domain\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ domains:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ domains.append(cookie.domain)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ domains}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00285}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_acdfa8427419ec34824c00e96fb651e1e}{00285}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_acdfa8427419ec34824c00e96fb651e1e}{list\_paths}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Utility\ method\ to\ list\ all\ the\ paths\ in\ the\ jar."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ paths\ =\ []}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.path\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ paths:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ paths.append(cookie.path)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ paths}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00293}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad8a68279bcb798f60712ae71965a16c1}{00293}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad8a68279bcb798f60712ae71965a16c1}{multiple\_domains}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ True\ if\ there\ are\ multiple\ domains\ in\ the\ jar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00295}00295\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns\ False\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00296}00296\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00297}00297\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ bool}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00298}00298\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ domains\ =\ []}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.domain\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ cookie.domain\ \textcolor{keywordflow}{in}\ domains:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ domains.append(cookie.domain)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}\ \ \textcolor{comment}{\#\ there\ is\ only\ one\ domain\ in\ jar}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00306}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aa0d393dd76ce7ff7176dc7bfe3b6b4f6}{00306}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aa0d393dd76ce7ff7176dc7bfe3b6b4f6}{get\_dict}}(self,\ domain=None,\ path=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Takes\ as\ an\ argument\ an\ optional\ domain\ and\ path\ and\ returns\ a\ plain}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00308}00308\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ old\ Python\ dict\ of\ name-\/value\ pairs\ of\ cookies\ that\ meet\ the}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00309}00309\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ requirements.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00310}00310\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00311}00311\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ dict}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00312}00312\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ dictionary\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (domain\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.domain\ ==\ domain)\ \textcolor{keywordflow}{and}\ (}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.path\ ==\ path}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dictionary[cookie.name]\ =\ cookie.value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dictionary}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00321}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3b8211fb85c74dcb2aa99b5322882594}{00321}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3b8211fb85c74dcb2aa99b5322882594}{\_\_contains\_\_}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3b8211fb85c74dcb2aa99b5322882594}{\_\_contains\_\_}}(name)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ CookieConflictError:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00327}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a45fe47d872f7d0ba6c3e6c59ff407767}{00327}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a45fe47d872f7d0ba6c3e6c59ff407767}{\_\_getitem\_\_}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ \_\_getitem\_\_()\ for\ compatibility\ with\ client\ code.\ Throws}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00329}00329\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ exception\ if\ there\ are\ more\ than\ one\ cookie\ with\ name.\ In\ that\ case,}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00330}00330\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ use\ the\ more\ explicit\ get()\ method\ instead.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00331}00331\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00332}00332\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ warning::\ operation\ is\ O(n),\ not\ O(1).}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00333}00333\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00334}00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aff035d2c60967c1e0e69339f9cf83c52}{\_find\_no\_duplicates}}(name)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00336}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad19eeca3e232fa87a33c5f8fbd80e9eb}{00336}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad19eeca3e232fa87a33c5f8fbd80e9eb}{\_\_setitem\_\_}}(self,\ name,\ value):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dict-\/like\ \_\_setitem\_\_\ for\ compatibility\ with\ client\ code.\ Throws}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00338}00338\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ exception\ if\ there\ is\ already\ a\ cookie\ of\ that\ name\ in\ the\ jar.\ In\ that}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00339}00339\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ case,\ use\ the\ more\ explicit\ set()\ method\ instead.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00340}00340\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a28960dff3960238ca2b31b9ceacb4d8a}{set}}(name,\ value)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00343}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a766be1aeffa1afa8e597b9a34735afda}{00343}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a766be1aeffa1afa8e597b9a34735afda}{\_\_delitem\_\_}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Deletes\ a\ cookie\ given\ a\ name.\ Wraps\ \`{}\`{}cookielib.CookieJar\`{}\`{}'s}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00345}00345\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}remove\_cookie\_by\_name()\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00346}00346\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_af62909db6a16e9ca3e552bed3b88421e}{remove\_cookie\_by\_name}}(self,\ name)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00349}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3fb3db39b2f85c5275054cff45aac8c7}{00349}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3fb3db39b2f85c5275054cff45aac8c7}{set\_cookie}}(self,\ cookie,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ hasattr(cookie.value,\ \textcolor{stringliteral}{"{}startswith"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ cookie.value.startswith(\textcolor{stringliteral}{'"{}'})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ cookie.value.endswith(\textcolor{stringliteral}{'"{}'})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ cookie.value\ =\ cookie.value.replace(\textcolor{stringliteral}{'\(\backslash\)\(\backslash\)"{}'},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3fb3db39b2f85c5275054cff45aac8c7}{set\_cookie}}(cookie,\ *args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00358}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a5a6c348e0ac54c377cf99c750e559c76}{00358}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a5a6c348e0ac54c377cf99c750e559c76}{update}}(self,\ other):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Updates\ this\ jar\ with\ cookies\ from\ another\ CookieJar\ or\ dict-\/like"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(other,\ cookielib.CookieJar):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ other:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a3fb3db39b2f85c5275054cff45aac8c7}{set\_cookie}}(copy.copy(cookie))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a5a6c348e0ac54c377cf99c750e559c76}{update}}(other)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00366}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ab900492112dbf985c5435aed8b3634fd}{00366}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ab900492112dbf985c5435aed8b3634fd}{\_find}}(self,\ name,\ domain=None,\ path=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Requests\ uses\ this\ method\ internally\ to\ get\ cookie\ values.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00368}00368\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00369}00369\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ there\ are\ conflicting\ cookies,\ \_find\ arbitrarily\ chooses\ one.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00370}00370\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ See\ \_find\_no\_duplicates\ if\ you\ want\ an\ exception\ thrown\ if\ there\ are}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00371}00371\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ conflicting\ cookies.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00372}00372\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00373}00373\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ name:\ a\ string\ containing\ name\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00374}00374\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ domain:\ (optional)\ string\ containing\ domain\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00375}00375\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ path:\ (optional)\ string\ containing\ path\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00376}00376\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ cookie.value}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00377}00377\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.name\ ==\ name:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ domain\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.domain\ ==\ domain:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.path\ ==\ path:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cookie.value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ KeyError(f\textcolor{stringliteral}{"{}name=\{name!r\},\ domain=\{domain!r\},\ path=\{path!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00386}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aff035d2c60967c1e0e69339f9cf83c52}{00386}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aff035d2c60967c1e0e69339f9cf83c52}{\_find\_no\_duplicates}}(self,\ name,\ domain=None,\ path=None):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Both\ \`{}\`{}\_\_get\_item\_\_\`{}\`{}\ and\ \`{}\`{}get\`{}\`{}\ call\ this\ function:\ it's\ never}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00388}00388\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ used\ elsewhere\ in\ Requests.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00389}00389\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00390}00390\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ name:\ a\ string\ containing\ name\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00391}00391\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ domain:\ (optional)\ string\ containing\ domain\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00392}00392\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ path:\ (optional)\ string\ containing\ path\ of\ cookie}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00393}00393\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ KeyError:\ if\ cookie\ is\ not\ found}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00394}00394\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ CookieConflictError:\ if\ there\ are\ multiple\ cookies}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00395}00395\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ that\ match\ name\ and\ optionally\ domain\ and\ path}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00396}00396\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ cookie.value}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00397}00397\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ toReturn\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ iter(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie.name\ ==\ name:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ domain\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.domain\ ==\ domain:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ cookie.path\ ==\ path:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ toReturn\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ there\ are\ multiple\ cookies\ that\ meet\ passed\ in\ criteria}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_cookie_conflict_error}{CookieConflictError}}(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}There\ are\ multiple\ cookies\ with\ name,\ \{name!r\}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ will\ eventually\ return\ this\ as\ long\ as\ no\ cookie\ conflict}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ toReturn\ =\ cookie.value}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ toReturn:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ toReturn}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ KeyError(f\textcolor{stringliteral}{"{}name=\{name!r\},\ domain=\{domain!r\},\ path=\{path!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00415}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aefb2f5041b9b3c90acf3683801e6034d}{00415}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_aefb2f5041b9b3c90acf3683801e6034d}{\_\_getstate\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Unlike\ a\ normal\ CookieJar,\ this\ class\ is\ pickleable."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ state\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ae55534cfed72fbc20108277a88fdc073}{\_\_dict\_\_}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad76cef38b925f4b77773e555faeee5d6}{copy}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ remove\ the\ unpickleable\ RLock\ object}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ state.pop(\textcolor{stringliteral}{"{}\_cookies\_lock"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ state}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00422}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_af58512310520fb7198309826f02daa4c}{00422}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_af58512310520fb7198309826f02daa4c}{\_\_setstate\_\_}}(self,\ state):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Unlike\ a\ normal\ CookieJar,\ this\ class\ is\ pickleable."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00424}00424\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ae55534cfed72fbc20108277a88fdc073}{\_\_dict\_\_}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a5a6c348e0ac54c377cf99c750e559c76}{update}}(state)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}\_cookies\_lock"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ae55534cfed72fbc20108277a88fdc073}{\_\_dict\_\_}}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00426}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_adc8b613807a41698b6808e8b1d250234}{00426}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_adc8b613807a41698b6808e8b1d250234}{\_cookies\_lock}}\ =\ threading.RLock()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00428}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad76cef38b925f4b77773e555faeee5d6}{00428}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_ad76cef38b925f4b77773e555faeee5d6}{copy}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ copy\ of\ this\ RequestsCookieJar."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ new\_cj\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar}{RequestsCookieJar}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ new\_cj.set\_policy(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a47f43e0920283a2de1b114f9241bb434}{get\_policy}}())}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ new\_cj.update(self)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_cj}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00435}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a47f43e0920283a2de1b114f9241bb434}{00435}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar_a47f43e0920283a2de1b114f9241bb434}{get\_policy}}(self):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ CookiePolicy\ instance\ used."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\_policy}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00438}00438\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00440}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_ac6c02824e944875cc2413b2bd973a4fe}{00440}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_ac6c02824e944875cc2413b2bd973a4fe}{\_copy\_cookie\_jar}}(jar):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00441}00441\ \ \ \ \ \textcolor{keywordflow}{if}\ jar\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00444}00444\ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(jar,\ \textcolor{stringliteral}{"{}copy"{}}):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We're\ dealing\ with\ an\ instance\ of\ RequestsCookieJar}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ jar.copy()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00447}00447\ \ \ \ \ \textcolor{comment}{\#\ We're\ dealing\ with\ a\ generic\ CookieJar\ instance}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00448}00448\ \ \ \ \ new\_jar\ =\ copy.copy(jar)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00449}00449\ \ \ \ \ new\_jar.clear()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00450}00450\ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ jar:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00451}00451\ \ \ \ \ \ \ \ \ new\_jar.set\_cookie(copy.copy(cookie))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00452}00452\ \ \ \ \ \textcolor{keywordflow}{return}\ new\_jar}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00453}00453\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00455}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a3a92b391170f2af1ac9dc0a53c1d00a2}{00455}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a3a92b391170f2af1ac9dc0a53c1d00a2}{create\_cookie}}(name,\ value,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00456}00456\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Make\ a\ cookie\ from\ underspecified\ parameters.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00457}00457\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00458}00458\ \textcolor{stringliteral}{\ \ \ \ By\ default,\ the\ pair\ of\ \`{}name\`{}\ and\ \`{}value\`{}\ will\ be\ set\ for\ the\ domain\ ''}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00459}00459\ \textcolor{stringliteral}{\ \ \ \ and\ sent\ on\ every\ request\ (this\ is\ sometimes\ called\ a\ "{}supercookie"{}).}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00460}00460\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00461}00461\ \ \ \ \ result\ =\ \{}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version"{}}:\ 0,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\ name,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}value"{}}:\ value,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}port"{}}:\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00466}00466\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}domain"{}}:\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}path"{}}:\ \textcolor{stringliteral}{"{}/"{}},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}secure"{}}:\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}expires"{}}:\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}discard"{}}:\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}comment"{}}:\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}comment\_url"{}}:\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rest"{}}:\ \{\textcolor{stringliteral}{"{}HttpOnly"{}}:\ \textcolor{keywordtype}{None}\},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00474}00474\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rfc2109"{}}:\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00475}00475\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00477}00477\ \ \ \ \ badargs\ =\ set(kwargs)\ -\/\ set(result)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00478}00478\ \ \ \ \ \textcolor{keywordflow}{if}\ badargs:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}create\_cookie()\ got\ unexpected\ keyword\ arguments:\ \{list(badargs)\}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00483}00483\ \ \ \ \ result.update(kwargs)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00484}00484\ \ \ \ \ result[\textcolor{stringliteral}{"{}port\_specified"{}}]\ =\ bool(result[\textcolor{stringliteral}{"{}port"{}}])}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00485}00485\ \ \ \ \ result[\textcolor{stringliteral}{"{}domain\_specified"{}}]\ =\ bool(result[\textcolor{stringliteral}{"{}domain"{}}])}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00486}00486\ \ \ \ \ result[\textcolor{stringliteral}{"{}domain\_initial\_dot"{}}]\ =\ result[\textcolor{stringliteral}{"{}domain"{}}].startswith(\textcolor{stringliteral}{"{}."{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00487}00487\ \ \ \ \ result[\textcolor{stringliteral}{"{}path\_specified"{}}]\ =\ bool(result[\textcolor{stringliteral}{"{}path"{}}])}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00489}00489\ \ \ \ \ \textcolor{keywordflow}{return}\ cookielib.Cookie(**result)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00492}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a879f2714165d14f40234b1dcac9becdb}{00492}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a879f2714165d14f40234b1dcac9becdb}{morsel\_to\_cookie}}(morsel):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00493}00493\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ a\ Morsel\ object\ into\ a\ Cookie\ containing\ the\ one\ k/v\ pair."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00495}00495\ \ \ \ \ expires\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00496}00496\ \ \ \ \ \textcolor{keywordflow}{if}\ morsel[\textcolor{stringliteral}{"{}max-\/age"{}}]:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ expires\ =\ int(time.time()\ +\ int(morsel[\textcolor{stringliteral}{"{}max-\/age"{}}]))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(f\textcolor{stringliteral}{"{}max-\/age:\ \{morsel['max-\/age']\}\ must\ be\ integer"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00501}00501\ \ \ \ \ \textcolor{keywordflow}{elif}\ morsel[\textcolor{stringliteral}{"{}expires"{}}]:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ time\_template\ =\ \textcolor{stringliteral}{"{}\%a,\ \%d-\/\%b-\/\%Y\ \%H:\%M:\%S\ GMT"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ expires\ =\ calendar.timegm(time.strptime(morsel[\textcolor{stringliteral}{"{}expires"{}}],\ time\_template))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a3a92b391170f2af1ac9dc0a53c1d00a2}{create\_cookie}}(}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ comment=morsel[\textcolor{stringliteral}{"{}comment"{}}],}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ comment\_url=bool(morsel[\textcolor{stringliteral}{"{}comment"{}}]),}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ discard=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ domain=morsel[\textcolor{stringliteral}{"{}domain"{}}],}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ expires=expires,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ name=morsel.key,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ path=morsel[\textcolor{stringliteral}{"{}path"{}}],}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ port=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ rest=\{\textcolor{stringliteral}{"{}HttpOnly"{}}:\ morsel[\textcolor{stringliteral}{"{}httponly"{}}]\},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ rfc2109=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ secure=bool(morsel[\textcolor{stringliteral}{"{}secure"{}}]),}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ value=morsel.value,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ version=morsel[\textcolor{stringliteral}{"{}version"{}}]\ \textcolor{keywordflow}{or}\ 0,}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00518}00518\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00521}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a6eb881dae150c5f407da309c55240352}{00521}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a6eb881dae150c5f407da309c55240352}{cookiejar\_from\_dict}}(cookie\_dict,\ cookiejar=None,\ overwrite=True):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00522}00522\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ a\ CookieJar\ from\ a\ key/value\ dictionary.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00523}00523\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00524}00524\ \textcolor{stringliteral}{\ \ \ \ :param\ cookie\_dict:\ Dict\ of\ key/values\ to\ insert\ into\ CookieJar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00525}00525\ \textcolor{stringliteral}{\ \ \ \ :param\ cookiejar:\ (optional)\ A\ cookiejar\ to\ add\ the\ cookies\ to.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00526}00526\ \textcolor{stringliteral}{\ \ \ \ :param\ overwrite:\ (optional)\ If\ False,\ will\ not\ replace\ cookies}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00527}00527\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ already\ in\ the\ jar\ with\ new\ ones.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00528}00528\ \textcolor{stringliteral}{\ \ \ \ :rtype:\ CookieJar}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00529}00529\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00530}00530\ \ \ \ \ \textcolor{keywordflow}{if}\ cookiejar\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ cookiejar\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar}{RequestsCookieJar}}()}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}\ cookie\_dict\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ names\_from\_jar\ =\ [cookie.name\ \textcolor{keywordflow}{for}\ cookie\ \textcolor{keywordflow}{in}\ cookiejar]}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ name\ \textcolor{keywordflow}{in}\ cookie\_dict:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ overwrite\ \textcolor{keywordflow}{or}\ (name\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ names\_from\_jar):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cookiejar.set\_cookie(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a3a92b391170f2af1ac9dc0a53c1d00a2}{create\_cookie}}(name,\ cookie\_dict[name]))}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00538}00538\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00539}00539\ \ \ \ \ \textcolor{keywordflow}{return}\ cookiejar}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00542}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a7610e002841e58e58fea1337371ede68}{00542}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a7610e002841e58e58fea1337371ede68}{merge\_cookies}}(cookiejar,\ cookies):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00543}00543\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ cookies\ to\ cookiejar\ and\ returns\ a\ merged\ CookieJar.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00544}00544\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00545}00545\ \textcolor{stringliteral}{\ \ \ \ :param\ cookiejar:\ CookieJar\ object\ to\ add\ the\ cookies\ to.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00546}00546\ \textcolor{stringliteral}{\ \ \ \ :param\ cookies:\ Dictionary\ or\ CookieJar\ object\ to\ be\ added.}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00547}00547\ \textcolor{stringliteral}{\ \ \ \ :rtype:\ CookieJar}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00548}00548\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00549}00549\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(cookiejar,\ cookielib.CookieJar):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}You\ can\ only\ merge\ into\ CookieJar"{}})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00551}00551\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00552}00552\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(cookies,\ dict):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ cookiejar\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1cookies_a6eb881dae150c5f407da309c55240352}{cookiejar\_from\_dict}}(cookies,\ cookiejar=cookiejar,\ overwrite=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00554}00554\ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(cookies,\ cookielib.CookieJar):}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ cookiejar.update(cookies)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cookie\_in\_jar\ \textcolor{keywordflow}{in}\ cookies:}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cookiejar.set\_cookie(cookie\_in\_jar)}
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{cookies_8py_source_l00561}00561\ \ \ \ \ \textcolor{keywordflow}{return}\ cookiejar}
+
+\end{DoxyCode}

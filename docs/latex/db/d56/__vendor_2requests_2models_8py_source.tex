@@ -1,0 +1,1040 @@
+\doxysection{models.\+py}
+\hypertarget{__vendor_2requests_2models_8py_source}{}\label{__vendor_2requests_2models_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/models.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/models.py}}
+\mbox{\hyperlink{__vendor_2requests_2models_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00002}00002\ \textcolor{stringliteral}{requests.models}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00003}00003\ \textcolor{stringliteral}{\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00005}00005\ \textcolor{stringliteral}{This\ module\ contains\ the\ primary\ objects\ that\ power\ Requests.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00008}00008\ \textcolor{keyword}{import}\ datetime}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00010}00010\ \textcolor{comment}{\#\ Import\ encoding\ now,\ to\ avoid\ implicit\ import\ later.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00011}00011\ \textcolor{comment}{\#\ Implicit\ import\ within\ threads\ may\ cause\ LookupError\ when\ standard\ library\ is\ in\ a\ ZIP,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00012}00012\ \textcolor{comment}{\#\ such\ as\ in\ Embedded\ Python.\ See\ https://github.com/psf/requests/issues/3578.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00013}00013\ \textcolor{keyword}{import}\ encodings.idna\ \ \textcolor{comment}{\#\ noqa:\ F401}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00014}00014\ \textcolor{keyword}{from}\ io\ \textcolor{keyword}{import}\ UnsupportedOperation}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00016}00016\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1exceptions}{pip.\_vendor.urllib3.exceptions}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00017}00017\ \ \ \ \ DecodeError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00018}00018\ \ \ \ \ LocationParseError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00019}00019\ \ \ \ \ ProtocolError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00020}00020\ \ \ \ \ ReadTimeoutError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00021}00021\ \ \ \ \ SSLError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00022}00022\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1fields}{pip.\_vendor.urllib3.fields}}\ \textcolor{keyword}{import}\ RequestField}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00024}00024\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost}{pip.\_vendor.urllib3.filepost}}\ \textcolor{keyword}{import}\ encode\_multipart\_formdata}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00025}00025\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util}{pip.\_vendor.urllib3.util}}\ \textcolor{keyword}{import}\ parse\_url}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00027}00027\ \textcolor{keyword}{from}\ .\_internal\_utils\ \textcolor{keyword}{import}\ to\_native\_string,\ unicode\_is\_ascii}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00028}00028\ \textcolor{keyword}{from}\ .auth\ \textcolor{keyword}{import}\ HTTPBasicAuth}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00029}00029\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00030}00030\ \ \ \ \ Callable,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00031}00031\ \ \ \ \ JSONDecodeError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00032}00032\ \ \ \ \ Mapping,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00033}00033\ \ \ \ \ basestring,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00034}00034\ \ \ \ \ builtin\_str,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00035}00035\ \ \ \ \ chardet,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00036}00036\ \ \ \ \ cookielib,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00037}00037\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00038}00038\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ json\ \textcolor{keyword}{as}\ complexjson}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00039}00039\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ urlencode,\ urlsplit,\ urlunparse}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00040}00040\ \textcolor{keyword}{from}\ .cookies\ \textcolor{keyword}{import}\ \_copy\_cookie\_jar,\ cookiejar\_from\_dict,\ get\_cookie\_header}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00041}00041\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00042}00042\ \ \ \ \ ChunkedEncodingError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00043}00043\ \ \ \ \ ConnectionError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00044}00044\ \ \ \ \ ContentDecodingError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00045}00045\ \ \ \ \ HTTPError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00046}00046\ \ \ \ \ InvalidJSONError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00047}00047\ \ \ \ \ InvalidURL,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00048}00048\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00049}00049\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ JSONDecodeError\ \textcolor{keyword}{as}\ RequestsJSONDecodeError}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00050}00050\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ MissingSchema}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00051}00051\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ SSLError\ \textcolor{keyword}{as}\ RequestsSSLError}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00052}00052\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ StreamConsumedError}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00053}00053\ \textcolor{keyword}{from}\ .hooks\ \textcolor{keyword}{import}\ default\_hooks}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00054}00054\ \textcolor{keyword}{from}\ .status\_codes\ \textcolor{keyword}{import}\ codes}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00055}00055\ \textcolor{keyword}{from}\ .structures\ \textcolor{keyword}{import}\ CaseInsensitiveDict}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00056}00056\ \textcolor{keyword}{from}\ .utils\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00057}00057\ \ \ \ \ check\_header\_validity,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00058}00058\ \ \ \ \ get\_auth\_from\_url,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00059}00059\ \ \ \ \ guess\_filename,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00060}00060\ \ \ \ \ guess\_json\_utf,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00061}00061\ \ \ \ \ iter\_slices,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00062}00062\ \ \ \ \ parse\_header\_links,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00063}00063\ \ \ \ \ requote\_uri,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00064}00064\ \ \ \ \ stream\_decode\_response\_unicode,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00065}00065\ \ \ \ \ super\_len,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00066}00066\ \ \ \ \ to\_key\_val\_list,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00067}00067\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00069}00069\ \textcolor{comment}{\#:\ The\ set\ of\ HTTP\ status\ codes\ that\ indicate\ an\ automatically}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00070}00070\ \textcolor{comment}{\#:\ processable\ redirect.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00071}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models_aa376bed74f9531c6f0cff8310dc4b714}{00071}}\ REDIRECT\_STATI\ =\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00072}00072\ \ \ \ \ codes.moved,\ \ \textcolor{comment}{\#\ 301}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00073}00073\ \ \ \ \ codes.found,\ \ \textcolor{comment}{\#\ 302}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00074}00074\ \ \ \ \ codes.other,\ \ \textcolor{comment}{\#\ 303}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00075}00075\ \ \ \ \ codes.temporary\_redirect,\ \ \textcolor{comment}{\#\ 307}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00076}00076\ \ \ \ \ codes.permanent\_redirect,\ \ \textcolor{comment}{\#\ 308}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00077}00077\ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00079}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models_ada38b58acc06d2810eaf042656b9015c}{00079}}\ DEFAULT\_REDIRECT\_LIMIT\ =\ 30}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00080}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models_a946ba6f601aae08b5dd12d0e2618545d}{00080}}\ CONTENT\_CHUNK\_SIZE\ =\ 10\ *\ 1024}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00081}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models_a077cef7ffd5c54229b8a1a2efe4bca69}{00081}}\ ITER\_CHUNK\_SIZE\ =\ 512}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00084}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin}{00084}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin}{RequestEncodingMixin}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00085}00085\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00086}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_a6ba5ffdb7ea42df637160a29a6c722d5}{00086}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_a6ba5ffdb7ea42df637160a29a6c722d5}{path\_url}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ the\ path\ URL\ to\ use."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ url\ =\ []}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ p\ =\ urlsplit(self.url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ path\ =\ p.path}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ path:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \textcolor{stringliteral}{"{}/"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ url.append(path)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ query\ =\ p.query}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ query:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ url.append(\textcolor{stringliteral}{"{}?"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ url.append(query)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00106}00106\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_af6a94c3f5e6607c0117214c1948dbd75}{00107}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_af6a94c3f5e6607c0117214c1948dbd75}{\_encode\_params}}(data):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Encode\ parameters\ in\ a\ piece\ of\ data.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00109}00109\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00110}00110\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Will\ successfully\ encode\ parameters\ when\ passed\ as\ a\ dict\ or\ a\ list\ of}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00111}00111\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 2-\/tuples.\ Order\ is\ retained\ if\ data\ is\ a\ list\ of\ 2-\/tuples\ but\ arbitrary}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00112}00112\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ parameters\ are\ supplied\ as\ a\ dict.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(data,\ (str,\ bytes)):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ hasattr(data,\ \textcolor{stringliteral}{"{}read"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ hasattr(data,\ \textcolor{stringliteral}{"{}\_\_iter\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ []}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ k,\ vs\ \textcolor{keywordflow}{in}\ to\_key\_val\_list(data):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(vs,\ basestring)\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ hasattr(vs,\ \textcolor{stringliteral}{"{}\_\_iter\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vs\ =\ [vs]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ vs:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ v\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.append(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keywordflow}{if}\ isinstance(k,\ str)\ \textcolor{keywordflow}{else}\ k,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keywordflow}{if}\ isinstance(v,\ str)\ \textcolor{keywordflow}{else}\ v,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ urlencode(result,\ doseq=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00136}00136\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00137}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_a1e17303810937459da88d1f7767b8c57}{00137}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_a1e17303810937459da88d1f7767b8c57}{\_encode\_files}}(files,\ data):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ the\ body\ for\ a\ multipart/form-\/data\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00139}00139\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Will\ successfully\ encode\ files\ when\ passed\ as\ a\ dict\ or\ a\ list\ of}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ tuples.\ Order\ is\ retained\ if\ data\ is\ a\ list\ of\ tuples\ but\ arbitrary}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ parameters\ are\ supplied\ as\ a\ dict.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ tuples\ may\ be\ 2-\/tuples\ (filename,\ fileobj),\ 3-\/tuples\ (filename,\ fileobj,\ contentype)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ or\ 4-\/tuples\ (filename,\ fileobj,\ contentype,\ custom\_headers).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ files:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Files\ must\ be\ provided."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(data,\ basestring):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Data\ must\ not\ be\ a\ string."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ new\_fields\ =\ []}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ fields\ =\ to\_key\_val\_list(data\ \textcolor{keywordflow}{or}\ \{\})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ files\ =\ to\_key\_val\_list(files\ \textcolor{keywordflow}{or}\ \{\})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ field,\ val\ \textcolor{keywordflow}{in}\ fields:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(val,\ basestring)\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ hasattr(val,\ \textcolor{stringliteral}{"{}\_\_iter\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ [val]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ val:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ v\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ call\ str()\ on\ bytestrings:\ in\ Py3\ it\ all\ goes\ wrong.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(v,\ bytes):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ str(v)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_fields.append(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ field.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(field,\ bytes)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ field,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keywordflow}{if}\ isinstance(v,\ str)\ \textcolor{keywordflow}{else}\ v,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (k,\ v)\ \textcolor{keywordflow}{in}\ files:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ support\ for\ explicit\ filename}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ ft\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ fh\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(v,\ (tuple,\ list)):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(v)\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn,\ fp\ =\ v}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ len(v)\ ==\ 3:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn,\ fp,\ ft\ =\ v}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn,\ fp,\ ft,\ fh\ =\ v}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ guess\_filename(v)\ \textcolor{keywordflow}{or}\ k}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp\ =\ v}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(fp,\ (str,\ bytes,\ bytearray)):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fdata\ =\ fp}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ hasattr(fp,\ \textcolor{stringliteral}{"{}read"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fdata\ =\ fp.read()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ fp\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fdata\ =\ fp}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ rf\ =\ RequestField(name=k,\ data=fdata,\ filename=fn,\ headers=fh)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ rf.make\_multipart(content\_type=ft)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ new\_fields.append(rf)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ body,\ content\_type\ =\ encode\_multipart\_formdata(new\_fields)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ body,\ content\_type}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00206}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin}{00206}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin}{RequestHooksMixin}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00207}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_a58c6959d2602f0d2051604c69d324651}{00207}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_a58c6959d2602f0d2051604c69d324651}{register\_hook}}(self,\ event,\ hook):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Properly\ register\ a\ hook."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00210}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{00210}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ event\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(f\textcolor{stringliteral}{'Unsupported\ event\ specified,\ with\ event\ name\ "{}\{event\}"{}'})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(hook,\ Callable):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}[event].\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_ac0abf82fd1523e3592ce5c160b2f806d}{append}}(hook)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ hasattr(hook,\ \textcolor{stringliteral}{"{}\_\_iter\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}[event].extend(h\ \textcolor{keywordflow}{for}\ h\ \textcolor{keywordflow}{in}\ hook\ \textcolor{keywordflow}{if}\ isinstance(h,\ Callable))}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00218}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_ad9fa8eefb28f6664017b559d6fe5438c}{00218}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_ad9fa8eefb28f6664017b559d6fe5438c}{deregister\_hook}}(self,\ event,\ hook):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Deregister\ a\ previously\ registered\ hook.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns\ True\ if\ the\ hook\ existed,\ False\ if\ not.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}[event].remove(hook)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00230}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request}{00230}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request}{Request}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin}{RequestHooksMixin}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00231}00231\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ user-\/created\ :class:\`{}Request\ <Request>\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00232}00232\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00233}00233\ \textcolor{stringliteral}{\ \ \ \ Used\ to\ prepare\ a\ :class:\`{}PreparedRequest\ <PreparedRequest>\`{},\ which\ is\ sent\ to\ the\ server.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00234}00234\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00235}00235\ \textcolor{stringliteral}{\ \ \ \ :param\ method:\ HTTP\ method\ to\ use.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ \ \ :param\ url:\ URL\ to\ send.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00237}00237\ \textcolor{stringliteral}{\ \ \ \ :param\ headers:\ dictionary\ of\ headers\ to\ send.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00238}00238\ \textcolor{stringliteral}{\ \ \ \ :param\ files:\ dictionary\ of\ \{filename:\ fileobject\}\ files\ to\ multipart\ upload.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00239}00239\ \textcolor{stringliteral}{\ \ \ \ :param\ data:\ the\ body\ to\ attach\ to\ the\ request.\ If\ a\ dictionary\ or}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00240}00240\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ list\ of\ tuples\ \`{}\`{}[(key,\ value)]\`{}\`{}\ is\ provided,\ form-\/encoding\ will}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00241}00241\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ take\ place.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00242}00242\ \textcolor{stringliteral}{\ \ \ \ :param\ json:\ json\ for\ the\ body\ to\ attach\ to\ the\ request\ (if\ files\ or\ data\ is\ not\ specified).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ \ \ :param\ params:\ URL\ parameters\ to\ append\ to\ the\ URL.\ If\ a\ dictionary\ or}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00244}00244\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ list\ of\ tuples\ \`{}\`{}[(key,\ value)]\`{}\`{}\ is\ provided,\ form-\/encoding\ will}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ take\ place.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ :param\ auth:\ Auth\ handler\ or\ (user,\ pass)\ tuple.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00247}00247\ \textcolor{stringliteral}{\ \ \ \ :param\ cookies:\ dictionary\ or\ CookieJar\ of\ cookies\ to\ attach\ to\ this\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00248}00248\ \textcolor{stringliteral}{\ \ \ \ :param\ hooks:\ dictionary\ of\ callback\ hooks,\ for\ internal\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00249}00249\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00250}00250\ \textcolor{stringliteral}{\ \ \ \ Usage::}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00251}00251\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00252}00252\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ import\ requests}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ req\ =\ requests.Request('GET',\ 'https://httpbin.org/get')}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00254}00254\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ req.prepare()}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ <PreparedRequest\ [GET]>}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00258}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a26800cfffb2caec891e402e741be615b}{00258}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a26800cfffb2caec891e402e741be615b}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ method=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ url=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ headers=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ files=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ data=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ params=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ auth=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ cookies=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ hooks=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ json=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00270}00270\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Default\ empty\ dicts\ for\ dict\ params.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ data\ =\ []\ \textcolor{keywordflow}{if}\ data\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ files\ =\ []\ \textcolor{keywordflow}{if}\ files\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ files}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ headers\ =\ \{\}\ \textcolor{keywordflow}{if}\ headers\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ headers}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ params\ =\ \{\}\ \textcolor{keywordflow}{if}\ params\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ params}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ hooks\ =\ \{\}\ \textcolor{keywordflow}{if}\ hooks\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ hooks}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00279}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request}{00279}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}\ =\ default\_hooks()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (k,\ v)\ \textcolor{keywordflow}{in}\ list(hooks.items()):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_a58c6959d2602f0d2051604c69d324651}{register\_hook}}(event=k,\ hook=v)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00283}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_abed946c62f140eb7ff2ac742e6ad9497}{00283}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ =\ method}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00284}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{00284}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}\ =\ url}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00285}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a06cb6bd881ae6a6b01698adbe29a3a48}{00285}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ =\ headers}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afafecb95aca5e0525fd6959a5602fb89}{00286}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afafecb95aca5e0525fd6959a5602fb89}{files}}\ =\ files}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00287}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a511ae0b1c13f95e5f08f1a0dd3da3d93}{00287}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a511ae0b1c13f95e5f08f1a0dd3da3d93}{data}}\ =\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00288}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_aec4b8ebff18d52c120a82ef46cbd1b95}{00288}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_aec4b8ebff18d52c120a82ef46cbd1b95}{json}}\ =\ json}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00289}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a41000f175dc0115080e2a682cc06dbe9}{00289}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a41000f175dc0115080e2a682cc06dbe9}{params}}\ =\ params}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00290}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_ab84e377c22a682d214e5fc202fccafff}{00290}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_ab84e377c22a682d214e5fc202fccafff}{auth}}\ =\ auth}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00291}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_acf6806cb451532910e49b7c25b368ec1}{00291}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_acf6806cb451532910e49b7c25b368ec1}{cookies}}\ =\ cookies}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00293}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a61a1f3a6a4df93d491cd753f617782a2}{00293}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a61a1f3a6a4df93d491cd753f617782a2}{\_\_repr\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<Request\ [\{self.method\}]>"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00296}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a7d0a9606142f22955173de2cf1bcf22d}{00296}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a7d0a9606142f22955173de2cf1bcf22d}{prepare}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Constructs\ a\ :class:\`{}PreparedRequest\ <PreparedRequest>\`{}\ for\ transmission\ and\ returns\ it."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ p\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{PreparedRequest}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ p.prepare(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ method=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_abed946c62f140eb7ff2ac742e6ad9497}{method}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ url=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ headers=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ files=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_afafecb95aca5e0525fd6959a5602fb89}{files}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ data=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a511ae0b1c13f95e5f08f1a0dd3da3d93}{data}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ json=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_aec4b8ebff18d52c120a82ef46cbd1b95}{json}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ params=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_a41000f175dc0115080e2a682cc06dbe9}{params}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ auth=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_ab84e377c22a682d214e5fc202fccafff}{auth}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ cookies=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_acf6806cb451532910e49b7c25b368ec1}{cookies}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ hooks=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ p}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00314}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{00314}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{PreparedRequest}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin}{RequestEncodingMixin}},\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin}{RequestHooksMixin}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00315}00315\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}The\ fully\ mutable\ :class:\`{}PreparedRequest\ <PreparedRequest>\`{}\ object,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00316}00316\ \textcolor{stringliteral}{\ \ \ \ containing\ the\ exact\ bytes\ that\ will\ be\ sent\ to\ the\ server.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00317}00317\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00318}00318\ \textcolor{stringliteral}{\ \ \ \ Instances\ are\ generated\ from\ a\ :class:\`{}Request\ <Request>\`{}\ object,\ and}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00319}00319\ \textcolor{stringliteral}{\ \ \ \ should\ not\ be\ instantiated\ manually;\ doing\ so\ may\ produce\ undesirable}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00320}00320\ \textcolor{stringliteral}{\ \ \ \ effects.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00321}00321\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00322}00322\ \textcolor{stringliteral}{\ \ \ \ Usage::}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00323}00323\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00324}00324\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ import\ requests}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00325}00325\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ req\ =\ requests.Request('GET',\ 'https://httpbin.org/get')}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00326}00326\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ r\ =\ req.prepare()}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00327}00327\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ r}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00328}00328\ \textcolor{stringliteral}{\ \ \ \ \ \ <PreparedRequest\ [GET]>}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00329}00329\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00330}00330\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ s\ =\ requests.Session()}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00331}00331\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ s.send(r)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00332}00332\ \textcolor{stringliteral}{\ \ \ \ \ \ <Response\ [200]>}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00333}00333\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00335}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abdd362d5f799ad16b5d6700efe590290}{00335}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abdd362d5f799ad16b5d6700efe590290}{\_\_init\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ HTTP\ verb\ to\ send\ to\ the\ server.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00337}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{00337}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ HTTP\ URL\ to\ send\ the\ request\ to.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00339}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{00339}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ dictionary\ of\ HTTP\ headers.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00341}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{00341}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ \`{}CookieJar`\ used\ to\ create\ the\ Cookie\ header\ will\ be\ stored\ here}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ after\ prepare\_cookies\ is\ called}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00344}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{00344}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{\_cookies}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ request\ body\ to\ send\ to\ the\ server.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00346}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a14d48c2e9f05d0b03044eb45f308fcb0}{00346}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a14d48c2e9f05d0b03044eb45f308fcb0}{body}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ dictionary\ of\ callback\ hooks,\ for\ internal\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00348}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{00348}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}\ =\ default\_hooks()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ integer\ denoting\ starting\ position\ of\ a\ readable\ file-\/like\ body.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00350}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a030abd5f373d557c014b5974061f75bc}{00350}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a030abd5f373d557c014b5974061f75bc}{\_body\_position}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00352}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a386701582cd58a758c013a550013800e}{00352}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a386701582cd58a758c013a550013800e}{prepare}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ method=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ url=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ headers=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ files=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ data=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ params=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ auth=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ cookies=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ hooks=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ json=None,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00364}00364\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ entire\ request\ with\ the\ given\ parameters."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aca82177abfa5386b00e619dcdb901ded}{prepare\_method}}(method)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ac98595475d8bc9ed6da7256d08f49871}{prepare\_url}}(url,\ params)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afc4e6b65cd4af0e05660653f91cad692}{prepare\_headers}}(headers)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a55d276df0c5f177ce5906edecea2ca6f}{prepare\_cookies}}(cookies)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ab16b3e804fec3c341011b0029b7f0563}{prepare\_body}}(data,\ files,\ json)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a116ddf36b3222410ca0b3b2bf0a1264d}{prepare\_auth}}(auth,\ url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Note\ that\ prepare\_auth\ must\ be\ last\ to\ enable\ authentication\ schemes}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00375}00375\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ such\ as\ OAuth\ to\ work\ on\ a\ fully\ prepared\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ MUST\ go\ after\ prepare\_auth.\ Authenticators\ could\ add\ a\ hook}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_af0053b80b9a84056354651786723b17c}{prepare\_hooks}}(hooks)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00380}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a61a1f3a6a4df93d491cd753f617782a2}{00380}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a61a1f3a6a4df93d491cd753f617782a2}{\_\_repr\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<PreparedRequest\ [\{self.method\}]>"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00383}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ad76cef38b925f4b77773e555faeee5d6}{00383}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ad76cef38b925f4b77773e555faeee5d6}{copy}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ p\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{PreparedRequest}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ p.method\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ p.url\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ p.headers\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ad76cef38b925f4b77773e555faeee5d6}{copy}}()\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ p.\_cookies\ =\ \_copy\_cookie\_jar(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{\_cookies}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ p.body\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a14d48c2e9f05d0b03044eb45f308fcb0}{body}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ p.hooks\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ p.\_body\_position\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a030abd5f373d557c014b5974061f75bc}{\_body\_position}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ p}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00394}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aca82177abfa5386b00e619dcdb901ded}{00394}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aca82177abfa5386b00e619dcdb901ded}{prepare\_method}}(self,\ method):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ method."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ =\ method}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ =\ to\_native\_string(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}.upper())}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00400}00400\ \ \ \ \ \textcolor{preprocessor}{@staticmethod}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00401}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aaca8b6be9107fde4a4176de6935b3721}{00401}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aaca8b6be9107fde4a4176de6935b3721}{\_get\_idna\_encoded\_host}}(host):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor}{pip.\_vendor}}\ \textcolor{keyword}{import}\ idna}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ host\ =\ idna.encode(host,\ uts46=\textcolor{keyword}{True}).decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1idna_1_1core_1_1_i_d_n_a_error}{idna.IDNAError}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ UnicodeError}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ host}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00410}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ac98595475d8bc9ed6da7256d08f49871}{00410}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ac98595475d8bc9ed6da7256d08f49871}{prepare\_url}}(self,\ url,\ params):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ URL."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Accept\ objects\ that\ have\ string\ representations.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ We're\ unable\ to\ blindly\ call\ unicode/str\ functions}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ as\ this\ will\ include\ the\ bytestring\ indicator\ (b'')}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ on\ python\ 3.x.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ https://github.com/psf/requests/pull/2238}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(url,\ bytes):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ url.decode(\textcolor{stringliteral}{"{}utf8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ str(url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Remove\ leading\ whitespaces\ from\ url}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ url\ =\ url.lstrip()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ do\ any\ URL\ preparation\ for\ non-\/HTTP\ schemes\ like\ \`{}mailto`,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \`{}data`\ etc\ to\ work\ around\ exceptions\ from\ \`{}url\_parse`,\ which}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ handles\ RFC\ 3986\ only.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}:"{}}\ \textcolor{keywordflow}{in}\ url\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ url.lower().startswith(\textcolor{stringliteral}{"{}http"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}\ =\ url}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Support\ for\ unicode\ domain\ names\ and\ paths.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ scheme,\ auth,\ host,\ port,\ path,\ query,\ fragment\ =\ parse\_url(url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ LocationParseError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_u_r_l}{InvalidURL}}(*e.args)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ scheme:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_missing_schema}{MissingSchema}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Invalid\ URL\ \{url!r\}:\ No\ scheme\ supplied.\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Perhaps\ you\ meant\ https://\{url\}?"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ host:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_u_r_l}{InvalidURL}}(f\textcolor{stringliteral}{"{}Invalid\ URL\ \{url!r\}:\ No\ host\ supplied"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ general,\ we\ want\ to\ try\ IDNA\ encoding\ the\ hostname\ if\ the\ string\ contains}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ non-\/ASCII\ characters.\ This\ allows\ users\ to\ automatically\ get\ the\ correct\ IDNA}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00449}00449\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ behaviour.\ For\ strings\ containing\ only\ ASCII\ characters,\ we\ need\ to\ also\ verify}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ doesn't\ start\ with\ a\ wildcard\ (*),\ before\ allowing\ the\ unencoded\ hostname.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00451}00451\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ unicode\_is\_ascii(host):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ host\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_aaca8b6be9107fde4a4176de6935b3721}{\_get\_idna\_encoded\_host}}(host)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_u_r_l}{InvalidURL}}(\textcolor{stringliteral}{"{}URL\ has\ an\ invalid\ label."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00456}00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ host.startswith((\textcolor{stringliteral}{"{}*"{}},\ \textcolor{stringliteral}{"{}."{}})):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_u_r_l}{InvalidURL}}(\textcolor{stringliteral}{"{}URL\ has\ an\ invalid\ label."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00458}00458\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Carefully\ reconstruct\ the\ network\ location}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ netloc\ =\ auth\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ netloc:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ netloc\ +=\ \textcolor{stringliteral}{"{}@"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ netloc\ +=\ host}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ port:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ netloc\ +=\ f\textcolor{stringliteral}{"{}:\{port\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Bare\ domains\ aren't\ valid\ URLs.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ path:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \textcolor{stringliteral}{"{}/"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(params,\ (str,\ bytes)):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ params\ =\ to\_native\_string(params)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00474}00474\ \ \ \ \ \ \ \ \ enc\_params\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_af6a94c3f5e6607c0117214c1948dbd75}{\_encode\_params}}(params)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ enc\_params:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ query:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ query\ =\ f\textcolor{stringliteral}{"{}\{query\}\&\{enc\_params\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ query\ =\ enc\_params}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ url\ =\ requote\_uri(urlunparse([scheme,\ netloc,\ path,\ \textcolor{keywordtype}{None},\ query,\ fragment]))}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}\ =\ url}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00484}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afc4e6b65cd4af0e05660653f91cad692}{00484}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afc4e6b65cd4af0e05660653f91cad692}{prepare\_headers}}(self,\ headers):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ headers."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00486}00486\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1structures_1_1_case_insensitive_dict}{CaseInsensitiveDict}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ headers:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ header\ \textcolor{keywordflow}{in}\ headers.items():}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Raise\ exception\ on\ invalid\ header\ value.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ check\_header\_validity(header)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,\ value\ =\ header}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[to\_native\_string(name)]\ =\ value}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00495}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ab16b3e804fec3c341011b0029b7f0563}{00495}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_ab16b3e804fec3c341011b0029b7f0563}{prepare\_body}}(self,\ data,\ files,\ json=None):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ body\ data."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ if\ file,\ fo,\ generator,\ iterator.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ not,\ run\ through\ normal\ process.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Nottin'\ on\ you.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ body\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ content\_type\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ data\ \textcolor{keywordflow}{and}\ json\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib3\ requires\ a\ bytes-\/like\ body.\ Python\ 2's\ json.dumps}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ provides\ this\ natively,\ but\ Python\ 3\ gives\ a\ Unicode\ string.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ content\_type\ =\ \textcolor{stringliteral}{"{}application/json"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ complexjson.dumps(json,\ allow\_nan=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError\ \textcolor{keyword}{as}\ ve:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_j_s_o_n_error}{InvalidJSONError}}(ve,\ request=self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(body,\ bytes):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ body.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ is\_stream\ =\ all(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasattr(data,\ \textcolor{stringliteral}{"{}\_\_iter\_\_"{}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ isinstance(data,\ (basestring,\ list,\ tuple,\ Mapping)),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00524}00524\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ is\_stream:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ length\ =\ super\_len(data)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (TypeError,\ AttributeError,\ UnsupportedOperation):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ length\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ data}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ getattr(body,\ \textcolor{stringliteral}{"{}tell"{}},\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Record\ the\ current\ file\ position\ before\ reading.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ will\ allow\ us\ to\ rewind\ a\ file\ in\ the\ event}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ of\ a\ redirect.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a030abd5f373d557c014b5974061f75bc}{\_body\_position}}\ =\ body.tell()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ differentiates\ from\ None,\ allowing\ us\ to\ catch}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ failed\ \`{}tell()`\ later\ when\ trying\ to\ rewind\ the\ body}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a030abd5f373d557c014b5974061f75bc}{\_body\_position}}\ =\ object()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ files:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Streamed\ bodies\ and\ files\ are\ mutually\ exclusive."{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ length:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Content-\/Length"{}}]\ =\ builtin\_str(length)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Transfer-\/Encoding"{}}]\ =\ \textcolor{stringliteral}{"{}chunked"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Multi-\/part\ file\ uploads.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ files:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (body,\ content\_type)\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_a1e17303810937459da88d1f7767b8c57}{\_encode\_files}}(files,\ data)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ data:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_encoding_mixin_af6a94c3f5e6607c0117214c1948dbd75}{\_encode\_params}}(data)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(data,\ basestring)\ \textcolor{keywordflow}{or}\ hasattr(data,\ \textcolor{stringliteral}{"{}read"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ content\_type\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ content\_type\ =\ \textcolor{stringliteral}{"{}application/x-\/www-\/form-\/urlencoded"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_acbf4eb9805270f71eec1c69b42fc8497}{prepare\_content\_length}}(body)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ content-\/type\ if\ it\ wasn't\ explicitly\ provided.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ content\_type\ \textcolor{keywordflow}{and}\ (\textcolor{stringliteral}{"{}content-\/type"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Content-\/Type"{}}]\ =\ content\_type}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00571}00571\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a14d48c2e9f05d0b03044eb45f308fcb0}{body}}\ =\ body}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00573}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_acbf4eb9805270f71eec1c69b42fc8497}{00573}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_acbf4eb9805270f71eec1c69b42fc8497}{prepare\_content\_length}}(self,\ body):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepare\ Content-\/Length\ header\ based\ on\ request\ method\ and\ body"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ body\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ length\ =\ super\_len(body)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ length:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ length\ exists,\ set\ it.\ Otherwise,\ we\ fallback}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ Transfer-\/Encoding:\ chunked.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Content-\/Length"{}}]\ =\ builtin\_str(length)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_abed946c62f140eb7ff2ac742e6ad9497}{method}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}GET"{}},\ \textcolor{stringliteral}{"{}HEAD"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}.get(\textcolor{stringliteral}{"{}Content-\/Length"{}})\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ Content-\/Length\ to\ 0\ for\ methods\ that\ can\ have\ a\ body}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ but\ don't\ provide\ one.\ (i.e.\ not\ GET\ or\ HEAD)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Content-\/Length"{}}]\ =\ \textcolor{stringliteral}{"{}0"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00589}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a116ddf36b3222410ca0b3b2bf0a1264d}{00589}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a116ddf36b3222410ca0b3b2bf0a1264d}{prepare\_auth}}(self,\ auth,\ url="{}"{}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ auth\ data."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00591}00591\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ no\ Auth\ is\ explicitly\ provided,\ extract\ it\ from\ the\ URL\ first.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00593}00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ auth\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ url\_auth\ =\ get\_auth\_from\_url(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ auth\ =\ url\_auth\ \textcolor{keywordflow}{if}\ any(url\_auth)\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00597}00597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ auth:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(auth,\ tuple)\ \textcolor{keywordflow}{and}\ len(auth)\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ special-\/case\ basic\ HTTP\ auth}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ auth\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth}{HTTPBasicAuth}}(*auth)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Allow\ auth\ to\ make\ its\ changes.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ auth(self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ self\ to\ reflect\ the\ auth\ changes.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ self.\_\_dict\_\_.update(r.\_\_dict\_\_)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Recompute\ Content-\/Length}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_acbf4eb9805270f71eec1c69b42fc8497}{prepare\_content\_length}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a14d48c2e9f05d0b03044eb45f308fcb0}{body}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00610}00610\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00611}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a55d276df0c5f177ce5906edecea2ca6f}{00611}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a55d276df0c5f177ce5906edecea2ca6f}{prepare\_cookies}}(self,\ cookies):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ HTTP\ cookie\ data.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00613}00613\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00614}00614\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ function\ eventually\ generates\ a\ \`{}\`{}Cookie\`{}\`{}\ header\ from\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00615}00615\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ given\ cookies\ using\ cookielib.\ Due\ to\ cookielib's\ design,\ the\ header}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00616}00616\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ not\ be\ regenerated\ if\ it\ already\ exists,\ meaning\ this\ function}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00617}00617\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ can\ only\ be\ called\ once\ for\ the\ life\ of\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00618}00618\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :class:\`{}PreparedRequest\ <PreparedRequest>\`{}\ object.\ Any\ subsequent\ calls}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00619}00619\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ to\ \`{}\`{}prepare\_cookies\`{}\`{}\ will\ have\ no\ actual\ effect,\ unless\ the\ "{}Cookie"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00620}00620\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ header\ is\ removed\ beforehand.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00621}00621\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(cookies,\ cookielib.CookieJar):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{\_cookies}}\ =\ cookies}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{\_cookies}}\ =\ cookiejar\_from\_dict(cookies)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00626}00626\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00627}00627\ \ \ \ \ \ \ \ \ cookie\_header\ =\ get\_cookie\_header(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a9bdd37992ef225a9b8293e15303f583f}{\_cookies}},\ self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00628}00628\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cookie\_header\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}[\textcolor{stringliteral}{"{}Cookie"{}}]\ =\ cookie\_header}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00631}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_af0053b80b9a84056354651786723b17c}{00631}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request_af0053b80b9a84056354651786723b17c}{prepare\_hooks}}(self,\ hooks):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00632}00632\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prepares\ the\ given\ hooks."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00633}00633\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hooks\ can\ be\ passed\ as\ None\ to\ the\ prepare\ method\ and\ to\ this}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00634}00634\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ method.\ To\ prevent\ iterating\ over\ None,\ simply\ use\ an\ empty\ list}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00635}00635\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ hooks\ is\ False-\/y}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00636}00636\ \ \ \ \ \ \ \ \ hooks\ =\ hooks\ \textcolor{keywordflow}{or}\ []}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00637}00637\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ event\ \textcolor{keywordflow}{in}\ hooks:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00638}00638\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request_hooks_mixin_a58c6959d2602f0d2051604c69d324651}{register\_hook}}(event,\ hooks[event])}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00639}00639\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00641}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{00641}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{Response}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00642}00642\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}The\ :class:\`{}Response\ <Response>\`{}\ object,\ which\ contains\ a}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00643}00643\ \textcolor{stringliteral}{\ \ \ \ server's\ response\ to\ an\ HTTP\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00644}00644\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00645}00645\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00646}00646\ \ \ \ \ \_\_attrs\_\_\ =\ [}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00647}00647\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_content"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00648}00648\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}status\_code"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}headers"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00650}00650\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}url"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00651}00651\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}history"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00652}00652\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}encoding"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00653}00653\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reason"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00654}00654\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cookies"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00655}00655\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}elapsed"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00656}00656\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}request"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00657}00657\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00658}00658\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00659}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_abdd362d5f799ad16b5d6700efe590290}{00659}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_abdd362d5f799ad16b5d6700efe590290}{\_\_init\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00660}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{00660}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}}\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00661}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{00661}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00662}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac147b94e31220a605b342233741ba52f}{00662}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac147b94e31220a605b342233741ba52f}{\_next}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00663}00663\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00664}00664\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Integer\ Code\ of\ responded\ HTTP\ Status,\ e.g.\ 404\ or\ 200.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00665}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{00665}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00667}00667\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Case-\/insensitive\ Dictionary\ of\ Response\ Headers.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00668}00668\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ For\ example,\ \`{}\`{}headers['content-\/encoding']``\ will\ return\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00669}00669\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ value\ of\ a\ \`{}\`{}'Content-\/Encoding'``\ response\ header.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00670}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a06cb6bd881ae6a6b01698adbe29a3a48}{00670}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1structures_1_1_case_insensitive_dict}{CaseInsensitiveDict}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00671}00671\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00672}00672\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ File-\/like\ object\ representation\ of\ response\ (for\ advanced\ usage).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00673}00673\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Use\ of\ \`{}\`{}raw``\ requires\ that\ \`{}\`{}stream=True``\ be\ set\ on\ the\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00674}00674\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ This\ requirement\ does\ not\ apply\ for\ use\ internally\ to\ Requests.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00675}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{00675}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00677}00677\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Final\ URL\ location\ of\ Response.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00678}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_afcd5a3e84f2adb7f83fa6c99911f31e4}{00678}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00679}00679\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00680}00680\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Encoding\ to\ decode\ with\ when\ accessing\ r.text.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00681}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab1000d1f2ea9878f60bc119650013894}{00681}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab1000d1f2ea9878f60bc119650013894}{encoding}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00682}00682\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00683}00683\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ A\ list\ of\ :class:`Response\ <Response>`\ objects\ from}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00684}00684\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ the\ history\ of\ the\ Request.\ Any\ redirect\ responses\ will\ end}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ up\ here.\ The\ list\ is\ sorted\ from\ the\ oldest\ to\ the\ most\ recent\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00686}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a121bd71aacf1cd848692faecb1741946}{00686}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a121bd71aacf1cd848692faecb1741946}{history}}\ =\ []}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Textual\ reason\ of\ responded\ HTTP\ Status,\ e.g.\ "{}Not\ Found"{}\ or\ "{}OK"{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00689}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{00689}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{reason}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00690}00690\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ A\ CookieJar\ of\ Cookies\ the\ server\ sent\ back.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00692}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_acf6806cb451532910e49b7c25b368ec1}{00692}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_acf6806cb451532910e49b7c25b368ec1}{cookies}}\ =\ cookiejar\_from\_dict(\{\})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00693}00693\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ The\ amount\ of\ time\ elapsed\ between\ sending\ the\ request}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00695}00695\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ and\ the\ arrival\ of\ the\ response\ (as\ a\ timedelta).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ This\ property\ specifically\ measures\ the\ time\ taken\ between\ sending}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ the\ first\ byte\ of\ the\ request\ and\ finishing\ parsing\ the\ headers.\ It}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00698}00698\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ is\ therefore\ unaffected\ by\ consuming\ the\ response\ content\ or\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ value\ of\ the\ \`{}\`{}stream``\ keyword\ argument.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00700}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a1748d2333ccad8e0f79b2f250a086063}{00700}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a1748d2333ccad8e0f79b2f250a086063}{elapsed}}\ =\ datetime.timedelta(0)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ The\ :class:`PreparedRequest\ <PreparedRequest>`\ object\ to\ which\ this}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ is\ a\ response.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00704}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a51e6a0d2bcb8531a5e5adcd66a77aa3b}{00704}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a51e6a0d2bcb8531a5e5adcd66a77aa3b}{request}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00705}00705\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00706}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8987aa5431ff32ea9a412315c2440b88}{00706}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8987aa5431ff32ea9a412315c2440b88}{\_\_enter\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00709}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab4a02adc8768956050ca3690ab2c8edf}{00709}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab4a02adc8768956050ca3690ab2c8edf}{\_\_exit\_\_}}(self,\ *args):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00710}00710\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00712}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aefb2f5041b9b3c90acf3683801e6034d}{00712}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aefb2f5041b9b3c90acf3683801e6034d}{\_\_getstate\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Consume\ everything;\ accessing\ the\ content\ attribute\ makes}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00714}00714\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ sure\ the\ content\ has\ been\ fully\ read.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00715}00715\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00718}00718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{attr:\ getattr(self,\ attr,\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a5ebd54e830172fe23ba21caf304aa570}{\_\_attrs\_\_}}\}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00719}00719\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00720}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_af58512310520fb7198309826f02daa4c}{00720}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_af58512310520fb7198309826f02daa4c}{\_\_setstate\_\_}}(self,\ state):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ name,\ value\ \textcolor{keywordflow}{in}\ state.items():}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ setattr(self,\ name,\ value)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00723}00723\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ pickled\ objects\ do\ not\ have\ .raw}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00725}00725\ \ \ \ \ \ \ \ \ setattr(self,\ \textcolor{stringliteral}{"{}\_content\_consumed"{}},\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ setattr(self,\ \textcolor{stringliteral}{"{}raw"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00727}00727\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00728}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a61a1f3a6a4df93d491cd753f617782a2}{00728}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a61a1f3a6a4df93d491cd753f617782a2}{\_\_repr\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00729}00729\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<Response\ [\{self.status\_code\}]>"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00730}00730\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00731}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac7f6934e18e54994ba4798401864c086}{00731}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac7f6934e18e54994ba4798401864c086}{\_\_bool\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ True\ if\ :attr:\`{}status\_code\`{}\ is\ less\ than\ 400.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00733}00733\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00734}00734\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ attribute\ checks\ if\ the\ status\ code\ of\ the\ response\ is\ between}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00735}00735\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 400\ and\ 600\ to\ see\ if\ there\ was\ a\ client\ error\ or\ a\ server\ error.\ If}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00736}00736\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ status\ code,\ is\ between\ 200\ and\ 400,\ this\ will\ return\ True.\ This}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00737}00737\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ **not**\ a\ check\ to\ see\ if\ the\ response\ code\ is\ \`{}\`{}200\ OK\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00738}00738\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a146c18be9cfeab3cd01562c8243a1093}{ok}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00741}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0becb914134599c3b1f7f296b183454a}{00741}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0becb914134599c3b1f7f296b183454a}{\_\_nonzero\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00742}00742\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ True\ if\ :attr:\`{}status\_code\`{}\ is\ less\ than\ 400.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00743}00743\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00744}00744\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ attribute\ checks\ if\ the\ status\ code\ of\ the\ response\ is\ between}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00745}00745\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 400\ and\ 600\ to\ see\ if\ there\ was\ a\ client\ error\ or\ a\ server\ error.\ If}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00746}00746\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ status\ code,\ is\ between\ 200\ and\ 400,\ this\ will\ return\ True.\ This}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00747}00747\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ **not**\ a\ check\ to\ see\ if\ the\ response\ code\ is\ \`{}\`{}200\ OK\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00748}00748\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00749}00749\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a146c18be9cfeab3cd01562c8243a1093}{ok}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00751}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3d1374cfb30c05eeeb049c2197b5a824}{00751}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3d1374cfb30c05eeeb049c2197b5a824}{\_\_iter\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Allows\ you\ to\ use\ a\ response\ as\ an\ iterator."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00753}00753\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ade8f20dd6917afd508c7bc66c02742e0}{iter\_content}}(128)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00754}00754\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00755}00755\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00756}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a146c18be9cfeab3cd01562c8243a1093}{00756}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a146c18be9cfeab3cd01562c8243a1093}{ok}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00757}00757\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ True\ if\ :attr:\`{}status\_code\`{}\ is\ less\ than\ 400,\ False\ if\ not.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00758}00758\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00759}00759\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ attribute\ checks\ if\ the\ status\ code\ of\ the\ response\ is\ between}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00760}00760\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 400\ and\ 600\ to\ see\ if\ there\ was\ a\ client\ error\ or\ a\ server\ error.\ If}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00761}00761\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ status\ code\ is\ between\ 200\ and\ 400,\ this\ will\ return\ True.\ This}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00762}00762\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ **not**\ a\ check\ to\ see\ if\ the\ response\ code\ is\ \`{}\`{}200\ OK\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00763}00763\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00764}00764\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aedee38c4b5919ff19d786a492ecc76ab}{raise\_for\_status}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00766}00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ HTTPError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00769}00769\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00770}00770\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00771}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_afc5c038c0b6b4e0082f337601dbfffa7}{00771}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_afc5c038c0b6b4e0082f337601dbfffa7}{is\_redirect}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}True\ if\ this\ Response\ is\ a\ well-\/formed\ HTTP\ redirect\ that\ could\ have}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00773}00773\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ been\ processed\ automatically\ (by\ :meth:\`{}Session.resolve\_redirects\`{}).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00774}00774\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}location"{}}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ \textcolor{keywordflow}{in}\ REDIRECT\_STATI}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00777}00777\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00778}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ad1782eab5c49d5c61606e810108a91ce}{00778}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ad1782eab5c49d5c61606e810108a91ce}{is\_permanent\_redirect}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00779}00779\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}True\ if\ this\ Response\ one\ of\ the\ permanent\ versions\ of\ redirect."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}location"{}}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00781}00781\ \ \ \ \ \ \ \ \ \ \ \ \ codes.moved\_permanently,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ codes.permanent\_redirect,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00783}00783\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00784}00784\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00785}00785\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00786}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3281ab2046e7d68746e7f76deeb99fed}{00786}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3281ab2046e7d68746e7f76deeb99fed}{next}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00787}00787\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ a\ PreparedRequest\ for\ the\ next\ request\ in\ a\ redirect\ chain,\ if\ there\ is\ one."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00788}00788\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac147b94e31220a605b342233741ba52f}{\_next}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00789}00789\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00790}00790\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00791}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aba54b13cb7deffb046475facb5e8279b}{00791}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aba54b13cb7deffb046475facb5e8279b}{apparent\_encoding}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00792}00792\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}The\ apparent\ encoding,\ provided\ by\ the\ charset\_normalizer\ or\ chardet\ libraries."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00793}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{00793}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chardet.detect(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}})[\textcolor{stringliteral}{"{}encoding"{}}]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00794}00794\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00795}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ade8f20dd6917afd508c7bc66c02742e0}{00795}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ade8f20dd6917afd508c7bc66c02742e0}{iter\_content}}(self,\ chunk\_size=1,\ decode\_unicode=False):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00796}00796\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterates\ over\ the\ response\ data.\ \ When\ stream=True\ is\ set\ on\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00797}00797\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request,\ this\ avoids\ reading\ the\ content\ at\ once\ into\ memory\ for}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00798}00798\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ large\ responses.\ \ The\ chunk\ size\ is\ the\ number\ of\ bytes\ it\ should}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00799}00799\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ read\ into\ memory.\ \ This\ is\ not\ necessarily\ the\ length\ of\ each\ item}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00800}00800\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ returned\ as\ decoding\ can\ take\ place.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00801}00801\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00802}00802\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ chunk\_size\ must\ be\ of\ type\ int\ or\ None.\ A\ value\ of\ None\ will}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00803}00803\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ function\ differently\ depending\ on\ the\ value\ of\ \`{}stream\`{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00804}00804\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ stream=True\ will\ read\ data\ as\ it\ arrives\ in\ whatever\ size\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00805}00805\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ chunks\ are\ received.\ If\ stream=False,\ data\ is\ returned\ as}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00806}00806\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ a\ single\ chunk.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00807}00807\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00808}00808\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ decode\_unicode\ is\ True,\ content\ will\ be\ decoded\ using\ the\ best}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00809}00809\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ available\ encoding\ based\ on\ the\ response.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00810}00810\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00811}00811\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00812}00812\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }generate():}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case\ for\ urllib3.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}},\ \textcolor{stringliteral}{"{}stream"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00815}00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00816}00816\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}}.stream(chunk\_size,\ decode\_content=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00817}00817\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ProtocolError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_chunked_encoding_error}{ChunkedEncodingError}}(e)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00819}00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ DecodeError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00820}00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_content_decoding_error}{ContentDecodingError}}(e)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00821}00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ReadTimeoutError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00822}00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_connection_error}{ConnectionError}}(e)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ SSLError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00824}00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RequestsSSLError(e)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00826}00826\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Standard\ file-\/like\ object.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00827}00827\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}}.read(chunk\_size)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ chunk:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00832}00832\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00834}00834\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00835}00835\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}\ \textcolor{keywordflow}{and}\ isinstance(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}},\ bool):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_stream_consumed_error}{StreamConsumedError}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00837}00837\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ chunk\_size\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ isinstance(chunk\_size,\ int):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}chunk\_size\ must\ be\ an\ int,\ it\ is\ instead\ a\ \{type(chunk\_size)\}."{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00841}00841\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ simulate\ reading\ small\ chunks\ of\ the\ content}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00842}00842\ \ \ \ \ \ \ \ \ reused\_chunks\ =\ iter\_slices(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}},\ chunk\_size)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00843}00843\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00844}00844\ \ \ \ \ \ \ \ \ stream\_chunks\ =\ generate()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00845}00845\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00846}00846\ \ \ \ \ \ \ \ \ chunks\ =\ reused\_chunks\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}\ \textcolor{keywordflow}{else}\ stream\_chunks}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00847}00847\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00848}00848\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ decode\_unicode:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ chunks\ =\ stream\_decode\_response\_unicode(chunks,\ self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00850}00850\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00851}00851\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chunks}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00852}00852\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00853}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_abc32cb7e925084cdc99d1526b4a05245}{00853}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_abc32cb7e925084cdc99d1526b4a05245}{iter\_lines}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00854}00854\ \ \ \ \ \ \ \ \ self,\ chunk\_size=ITER\_CHUNK\_SIZE,\ decode\_unicode=False,\ delimiter=None}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00855}00855\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00856}00856\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterates\ over\ the\ response\ data,\ one\ line\ at\ a\ time.\ \ When}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00857}00857\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ stream=True\ is\ set\ on\ the\ request,\ this\ avoids\ reading\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00858}00858\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ content\ at\ once\ into\ memory\ for\ large\ responses.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00859}00859\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00860}00860\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ note::\ This\ method\ is\ not\ reentrant\ safe.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00861}00861\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00862}00862\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00863}00863\ \ \ \ \ \ \ \ \ pending\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00865}00865\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ade8f20dd6917afd508c7bc66c02742e0}{iter\_content}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\_size=chunk\_size,\ decode\_unicode=decode\_unicode}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00867}00867\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00868}00868\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pending\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ pending\ +\ chunk}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00871}00871\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ delimiter:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines\ =\ chunk.split(delimiter)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00875}00875\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines\ =\ chunk.splitlines()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ lines\ \textcolor{keywordflow}{and}\ lines[-\/1]\ \textcolor{keywordflow}{and}\ chunk\ \textcolor{keywordflow}{and}\ lines[-\/1][-\/1]\ ==\ chunk[-\/1]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pending\ =\ lines.pop()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00879}00879\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pending\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00881}00881\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ lines}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00883}00883\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00884}00884\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pending\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ pending}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00886}00886\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00887}00887\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00888}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a05e13321d99110fd86d5734af5f46a50}{00888}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00889}00889\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Content\ of\ the\ response,\ in\ bytes."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00890}00890\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00891}00891\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}}\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Read\ the\ contents.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{"{}The\ content\ for\ this\ response\ was\ already\ consumed"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00895}00895\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ ==\ 0\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00899}00899\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}}\ =\ b\textcolor{stringliteral}{"{}"{}}.join(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ade8f20dd6917afd508c7bc66c02742e0}{iter\_content}}(CONTENT\_CHUNK\_SIZE))\ \textcolor{keywordflow}{or}\ b\textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00900}00900\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00901}00901\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00902}00902\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ don't\ need\ to\ release\ the\ connection;\ that's\ been\ handled\ by\ urllib3}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00903}00903\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ since\ we\ exhausted\ the\ data.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00904}00904\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a3017701f266b407736b4b65e9f79a4d8}{\_content}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00905}00905\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00906}00906\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00907}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0ba45826b094da6918b604fe17d8547a}{00907}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_af575f17e6be3f269b86b041a60560dbf}{text}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00908}00908\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Content\ of\ the\ response,\ in\ unicode.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00909}00909\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00910}00910\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ Response.encoding\ is\ None,\ encoding\ will\ be\ guessed\ using}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00911}00911\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}charset\_normalizer\`{}\`{}\ or\ \`{}\`{}chardet\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00912}00912\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00913}00913\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ encoding\ of\ the\ response\ content\ is\ determined\ based\ solely\ on\ HTTP}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00914}00914\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ headers,\ following\ RFC\ 2616\ to\ the\ letter.\ If\ you\ can\ take\ advantage\ of}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00915}00915\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ non-\/HTTP\ knowledge\ to\ make\ a\ better\ guess\ at\ the\ encoding,\ you\ should}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00916}00916\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ set\ \`{}\`{}r.encoding\`{}\`{}\ appropriately\ before\ accessing\ this\ property.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00917}00917\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00918}00918\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00919}00919\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Try\ charset\ from\ content-\/type}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00920}00920\ \ \ \ \ \ \ \ \ content\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00921}00921\ \ \ \ \ \ \ \ \ encoding\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab1000d1f2ea9878f60bc119650013894}{encoding}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00922}00922\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00923}00923\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00925}00925\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00926}00926\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Fallback\ to\ auto-\/detected\ encoding.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00927}00927\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab1000d1f2ea9878f60bc119650013894}{encoding}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00928}00928\ \ \ \ \ \ \ \ \ \ \ \ \ encoding\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aba54b13cb7deffb046475facb5e8279b}{apparent\_encoding}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00929}00929\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00930}00930\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Decode\ unicode\ from\ given\ encoding.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00931}00931\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00932}00932\ \ \ \ \ \ \ \ \ \ \ \ \ content\ =\ str(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}},\ encoding,\ errors=\textcolor{stringliteral}{"{}replace"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00933}00933\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (LookupError,\ TypeError):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00934}00934\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ LookupError\ is\ raised\ if\ the\ encoding\ was\ not\ found\ which\ could}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00935}00935\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ indicate\ a\ misspelling\ or\ similar\ mistake.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00936}00936\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00937}00937\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ TypeError\ can\ be\ raised\ if\ encoding\ is\ None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00938}00938\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ So\ we\ try\ blindly\ encoding.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ content\ =\ str(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}},\ errors=\textcolor{stringliteral}{"{}replace"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00941}00941\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00942}00942\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ content}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00943}00943\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00944}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a4b3deb9e8cb92f23505de91beefc80f2}{00944}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a4b3deb9e8cb92f23505de91beefc80f2}{json}}(self,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00945}00945\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Returns\ the\ json-\/encoded\ content\ of\ a\ response,\ if\ any.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00946}00946\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00947}00947\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}json.loads\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00948}00948\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ requests.exceptions.JSONDecodeError:\ If\ the\ response\ body\ does\ not}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00949}00949\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ contain\ valid\ json.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00950}00950\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00951}00951\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00952}00952\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab1000d1f2ea9878f60bc119650013894}{encoding}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}}\ \textcolor{keywordflow}{and}\ len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}})\ >\ 3:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00953}00953\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ No\ encoding\ set.\ JSON\ RFC\ 4627\ section\ 3\ states\ we\ should\ expect}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00954}00954\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ UTF-\/8,\ -\/16\ or\ -\/32.\ Detect\ which\ one\ to\ use;\ If\ the\ detection\ or}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00955}00955\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ decoding\ fails,\ fall\ back\ to\ \`{}self.text`\ (using\ charset\_normalizer\ to\ make}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00956}00956\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ best\ guess).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00957}00957\ \ \ \ \ \ \ \ \ \ \ \ \ encoding\ =\ guess\_json\_utf(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00958}00958\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ encoding\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00959}00959\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00960}00960\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ complexjson.loads(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a6858851eee0e05f318897984757b59dc}{content}}.decode(encoding),\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00961}00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00962}00962\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Wrong\ UTF\ codec\ detected;\ usually\ because\ it's\ not\ UTF-\/8}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00963}00963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ but\ some\ other\ 8-\/bit\ codec.\ \ This\ is\ an\ RFC\ violation,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00964}00964\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ and\ the\ server\ didn't\ bother\ to\ tell\ us\ what\ codec\ *was*}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00965}00965\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ used.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00966}00966\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00967}00967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ JSONDecodeError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00968}00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RequestsJSONDecodeError(e.msg,\ e.doc,\ e.pos)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00969}00969\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00970}00970\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00971}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_af575f17e6be3f269b86b041a60560dbf}{00971}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ complexjson.loads(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_af575f17e6be3f269b86b041a60560dbf}{text}},\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00972}00972\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ JSONDecodeError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00973}00973\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Catch\ JSON-\/related\ errors\ and\ raise\ as\ requests.JSONDecodeError}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00974}00974\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ aliases\ json.JSONDecodeError\ and\ simplejson.JSONDecodeError}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00975}00975\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RequestsJSONDecodeError(e.msg,\ e.doc,\ e.pos)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00976}00976\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00977}00977\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00978}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a1d8bdf466db3bea5f026910944387312}{00978}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a1d8bdf466db3bea5f026910944387312}{links}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00979}00979\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ parsed\ header\ links\ of\ the\ response,\ if\ any."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00980}00980\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00981}00981\ \ \ \ \ \ \ \ \ header\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}.get(\textcolor{stringliteral}{"{}link"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00982}00982\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00983}00983\ \ \ \ \ \ \ \ \ resolved\_links\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00984}00984\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00985}00985\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ header:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00986}00986\ \ \ \ \ \ \ \ \ \ \ \ \ links\ =\ parse\_header\_links(header)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00987}00987\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00988}00988\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ link\ \textcolor{keywordflow}{in}\ links:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00989}00989\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key\ =\ link.get(\textcolor{stringliteral}{"{}rel"{}})\ \textcolor{keywordflow}{or}\ link.get(\textcolor{stringliteral}{"{}url"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00990}00990\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resolved\_links[key]\ =\ link}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00991}00991\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00992}00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ resolved\_links}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00993}00993\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00994}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aedee38c4b5919ff19d786a492ecc76ab}{00994}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_aedee38c4b5919ff19d786a492ecc76ab}{raise\_for\_status}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00995}00995\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Raises\ :class:\`{}HTTPError\`{},\ if\ one\ occurred."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00996}00996\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00997}00997\ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00998}00998\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{reason}},\ bytes):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l00999}00999\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ attempt\ to\ decode\ utf-\/8\ first\ because\ some\ servers}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01000}01000\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ choose\ to\ localize\ their\ reason\ strings.\ If\ the\ string}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01001}01001\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ isn't\ utf-\/8,\ we\ fall\ back\ to\ iso-\/8859-\/1\ for\ all\ other}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01002}01002\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ encodings.\ (See\ PR\ \#3538)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01003}01003\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01004}01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{reason}}.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01005}01005\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01006}01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{reason}}.decode(\textcolor{stringliteral}{"{}iso-\/8859-\/1"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01007}01007\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01008}01008\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a144a3f0ab0553569e546510e66e93766}{reason}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01009}01009\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01010}01010\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ 400\ <=\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ <\ 500:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01011}01011\ \ \ \ \ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01012}01012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{self.status\_code\}\ Client\ Error:\ \{reason\}\ for\ url:\ \{self.url\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01013}01013\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01014}01014\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01015}01015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ 500\ <=\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ac275fb0ffa19246e789b4c3c9febcf00}{status\_code}}\ <\ 600:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01016}01016\ \ \ \ \ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01017}01017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{self.status\_code\}\ Server\ Error:\ \{reason\}\ for\ url:\ \{self.url\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01018}01018\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01019}01019\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01020}01020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ http\_error\_msg:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01021}01021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_h_t_t_p_error}{HTTPError}}(http\_error\_msg,\ response=self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01022}01022\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01023}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8ab79e14e24aa440dcd1d9e822eb1f1c}{01023}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01024}01024\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Releases\ the\ connection\ back\ to\ the\ pool.\ Once\ this\ method\ has\ been}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01025}01025\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ called\ the\ underlying\ \`{}\`{}raw\`{}\`{}\ object\ must\ not\ be\ accessed\ again.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01026}01026\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01027}01027\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *Note:\ Should\ not\ normally\ need\ to\ be\ called\ explicitly.*}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01028}01028\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01029}01029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a0b4851c8d11baf94840bb10792bdcfae}{\_content\_consumed}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01030}01030\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01031}01031\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01032}01032\ \ \ \ \ \ \ \ \ release\_conn\ =\ getattr(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response_ab40c0477eb4fed2f8832d04963500f01}{raw}},\ \textcolor{stringliteral}{"{}release\_conn"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01033}01033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ release\_conn\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2models_8py_source_l01034}01034\ \ \ \ \ \ \ \ \ \ \ \ \ release\_conn()}
+
+\end{DoxyCode}

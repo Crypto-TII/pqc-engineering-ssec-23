@@ -1,0 +1,839 @@
+\doxysection{sessions.\+py}
+\hypertarget{sessions_8py_source}{}\label{sessions_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/sessions.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/sessions.py}}
+\mbox{\hyperlink{sessions_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00002}00002\ \textcolor{stringliteral}{requests.sessions}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00003}00003\ \textcolor{stringliteral}{\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00005}00005\ \textcolor{stringliteral}{This\ module\ provides\ a\ Session\ object\ to\ manage\ and\ persist\ settings\ across}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00006}00006\ \textcolor{stringliteral}{requests\ (cookies,\ auth,\ proxies).}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00007}00007\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00008}00008\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00009}00009\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00010}00010\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00011}00011\ \textcolor{keyword}{from}\ collections\ \textcolor{keyword}{import}\ OrderedDict}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00012}00012\ \textcolor{keyword}{from}\ datetime\ \textcolor{keyword}{import}\ timedelta}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00014}00014\ \textcolor{keyword}{from}\ .\_internal\_utils\ \textcolor{keyword}{import}\ to\_native\_string}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00015}00015\ \textcolor{keyword}{from}\ .adapters\ \textcolor{keyword}{import}\ HTTPAdapter}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00016}00016\ \textcolor{keyword}{from}\ .auth\ \textcolor{keyword}{import}\ \_basic\_auth\_str}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00017}00017\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ Mapping,\ cookielib,\ urljoin,\ urlparse}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00018}00018\ \textcolor{keyword}{from}\ .cookies\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00019}00019\ \ \ \ \ RequestsCookieJar,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00020}00020\ \ \ \ \ cookiejar\_from\_dict,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00021}00021\ \ \ \ \ extract\_cookies\_to\_jar,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00022}00022\ \ \ \ \ merge\_cookies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00023}00023\ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00024}00024\ \textcolor{keyword}{from}\ .exceptions\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00025}00025\ \ \ \ \ ChunkedEncodingError,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00026}00026\ \ \ \ \ ContentDecodingError,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00027}00027\ \ \ \ \ InvalidSchema,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00028}00028\ \ \ \ \ TooManyRedirects,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00029}00029\ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00030}00030\ \textcolor{keyword}{from}\ .hooks\ \textcolor{keyword}{import}\ default\_hooks,\ dispatch\_hook}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00032}00032\ \textcolor{comment}{\#\ formerly\ defined\ here,\ reexposed\ here\ for\ backward\ compatibility}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00033}00033\ \textcolor{keyword}{from}\ .models\ \textcolor{keyword}{import}\ (\ \ \textcolor{comment}{\#\ noqa:\ F401}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00034}00034\ \ \ \ \ DEFAULT\_REDIRECT\_LIMIT,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00035}00035\ \ \ \ \ REDIRECT\_STATI,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00036}00036\ \ \ \ \ PreparedRequest,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00037}00037\ \ \ \ \ Request,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00038}00038\ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00039}00039\ \textcolor{keyword}{from}\ .status\_codes\ \textcolor{keyword}{import}\ codes}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00040}00040\ \textcolor{keyword}{from}\ .structures\ \textcolor{keyword}{import}\ CaseInsensitiveDict}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00041}00041\ \textcolor{keyword}{from}\ .utils\ \textcolor{keyword}{import}\ (\ \ \textcolor{comment}{\#\ noqa:\ F401}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00042}00042\ \ \ \ \ DEFAULT\_PORTS,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00043}00043\ \ \ \ \ default\_headers,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00044}00044\ \ \ \ \ get\_auth\_from\_url,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00045}00045\ \ \ \ \ get\_environ\_proxies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00046}00046\ \ \ \ \ get\_netrc\_auth,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00047}00047\ \ \ \ \ requote\_uri,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00048}00048\ \ \ \ \ resolve\_proxies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00049}00049\ \ \ \ \ rewind\_body,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00050}00050\ \ \ \ \ should\_bypass\_proxies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00051}00051\ \ \ \ \ to\_key\_val\_list,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00052}00052\ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00054}00054\ \textcolor{comment}{\#\ Preferred\ clock,\ based\ on\ which\ one\ is\ more\ accurate\ on\ a\ given\ system.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00055}00055\ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}win32"{}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00056}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_ae9e187181429a71b78e3380683516d07}{00056}}\ \ \ \ \ preferred\_clock\ =\ time.perf\_counter}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00057}00057\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00058}00058\ \ \ \ \ preferred\_clock\ =\ time.time}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00061}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{00061}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(request\_setting,\ session\_setting,\ dict\_class=OrderedDict):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00062}00062\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Determines\ appropriate\ setting\ for\ a\ given\ request,\ taking\ into\ account}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ the\ explicit\ setting\ on\ that\ request,\ and\ the\ setting\ in\ the\ session.\ If\ a}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ setting\ is\ a\ dictionary,\ they\ will\ be\ merged\ together\ using\ \`{}dict\_class\`{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{if}\ session\_setting\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ request\_setting}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ request\_setting\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ session\_setting}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00073}00073\ \ \ \ \ \textcolor{comment}{\#\ Bypass\ if\ not\ a\ dictionary\ (e.g.\ verify)}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ isinstance(session\_setting,\ Mapping)\ \textcolor{keywordflow}{and}\ isinstance(request\_setting,\ Mapping)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00076}00076\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ request\_setting}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00079}00079\ \ \ \ \ merged\_setting\ =\ dict\_class(to\_key\_val\_list(session\_setting))}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00080}00080\ \ \ \ \ merged\_setting.update(to\_key\_val\_list(request\_setting))}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00082}00082\ \ \ \ \ \textcolor{comment}{\#\ Remove\ keys\ that\ are\ set\ to\ None.\ Extract\ keys\ first\ to\ avoid\ altering}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ the\ dictionary\ during\ iteration.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00084}00084\ \ \ \ \ none\_keys\ =\ [k\ \textcolor{keywordflow}{for}\ (k,\ v)\ \textcolor{keywordflow}{in}\ merged\_setting.items()\ \textcolor{keywordflow}{if}\ v\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ none\_keys:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ del\ merged\_setting[key]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{return}\ merged\_setting}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00091}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a84f817d0bce947494288e50092a404d6}{00091}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a84f817d0bce947494288e50092a404d6}{merge\_hooks}}(request\_hooks,\ session\_hooks,\ dict\_class=OrderedDict):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00092}00092\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Properly\ merges\ both\ requests\ and\ session\ hooks.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00093}00093\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ This\ is\ necessary\ because\ when\ request\_hooks\ ==\ \{'response':\ []\},\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ merge\ breaks\ Session\ hooks\ entirely.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ session\_hooks\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ session\_hooks.get(\textcolor{stringliteral}{"{}response"{}})\ ==\ []:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ request\_hooks}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{if}\ request\_hooks\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ request\_hooks.get(\textcolor{stringliteral}{"{}response"{}})\ ==\ []:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ session\_hooks}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(request\_hooks,\ session\_hooks,\ dict\_class)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00106}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin}{00106}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin}{SessionRedirectMixin}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}{00107}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}{get\_redirect\_target}}(self,\ resp):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Receives\ a\ Response.\ Returns\ a\ redirect\ URI\ or\ \`{}\`{}None\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Due\ to\ the\ nature\ of\ how\ requests\ processes\ redirects\ this\ method\ will}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ be\ called\ at\ least\ once\ upon\ the\ original\ response\ and\ at\ least\ twice}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ on\ each\ subsequent\ redirect\ response\ (if\ any).}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ a\ custom\ mixin\ is\ used\ to\ handle\ this\ logic,\ it\ may\ be\ advantageous}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ cache\ the\ redirect\ location\ onto\ the\ response\ object\ as\ a\ private}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ attribute.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ resp.is\_redirect:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =\ resp.headers[\textcolor{stringliteral}{"{}location"{}}]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Currently\ the\ underlying\ http\ module\ on\ py3\ decode\ headers}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ latin1,\ but\ empirical\ evidence\ suggests\ that\ latin1\ is\ very}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ rarely\ used\ with\ non-\/ASCII\ characters\ in\ HTTP\ headers.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ It\ is\ more\ likely\ to\ get\ UTF8\ header\ rather\ than\ latin1.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ causes\ incorrect\ handling\ of\ UTF8\ encoded\ location\ headers.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ To\ solve\ this,\ we\ re-\/encode\ the\ location\ in\ latin1.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =\ location.encode(\textcolor{stringliteral}{"{}latin1"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ to\_native\_string(location,\ \textcolor{stringliteral}{"{}utf8"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00127}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6}{00127}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6}{should\_strip\_auth}}(self,\ old\_url,\ new\_url):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Decide\ whether\ Authorization\ header\ should\ be\ removed\ when\ redirecting"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ old\_parsed\ =\ urlparse(old\_url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ new\_parsed\ =\ urlparse(new\_url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ old\_parsed.hostname\ !=\ new\_parsed.hostname:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case:\ allow\ http\ -\/>\ https\ redirect\ when\ using\ the\ standard}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ports.\ This\ isn't\ specified\ by\ RFC\ 7235,\ but\ is\ kept\ to\ avoid}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ breaking\ backwards\ compatibility\ with\ older\ versions\ of\ requests}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ allowed\ any\ redirects\ on\ the\ same\ host.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ old\_parsed.scheme\ ==\ \textcolor{stringliteral}{"{}http"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ old\_parsed.port\ \textcolor{keywordflow}{in}\ (80,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.scheme\ ==\ \textcolor{stringliteral}{"{}https"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.port\ \textcolor{keywordflow}{in}\ (443,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ default\ port\ usage\ corresponding\ to\ scheme.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ changed\_port\ =\ old\_parsed.port\ !=\ new\_parsed.port}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ changed\_scheme\ =\ old\_parsed.scheme\ !=\ new\_parsed.scheme}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ default\_port\ =\ (DEFAULT\_PORTS.get(old\_parsed.scheme,\ \textcolor{keywordtype}{None}),\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ changed\_scheme}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ old\_parsed.port\ \textcolor{keywordflow}{in}\ default\_port}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.port\ \textcolor{keywordflow}{in}\ default\_port}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Standard\ case:\ root\ URI\ must\ match}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ changed\_port\ \textcolor{keywordflow}{or}\ changed\_scheme}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00159}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}{00159}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}{resolve\_redirects}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ resp,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ req,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ stream=False,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ timeout=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ verify=True,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ cert=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ proxies=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ yield\_requests=False,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ **adapter\_kwargs,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00170}00170\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Receives\ a\ Response.\ Returns\ a\ generator\ of\ Responses\ or\ Requests."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ hist\ =\ []\ \ \textcolor{comment}{\#\ keep\ track\ of\ history}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ url\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}{get\_redirect\_target}}(resp)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ previous\_fragment\ =\ urlparse(req.url).fragment}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ url:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request\ =\ req.copy()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ history\ and\ keep\ track\ of\ redirects.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ resp.history\ must\ ignore\ the\ original\ request\ in\ this\ loop}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ hist.append(resp)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ resp.history\ =\ hist[1:]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp.content\ \ \textcolor{comment}{\#\ Consume\ socket\ so\ it\ can\ be\ released}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (ChunkedEncodingError,\ ContentDecodingError,\ RuntimeError):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp.raw.read(decode\_content=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(resp.history)\ >=\ self.max\_redirects:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_too_many_redirects}{TooManyRedirects}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Exceeded\ \{self.max\_redirects\}\ redirects."{}},\ response=resp}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Release\ the\ connection\ back\ into\ the\ pool.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ resp.close()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ redirection\ without\ scheme\ (see:\ RFC\ 1808\ Section\ 4)}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url.startswith(\textcolor{stringliteral}{"{}//"{}}):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed\_rurl\ =\ urlparse(resp.url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ \textcolor{stringliteral}{"{}:"{}}.join([to\_native\_string(parsed\_rurl.scheme),\ url])}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Normalize\ url\ case\ and\ attach\ previous\ fragment\ if\ needed\ (RFC\ 7231\ 7.1.2)}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ parsed\ =\ urlparse(url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ parsed.fragment\ ==\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{and}\ previous\_fragment:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed\ =\ parsed.\_replace(fragment=previous\_fragment)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ parsed.fragment:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ previous\_fragment\ =\ parsed.fragment}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ parsed.geturl()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Facilitate\ relative\ 'location'\ headers,\ as\ allowed\ by\ RFC\ 7231.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (e.g.\ '/path/to/resource'\ instead\ of\ 'http://domain.tld/path/to/resource')}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Compliant\ with\ RFC3986,\ we\ percent\ encode\ the\ url.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ parsed.netloc:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ urljoin(resp.url,\ requote\_uri(url))}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ requote\_uri(url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.url\ =\ to\_native\_string(url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a}{rebuild\_method}}(prepared\_request,\ resp)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://github.com/psf/requests/issues/1084}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ resp.status\_code\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes.temporary\_redirect,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes.permanent\_redirect,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://github.com/psf/requests/issues/3490}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ purged\_headers\ =\ (\textcolor{stringliteral}{"{}Content-\/Length"{}},\ \textcolor{stringliteral}{"{}Content-\/Type"{}},\ \textcolor{stringliteral}{"{}Transfer-\/Encoding"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ header\ \textcolor{keywordflow}{in}\ purged\_headers:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.headers.pop(header,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.body\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ headers.pop(\textcolor{stringliteral}{"{}Cookie"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Extract\ any\ cookies\ sent\ on\ the\ response\ to\ the\ cookiejar}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ the\ new\ request.\ Because\ we've\ mutated\ our\ copied\ prepared}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ request,\ use\ the\ old\ one\ that\ we\ haven't\ yet\ touched.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(prepared\_request.\_cookies,\ req,\ resp.raw)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00241}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{00241}}\ \ \ \ \ \ \ \ \ \ \ \ \ merge\_cookies(prepared\_request.\_cookies,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.prepare\_cookies(prepared\_request.\_cookies)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Rebuild\ auth\ and\ proxy\ information.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ proxies\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd}{rebuild\_proxies}}(prepared\_request,\ proxies)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c}{rebuild\_auth}}(prepared\_request,\ resp)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ failed\ tell()\ sets\ \`{}\_body\_position`\ to\ \`{}object()`.\ This\ non-\/None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ value\ ensures\ \`{}rewindable`\ will\ be\ True,\ allowing\ us\ to\ raise\ an}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ UnrewindableBodyError,\ instead\ of\ hanging\ the\ connection.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ rewindable\ =\ prepared\_request.\_body\_position\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Content-\/Length"{}}\ \textcolor{keywordflow}{in}\ headers\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}Transfer-\/Encoding"{}}\ \textcolor{keywordflow}{in}\ headers}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Attempt\ to\ rewind\ consumed\ file-\/like\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rewindable:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rewind\_body(prepared\_request)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Override\ the\ original\ request.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ prepared\_request}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ yield\_requests:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ req}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp\ =\ self.send(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stream=stream,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timeout=timeout,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verify=verify,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cert=cert,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proxies=proxies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ allow\_redirects=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ **adapter\_kwargs,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}},\ prepared\_request,\ resp.raw)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ extract\ redirect\ url,\ if\ any,\ for\ the\ next\ loop}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}{get\_redirect\_target}}(resp)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ resp}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00283}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c}{00283}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c}{rebuild\_auth}}(self,\ prepared\_request,\ response):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}When\ being\ redirected\ we\ may\ want\ to\ strip\ authentication\ from\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00285}00285\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request\ to\ avoid\ leaking\ credentials.\ This\ method\ intelligently\ removes}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00286}00286\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ reapplies\ authentication\ where\ possible\ to\ avoid\ credential\ loss.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00287}00287\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ url\ =\ prepared\_request.url}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00290}00290\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}Authorization"{}}\ \textcolor{keywordflow}{in}\ headers\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6}{should\_strip\_auth}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ response.request.url,\ url}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we\ get\ redirected\ to\ a\ new\ host,\ we\ should\ strip\ out\ any}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ authentication\ headers.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ del\ headers[\textcolor{stringliteral}{"{}Authorization"{}}]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ .netrc\ might\ have\ more\ auth\ for\ us\ on\ our\ new\ host.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ new\_auth\ =\ get\_netrc\_auth(url)\ \textcolor{keywordflow}{if}\ self.trust\_env\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\_auth\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.prepare\_auth(new\_auth)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00303}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd}{00303}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd}{rebuild\_proxies}}(self,\ prepared\_request,\ proxies):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}This\ method\ re-\/evaluates\ the\ proxy\ configuration\ by\ considering\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00305}00305\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ environment\ variables.\ If\ we\ are\ redirected\ to\ a\ URL\ covered\ by}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00306}00306\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ NO\_PROXY,\ we\ strip\ the\ proxy\ configuration.\ Otherwise,\ we\ set\ missing}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00307}00307\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ proxy\ keys\ for\ this\ URL\ (in\ case\ they\ were\ stripped\ by\ a\ previous}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00308}00308\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ redirect).}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00309}00309\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00310}00310\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ method\ also\ replaces\ the\ Proxy-\/Authorization\ header\ where}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00311}00311\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ necessary.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00312}00312\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00313}00313\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ dict}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00314}00314\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ scheme\ =\ urlparse(prepared\_request.url).scheme}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ new\_proxies\ =\ resolve\_proxies(prepared\_request,\ proxies,\ self.trust\_env)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}\ \textcolor{keywordflow}{in}\ headers:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ del\ headers[\textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ username,\ password\ =\ get\_auth\_from\_url(new\_proxies[scheme])}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ username,\ password\ =\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib3\ handles\ proxy\ authorization\ for\ us\ in\ the\ standard\ adapter.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Avoid\ appending\ this\ to\ TLS\ tunneled\ requests\ where\ it\ may\ be\ leaked.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ scheme.startswith(\textcolor{stringliteral}{'https'})\ \textcolor{keywordflow}{and}\ username\ \textcolor{keywordflow}{and}\ password:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}]\ =\ \_basic\_auth\_str(username,\ password)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_proxies}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00334}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a}{00334}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a}{rebuild\_method}}(self,\ prepared\_request,\ response):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}When\ being\ redirected\ we\ may\ want\ to\ change\ the\ method\ of\ the\ request}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00336}00336\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ based\ on\ certain\ specs\ or\ browser\ behavior.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00337}00337\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ method\ =\ prepared\_request.method}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://tools.ietf.org/html/rfc7231\#section-\/6.4.4}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.see\_other\ \textcolor{keywordflow}{and}\ method\ !=\ \textcolor{stringliteral}{"{}HEAD"{}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Do\ what\ the\ browsers\ do,\ despite\ standards...}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ First,\ turn\ 302s\ into\ GETs.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.found\ \textcolor{keywordflow}{and}\ method\ !=\ \textcolor{stringliteral}{"{}HEAD"{}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Second,\ if\ a\ POST\ is\ responded\ to\ with\ a\ 301,\ turn\ it\ into\ a\ GET.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ bizarre\ behaviour\ is\ explained\ in\ Issue\ 1704.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.moved\ \textcolor{keywordflow}{and}\ method\ ==\ \textcolor{stringliteral}{"{}POST"{}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ prepared\_request.method\ =\ method}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00357}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session}{00357}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session}{Session}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin}{SessionRedirectMixin}}):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00358}00358\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ Requests\ session.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00359}00359\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00360}00360\ \textcolor{stringliteral}{\ \ \ \ Provides\ cookie\ persistence,\ connection-\/pooling,\ and\ configuration.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00361}00361\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00362}00362\ \textcolor{stringliteral}{\ \ \ \ Basic\ Usage::}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00363}00363\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00364}00364\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ import\ requests}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00365}00365\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ s\ =\ requests.Session()}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00366}00366\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ s.get('https://httpbin.org/get')}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00367}00367\ \textcolor{stringliteral}{\ \ \ \ \ \ <Response\ [200]>}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00368}00368\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00369}00369\ \textcolor{stringliteral}{\ \ \ \ Or\ as\ a\ context\ manager::}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00370}00370\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00371}00371\ \textcolor{stringliteral}{\ \ \ \ \ \ >>>\ with\ requests.Session()\ as\ s:}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00372}00372\ \textcolor{stringliteral}{\ \ \ \ \ \ ...\ \ \ \ \ s.get('https://httpbin.org/get')}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00373}00373\ \textcolor{stringliteral}{\ \ \ \ \ \ <Response\ [200]>}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00374}00374\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00376}00376\ \ \ \ \ \_\_attrs\_\_\ =\ [}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}headers"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cookies"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}auth"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}proxies"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}hooks"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}params"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}verify"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cert"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}adapters"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stream"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}trust\_env"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}max\_redirects"{}},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00389}00389\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00391}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_abdd362d5f799ad16b5d6700efe590290}{00391}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_abdd362d5f799ad16b5d6700efe590290}{\_\_init\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ A\ case-\/insensitive\ dictionary\ of\ headers\ to\ be\ sent\ on\ each}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ :class:`Request\ <Request>`\ sent\ from\ this}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ :class:`Session\ <Session>`.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00396}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a06cb6bd881ae6a6b01698adbe29a3a48}{00396}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}}\ =\ default\_headers()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Default\ Authentication\ tuple\ or\ object\ to\ attach\ to}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ :class:`Request\ <Request>`.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00400}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab84e377c22a682d214e5fc202fccafff}{00400}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab84e377c22a682d214e5fc202fccafff}{auth}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Dictionary\ mapping\ protocol\ or\ protocol\ and\ host\ to\ the\ URL\ of\ the\ proxy}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ (e.g.\ \{'http':\ 'foo.bar:3128',\ 'http://host.name':\ 'foo.bar:4012'\})\ to}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ be\ used\ on\ each\ :class:`Request\ <Request>`.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00405}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a909487bb7617c1f5e70adf940a307e72}{00405}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a909487bb7617c1f5e70adf940a307e72}{proxies}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Event-\/handling\ hooks.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00408}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_af1f0321377a8975493a122a0e0e7d6fb}{00408}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}\ =\ default\_hooks()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Dictionary\ of\ querystring\ data\ to\ attach\ to\ each}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ :class:`Request\ <Request>`.\ The\ dictionary\ values\ may\ be\ lists\ for}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ representing\ multivalued\ query\ parameters.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00413}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a66ec4b8948c01e43f0cc218563d91684}{00413}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a66ec4b8948c01e43f0cc218563d91684}{params}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Stream\ response\ content\ default.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00416}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae489866f8220882799d2786ca0690e5b}{00416}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae489866f8220882799d2786ca0690e5b}{stream}}\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ SSL\ Verification\ default.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Defaults\ to\ \`{}True`,\ requiring\ requests\ to\ verify\ the\ TLS\ certificate\ at\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ remote\ end.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ If\ verify\ is\ set\ to\ \`{}False`,\ requests\ will\ accept\ any\ TLS\ certificate}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ presented\ by\ the\ server,\ and\ will\ ignore\ hostname\ mismatches\ and/or}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ expired\ certificates,\ which\ will\ make\ your\ application\ vulnerable\ to}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ man-\/in-\/the-\/middle\ (MitM)\ attacks.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Only\ set\ this\ to\ \`{}False`\ for\ testing.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00426}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a3c970c3ae6590882d7c77729b580fc6e}{00426}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a3c970c3ae6590882d7c77729b580fc6e}{verify}}\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ SSL\ client\ certificate\ default,\ if\ String,\ path\ to\ ssl\ client}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ cert\ file\ (.pem).\ If\ Tuple,\ ('cert',\ 'key')\ pair.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00430}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a563a3dc423657b0974ab97b40dfe5431}{00430}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a563a3dc423657b0974ab97b40dfe5431}{cert}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Maximum\ number\ of\ redirects\ allowed.\ If\ the\ request\ exceeds\ this}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ limit,\ a\ :class:`TooManyRedirects`\ exception\ is\ raised.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ This\ defaults\ to\ requests.models.DEFAULT\_REDIRECT\_LIMIT,\ which\ is}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ 30.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00436}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a015ce3eff9d95d5771d1a3444974a2d0}{00436}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a015ce3eff9d95d5771d1a3444974a2d0}{max\_redirects}}\ =\ DEFAULT\_REDIRECT\_LIMIT}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Trust\ environment\ settings\ for\ proxy\ configuration,\ default}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ authentication\ and\ similar.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00440}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a421477f8da5b874a44455b9957a0862b}{00440}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a421477f8da5b874a44455b9957a0862b}{trust\_env}}\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ A\ CookieJar\ containing\ all\ currently\ outstanding\ cookies\ set\ on\ this}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ session.\ By\ default\ it\ is\ a}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ :class:`RequestsCookieJar\ <requests.cookies.RequestsCookieJar>`,\ but}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ may\ be\ any\ other\ \`{}\`{}cookielib.CookieJar``\ compatible\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00446}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session}{00446}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}}\ =\ cookiejar\_from\_dict(\{\})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Default\ connection\ adapters.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00449}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{00449}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}\ =\ OrderedDict()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00450}00450\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aaaf7138ed3d772080ffbb8f5a53c10fc}{mount}}(\textcolor{stringliteral}{"{}https://"{}},\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1adapters_1_1_h_t_t_p_adapter}{HTTPAdapter}}())}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00451}00451\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aaaf7138ed3d772080ffbb8f5a53c10fc}{mount}}(\textcolor{stringliteral}{"{}http://"{}},\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1adapters_1_1_h_t_t_p_adapter}{HTTPAdapter}}())}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00453}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a8987aa5431ff32ea9a412315c2440b88}{00453}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a8987aa5431ff32ea9a412315c2440b88}{\_\_enter\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00456}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab4a02adc8768956050ca3690ab2c8edf}{00456}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab4a02adc8768956050ca3690ab2c8edf}{\_\_exit\_\_}}(self,\ *args):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00458}00458\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00459}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2adf1ad4ab346945415909e22d1ee61d}{00459}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2adf1ad4ab346945415909e22d1ee61d}{prepare\_request}}(self,\ request):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Constructs\ a\ :class:\`{}PreparedRequest\ <PreparedRequest>\`{}\ for}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00461}00461\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ transmission\ and\ returns\ it.\ The\ :class:\`{}PreparedRequest\`{}\ has\ settings}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00462}00462\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ merged\ from\ the\ :class:\`{}Request\ <Request>\`{}\ instance\ and\ those\ of\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00463}00463\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :class:\`{}Session\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00464}00464\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00465}00465\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ request:\ :class:\`{}Request\`{}\ instance\ to\ prepare\ with\ this}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00466}00466\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ session's\ settings.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00467}00467\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.PreparedRequest}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00468}00468\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ cookies\ =\ request.cookies\ \textcolor{keywordflow}{or}\ \{\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Bootstrap\ CookieJar.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(cookies,\ cookielib.CookieJar):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ cookies\ =\ cookiejar\_from\_dict(cookies)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Merge\ with\ session\ cookies}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ merged\_cookies\ =\ merge\_cookies(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ merge\_cookies(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar}{RequestsCookieJar}}(),\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}}),\ cookies}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ environment's\ basic\ authentication\ if\ not\ explicitly\ set.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ auth\ =\ request.auth}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a421477f8da5b874a44455b9957a0862b}{trust\_env}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ auth\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab84e377c22a682d214e5fc202fccafff}{auth}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ auth\ =\ get\_netrc\_auth(request.url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ p\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_prepared_request}{PreparedRequest}}()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ p.prepare(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ method=request.method.upper(),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ url=request.url,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ files=request.files,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ data=request.data,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ json=request.json,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ headers=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ request.headers,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a06cb6bd881ae6a6b01698adbe29a3a48}{headers}},\ dict\_class=CaseInsensitiveDict}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ params=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(request.params,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a66ec4b8948c01e43f0cc218563d91684}{params}}),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ auth=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(auth,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ab84e377c22a682d214e5fc202fccafff}{auth}}),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ cookies=merged\_cookies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ hooks=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a84f817d0bce947494288e50092a404d6}{merge\_hooks}}(request.hooks,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_af1f0321377a8975493a122a0e0e7d6fb}{hooks}}),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ p}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00502}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{00502}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ method,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ url,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ params=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ data=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ headers=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ cookies=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ files=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ auth=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ timeout=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ allow\_redirects=True,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ proxies=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ hooks=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ stream=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ verify=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ cert=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00519}00519\ \ \ \ \ \ \ \ \ json=None,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00520}00520\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Constructs\ a\ :class:\`{}Request\ <Request>\`{},\ prepares\ it\ and\ sends\ it.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00522}00522\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns\ :class:\`{}Response\ <Response>\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00523}00523\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00524}00524\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ method:\ method\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00525}00525\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00526}00526\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ params:\ (optional)\ Dictionary\ or\ bytes\ to\ be\ sent\ in\ the\ query}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00527}00527\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ string\ for\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00528}00528\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ data:\ (optional)\ Dictionary,\ list\ of\ tuples,\ bytes,\ or\ file-\/like}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00529}00529\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ object\ to\ send\ in\ the\ body\ of\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00530}00530\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ json:\ (optional)\ json\ to\ send\ in\ the\ body\ of\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00531}00531\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00532}00532\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ headers:\ (optional)\ Dictionary\ of\ HTTP\ Headers\ to\ send\ with\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00533}00533\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00534}00534\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ cookies:\ (optional)\ Dict\ or\ CookieJar\ object\ to\ send\ with\ the}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00535}00535\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00536}00536\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ files:\ (optional)\ Dictionary\ of\ \`{}\`{}'filename':\ file-\/like-\/objects\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00537}00537\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ for\ multipart\ encoding\ upload.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00538}00538\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ auth:\ (optional)\ Auth\ tuple\ or\ callable\ to\ enable}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00539}00539\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Basic/Digest/Custom\ HTTP\ Auth.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00540}00540\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ timeout:\ (optional)\ How\ long\ to\ wait\ for\ the\ server\ to\ send}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00541}00541\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ data\ before\ giving\ up,\ as\ a\ float,\ or\ a\ :ref:\`{}(connect\ timeout,}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00542}00542\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ read\ timeout)\ <timeouts>\`{}\ tuple.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00543}00543\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :type\ timeout:\ float\ or\ tuple}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00544}00544\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ allow\_redirects:\ (optional)\ Set\ to\ True\ by\ default.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00545}00545\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :type\ allow\_redirects:\ bool}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00546}00546\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ proxies:\ (optional)\ Dictionary\ mapping\ protocol\ or\ protocol\ and}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00547}00547\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ hostname\ to\ the\ URL\ of\ the\ proxy.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00548}00548\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ stream:\ (optional)\ whether\ to\ immediately\ download\ the\ response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00549}00549\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ content.\ Defaults\ to\ \`{}\`{}False\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00550}00550\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ verify:\ (optional)\ Either\ a\ boolean,\ in\ which\ case\ it\ controls\ whether\ we\ verify}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00551}00551\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ the\ server's\ TLS\ certificate,\ or\ a\ string,\ in\ which\ case\ it\ must\ be\ a\ path}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00552}00552\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ to\ a\ CA\ bundle\ to\ use.\ Defaults\ to\ \`{}\`{}True\`{}\`{}.\ When\ set\ to}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00553}00553\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \`{}\`{}False\`{}\`{},\ requests\ will\ accept\ any\ TLS\ certificate\ presented\ by}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00554}00554\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ the\ server,\ and\ will\ ignore\ hostname\ mismatches\ and/or\ expired}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00555}00555\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ certificates,\ which\ will\ make\ your\ application\ vulnerable\ to}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00556}00556\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ man-\/in-\/the-\/middle\ (MitM)\ attacks.\ Setting\ verify\ to\ \`{}\`{}False\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00557}00557\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ may\ be\ useful\ during\ local\ development\ or\ testing.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00558}00558\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ cert:\ (optional)\ if\ String,\ path\ to\ ssl\ client\ cert\ file\ (.pem).}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00559}00559\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ If\ Tuple,\ ('cert',\ 'key')\ pair.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00560}00560\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00561}00561\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Create\ the\ Request.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ req\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_request}{Request}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ method=method.upper(),}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ url=url,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ headers=headers,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ files=files,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ data=data\ \textcolor{keywordflow}{or}\ \{\},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ json=json,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00570}00570\ \ \ \ \ \ \ \ \ \ \ \ \ params=params\ \textcolor{keywordflow}{or}\ \{\},}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ auth=auth,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00572}00572\ \ \ \ \ \ \ \ \ \ \ \ \ cookies=cookies,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \ \ hooks=hooks,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00575}00575\ \ \ \ \ \ \ \ \ prep\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2adf1ad4ab346945415909e22d1ee61d}{prepare\_request}}(req)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00576}00576\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00577}00577\ \ \ \ \ \ \ \ \ proxies\ =\ proxies\ \textcolor{keywordflow}{or}\ \{\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00578}00578\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00579}00579\ \ \ \ \ \ \ \ \ settings\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac616cecb14fa6c69e187566122b63540}{merge\_environment\_settings}}(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ prep.url,\ proxies,\ stream,\ verify,\ cert}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Send\ the\ request.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ send\_kwargs\ =\ \{}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}timeout"{}}:\ timeout,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}allow\_redirects"{}}:\ allow\_redirects,}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ send\_kwargs.update(settings)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00589}00589\ \ \ \ \ \ \ \ \ resp\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ad37f04d36bee73e86a56c5251a733671}{send}}(prep,\ **send\_kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00590}00590\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ resp}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00593}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae65ffc33501bda50139df9c6e4903d57}{00593}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae65ffc33501bda50139df9c6e4903d57}{get}}(self,\ url,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ GET\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00595}00595\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00596}00596\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00597}00597\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00598}00598\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00599}00599\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00601}00601\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}allow\_redirects"{}},\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00602}00602\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}GET"{}},\ url,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00604}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a7934a02ccaf206b271e9b2b4e258e456}{00604}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a7934a02ccaf206b271e9b2b4e258e456}{options}}(self,\ url,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ OPTIONS\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00606}00606\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00607}00607\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00608}00608\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00609}00609\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00610}00610\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}allow\_redirects"{}},\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}OPTIONS"{}},\ url,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00615}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aea5666eed92f188f209d6fb488ba602c}{00615}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aea5666eed92f188f209d6fb488ba602c}{head}}(self,\ url,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ HEAD\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00617}00617\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00618}00618\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00619}00619\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00620}00620\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00621}00621\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}allow\_redirects"{}},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}HEAD"{}},\ url,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00626}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a824c24cd63da3232865e3625d6dd20f0}{00626}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a824c24cd63da3232865e3625d6dd20f0}{post}}(self,\ url,\ data=None,\ json=None,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00627}00627\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ POST\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00628}00628\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00629}00629\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00630}00630\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ data:\ (optional)\ Dictionary,\ list\ of\ tuples,\ bytes,\ or\ file-\/like}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00631}00631\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ object\ to\ send\ in\ the\ body\ of\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00632}00632\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ json:\ (optional)\ json\ to\ send\ in\ the\ body\ of\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00633}00633\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00634}00634\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00635}00635\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00637}00637\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}POST"{}},\ url,\ data=data,\ json=json,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00639}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a688de500f6aad8de9191e47f67900dac}{00639}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a688de500f6aad8de9191e47f67900dac}{put}}(self,\ url,\ data=None,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00640}00640\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ PUT\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00641}00641\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00642}00642\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00643}00643\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ data:\ (optional)\ Dictionary,\ list\ of\ tuples,\ bytes,\ or\ file-\/like}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00644}00644\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ object\ to\ send\ in\ the\ body\ of\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00645}00645\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00646}00646\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00647}00647\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}PUT"{}},\ url,\ data=data,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00651}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a7ba5796ef02f3010aada5c329f64f419}{00651}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a7ba5796ef02f3010aada5c329f64f419}{patch}}(self,\ url,\ data=None,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00652}00652\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ PATCH\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00653}00653\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00654}00654\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00655}00655\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ data:\ (optional)\ Dictionary,\ list\ of\ tuples,\ bytes,\ or\ file-\/like}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00656}00656\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ object\ to\ send\ in\ the\ body\ of\ the\ :class:\`{}Request\`{}.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00657}00657\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00658}00658\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00659}00659\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00660}00660\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00661}00661\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}PATCH"{}},\ url,\ data=data,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00663}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a4ecfc01eba5c54f55da17c4dcba34d07}{00663}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a4ecfc01eba5c54f55da17c4dcba34d07}{delete}}(self,\ url,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00664}00664\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Sends\ a\ DELETE\ request.\ Returns\ :class:\`{}Response\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00665}00665\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00666}00666\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ url:\ URL\ for\ the\ new\ :class:\`{}Request\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00667}00667\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ \(\backslash\)*\(\backslash\)*kwargs:\ Optional\ arguments\ that\ \`{}\`{}request\`{}\`{}\ takes.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00668}00668\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00669}00669\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00670}00670\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00671}00671\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_accf48da4057f687c5f174e07b86a34d4}{request}}(\textcolor{stringliteral}{"{}DELETE"{}},\ url,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00673}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ad37f04d36bee73e86a56c5251a733671}{00673}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ad37f04d36bee73e86a56c5251a733671}{send}}(self,\ request,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00674}00674\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Send\ a\ given\ PreparedRequest.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00675}00675\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00676}00676\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00677}00677\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00678}00678\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ defaults\ that\ the\ hooks\ can\ utilize\ to\ ensure\ they\ always\ have}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00679}00679\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ correct\ parameters\ to\ reproduce\ the\ previous\ request.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00680}00680\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}stream"{}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae489866f8220882799d2786ca0690e5b}{stream}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00681}00681\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}verify"{}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a3c970c3ae6590882d7c77729b580fc6e}{verify}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00682}00682\ \ \ \ \ \ \ \ \ kwargs.setdefault(\textcolor{stringliteral}{"{}cert"{}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a563a3dc423657b0974ab97b40dfe5431}{cert}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00683}00683\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}proxies"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ kwargs:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ kwargs[\textcolor{stringliteral}{"{}proxies"{}}]\ =\ resolve\_proxies(request,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a909487bb7617c1f5e70adf940a307e72}{proxies}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a421477f8da5b874a44455b9957a0862b}{trust\_env}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ It's\ possible\ that\ users\ might\ accidentally\ send\ a\ Request\ object.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Guard\ against\ that\ specific\ failure\ case.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(request,\ Request):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}You\ can\ only\ send\ PreparedRequests."{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00690}00690\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ up\ variables\ needed\ for\ resolve\_redirects\ and\ dispatching\ of\ hooks}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00692}00692\ \ \ \ \ \ \ \ \ allow\_redirects\ =\ kwargs.pop(\textcolor{stringliteral}{"{}allow\_redirects"{}},\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00693}00693\ \ \ \ \ \ \ \ \ stream\ =\ kwargs.get(\textcolor{stringliteral}{"{}stream"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ hooks\ =\ request.hooks}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00695}00695\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Get\ the\ appropriate\ adapter\ to\ use}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ adapter\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac7756b8f825f70b10d3e90c5a03090c7}{get\_adapter}}(url=request.url)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Start\ time\ (approximately)\ of\ the\ request}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00700}00700\ \ \ \ \ \ \ \ \ start\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_ae9e187181429a71b78e3380683516d07}{preferred\_clock}}()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Send\ the\ request}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ r\ =\ adapter.send(request,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00705}00705\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Total\ elapsed\ time\ of\ the\ request\ (approximately)}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00706}00706\ \ \ \ \ \ \ \ \ elapsed\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_ae9e187181429a71b78e3380683516d07}{preferred\_clock}}()\ -\/\ start}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ r.elapsed\ =\ timedelta(seconds=elapsed)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Response\ manipulation\ hooks}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00710}00710\ \ \ \ \ \ \ \ \ r\ =\ dispatch\_hook(\textcolor{stringliteral}{"{}response"{}},\ hooks,\ r,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Persist\ cookies}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ r.history:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00714}00714\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00715}00715\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ the\ hooks\ create\ history\ then\ we\ want\ those\ cookies\ too}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ resp\ \textcolor{keywordflow}{in}\ r.history:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}},\ resp.request,\ resp.raw)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00719}00719\ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}},\ request,\ r.raw)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00720}00720\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Resolve\ redirects\ if\ allowed.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00722}00722\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ allow\_redirects:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Redirect\ resolving\ generator.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ gen\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}{resolve\_redirects}}(r,\ request,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ history\ =\ [resp\ \textcolor{keywordflow}{for}\ resp\ \textcolor{keywordflow}{in}\ gen]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ history\ =\ []}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00729}00729\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Shuffle\ things\ around\ if\ there's\ history.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00730}00730\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ history:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Insert\ the\ first\ (original)\ request\ at\ the\ start}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ \ \ \ \ history.insert(0,\ r)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00733}00733\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Get\ the\ last\ request\ made}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00734}00734\ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ history.pop()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ r.history\ =\ history}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00736}00736\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00737}00737\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ redirects\ aren't\ being\ followed,\ store\ the\ response\ on\ the\ Request\ for\ Response.next().}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ allow\_redirects:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r.\_next\ =\ next(}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}{resolve\_redirects}}(r,\ request,\ yield\_requests=\textcolor{keyword}{True},\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00742}00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00743}00743\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ StopIteration:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00744}00744\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00746}00746\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ stream:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ r.content}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00748}00748\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00749}00749\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00751}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac616cecb14fa6c69e187566122b63540}{00751}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac616cecb14fa6c69e187566122b63540}{merge\_environment\_settings}}(self,\ url,\ proxies,\ stream,\ verify,\ cert):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00753}00753\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Check\ the\ environment\ and\ merge\ it\ with\ some\ settings.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00754}00754\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00755}00755\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ dict}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00756}00756\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00757}00757\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Gather\ clues\ from\ the\ surrounding\ environment.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00758}00758\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a421477f8da5b874a44455b9957a0862b}{trust\_env}}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ environment's\ proxies.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ no\_proxy\ =\ proxies.get(\textcolor{stringliteral}{"{}no\_proxy"{}})\ \textcolor{keywordflow}{if}\ proxies\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \ \ env\_proxies\ =\ get\_environ\_proxies(url,\ no\_proxy=no\_proxy)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (k,\ v)\ \textcolor{keywordflow}{in}\ env\_proxies.items():}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00763}00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proxies.setdefault(k,\ v)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00764}00764\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Look\ for\ requests\ environment\ configuration}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00766}00766\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ and\ be\ compatible\ with\ cURL.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ verify\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{True}\ \textcolor{keywordflow}{or}\ verify\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verify\ =\ (}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.environ.get(\textcolor{stringliteral}{"{}REQUESTS\_CA\_BUNDLE"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ os.environ.get(\textcolor{stringliteral}{"{}CURL\_CA\_BUNDLE"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ verify}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00774}00774\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Merge\ all\ the\ kwargs.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ proxies\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(proxies,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a909487bb7617c1f5e70adf940a307e72}{proxies}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00776}00776\ \ \ \ \ \ \ \ \ stream\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(stream,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ae489866f8220882799d2786ca0690e5b}{stream}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00777}00777\ \ \ \ \ \ \ \ \ verify\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(verify,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a3c970c3ae6590882d7c77729b580fc6e}{verify}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00778}00778\ \ \ \ \ \ \ \ \ cert\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a7ae5123b4125978df0465fa0e683c555}{merge\_setting}}(cert,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a563a3dc423657b0974ab97b40dfe5431}{cert}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00779}00779\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\textcolor{stringliteral}{"{}proxies"{}}:\ proxies,\ \textcolor{stringliteral}{"{}stream"{}}:\ stream,\ \textcolor{stringliteral}{"{}verify"{}}:\ verify,\ \textcolor{stringliteral}{"{}cert"{}}:\ cert\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00781}00781\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00782}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac7756b8f825f70b10d3e90c5a03090c7}{00782}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_ac7756b8f825f70b10d3e90c5a03090c7}{get\_adapter}}(self,\ url):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00783}00783\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00784}00784\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns\ the\ appropriate\ connection\ adapter\ for\ the\ given\ URL.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00785}00785\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00786}00786\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.adapters.BaseAdapter}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00787}00787\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00788}00788\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (prefix,\ adapter)\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}.items():}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00789}00789\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00790}00790\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url.lower().startswith(prefix.lower()):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00791}00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ adapter}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00792}00792\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00793}00793\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Nothing\ matches\ :-\//}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00794}00794\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_schema}{InvalidSchema}}(f\textcolor{stringliteral}{"{}No\ connection\ adapters\ were\ found\ for\ \{url!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00796}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a8ab79e14e24aa440dcd1d9e822eb1f1c}{00796}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}(self):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00797}00797\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Closes\ all\ adapters\ and\ as\ such\ the\ session"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00798}00798\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}.values():}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ v.close()}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00800}00800\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00801}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aaaf7138ed3d772080ffbb8f5a53c10fc}{00801}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aaaf7138ed3d772080ffbb8f5a53c10fc}{mount}}(self,\ prefix,\ adapter):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00802}00802\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Registers\ a\ connection\ adapter\ to\ a\ prefix.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00803}00803\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00804}00804\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Adapters\ are\ sorted\ in\ descending\ order\ by\ prefix\ length.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00805}00805\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00806}00806\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}[prefix]\ =\ adapter}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00807}00807\ \ \ \ \ \ \ \ \ keys\_to\_move\ =\ [k\ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}\ \textcolor{keywordflow}{if}\ len(k)\ <\ len(prefix)]}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00808}00808\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00809}00809\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ keys\_to\_move:}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}[key]\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a2a98682d79ee95a710b4af883b753a9a}{adapters}}.pop(key)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00811}00811\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00812}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aefb2f5041b9b3c90acf3683801e6034d}{00812}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_aefb2f5041b9b3c90acf3683801e6034d}{\_\_getstate\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00813}00813\ \ \ \ \ \ \ \ \ state\ =\ \{attr:\ getattr(self,\ attr,\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_a5ebd54e830172fe23ba21caf304aa570}{\_\_attrs\_\_}}\}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00814}00814\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ state}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00815}00815\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00816}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_af58512310520fb7198309826f02daa4c}{00816}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_af58512310520fb7198309826f02daa4c}{\_\_setstate\_\_}}(self,\ state):}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00817}00817\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ attr,\ value\ \textcolor{keywordflow}{in}\ state.items():}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ setattr(self,\ attr,\ value)}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00819}00819\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00820}00820\ }
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00821}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a912187b9bad05f8454864cc5eef14395}{00821}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1sessions_a912187b9bad05f8454864cc5eef14395}{session}}():}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00822}00822\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00823}00823\ \textcolor{stringliteral}{\ \ \ \ Returns\ a\ :class:\`{}Session\`{}\ for\ context-\/management.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00824}00824\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00825}00825\ \textcolor{stringliteral}{\ \ \ \ ..\ deprecated::\ 1.0.0}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00826}00826\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00827}00827\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ method\ has\ been\ deprecated\ since\ version\ 1.0.0\ and\ is\ only\ kept\ for}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00828}00828\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ backwards\ compatibility.\ New\ code\ should\ use\ :class:\`{}\string~requests.sessions.Session\`{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00829}00829\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ to\ create\ a\ session.\ This\ may\ be\ removed\ at\ a\ future\ date.}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00830}00830\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00831}00831\ \textcolor{stringliteral}{\ \ \ \ :rtype:\ Session}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00832}00832\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{sessions_8py_source_l00833}00833\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session}{Session}}()}
+
+\end{DoxyCode}

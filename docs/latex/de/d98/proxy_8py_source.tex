@@ -1,0 +1,63 @@
+\doxysection{proxy.\+py}
+\hypertarget{proxy_8py_source}{}\label{proxy_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/proxy.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/proxy.py}}
+\mbox{\hyperlink{proxy_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1proxy}{00001}}\ \textcolor{keyword}{from}\ .ssl\_\ \textcolor{keyword}{import}\ create\_urllib3\_context,\ resolve\_cert\_reqs,\ resolve\_ssl\_version}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00004}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1proxy_a09a8cd36ecf041b7034031829d3fd98b}{00004}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1proxy_a09a8cd36ecf041b7034031829d3fd98b}{connection\_requires\_http\_tunnel}}(}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00005}00005\ \ \ \ \ proxy\_url=None,\ proxy\_config=None,\ destination\_scheme=None}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00006}00006\ ):}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00007}00007\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ Returns\ True\ if\ the\ connection\ requires\ an\ HTTP\ CONNECT\ through\ the\ proxy.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00009}00009\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00010}00010\ \textcolor{stringliteral}{\ \ \ \ :param\ URL\ proxy\_url:}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ URL\ of\ the\ proxy.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00012}00012\ \textcolor{stringliteral}{\ \ \ \ :param\ ProxyConfig\ proxy\_config:}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Proxy\ configuration\ from\ poolmanager.py}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00014}00014\ \textcolor{stringliteral}{\ \ \ \ :param\ str\ destination\_scheme:}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00015}00015\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ scheme\ of\ the\ destination.\ (i.e\ https,\ http,\ etc)}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00016}00016\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00017}00017\ \ \ \ \ \textcolor{comment}{\#\ If\ we're\ not\ using\ a\ proxy,\ no\ way\ to\ use\ a\ tunnel.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{if}\ proxy\_url\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00021}00021\ \ \ \ \ \textcolor{comment}{\#\ HTTP\ destinations\ never\ require\ tunneling,\ we\ always\ forward.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{if}\ destination\_scheme\ ==\ \textcolor{stringliteral}{"{}http"{}}:}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00025}00025\ \ \ \ \ \textcolor{comment}{\#\ Support\ for\ forwarding\ with\ HTTPS\ proxies\ and\ HTTPS\ destinations.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ proxy\_url.scheme\ ==\ \textcolor{stringliteral}{"{}https"{}}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ proxy\_config}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ proxy\_config.use\_forwarding\_for\_https}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00030}00030\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00033}00033\ \ \ \ \ \textcolor{comment}{\#\ Otherwise\ always\ use\ a\ tunnel.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1proxy_a2395d991bb4c8d8ed18785074fc26d3d}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1proxy_a2395d991bb4c8d8ed18785074fc26d3d}{create\_proxy\_ssl\_context}}(}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00038}00038\ \ \ \ \ ssl\_version,\ cert\_reqs,\ ca\_certs=None,\ ca\_cert\_dir=None,\ ca\_cert\_data=None}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00039}00039\ ):}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ Generates\ a\ default\ proxy\ ssl\ context\ if\ one\ hasn't\ been\ provided\ by\ the}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ user.}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00044}00044\ \ \ \ \ ssl\_context\ =\ create\_urllib3\_context(}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ ssl\_version=resolve\_ssl\_version(ssl\_version),}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ cert\_reqs=resolve\_cert\_reqs(cert\_reqs),}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00047}00047\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ ca\_certs}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ ca\_cert\_dir}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ ca\_cert\_data}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ hasattr(ssl\_context,\ \textcolor{stringliteral}{"{}load\_default\_certs"{}})}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00054}00054\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ ssl\_context.load\_default\_certs()}
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{proxy_8py_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{return}\ ssl\_context}
+
+\end{DoxyCode}

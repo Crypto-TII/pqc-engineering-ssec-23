@@ -1,0 +1,132 @@
+\doxysection{elligator.\+c}
+\hypertarget{elligator_8c_source}{}\label{elligator_8c_source}\index{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/common/elligator.c@{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/common/elligator.c}}
+\mbox{\hyperlink{elligator_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00001}00001\ \textcolor{comment}{//\ \#include\ "{}crypto\_declassify.h"{}}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{elligator_8h}{elligator.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00004}00004\ \textcolor{comment}{//\ \#define\ fp\_cswap\ fp\_cswap\_ctidh}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00006}\mbox{\hyperlink{elligator_8c_a0bb8b385006923e2c0fa3e2a69f59a98}{00006}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{elligator_8h_acf1a4eeab8fd549edc8e9e06c748ac15}{elligator}}(\mbox{\hyperlink{structproj}{proj}}\ *plus,\mbox{\hyperlink{structproj}{proj}}\ *minus,\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *A)}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00008}00008\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00009}00009\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ u;}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00010}00010\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_afe624b010306dd35023fcd3ccbcf3378}{fp\_random}}(u);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00011}00011\ \ \ \ \ \textcolor{comment}{//\ memset(u,\ 1,\ sizeof(u));\ }}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00013}00013\ \ \ \ \ \textcolor{comment}{//\ long\ long\ reject\ =\ fp\_iszero(\&u);}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00014}00014\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ reject\ =\ fp\_iszero(u);\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00015}00015\ \ \ \ \ \textcolor{comment}{//\ crypto\_declassify(\&reject,sizeof\ reject);}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{if}\ (reject)\ \textcolor{keywordflow}{continue};\ \textcolor{comment}{/*\ bad\ RNG\ outputs\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00018}00018\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ u2;\ fp\_sq2(\&u2,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&u);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00019}00019\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ D\ =\ \{0\};\ fp\_sub3(\&D,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&u2,\&\mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}});}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00021}00021\ \ \ \ \ \textcolor{comment}{//\ reject\ =\ fp\_iszero(\&D);}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00022}00022\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00023}00023\ \ \ \ \ reject\ =\ fp\_iszero(D);\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00024}00024\ \ \ \ \ \textcolor{comment}{//\ crypto\_declassify(\&reject,sizeof\ reject);}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{if}\ (reject)\ \textcolor{keywordflow}{continue};\ \textcolor{comment}{/*\ bad\ RNG\ outputs\ +-\/1\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00027}00027\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ M;\ fp\_mul3(\&M,\&A-\/>x,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&u2);\ \textcolor{comment}{/*\ M\ =\ u\string^2\ A-\/>x\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00028}00028\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ T;\ fp\_mul3(\&T,\&A-\/>x,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&M);\ \textcolor{comment}{/*\ T\ =\ u\string^2\ A-\/>x\string^2\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00030}00030\ \ \ \ \ \textcolor{comment}{//\ long\ long\ control\ =\ fp\_iszero(\&A-\/>x);}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00031}00031\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ control\ =\ fp\_iszero(A-\/>x);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00032}00032\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ P;}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00033}00033\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(P,\ A-\/>x);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00034}00034\ \ \ \ \ fp\_cmov\_ctidh(\&P,\&\mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}},control);\ \textcolor{comment}{/*\ P\ =\ 1\ if\ A-\/>x\ =\ 0\ else\ A-\/>x\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00035}00035\ \ \ \ \ fp\_cmov\_ctidh(\&M,\&\mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}},control);\ \textcolor{comment}{/*\ M\ =\ 1\ if\ A-\/>x\ =\ 0\ else\ u\string^2\ A-\/>x\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00036}00036\ \ \ \ \ fp\_cmov\_ctidh(\&T,\&\mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}},control);\ \textcolor{comment}{/*\ T\ =\ 1\ if\ A-\/>x\ =\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00038}00038\ \ \ \ \ fp\_mul2(\&D,\&A-\/>z);\ \textcolor{comment}{/*\ D\ =\ (u\string^2-\/1)\ A-\/>z\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00040}00040\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ D2;\ fp\_sq2(\&D2,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&D);\ \textcolor{comment}{/*\ D2\ =\ (u\string^2-\/1)\string^2\ A-\/>z\string^2\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00042}00042\ \ \ \ \ fp\_add2(\&T,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&D2);\ \textcolor{comment}{/*\ T\ =\ 1\ +\ (u\string^2-\/1)\string^2\ A-\/>z\string^2\ if\ A-\/>x\ =\ 0,\ else\ u\string^2\ A-\/>x\string^2\ +\ (u\string^2-\/1)\string^2\ A-\/>z\string^2\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00043}00043\ \ \ \ \ fp\_mul2(\&T,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&D);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00044}00044\ \ \ \ \ fp\_mul2(\&T,(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&P);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00045}00045\ \ \ \ \ \textcolor{comment}{/*\ T\ =\ (u\string^2-\/1)A-\/>z(1+(u\string^2-\/1)\string^2\ A-\/>z\string^2)\ if\ A-\/>x\ =\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00046}00046\ \ \ \ \ \textcolor{comment}{/*\ else\ (u\string^2-\/1)\ A-\/>z\ A-\/>x(u\string^2\ A-\/>x\string^2\ +\ (u\string^2-\/1)\string^2\ A-\/>z\string^2)\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00048}00048\ \ \ \ \ \textcolor{comment}{/*\ plus\ point\ will\ be\ P/D\ =\ 1/(u\string^2-\/1)A-\/>z\ if\ A-\/>x\ =\ 0\ else\ A/(u\string^2-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00049}00049\ \ \ \ \ \textcolor{comment}{/*\ and\ minus\ point\ will\ be\ -\/M/D\ =\ -\/1/(u\string^2-\/1)A-\/>z\ if\ A-\/>x\ =\ 0\ else\ -\/u\string^2\ A/(u\string^2-\/1)\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00050}00050\ \ \ \ \ \textcolor{comment}{/*\ unless\ they're\ flipped,\ which\ is\ determined\ by\ T\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00052}00052\ \ \ \ \ \textcolor{comment}{/*\ T\ =\ Az\string^4\ (1-\/u\string^2)\string^4\ ((P/D)\string^3+A(P/D)\string^2+(P/D))\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00053}00053\ \ \ \ \ \textcolor{comment}{/*\ so\ T\ squareness\ says\ whether\ P/D\ is\ on\ curve\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00055}00055\ \ \ \ \ \textcolor{comment}{/*\ also\ says\ whether\ -\/M/D\ is\ not\ on\ curve:\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00056}00056\ \ \ \ \ \textcolor{comment}{/*\ in\ all\ cases\ -\/M/D\ =\ -\/P/D-\/A\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00057}00057\ \ \ \ \ \textcolor{comment}{/*\ so\ (-\/M/D)\string^3+A(-\/M/D)\string^2+(-\/M/D)\ =\ (-\/P/D-\/A)\string^3+A(-\/P/D-\/A)\string^2+(-\/P/D-\/A)\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00058}00058\ \ \ \ \ \textcolor{comment}{/*\ =\ ((P/D)\string^3+A(P/D)\string^2+(P/D))\ (-\/1-\/AD/P)\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00059}00059\ \ \ \ \ \textcolor{comment}{/*\ and\ by\ construction\ -\/1-\/AD/P\ is\ a\ non-\/square\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00060}00060\ \ \ \ \ \textcolor{comment}{/*\ since\ it's\ -\/1\ if\ A=0,\ else\ -\/u\string^2\ */}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00062}00062\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(plus-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ P);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00063}00063\ \ \ \ \ fp\_neg2(\&minus-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},(\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}*)\ \&M);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00067}00067\ \textcolor{comment}{//\ \ \ x0\ =\ plus-\/>x;}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00068}00068\ \textcolor{comment}{//\ \ \ y0\ =\ minus-\/>x;}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00070}00070\ \ \ \ \ \textcolor{comment}{//\ test\ x0,\ y0;}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00071}00071\ \ \ \ \ \textcolor{comment}{//\ x0[0]\ =\ 1;}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ y0[0]\ =\ 2;}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00075}00075\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ae5352fd0eaf14191f3b15b9203b92cfc}{fp\_cswap}}(plus-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},minus-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},1-\/\mbox{\hyperlink{fp_8c_aba1244ec3fa3fb19a97efee5c67e6b96}{fp\_sqrt}}(\&T));}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00078}00078\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(plus-\/>\mbox{\hyperlink{structproj_a19c39c220c63a98db129805719703ce6}{z}},\ D);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00079}00079\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(minus-\/>\mbox{\hyperlink{structproj_a19c39c220c63a98db129805719703ce6}{z}},\ D);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00082}00082\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00083}00083\ \}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00085}00085\ \textcolor{comment}{//\ Computes\ elligator\ for\ fixed\ seed\ u}}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00086}\mbox{\hyperlink{elligator_8c_a37fd27435003aee4f3bf12402b95a4c7}{00086}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{elligator_8h_ab62f777855b4aeae0423f37feb8386e2}{elligator\_seeded}}(\mbox{\hyperlink{structproj}{proj}}\ *Tp,\ \mbox{\hyperlink{structproj}{proj}}\ *Tm,\ \mbox{\hyperlink{structproj}{proj}}\ \textcolor{keyword}{const}\ *A,\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ \textcolor{keyword}{const}\ *u)}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00088}00088\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ Ap,\ C\_times\_u\_squared\_minus\_one,\ AC\_times\_u\_squared\_minus\_one,}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00089}00089\ \ \ \ \ \ \ \ u\_squared,\ u\_squared\_plus\_one,\ u\_squared\_minus\_one,}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00090}00090\ \ \ \ \ \ \ \ alpha,\ beta,\ tmp,\ aux;}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00092}00092\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(Ap,\ A-\/>x,\ A-\/>x);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00093}00093\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a39db70a91da3d35b6c9e8b50cde6aab2}{fp\_sub}}(Ap,\ Ap,\ A-\/>z);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00094}00094\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(Ap,\ Ap,\ Ap);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00095}00095\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00096}00096\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a15326dc97def54531d1ba527d996316e}{fp\_sqr}}(u\_squared,\ *u);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00098}00098\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(u\_squared\_plus\_one,\ u\_squared,\ \mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}});}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00099}00099\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a39db70a91da3d35b6c9e8b50cde6aab2}{fp\_sub}}(u\_squared\_minus\_one,\ u\_squared,\ \mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}});}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00101}00101\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(C\_times\_u\_squared\_minus\_one,\ A-\/>z,\ u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00102}00102\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(AC\_times\_u\_squared\_minus\_one,\ Ap,\ C\_times\_u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00104}00104\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a15326dc97def54531d1ba527d996316e}{fp\_sqr}}(tmp,\ Ap);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00105}00105\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(tmp,\ tmp,\ u\_squared);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00106}00106\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a15326dc97def54531d1ba527d996316e}{fp\_sqr}}(aux,\ C\_times\_u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00107}00107\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(tmp,\ tmp,\ aux);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00108}00108\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(tmp,\ AC\_times\_u\_squared\_minus\_one,\ tmp);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00110}00110\ \ \ \ \ fp\_set0(alpha);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00111}00111\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(beta,\ *u);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00112}00112\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ae5352fd0eaf14191f3b15b9203b92cfc}{fp\_cswap}}(alpha,\ beta,\ fp\_iszero(tmp));}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00113}00113\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(u\_squared\_plus\_one,\ alpha,\ u\_squared\_plus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00114}00114\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(alpha,\ alpha,\ C\_times\_u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00116}00116\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(Tp-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ Ap,\ alpha);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00117}00117\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4072510900fe5bb7cff7fac34e483e48}{fp\_mul}}(Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ Ap,\ u\_squared);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00118}00118\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ alpha);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00119}00119\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a39db70a91da3d35b6c9e8b50cde6aab2}{fp\_sub}}(Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ \mbox{\hyperlink{fp-gmp_8h_a752d13f29bc45af353433e5ac19b10b9}{fp\_0}},\ Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}});}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00121}00121\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(tmp,\ tmp,\ u\_squared\_plus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00122}00122\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ae5352fd0eaf14191f3b15b9203b92cfc}{fp\_cswap}}(Tp-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ Tm-\/>\mbox{\hyperlink{structproj_a31f41d568a93c482a68ec892b90fbb62}{x}},\ 1\ -\/\ \mbox{\hyperlink{fp-gmp_8h_a604ab54d018792270d7166b2a57455c4}{fp\_issquare}}(tmp));}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00124}00124\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(Tp-\/>\mbox{\hyperlink{structproj_a19c39c220c63a98db129805719703ce6}{z}},\ C\_times\_u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00125}00125\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(Tm-\/>\mbox{\hyperlink{structproj_a19c39c220c63a98db129805719703ce6}{z}},\ C\_times\_u\_squared\_minus\_one);}
+\DoxyCodeLine{\Hypertarget{elligator_8c_source_l00126}00126\ \}}
+
+\end{DoxyCode}

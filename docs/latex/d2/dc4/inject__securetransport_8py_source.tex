@@ -1,0 +1,41 @@
+\doxysection{inject\+\_\+securetransport.\+py}
+\hypertarget{inject__securetransport_8py_source}{}\label{inject__securetransport_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/inject\_securetransport.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/inject\_securetransport.py}}
+\mbox{\hyperlink{inject__securetransport_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}A\ helper\ module\ that\ injects\ SecureTransport,\ on\ import.}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00002}00002\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00003}00003\ \textcolor{stringliteral}{The\ import\ should\ be\ done\ as\ early\ as\ possible,\ to\ ensure\ all\ requests\ and}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00004}00004\ \textcolor{stringliteral}{sessions\ (or\ whatever)\ are\ created\ after\ injecting\ SecureTransport.}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00005}00005\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00006}00006\ \textcolor{stringliteral}{Note\ that\ we\ only\ do\ the\ injection\ on\ macOS,\ when\ the\ linked\ OpenSSL\ is\ too}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00007}00007\ \textcolor{stringliteral}{old\ to\ handle\ TLSv1.2.}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00008}00008\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00010}00010\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00013}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d}{00013}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d}{inject\_securetransport}}()\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00014}00014\ \ \ \ \ \textcolor{comment}{\#\ Only\ relevant\ on\ macOS}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00015}00015\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ !=\ \textcolor{stringliteral}{"{}darwin"{}}:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00016}00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{import}\ ssl}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00023}00023\ \ \ \ \ \textcolor{comment}{\#\ Checks\ for\ OpenSSL\ 1.0.1}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{if}\ ssl.OPENSSL\_VERSION\_NUMBER\ >=\ 0x1000100F:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib}{pip.\_vendor.urllib3.contrib}}\ \textcolor{keyword}{import}\ securetransport}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{except}\ (ImportError,\ OSError):}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00032}00032\ \ \ \ \ securetransport.inject\_into\_urllib3()}
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{inject__securetransport_8py_source_l00035}00035\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d}{inject\_securetransport}}()}
+
+\end{DoxyCode}

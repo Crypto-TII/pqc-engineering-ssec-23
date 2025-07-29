@@ -1,0 +1,784 @@
+\doxysection{install.\+py}
+\hypertarget{install_8py_source}{}\label{install_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/install.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/install.py}}
+\mbox{\hyperlink{install_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install}{00001}}\ \textcolor{keyword}{import}\ errno}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00002}00002\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00003}00003\ \textcolor{keyword}{import}\ operator}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00004}00004\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00005}00005\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00006}00006\ \textcolor{keyword}{import}\ site}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00007}00007\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ SUPPRESS\_HELP,\ Values}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00008}00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich}{pip.\_vendor.rich}}\ \textcolor{keyword}{import}\ print\_json}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cache}{pip.\_internal.cache}}\ \textcolor{keyword}{import}\ WheelCache}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli}{pip.\_internal.cli}}\ \textcolor{keyword}{import}\ cmdoptions}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1cmdoptions}{pip.\_internal.cli.cmdoptions}}\ \textcolor{keyword}{import}\ make\_target\_python}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1req__command}{pip.\_internal.cli.req\_command}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00016}00016\ \ \ \ \ RequirementCommand,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00017}00017\ \ \ \ \ warn\_if\_run\_as\_root,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00018}00018\ \ \ \ \ with\_cleanup,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00019}00019\ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00020}00020\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ ERROR,\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00021}00021\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ CommandError,\ InstallationError}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00022}00022\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations}{pip.\_internal.locations}}\ \textcolor{keyword}{import}\ get\_scheme}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ get\_environment}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00024}00024\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1installation__report}{pip.\_internal.models.installation\_report}}\ \textcolor{keyword}{import}\ InstallationReport}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00025}00025\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1build__tracker}{pip.\_internal.operations.build.build\_tracker}}\ \textcolor{keyword}{import}\ get\_build\_tracker}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00026}00026\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1check}{pip.\_internal.operations.check}}\ \textcolor{keyword}{import}\ ConflictDetails,\ check\_install\_conflicts}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00027}00027\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req}{pip.\_internal.req}}\ \textcolor{keyword}{import}\ install\_given\_reqs}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00028}00028\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req_1_1req__install}{pip.\_internal.req.req\_install}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00029}00029\ \ \ \ \ InstallRequirement,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00030}00030\ \ \ \ \ check\_legacy\_setup\_py\_options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00031}00031\ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00032}00032\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat}{pip.\_internal.utils.compat}}\ \textcolor{keyword}{import}\ WINDOWS}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00033}00033\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1filesystem}{pip.\_internal.utils.filesystem}}\ \textcolor{keyword}{import}\ test\_writable\_dir}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00034}00034\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging}{pip.\_internal.utils.logging}}\ \textcolor{keyword}{import}\ getLogger}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00035}00035\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00036}00036\ \ \ \ \ check\_externally\_managed,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00037}00037\ \ \ \ \ ensure\_dir,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00038}00038\ \ \ \ \ get\_pip\_version,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00039}00039\ \ \ \ \ protect\_pip\_from\_modification\_on\_windows,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00040}00040\ \ \ \ \ write\_output,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00041}00041\ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00042}00042\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1temp__dir}{pip.\_internal.utils.temp\_dir}}\ \textcolor{keyword}{import}\ TempDirectory}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00043}00043\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv}{pip.\_internal.utils.virtualenv}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00044}00044\ \ \ \ \ running\_under\_virtualenv,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00045}00045\ \ \ \ \ virtualenv\_no\_global,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00046}00046\ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00047}00047\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1wheel__builder}{pip.\_internal.wheel\_builder}}\ \textcolor{keyword}{import}\ build,\ should\_build\_for\_install\_command}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00049}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0b14e488ae28d98d262453f3e9cd6e4d}{00049}}\ logger\ =\ getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00052}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command}{00052}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command}{InstallCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command}{RequirementCommand}}):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00053}00053\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ Install\ packages\ from:}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00055}00055\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ -\/\ PyPI\ (and\ other\ indexes)\ using\ requirement\ specifiers.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ -\/\ VCS\ project\ urls.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ -\/\ Local\ project\ directories.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ -\/\ Local\ or\ remote\ source\ archives.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00060}00060\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ pip\ also\ supports\ installing\ from\ "{}requirements\ files"{},\ which\ provide}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ an\ easy\ way\ to\ specify\ a\ whole\ environment\ to\ be\ installed.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00065}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command}{00065}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ <requirement\ specifier>\ [package-\/index-\/options]\ ...}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ -\/r\ <requirements\ file>\ [package-\/index-\/options]\ ...}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ [-\/e]\ <vcs\ project\ url>\ ...}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ [-\/e]\ <local\ project\ path>\ ...}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ <archive\ url/path>\ ..."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a1168021049b96b5b9957aa2186f7f72c}{00072}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a1168021049b96b5b9957aa2186f7f72c}{add\_options}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.requirements())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.constraints())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.no\_deps())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.pre())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.editable())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/dry-\/run"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}dry\_run"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Don't\ actually\ install\ anything,\ just\ print\ what\ would\ be.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can\ be\ used\ in\ combination\ with\ -\/-\/ignore-\/installed\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}to\ 'resolve'\ the\ requirements."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/t"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/target"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}target\_dir"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}dir"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Install\ packages\ into\ <dir>.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}By\ default\ this\ will\ not\ replace\ existing\ files/folders\ in\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}<dir>.\ Use\ -\/-\/upgrade\ to\ replace\ existing\ packages\ in\ <dir>\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}with\ new\ versions."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command}{00103}}\ \ \ \ \ \ \ \ \ cmdoptions.add\_target\_python\_options(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/user"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}use\_user\_site"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Install\ to\ the\ Python\ user\ install\ directory\ for\ your\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}platform.\ Typically\ \string~/.local/,\ or\ \%APPDATA\%\(\backslash\)\(\backslash\)Python\ on\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Windows.\ (See\ the\ Python\ documentation\ for\ site.USER\_BASE\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}for\ full\ details.)"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/user"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}use\_user\_site"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ help=SUPPRESS\_HELP,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/root"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}root\_path"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}dir"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Install\ everything\ relative\ to\ this\ alternate\ root\ directory."{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/prefix"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}prefix\_path"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}dir"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Installation\ prefix\ where\ lib,\ bin\ and\ other\ top-\/level\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}folders\ are\ placed.\ Note\ that\ the\ resulting\ installation\ may\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}contain\ scripts\ and\ other\ resources\ which\ reference\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Python\ interpreter\ of\ pip,\ and\ not\ that\ of\ \`{}\`{}-\/-\/prefix``.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}See\ also\ the\ \`{}\`{}-\/-\/python``\ option\ if\ the\ intention\ is\ to\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}install\ packages\ into\ another\ (possibly\ pip-\/free)\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}environment."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.src())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/U"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/upgrade"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}upgrade"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Upgrade\ all\ specified\ packages\ to\ the\ newest\ available\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version.\ The\ handling\ of\ dependencies\ depends\ on\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}upgrade-\/strategy\ used."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/upgrade-\/strategy"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}upgrade\_strategy"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{stringliteral}{"{}only-\/if-\/needed"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ choices=[\textcolor{stringliteral}{"{}only-\/if-\/needed"{}},\ \textcolor{stringliteral}{"{}eager"{}}],}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Determines\ how\ dependency\ upgrading\ should\ be\ handled\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}[default:\ \%default].\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'"{}eager"{}\ -\/\ dependencies\ are\ upgraded\ regardless\ of\ '}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}whether\ the\ currently\ installed\ version\ satisfies\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}requirements\ of\ the\ upgraded\ package(s).\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'"{}only-\/if-\/needed"{}\ -\/\ \ are\ upgraded\ only\ when\ they\ do\ not\ '}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}satisfy\ the\ requirements\ of\ the\ upgraded\ package(s)."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/force-\/reinstall"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}force\_reinstall"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Reinstall\ all\ packages\ even\ if\ they\ are\ already\ up-\/to-\/date."{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/I"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/ignore-\/installed"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}ignore\_installed"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Ignore\ the\ installed\ packages,\ overwriting\ them.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}This\ can\ break\ your\ system\ if\ the\ existing\ package\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}is\ of\ a\ different\ version\ or\ was\ installed\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}with\ a\ different\ package\ manager!"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.ignore\_requires\_python())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.no\_build\_isolation())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.use\_pep517())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.no\_use\_pep517())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.check\_build\_deps())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.override\_externally\_managed())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.config\_settings())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.global\_options())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/compile"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}compile"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Compile\ Python\ source\ files\ to\ bytecode"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/compile"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}compile"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Do\ not\ compile\ Python\ source\ files\ to\ bytecode"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/warn-\/script-\/location"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}warn\_script\_location"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Do\ not\ warn\ when\ installing\ scripts\ outside\ PATH"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/warn-\/conflicts"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}warn\_about\_conflicts"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Do\ not\ warn\ about\ broken\ dependencies"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.no\_binary())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.only\_binary())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.prefer\_binary())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.require\_hashes())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.progress\_bar())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.root\_user\_action())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ index\_opts\ =\ cmdoptions.make\_option\_group(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ cmdoptions.index\_group,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ index\_opts)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/report"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}json\_report\_file"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}file"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Generate\ a\ JSON\ file\ describing\ what\ pip\ did\ to\ install\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}the\ provided\ requirements.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can\ be\ used\ in\ combination\ with\ -\/-\/dry-\/run\ and\ -\/-\/ignore-\/installed\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}to\ 'resolve'\ the\ requirements.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}When\ -\/\ is\ used\ as\ file\ name\ it\ writes\ to\ stdout.\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}When\ writing\ to\ stdout,\ please\ combine\ with\ the\ -\/-\/quiet\ option\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}to\ avoid\ mixing\ pip\ logging\ output\ with\ JSON\ output."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00265}00265\ \ \ \ \ \textcolor{preprocessor}{@with\_cleanup}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00266}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_aed702143af1fdca26efdec21bf5c396e}{00266}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_user\_site\ \textcolor{keywordflow}{and}\ options.target\_dir\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(\textcolor{stringliteral}{"{}Can\ not\ combine\ '-\/-\/user'\ and\ '-\/-\/target'"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ whether\ the\ environment\ we're\ installing\ into\ is\ externally}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ managed,\ as\ specified\ in\ PEP\ 668.\ Specifying\ -\/-\/root,\ -\/-\/target,\ or}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/prefix\ disables\ the\ check,\ since\ there's\ no\ reliable\ way\ to\ locate}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ EXTERNALLY-\/MANAGED\ file\ for\ those\ cases.\ An\ exception\ is\ also}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ made\ specifically\ for\ "{}-\/-\/dry-\/run\ -\/-\/report"{}\ for\ convenience.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ installing\_into\_current\_environment\ =\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ (options.dry\_run\ \textcolor{keywordflow}{and}\ options.json\_report\_file)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ options.root\_path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ options.target\_dir\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ options.prefix\_path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ installing\_into\_current\_environment}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ options.override\_externally\_managed}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ check\_externally\_managed()}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ upgrade\_strategy\ =\ \textcolor{stringliteral}{"{}to-\/satisfy-\/only"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.upgrade:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ upgrade\_strategy\ =\ options.upgrade\_strategy}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00290}00290\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ cmdoptions.check\_dist\_restriction(options,\ check\_target=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ logger.verbose(\textcolor{stringliteral}{"{}Using\ \%s"{}},\ get\_pip\_version())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ options.use\_user\_site\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a18ccc9636aa031d66285ae859bbee81c}{decide\_user\_install}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ prefix\_path=options.prefix\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ target\_dir=options.target\_dir,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ root\_path=options.root\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ isolated\_mode=options.isolated\_mode,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ target\_temp\_dir:\ Optional[TempDirectory]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ target\_temp\_dir\_path:\ Optional[str]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.target\_dir:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ options.ignore\_installed\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ options.target\_dir\ =\ os.path.abspath(options.target\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ fmt:\ off}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.path.exists(options.target\_dir)\ \textcolor{keywordflow}{and}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ os.path.isdir(options.target\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ fmt:\ on}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Target\ path\ exists\ but\ is\ not\ a\ directory,\ will\ not\ continue."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Create\ a\ target\ directory\ for\ using\ with\ the\ target\ option}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ target\_temp\_dir\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1temp__dir_1_1_temp_directory}{TempDirectory}}(kind=\textcolor{stringliteral}{"{}target"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ target\_temp\_dir\_path\ =\ target\_temp\_dir.path}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1command__context_1_1_command_context_mix_in_aed12b4b4784179d10d11459c6f53bf37}{enter\_context}}(target\_temp\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ global\_options\ =\ options.global\_options\ \textcolor{keywordflow}{or}\ []}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ session\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_session_command_mixin_accd08325c81aa870a90c1ee683c499f1}{get\_default\_session}}(options)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ target\_python\ =\ make\_target\_python(options)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ finder\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_a2b770b45d4aa3b574f4133bda8c35e96}{\_build\_package\_finder}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ options=options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ session=session,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ target\_python=target\_python,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_requires\_python=options.ignore\_requires\_python,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00333}00333\ \ \ \ \ \ \ \ \ build\_tracker\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1command__context_1_1_command_context_mix_in_aed12b4b4784179d10d11459c6f53bf37}{enter\_context}}(get\_build\_tracker())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ directory\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1temp__dir_1_1_temp_directory}{TempDirectory}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ delete=\textcolor{keywordflow}{not}\ options.no\_clean,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ kind=\textcolor{stringliteral}{"{}install"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ globally\_managed=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00339}00339\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ reqs\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_a17199e748110567937f78015fb22b340}{get\_requirements}}(args,\ options,\ finder,\ session)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ check\_legacy\_setup\_py\_options(options,\ reqs)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_cache\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1cache_1_1_wheel_cache}{WheelCache}}(options.cache\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Only\ when\ installing\ is\ it\ permitted\ to\ use\ PEP\ 660.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ other\ circumstances\ (pip\ wheel,\ pip\ download)\ we\ generate}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ regular\ (i.e.\ non\ editable)\ metadata\ and\ wheels.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ req\ \textcolor{keywordflow}{in}\ reqs:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req.permit\_editable\_wheels\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ preparer\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_aecf3c6bb4fc0d213ecfc3cbf19abe712}{make\_requirement\_preparer}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_build\_dir=directory,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options=options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ build\_tracker=build\_tracker,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ session=session,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ finder=finder,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_user\_site=options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verbosity=self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a97b1cc04ec204ba7f1507498beb1d460}{verbosity}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ resolver\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_aa40841c46f2f0d6aae646f48746c88f1}{make\_resolver}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ preparer=preparer,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ finder=finder,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options=options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_cache=wheel\_cache,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_user\_site=options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_installed=options.ignore\_installed,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_requires\_python=options.ignore\_requires\_python,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ force\_reinstall=options.force\_reinstall,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ upgrade\_strategy=upgrade\_strategy,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_pep517=options.use\_pep517,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_a2d1b696c911a0bb42493bcdb5c7a9800}{trace\_basic\_info}}(finder)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set\ =\ resolver.resolve(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reqs,\ check\_supported\_wheels=\textcolor{keywordflow}{not}\ options.target\_dir}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.json\_report\_file:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ report\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1installation__report_1_1_installation_report}{InstallationReport}}(requirement\_set.requirements\_to\_install)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.json\_report\_file\ ==\ \textcolor{stringliteral}{"{}-\/"{}}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print\_json(data=report.to\_dict())}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(options.json\_report\_file,\ \textcolor{stringliteral}{"{}w"{}},\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ json.dump(report.to\_dict(),\ f,\ indent=2,\ ensure\_ascii=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.dry\_run:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ non\ dry-\/run\ mode,\ the\ legacy\ versions\ and\ specifiers\ check}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ will\ be\ done\ as\ part\ of\ conflict\ detection.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requirement\_set.warn\_legacy\_versions\_and\_specifiers()}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_install\_items\ =\ sorted(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (r.metadata[\textcolor{stringliteral}{"{}name"{}}],\ r.metadata[\textcolor{stringliteral}{"{}version"{}}])}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ r\ \textcolor{keywordflow}{in}\ requirement\_set.requirements\_to\_install}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ would\_install\_items:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Would\ install\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ "{}}.join(\textcolor{stringliteral}{"{}-\/"{}}.join(item)\ \textcolor{keywordflow}{for}\ item\ \textcolor{keywordflow}{in}\ would\_install\_items),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pip\_req\ =\ requirement\_set.get\_requirement(\textcolor{stringliteral}{"{}pip"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ modifying\_pip\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we're\ not\ replacing\ an\ already\ installed\ pip,}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we're\ not\ modifying\ it.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ modifying\_pip\ =\ pip\_req.satisfied\_by\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ protect\_pip\_from\_modification\_on\_windows(modifying\_pip=modifying\_pip)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00413}00413\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ reqs\_to\_build\ =\ [}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ r\ \textcolor{keywordflow}{in}\ requirement\_set.requirements.values()}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ should\_build\_for\_install\_command(r)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \_,\ build\_failures\ =\ build(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reqs\_to\_build,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_cache=wheel\_cache,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verify=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ build\_options=[],}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\_options=global\_options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ build\_failures:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Could\ not\ build\ wheels\ for\ \{\},\ which\ is\ required\ to\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}install\ pyproject.toml-\/based\ projects"{}}.format(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{},\ "{}}.join(r.name\ \textcolor{keywordflow}{for}\ r\ \textcolor{keywordflow}{in}\ build\_failures)\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00435}00435\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ to\_install\ =\ resolver.get\_installation\_order(requirement\_set)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ conflicts\ in\ the\ package\ set\ we're\ installing.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ conflicts:\ Optional[ConflictDetails]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ should\_warn\_about\_conflicts\ =\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ options.ignore\_dependencies\ \textcolor{keywordflow}{and}\ options.warn\_about\_conflicts}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ should\_warn\_about\_conflicts:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conflicts\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_ab107e21c69f8f3775dc922c427d78ced}{\_determine\_conflicts}}(to\_install)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ warn\ about\ script\ install\ locations\ if}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/target\ or\ -\/-\/prefix\ has\ been\ specified}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ warn\_script\_location\ =\ options.warn\_script\_location}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.target\_dir\ \textcolor{keywordflow}{or}\ options.prefix\_path:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ warn\_script\_location\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ installed\ =\ install\_given\_reqs(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ to\_install,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\_options,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ root=options.root\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home=target\_temp\_dir\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=options.prefix\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ warn\_script\_location=warn\_script\_location,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00459}00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_user\_site=options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pycompile=options.compile,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ lib\_locations\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0af0b5d37634ef7b83d5b92d46f86ecb}{get\_lib\_location\_guesses}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ user=options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home=target\_temp\_dir\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ root=options.root\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix=options.prefix\_path,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isolated=options.isolated\_mode,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ env\ =\ get\_environment(lib\_locations)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ installed.sort(key=operator.attrgetter(\textcolor{stringliteral}{"{}name"{}}))}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ items\ =\ []}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ result\ \textcolor{keywordflow}{in}\ installed:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ result.name}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ installed\_dist\ =\ env.get\_distribution(item)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ installed\_dist\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ f\textcolor{stringliteral}{"{}\{item\}-\/\{installed\_dist.version\}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ items.append(item)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ conflicts\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a59ab106e0369bc7045cfbf37abf38903}{\_warn\_about\_conflicts}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conflicts,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resolver\_variant=self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_requirement_command_a721de2860bc84c175ef1658918e2c183}{determine\_resolver\_variant}}(options),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00489}00489\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ installed\_desc\ =\ \textcolor{stringliteral}{"{}\ "{}}.join(items)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ installed\_desc:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Successfully\ installed\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ installed\_desc,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OSError\ \textcolor{keyword}{as}\ error:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ show\_traceback\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a97b1cc04ec204ba7f1507498beb1d460}{verbosity}}\ >=\ 1}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ message\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a10ea843265f73a47466b1fc281b646e9}{create\_os\_error\_message}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ error,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ show\_traceback,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.use\_user\_site,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(message,\ exc\_info=show\_traceback)\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00505}00505\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ERROR}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.target\_dir:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ target\_temp\_dir}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a98c393115db9066bd8dece790b3bbdf0}{\_handle\_target\_dir}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.target\_dir,\ target\_temp\_dir,\ options.upgrade}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.root\_user\_action\ ==\ \textcolor{stringliteral}{"{}warn"{}}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ warn\_if\_run\_as\_root()}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00517}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a98c393115db9066bd8dece790b3bbdf0}{00517}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a98c393115db9066bd8dece790b3bbdf0}{\_handle\_target\_dir}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ self,\ target\_dir:\ str,\ target\_temp\_dir:\ TempDirectory,\ upgrade:\ bool}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00519}00519\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ ensure\_dir(target\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00521}00521\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Checking\ both\ purelib\ and\ platlib\ directories\ for\ installed}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ packages\ to\ be\ moved\ to\ target\ directory}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ lib\_dir\_list\ =\ []}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Checking\ both\ purelib\ and\ platlib\ directories\ for\ installed}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ packages\ to\ be\ moved\ to\ target\ directory}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ scheme\ =\ get\_scheme(\textcolor{stringliteral}{"{}"{}},\ home=target\_temp\_dir.path)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ purelib\_dir\ =\ scheme.purelib}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00530}00530\ \ \ \ \ \ \ \ \ platlib\_dir\ =\ scheme.platlib}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ data\_dir\ =\ scheme.data}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(purelib\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ lib\_dir\_list.append(purelib\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(platlib\_dir)\ \textcolor{keywordflow}{and}\ platlib\_dir\ !=\ purelib\_dir:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ lib\_dir\_list.append(platlib\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(data\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ lib\_dir\_list.append(data\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ lib\_dir\ \textcolor{keywordflow}{in}\ lib\_dir\_list:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ item\ \textcolor{keywordflow}{in}\ os.listdir(lib\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ lib\_dir\ ==\ data\_dir:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ddir\ =\ os.path.join(data\_dir,\ item)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ any(s.startswith(ddir)\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ lib\_dir\_list[:-\/1]):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_item\_dir\ =\ os.path.join(target\_dir,\ item)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(target\_item\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ upgrade:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Target\ directory\ \%s\ already\ exists.\ Specify\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/upgrade\ to\ force\ replacement."{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_item\_dir,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.islink(target\_item\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Target\ directory\ \%s\ already\ exists\ and\ is\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ link.\ pip\ will\ not\ automatically\ replace\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}links,\ please\ remove\ if\ replacement\ is\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}desired."{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_item\_dir,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isdir(target\_item\_dir):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shutil.rmtree(target\_item\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.remove(target\_item\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shutil.move(os.path.join(lib\_dir,\ item),\ target\_item\_dir)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00571}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_ab107e21c69f8f3775dc922c427d78ced}{00571}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_ab107e21c69f8f3775dc922c427d78ced}{\_determine\_conflicts}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00572}00572\ \ \ \ \ \ \ \ \ self,\ to\_install:\ List[InstallRequirement]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00573}00573\ \ \ \ \ )\ -\/>\ Optional[ConflictDetails]:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ check\_install\_conflicts(to\_install)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00576}00576\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ logger.exception(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Error\ while\ checking\ for\ conflicts.\ Please\ file\ an\ issue\ on\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip's\ issue\ tracker:\ https://github.com/pypa/pip/issues/new"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00583}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a59ab106e0369bc7045cfbf37abf38903}{00583}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1install_1_1_install_command_a59ab106e0369bc7045cfbf37abf38903}{\_warn\_about\_conflicts}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ self,\ conflict\_details:\ ConflictDetails,\ resolver\_variant:\ str}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00585}00585\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ package\_set,\ (missing,\ conflicting)\ =\ conflict\_details}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ missing\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ conflicting:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00590}00590\ \ \ \ \ \ \ \ \ parts:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ resolver\_variant\ ==\ \textcolor{stringliteral}{"{}legacy"{}}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip's\ legacy\ dependency\ resolver\ does\ not\ consider\ dependency\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}conflicts\ when\ selecting\ packages.\ This\ behaviour\ is\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}source\ of\ the\ following\ dependency\ conflicts."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00597}00597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ resolver\_variant\ ==\ \textcolor{stringliteral}{"{}2020-\/resolver"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip's\ dependency\ resolver\ does\ not\ currently\ take\ into\ account\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}all\ the\ packages\ that\ are\ installed.\ This\ behaviour\ is\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}source\ of\ the\ following\ dependency\ conflicts."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ NOTE:\ There\ is\ some\ duplication\ here,\ with\ commands/check.py}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ project\_name\ \textcolor{keywordflow}{in}\ missing:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ version\ =\ package\_set[project\_name][0]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dependency\ \textcolor{keywordflow}{in}\ missing[project\_name]:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ message\ =\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{name\}\ \{version\}\ requires\ \{requirement\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}which\ is\ not\ installed."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ).format(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name=project\_name,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version=version,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requirement=dependency[1],}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00617}00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(message)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00619}00619\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ project\_name\ \textcolor{keywordflow}{in}\ conflicting:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ version\ =\ package\_set[project\_name][0]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\_name,\ dep\_version,\ req\ \textcolor{keywordflow}{in}\ conflicting[project\_name]:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ message\ =\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{name\}\ \{version\}\ requires\ \{requirement\},\ but\ \{you\}\ have\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{dep\_name\}\ \{dep\_version\}\ which\ is\ incompatible."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ).format(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name=project\_name,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version=version,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00628}00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requirement=req,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dep\_name=dep\_name,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dep\_version=dep\_version,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00631}00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ you=(\textcolor{stringliteral}{"{}you"{}}\ \textcolor{keywordflow}{if}\ resolver\_variant\ ==\ \textcolor{stringliteral}{"{}2020-\/resolver"{}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}you'll"{}}),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00633}00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(message)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00635}00635\ \ \ \ \ \ \ \ \ logger.critical(\textcolor{stringliteral}{"{}\(\backslash\)n"{}}.join(parts))}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00638}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0af0b5d37634ef7b83d5b92d46f86ecb}{00638}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0af0b5d37634ef7b83d5b92d46f86ecb}{get\_lib\_location\_guesses}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00639}00639\ \ \ \ \ user:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00640}00640\ \ \ \ \ home:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00641}00641\ \ \ \ \ root:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00642}00642\ \ \ \ \ isolated:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00643}00643\ \ \ \ \ prefix:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00644}00644\ )\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00645}00645\ \ \ \ \ scheme\ =\ get\_scheme(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00646}00646\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00647}00647\ \ \ \ \ \ \ \ \ user=user,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00648}00648\ \ \ \ \ \ \ \ \ home=home,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ root=root,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00650}00650\ \ \ \ \ \ \ \ \ isolated=isolated,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00651}00651\ \ \ \ \ \ \ \ \ prefix=prefix,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00652}00652\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00653}00653\ \ \ \ \ \textcolor{keywordflow}{return}\ [scheme.purelib,\ scheme.platlib]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00654}00654\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00656}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0fc7ee8cef1dd5f0d2aa66380dbd4622}{00656}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0fc7ee8cef1dd5f0d2aa66380dbd4622}{site\_packages\_writable}}(root:\ Optional[str],\ isolated:\ bool)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00657}00657\ \ \ \ \ \textcolor{keywordflow}{return}\ all(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00658}00658\ \ \ \ \ \ \ \ \ test\_writable\_dir(d)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00659}00659\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ d\ \textcolor{keywordflow}{in}\ set(\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0af0b5d37634ef7b83d5b92d46f86ecb}{get\_lib\_location\_guesses}}(root=root,\ isolated=isolated))}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00660}00660\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00663}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a18ccc9636aa031d66285ae859bbee81c}{00663}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a18ccc9636aa031d66285ae859bbee81c}{decide\_user\_install}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00664}00664\ \ \ \ \ use\_user\_site:\ Optional[bool],}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00665}00665\ \ \ \ \ prefix\_path:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00666}00666\ \ \ \ \ target\_dir:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00667}00667\ \ \ \ \ root\_path:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00668}00668\ \ \ \ \ isolated\_mode:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00669}00669\ )\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00670}00670\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Determine\ whether\ to\ do\ a\ user\ install\ based\ on\ the\ input\ options.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00671}00671\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00672}00672\ \textcolor{stringliteral}{\ \ \ \ If\ use\_user\_site\ is\ False,\ no\ additional\ checks\ are\ done.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00673}00673\ \textcolor{stringliteral}{\ \ \ \ If\ use\_user\_site\ is\ True,\ it\ is\ checked\ for\ compatibility\ with\ other}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00674}00674\ \textcolor{stringliteral}{\ \ \ \ options.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00675}00675\ \textcolor{stringliteral}{\ \ \ \ If\ use\_user\_site\ is\ None,\ the\ default\ behaviour\ depends\ on\ the\ environment,}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00676}00676\ \textcolor{stringliteral}{\ \ \ \ which\ is\ provided\ by\ the\ other\ arguments.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00677}00677\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00678}00678\ \ \ \ \ \textcolor{comment}{\#\ In\ some\ cases\ (config\ from\ tox),\ use\_user\_site\ can\ be\ set\ to\ an\ integer}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00679}00679\ \ \ \ \ \textcolor{comment}{\#\ rather\ than\ a\ bool,\ which\ 'use\_user\_site\ is\ False'\ wouldn't\ catch.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00680}00680\ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_user\_site\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{and}\ (\textcolor{keywordflow}{not}\ use\_user\_site):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00681}00681\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Non-\/user\ install\ by\ explicit\ request"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00682}00682\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00683}00683\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00684}00684\ \ \ \ \ \textcolor{keywordflow}{if}\ use\_user\_site:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ prefix\_path:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can\ not\ combine\ '-\/-\/user'\ and\ '-\/-\/prefix'\ as\ they\ imply\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}different\ installation\ locations"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ virtualenv\_no\_global():}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can\ not\ perform\ a\ '-\/-\/user'\ install.\ User\ site-\/packages\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}are\ not\ visible\ in\ this\ virtualenv."{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00695}00695\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}User\ install\ by\ explicit\ request"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00698}00698\ \ \ \ \ \textcolor{comment}{\#\ If\ we\ are\ here,\ user\ installs\ have\ not\ been\ explicitly\ requested/avoided}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00699}00699\ \ \ \ \ \textcolor{keyword}{assert}\ use\_user\_site\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00701}00701\ \ \ \ \ \textcolor{comment}{\#\ user\ install\ incompatible\ with\ -\/-\/prefix/-\/-\/target}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00702}00702\ \ \ \ \ \textcolor{keywordflow}{if}\ prefix\_path\ \textcolor{keywordflow}{or}\ target\_dir:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Non-\/user\ install\ due\ to\ -\/-\/prefix\ or\ -\/-\/target\ option"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00704}00704\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00705}00705\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00706}00706\ \ \ \ \ \textcolor{comment}{\#\ If\ user\ installs\ are\ not\ enabled,\ choose\ a\ non-\/user\ install}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00707}00707\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ site.ENABLE\_USER\_SITE:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00708}00708\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Non-\/user\ install\ because\ user\ site-\/packages\ disabled"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00711}00711\ \ \ \ \ \textcolor{comment}{\#\ If\ we\ have\ permission\ for\ a\ non-\/user\ install,\ do\ that,}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00712}00712\ \ \ \ \ \textcolor{comment}{\#\ otherwise\ do\ a\ user\ install.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00713}00713\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a0fc7ee8cef1dd5f0d2aa66380dbd4622}{site\_packages\_writable}}(root=root\_path,\ isolated=isolated\_mode):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00714}00714\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Non-\/user\ install\ because\ site-\/packages\ writeable"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00715}00715\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00716}00716\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00717}00717\ \ \ \ \ logger.info(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00718}00718\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Defaulting\ to\ user\ installation\ because\ normal\ site-\/packages\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}is\ not\ writeable"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00720}00720\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00721}00721\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00723}00723\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00724}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a10ea843265f73a47466b1fc281b646e9}{00724}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1install_a10ea843265f73a47466b1fc281b646e9}{create\_os\_error\_message}}(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00725}00725\ \ \ \ \ error:\ OSError,\ show\_traceback:\ bool,\ using\_user\_site:\ bool}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00726}00726\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00727}00727\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Format\ an\ error\ message\ for\ an\ OSError}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00728}00728\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00729}00729\ \textcolor{stringliteral}{\ \ \ \ It\ may\ occur\ anytime\ during\ the\ execution\ of\ the\ install\ command.}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00730}00730\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00731}00731\ \ \ \ \ parts\ =\ []}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00732}00732\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00733}00733\ \ \ \ \ \textcolor{comment}{\#\ Mention\ the\ error\ if\ we\ are\ not\ going\ to\ show\ a\ traceback}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00734}00734\ \ \ \ \ parts.append(\textcolor{stringliteral}{"{}Could\ not\ install\ packages\ due\ to\ an\ OSError"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00735}00735\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ show\_traceback:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00736}00736\ \ \ \ \ \ \ \ \ parts.append(\textcolor{stringliteral}{"{}:\ "{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00737}00737\ \ \ \ \ \ \ \ \ parts.append(str(error))}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00738}00738\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ parts.append(\textcolor{stringliteral}{"{}."{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00741}00741\ \ \ \ \ \textcolor{comment}{\#\ Spilt\ the\ error\ indication\ from\ a\ helper\ message\ (if\ any)}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00742}00742\ \ \ \ \ parts[-\/1]\ +=\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00743}00743\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00744}00744\ \ \ \ \ \textcolor{comment}{\#\ Suggest\ useful\ actions\ to\ the\ user:}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00745}00745\ \ \ \ \ \textcolor{comment}{\#\ \ (1)\ using\ user\ site-\/packages\ or\ (2)\ verifying\ the\ permissions}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00746}00746\ \ \ \ \ \textcolor{keywordflow}{if}\ error.errno\ ==\ errno.EACCES:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00747}00747\ \ \ \ \ \ \ \ \ user\_option\_part\ =\ \textcolor{stringliteral}{"{}Consider\ using\ the\ \`{}-\/-\/user`\ option"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00748}00748\ \ \ \ \ \ \ \ \ permissions\_part\ =\ \textcolor{stringliteral}{"{}Check\ the\ permissions"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00749}00749\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00750}00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ running\_under\_virtualenv()\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ using\_user\_site:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ parts.extend(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ user\_option\_part,}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00754}00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ or\ "{}},}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00755}00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ permissions\_part.lower(),}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00756}00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00757}00757\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00758}00758\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ parts.append(permissions\_part)}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00760}00760\ \ \ \ \ \ \ \ \ parts.append(\textcolor{stringliteral}{"{}.\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00762}00762\ \ \ \ \ \textcolor{comment}{\#\ Suggest\ the\ user\ to\ enable\ Long\ Paths\ if\ path\ length\ is}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00763}00763\ \ \ \ \ \textcolor{comment}{\#\ more\ than\ 260}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00764}00764\ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ WINDOWS}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00766}00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ error.errno\ ==\ errno.ENOENT}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00767}00767\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ error.filename}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ len(error.filename)\ >\ 260}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00769}00769\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ parts.append(}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}HINT:\ This\ error\ might\ have\ occurred\ since\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}this\ system\ does\ not\ have\ Windows\ Long\ Path\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}support\ enabled.\ You\ can\ find\ information\ on\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00774}00774\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}how\ to\ enable\ this\ at\ "{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}https://pip.pypa.io/warnings/enable-\/long-\/paths\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00776}00776\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00777}00777\ }
+\DoxyCodeLine{\Hypertarget{install_8py_source_l00778}00778\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(parts).strip()\ +\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+
+\end{DoxyCode}

@@ -1,0 +1,110 @@
+\doxysection{virtualenv.\+py}
+\hypertarget{virtualenv_8py_source}{}\label{virtualenv_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/virtualenv.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/virtualenv.py}}
+\mbox{\hyperlink{virtualenv_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00003}00003\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00004}00004\ \textcolor{keyword}{import}\ site}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00005}00005\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00006}00006\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00008}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a0b14e488ae28d98d262453f3e9cd6e4d}{00008}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a6af29ee0be812257847038c8e64c04af}{00009}}\ \_INCLUDE\_SYSTEM\_SITE\_PACKAGES\_REGEX\ =\ re.compile(}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00010}00010\ \ \ \ \ \textcolor{stringliteral}{r"{}include-\/system-\/site-\/packages\(\backslash\)s*=\(\backslash\)s*(?P<value>true|false)"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00011}00011\ )}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00014}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8dd56ce07625991501866bf7beca1518}{00014}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8dd56ce07625991501866bf7beca1518}{\_running\_under\_venv}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00015}00015\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Checks\ if\ sys.base\_prefix\ and\ sys.prefix\ match.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00016}00016\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ This\ handles\ PEP\ 405\ compliant\ virtual\ environments.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{return}\ sys.prefix\ !=\ getattr(sys,\ \textcolor{stringliteral}{"{}base\_prefix"{}},\ sys.prefix)}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a5496f2aa34633c27104b68fded06c675}{00022}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a5496f2aa34633c27104b68fded06c675}{\_running\_under\_legacy\_virtualenv}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Checks\ if\ sys.real\_prefix\ is\ set.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00024}00024\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ This\ handles\ virtual\ environments\ created\ with\ pypa's\ virtualenv.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00027}00027\ \ \ \ \ \textcolor{comment}{\#\ pypa/virtualenv\ case}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{return}\ hasattr(sys,\ \textcolor{stringliteral}{"{}real\_prefix"{}})}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00031}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_ac75af5dbb9d564141011b69cee1f9157}{00031}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_ac75af5dbb9d564141011b69cee1f9157}{running\_under\_virtualenv}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00032}00032\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}True\ if\ we're\ running\ inside\ a\ virtual\ environment,\ False\ otherwise."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8dd56ce07625991501866bf7beca1518}{\_running\_under\_venv}}()\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a5496f2aa34633c27104b68fded06c675}{\_running\_under\_legacy\_virtualenv}}()}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8ab48bab2123cf6ad0f7e9af349f65b7}{00036}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8ab48bab2123cf6ad0f7e9af349f65b7}{\_get\_pyvenv\_cfg\_lines}}()\ -\/>\ Optional[List[str]]:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00037}00037\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Reads\ \{sys.prefix\}/pyvenv.cfg\ and\ returns\ its\ contents\ as\ list\ of\ lines}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00038}00038\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ Returns\ None,\ if\ it\ could\ not\ read/access\ the\ file.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00041}00041\ \ \ \ \ pyvenv\_cfg\_file\ =\ os.path.join(sys.prefix,\ \textcolor{stringliteral}{"{}pyvenv.cfg"{}})}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Although\ PEP\ 405\ does\ not\ specify,\ the\ built-\/in\ venv\ module\ always}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ writes\ with\ UTF-\/8.\ (pypa/pip\#8717)}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(pyvenv\_cfg\_file,\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f.read().splitlines()\ \ \textcolor{comment}{\#\ avoids\ trailing\ newlines}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00051}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a9afe56965cd48222b80c5e2dff0032ac}{00051}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a9afe56965cd48222b80c5e2dff0032ac}{\_no\_global\_under\_venv}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00052}00052\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ \`{}\{sys.prefix\}/pyvenv.cfg\`{}\ for\ system\ site-\/packages\ inclusion}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00053}00053\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ PEP\ 405\ specifies\ that\ when\ system\ site-\/packages\ are\ not\ supposed\ to\ be}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ visible\ from\ a\ virtual\ environment,\ \`{}pyvenv.cfg\`{}\ must\ contain\ the\ following}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ line:}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00057}00057\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ include-\/system-\/site-\/packages\ =\ false}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00059}00059\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ Additionally,\ log\ a\ warning\ if\ accessing\ the\ file\ fails.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00062}00062\ \ \ \ \ cfg\_lines\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8ab48bab2123cf6ad0f7e9af349f65b7}{\_get\_pyvenv\_cfg\_lines}}()}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{if}\ cfg\_lines\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We're\ not\ in\ a\ "{}sane"{}\ venv,\ so\ assume\ there\ is\ no\ system}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ site-\/packages\ access\ (since\ that's\ PEP\ 405's\ default\ state).}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Could\ not\ access\ 'pyvenv.cfg'\ despite\ a\ virtual\ environment\ "{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}being\ active.\ Assuming\ global\ site-\/packages\ is\ not\ accessible\ "{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ this\ environment."{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ cfg\_lines:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ match\ =\ \_INCLUDE\_SYSTEM\_SITE\_PACKAGES\_REGEX.match(line)}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ match\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ match.group(\textcolor{stringliteral}{"{}value"{}})\ ==\ \textcolor{stringliteral}{"{}false"{}}:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00080}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8830a0064a4ad8e39975af8e08703d67}{00080}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8830a0064a4ad8e39975af8e08703d67}{\_no\_global\_under\_legacy\_virtualenv}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00081}00081\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ "{}no-\/global-\/site-\/packages.txt"{}\ exists\ beside\ site.py}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00082}00082\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00083}00083\ \textcolor{stringliteral}{\ \ \ \ This\ mirrors\ logic\ in\ pypa/virtualenv\ for\ determining\ whether\ system}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00084}00084\ \textcolor{stringliteral}{\ \ \ \ site-\/packages\ are\ visible\ in\ the\ virtual\ environment.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00086}00086\ \ \ \ \ site\_mod\_dir\ =\ os.path.dirname(os.path.abspath(site.\_\_file\_\_))}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00087}00087\ \ \ \ \ no\_global\_site\_packages\_file\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ site\_mod\_dir,}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no-\/global-\/site-\/packages.txt"{}},}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00090}00090\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.exists(no\_global\_site\_packages\_file)}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00094}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a064b52a4fcc71c4a573ad86c883f11c2}{00094}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a064b52a4fcc71c4a573ad86c883f11c2}{virtualenv\_no\_global}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00095}00095\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ a\ boolean,\ whether\ running\ in\ venv\ with\ no\ system\ site-\/packages."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00096}00096\ \ \ \ \ \textcolor{comment}{\#\ PEP\ 405\ compliance\ needs\ to\ be\ checked\ first\ since\ virtualenv\ >=20\ would}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00097}00097\ \ \ \ \ \textcolor{comment}{\#\ return\ True\ for\ both\ checks,\ but\ is\ only\ able\ to\ use\ the\ PEP\ 405\ config.}}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8dd56ce07625991501866bf7beca1518}{\_running\_under\_venv}}():}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a9afe56965cd48222b80c5e2dff0032ac}{\_no\_global\_under\_venv}}()}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a5496f2aa34633c27104b68fded06c675}{\_running\_under\_legacy\_virtualenv}}():}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv_a8830a0064a4ad8e39975af8e08703d67}{\_no\_global\_under\_legacy\_virtualenv}}()}
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{virtualenv_8py_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+
+\end{DoxyCode}

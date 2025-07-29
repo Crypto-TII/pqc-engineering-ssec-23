@@ -1,0 +1,314 @@
+\doxysection{pip.\+\_\+vendor.\+urllib3.\+util.\+ssl\+\_\+match\+\_\+hostname Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname}{}\label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_1_1_certificate_error}{Certificate\+Error}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4e73324fae310085d014f64e5b83907b}{\+\_\+dnsname\+\_\+match}} (dn, hostname, max\+\_\+wildcards=1)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a49f8bd45b97890b8cb4371aae62ac177}{\+\_\+to\+\_\+unicode}} (obj)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4203395c9adcc59035222799a6ac48d6}{\+\_\+ipaddress\+\_\+match}} (ipname, host\+\_\+ip)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_af2bcc3a9dcb3dc3edcb51f091addfc11}{match\+\_\+hostname}} (cert, hostname)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a306ffb6d4de33c930da7e13bb68823d0}{ipaddress}} = None
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}The match_hostname() function from Python 3.3.3, essential when using SSL.\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4e73324fae310085d014f64e5b83907b}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}!\_dnsname\_match@{\_dnsname\_match}}
+\index{\_dnsname\_match@{\_dnsname\_match}!pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection{\texorpdfstring{\_dnsname\_match()}{\_dnsname\_match()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4e73324fae310085d014f64e5b83907b} 
+\+\_\+dnsname\+\_\+match (\begin{DoxyParamCaption}\item[{}]{dn}{, }\item[{}]{hostname}{, }\item[{}]{max\+\_\+wildcards}{ = {\ttfamily 1}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Matching according to RFC 6125, section 6.4.3
+
+http://tools.ietf.org/html/rfc6125#section-6.4.3
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{ssl__match__hostname_8py_source_l00025}{25}} of file \mbox{\hyperlink{ssl__match__hostname_8py_source}{ssl\+\_\+match\+\_\+hostname.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00025\ \textcolor{keyword}{def\ }\_dnsname\_match(dn,\ hostname,\ max\_wildcards=1):}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Matching\ according\ to\ RFC\ 6125,\ section\ 6.4.3}}
+\DoxyCodeLine{00027\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00028\ \textcolor{stringliteral}{\ \ \ \ http://tools.ietf.org/html/rfc6125\#section-\/6.4.3}}
+\DoxyCodeLine{00029\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00030\ \ \ \ \ pats\ =\ []}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ dn:}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{\#\ Ported\ from\ python3-\/syntax:}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{\#\ leftmost,\ *remainder\ =\ dn.split(r'.')}}
+\DoxyCodeLine{00036\ \ \ \ \ parts\ =\ dn.split(\textcolor{stringliteral}{r"{}."{}})}
+\DoxyCodeLine{00037\ \ \ \ \ leftmost\ =\ parts[0]}
+\DoxyCodeLine{00038\ \ \ \ \ remainder\ =\ parts[1:]}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ wildcards\ =\ leftmost.count(\textcolor{stringliteral}{"{}*"{}})}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}\ wildcards\ >\ max\_wildcards:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Issue\ \#17980:\ avoid\ denials\ of\ service\ by\ refusing\ more}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ than\ one\ wildcard\ per\ fragment.\ \ A\ survey\ of\ established}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ policy\ among\ SSL\ implementations\ showed\ it\ to\ be\ a}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ reasonable\ choice.}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ CertificateError(}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}too\ many\ wildcards\ in\ certificate\ DNS\ name:\ "{}}\ +\ repr(dn)}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{\#\ speed\ up\ common\ case\ w/o\ wildcards}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ wildcards:}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dn.lower()\ ==\ hostname.lower()}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{\#\ RFC\ 6125,\ section\ 6.4.3,\ subitem\ 1.}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{\#\ The\ client\ SHOULD\ NOT\ attempt\ to\ match\ a\ presented\ identifier\ in\ which}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{\#\ the\ wildcard\ character\ comprises\ a\ label\ other\ than\ the\ left-\/most\ label.}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{if}\ leftmost\ ==\ \textcolor{stringliteral}{"{}*"{}}:}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ When\ '*'\ is\ a\ fragment\ by\ itself,\ it\ matches\ a\ non-\/empty\ dotless}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ fragment.}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ pats.append(\textcolor{stringliteral}{"{}[\string^.]+"{}})}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{elif}\ leftmost.startswith(\textcolor{stringliteral}{"{}xn-\/-\/"{}})\ \textcolor{keywordflow}{or}\ hostname.startswith(\textcolor{stringliteral}{"{}xn-\/-\/"{}}):}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ RFC\ 6125,\ section\ 6.4.3,\ subitem\ 3.}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ client\ SHOULD\ NOT\ attempt\ to\ match\ a\ presented\ identifier}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ where\ the\ wildcard\ character\ is\ embedded\ within\ an\ A-\/label\ or}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ U-\/label\ of\ an\ internationalized\ domain\ name.}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ pats.append(re.escape(leftmost))}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Otherwise,\ '*'\ matches\ any\ dotless\ string,\ e.g.\ www*}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ pats.append(re.escape(leftmost).replace(\textcolor{stringliteral}{r"{}\(\backslash\)*"{}},\ \textcolor{stringliteral}{"{}[\string^.]*"{}}))}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{\#\ add\ the\ remaining\ fragments,\ ignore\ any\ wildcards}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{for}\ frag\ \textcolor{keywordflow}{in}\ remainder:}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ pats.append(re.escape(frag))}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ pat\ =\ re.compile(\textcolor{stringliteral}{r"{}\(\backslash\)A"{}}\ +\ \textcolor{stringliteral}{r"{}\(\backslash\)."{}}.join(pats)\ +\ \textcolor{stringliteral}{r"{}\(\backslash\)Z"{}},\ re.IGNORECASE)}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{return}\ pat.match(hostname)}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{ssl__match__hostname_8py_source_l00098}{match\+\_\+hostname()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=300pt]{d5/d6c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4e73324fae310085d014f64e5b83907b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4203395c9adcc59035222799a6ac48d6}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}!\_ipaddress\_match@{\_ipaddress\_match}}
+\index{\_ipaddress\_match@{\_ipaddress\_match}!pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection{\texorpdfstring{\_ipaddress\_match()}{\_ipaddress\_match()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4203395c9adcc59035222799a6ac48d6} 
+\+\_\+ipaddress\+\_\+match (\begin{DoxyParamCaption}\item[{}]{ipname}{, }\item[{}]{host\+\_\+ip}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Exact matching of IP addresses.
+
+RFC 6125 explicitly doesn't define an algorithm for this
+(section 1.7.2 - "Out of Scope").
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{ssl__match__hostname_8py_source_l00086}{86}} of file \mbox{\hyperlink{ssl__match__hostname_8py_source}{ssl\+\_\+match\+\_\+hostname.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00086\ \textcolor{keyword}{def\ }\_ipaddress\_match(ipname,\ host\_ip):}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Exact\ matching\ of\ IP\ addresses.}}
+\DoxyCodeLine{00088\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00089\ \textcolor{stringliteral}{\ \ \ \ RFC\ 6125\ explicitly\ doesn't\ define\ an\ algorithm\ for\ this}}
+\DoxyCodeLine{00090\ \textcolor{stringliteral}{\ \ \ \ (section\ 1.7.2\ -\/\ "{}Out\ of\ Scope"{}).}}
+\DoxyCodeLine{00091\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{\#\ OpenSSL\ may\ add\ a\ trailing\ newline\ to\ a\ subjectAltName's\ IP\ address}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{\#\ Divergence\ from\ upstream:\ ipaddress\ can't\ handle\ byte\ str}}
+\DoxyCodeLine{00094\ \ \ \ \ ip\ =\ ipaddress.ip\_address(\_to\_unicode(ipname).rstrip())}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{return}\ ip\ ==\ host\_ip}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ssl__match__hostname_8py_source_l00079}{\+\_\+to\+\_\+unicode()}}.
+
+
+
+Referenced by \mbox{\hyperlink{ssl__match__hostname_8py_source_l00098}{match\+\_\+hostname()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=280pt]{d5/d6c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4203395c9adcc59035222799a6ac48d6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=303pt]{d5/d6c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a4203395c9adcc59035222799a6ac48d6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a49f8bd45b97890b8cb4371aae62ac177}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}!\_to\_unicode@{\_to\_unicode}}
+\index{\_to\_unicode@{\_to\_unicode}!pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection{\texorpdfstring{\_to\_unicode()}{\_to\_unicode()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a49f8bd45b97890b8cb4371aae62ac177} 
+\+\_\+to\+\_\+unicode (\begin{DoxyParamCaption}\item[{}]{obj}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{ssl__match__hostname_8py_source_l00079}{79}} of file \mbox{\hyperlink{ssl__match__hostname_8py_source}{ssl\+\_\+match\+\_\+hostname.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00079\ \textcolor{keyword}{def\ }\_to\_unicode(obj):}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(obj,\ str)\ \textcolor{keywordflow}{and}\ sys.version\_info\ <\ (3,):}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ignored\ flake8\ \#\ F821\ to\ support\ python\ 2.7\ function}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ obj\ =\ unicode(obj,\ encoding=\textcolor{stringliteral}{"{}ascii"{}},\ errors=\textcolor{stringliteral}{"{}strict"{}})\ \ \textcolor{comment}{\#\ noqa:\ F821}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{return}\ obj}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{ssl__match__hostname_8py_source_l00086}{\+\_\+ipaddress\+\_\+match()}}, and \mbox{\hyperlink{ssl__match__hostname_8py_source_l00098}{match\+\_\+hostname()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d5/d6c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a49f8bd45b97890b8cb4371aae62ac177_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_af2bcc3a9dcb3dc3edcb51f091addfc11}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}!match\_hostname@{match\_hostname}}
+\index{match\_hostname@{match\_hostname}!pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection{\texorpdfstring{match\_hostname()}{match\_hostname()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_af2bcc3a9dcb3dc3edcb51f091addfc11} 
+match\+\_\+hostname (\begin{DoxyParamCaption}\item[{}]{cert}{, }\item[{}]{hostname}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Verify that *cert* (in decoded format as returned by
+SSLSocket.getpeercert()) matches the *hostname*.  RFC 2818 and RFC 6125
+rules are followed, but IP addresses are not accepted for *hostname*.
+
+CertificateError is raised on failure. On success, the function
+returns nothing.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{ssl__match__hostname_8py_source_l00098}{98}} of file \mbox{\hyperlink{ssl__match__hostname_8py_source}{ssl\+\_\+match\+\_\+hostname.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00098\ \textcolor{keyword}{def\ }match\_hostname(cert,\ hostname):}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Verify\ that\ *cert*\ (in\ decoded\ format\ as\ returned\ by}}
+\DoxyCodeLine{00100\ \textcolor{stringliteral}{\ \ \ \ SSLSocket.getpeercert())\ matches\ the\ *hostname*.\ \ RFC\ 2818\ and\ RFC\ 6125}}
+\DoxyCodeLine{00101\ \textcolor{stringliteral}{\ \ \ \ rules\ are\ followed,\ but\ IP\ addresses\ are\ not\ accepted\ for\ *hostname*.}}
+\DoxyCodeLine{00102\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00103\ \textcolor{stringliteral}{\ \ \ \ CertificateError\ is\ raised\ on\ failure.\ On\ success,\ the\ function}}
+\DoxyCodeLine{00104\ \textcolor{stringliteral}{\ \ \ \ returns\ nothing.}}
+\DoxyCodeLine{00105\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ cert:}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}empty\ or\ no\ certificate,\ match\_hostname\ needs\ a\ "{}}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}SSL\ socket\ or\ SSL\ context\ with\ either\ "{}}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CERT\_OPTIONAL\ or\ CERT\_REQUIRED"{}}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Divergence\ from\ upstream:\ ipaddress\ can't\ handle\ byte\ str}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ host\_ip\ =\ ipaddress.ip\_address(\_to\_unicode(hostname))}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordflow}{except}\ (UnicodeError,\ ValueError):}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ValueError:\ Not\ an\ IP\ address\ (common\ case)}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ UnicodeError:\ Divergence\ from\ upstream:\ Have\ to\ deal\ with\ ipaddress\ not\ taking}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ byte\ strings.\ \ addresses\ should\ be\ all\ ascii,\ so\ we\ consider\ it\ not}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ an\ ipaddress\ in\ this\ case}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ host\_ip\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Divergence\ from\ upstream:\ Make\ ipaddress\ library\ optional}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ipaddress\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ host\_ip\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ Defensive}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{00127\ \ \ \ \ dnsnames\ =\ []}
+\DoxyCodeLine{00128\ \ \ \ \ san\ =\ cert.get(\textcolor{stringliteral}{"{}subjectAltName"{}},\ ())}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ value\ \textcolor{keywordflow}{in}\ san:}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}DNS"{}}:}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ host\_ip\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \_dnsname\_match(value,\ hostname):}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ dnsnames.append(value)}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ key\ ==\ \textcolor{stringliteral}{"{}IP\ Address"{}}:}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ host\_ip\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \_ipaddress\_match(value,\ host\_ip):}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ dnsnames.append(value)}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ dnsnames:}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ subject\ is\ only\ checked\ when\ there\ is\ no\ dNSName\ entry}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ subjectAltName}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ sub\ \textcolor{keywordflow}{in}\ cert.get(\textcolor{stringliteral}{"{}subject"{}},\ ()):}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ value\ \textcolor{keywordflow}{in}\ sub:}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ XXX\ according\ to\ RFC\ 2818,\ the\ most\ specific\ Common\ Name}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ must\ be\ used.}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}commonName"{}}:}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_dnsname\_match(value,\ hostname):}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dnsnames.append(value)}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{if}\ len(dnsnames)\ >\ 1:}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ CertificateError(}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}hostname\ \%r\ "{}}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}doesn't\ match\ either\ of\ \%s"{}}\ \%\ (hostname,\ \textcolor{stringliteral}{"{},\ "{}}.join(map(repr,\ dnsnames)))}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{elif}\ len(dnsnames)\ ==\ 1:}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ CertificateError(\textcolor{stringliteral}{"{}hostname\ \%r\ doesn't\ match\ \%r"{}}\ \%\ (hostname,\ dnsnames[0]))}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ CertificateError(}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no\ appropriate\ commonName\ or\ subjectAltName\ fields\ were\ found"{}}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ssl__match__hostname_8py_source_l00025}{\+\_\+dnsname\+\_\+match()}}, \mbox{\hyperlink{ssl__match__hostname_8py_source_l00086}{\+\_\+ipaddress\+\_\+match()}}, and \mbox{\hyperlink{ssl__match__hostname_8py_source_l00079}{\+\_\+to\+\_\+unicode()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d5/d6c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_af2bcc3a9dcb3dc3edcb51f091addfc11_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a306ffb6d4de33c930da7e13bb68823d0}\index{pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}!ipaddress@{ipaddress}}
+\index{ipaddress@{ipaddress}!pip.\_vendor.urllib3.util.ssl\_match\_hostname@{pip.\_vendor.urllib3.util.ssl\_match\_hostname}}
+\doxysubsubsection{\texorpdfstring{ipaddress}{ipaddress}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__match__hostname_a306ffb6d4de33c930da7e13bb68823d0} 
+ipaddress = None}
+
+
+
+Definition at line \mbox{\hyperlink{ssl__match__hostname_8py_source_l00016}{16}} of file \mbox{\hyperlink{ssl__match__hostname_8py_source}{ssl\+\_\+match\+\_\+hostname.\+py}}.
+

@@ -1,0 +1,219 @@
+\doxysection{\+\_\+sysconfig.\+py}
+\hypertarget{__sysconfig_8py_source}{}\label{__sysconfig_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/locations/\_sysconfig.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/locations/\_sysconfig.py}}
+\mbox{\hyperlink{__sysconfig_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00003}00003\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00004}00004\ \textcolor{keyword}{import}\ sysconfig}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00005}00005\ \textcolor{keyword}{import}\ typing}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ InvalidSchemeCombination,\ UserInstallationInvalid}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1scheme}{pip.\_internal.models.scheme}}\ \textcolor{keyword}{import}\ SCHEME\_KEYS,\ Scheme}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv}{pip.\_internal.utils.virtualenv}}\ \textcolor{keyword}{import}\ running\_under\_virtualenv}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00011}00011\ \textcolor{keyword}{from}\ .base\ \textcolor{keyword}{import}\ change\_root,\ get\_major\_minor\_version,\ is\_osx\_framework}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00013}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a0b14e488ae28d98d262453f3e9cd6e4d}{00013}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00016}00016\ \textcolor{comment}{\#\ Notes\ on\ \_infer\_*\ functions.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00017}00017\ \textcolor{comment}{\#\ Unfortunately\ \`{}\`{}get\_default\_scheme()``\ didn't\ exist\ before\ 3.10,\ so\ there's\ no}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00018}00018\ \textcolor{comment}{\#\ way\ to\ ask\ things\ like\ "{}what\ is\ the\ '\_prefix'\ scheme\ on\ this\ platform"{}.\ These}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00019}00019\ \textcolor{comment}{\#\ functions\ try\ to\ answer\ that\ with\ some\ heuristics\ while\ accounting\ for\ ad-\/hoc}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00020}00020\ \textcolor{comment}{\#\ platforms\ not\ covered\ by\ CPython's\ default\ sysconfig\ implementation.\ If\ the}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00021}00021\ \textcolor{comment}{\#\ ad-\/hoc\ implementation\ does\ not\ fully\ implement\ sysconfig,\ we'll\ fall\ back\ to}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00022}00022\ \textcolor{comment}{\#\ a\ POSIX\ scheme.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a04ae4e72a1917ac18943ee0c9ce58c55}{00024}}\ \_AVAILABLE\_SCHEMES\ =\ set(sysconfig.get\_scheme\_names())}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a87b49a0760a318ec0735ae41bbecf1e0}{00026}}\ \_PREFERRED\_SCHEME\_API\ =\ getattr(sysconfig,\ \textcolor{stringliteral}{"{}get\_preferred\_scheme"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a2ac002b12e04f8efac2297804383ed09}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a2ac002b12e04f8efac2297804383ed09}{\_should\_use\_osx\_framework\_prefix}}()\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ for\ Apple's\ \`{}\`{}osx\_framework\_library\`{}\`{}\ scheme.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00031}00031\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ Python\ distributed\ by\ Apple's\ Command\ Line\ Tools\ has\ this\ special\ scheme}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ that's\ used\ when:}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00034}00034\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ *\ This\ is\ a\ framework\ build.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ *\ We\ are\ installing\ into\ the\ system\ prefix.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00037}00037\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ This\ does\ not\ account\ for\ \`{}\`{}pip\ install\ -\/-\/prefix\`{}\`{}\ (also\ means\ we're\ not}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ installing\ to\ the\ system\ prefix),\ which\ should\ use\ \`{}\`{}posix\_prefix\`{}\`{},\ but}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ logic\ here\ means\ \`{}\`{}\_infer\_prefix()\`{}\`{}\ outputs\ \`{}\`{}osx\_framework\_library\`{}\`{}.\ But}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ since\ \`{}\`{}prefix\`{}\`{}\ is\ not\ available\ for\ \`{}\`{}sysconfig.get\_default\_scheme()\`{}\`{},}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ which\ is\ the\ stdlib\ replacement\ for\ \`{}\`{}\_infer\_prefix()\`{}\`{},\ presumably\ Apple}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ wouldn't\ be\ able\ to\ magically\ switch\ between\ \`{}\`{}osx\_framework\_library\`{}\`{}\ and}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ \`{}\`{}posix\_prefix\`{}\`{}.\ \`{}\`{}\_infer\_prefix()\`{}\`{}\ returning\ \`{}\`{}osx\_framework\_library\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ means\ its\ behavior\ is\ consistent\ whether\ we\ use\ the\ stdlib\ implementation}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ or\ our\ own,\ and\ we\ deal\ with\ this\ special\ case\ in\ \`{}\`{}get\_scheme()\`{}\`{}\ instead.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}osx\_framework\_library"{}}\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ running\_under\_virtualenv()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ is\_osx\_framework()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00052}00052\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00055}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a67da6d0997337365a42a1e82864d0153}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a67da6d0997337365a42a1e82864d0153}{\_infer\_prefix}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ find\ a\ prefix\ scheme\ for\ the\ current\ platform.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00057}00057\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ This\ tries:}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00059}00059\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ *\ A\ special\ \`{}\`{}osx\_framework\_library\`{}\`{}\ for\ Python\ distributed\ by\ Apple's}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ \ \ Command\ Line\ Tools,\ when\ not\ running\ in\ a\ virtual\ environment.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ *\ Implementation\ +\ OS,\ used\ by\ PyPy\ on\ Windows\ (\`{}\`{}pypy\_nt\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ *\ Implementation\ without\ OS,\ used\ by\ PyPy\ on\ POSIX\ (\`{}\`{}pypy\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ *\ OS\ +\ "{}prefix"{},\ used\ by\ CPython\ on\ POSIX\ (\`{}\`{}posix\_prefix\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ *\ Just\ the\ OS\ name,\ used\ by\ CPython\ on\ Windows\ (\`{}\`{}nt\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00066}00066\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ If\ none\ of\ the\ above\ works,\ fall\ back\ to\ \`{}\`{}posix\_prefix\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00069}00069\ \ \ \ \ \textcolor{keywordflow}{if}\ \_PREFERRED\_SCHEME\_API:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a87b49a0760a318ec0735ae41bbecf1e0}{\_PREFERRED\_SCHEME\_API}}(\textcolor{stringliteral}{"{}prefix"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a2ac002b12e04f8efac2297804383ed09}{\_should\_use\_osx\_framework\_prefix}}():}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}osx\_framework\_library"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00073}00073\ \ \ \ \ implementation\_suffixed\ =\ f\textcolor{stringliteral}{"{}\{sys.implementation.name\}\_\{os.name\}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{if}\ implementation\_suffixed\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ implementation\_suffixed}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.implementation.name\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sys.implementation.name}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00078}00078\ \ \ \ \ suffixed\ =\ f\textcolor{stringliteral}{"{}\{os.name\}\_prefix"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{if}\ suffixed\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ suffixed}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{if}\ os.name\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:\ \ \textcolor{comment}{\#\ On\ Windows,\ prefx\ is\ just\ called\ "{}nt"{}.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.name}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00083}00083\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}posix\_prefix"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00086}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a5f276460702a4b38a24b86242165f692}{00086}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a5f276460702a4b38a24b86242165f692}{\_infer\_user}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00087}00087\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ find\ a\ user\ scheme\ for\ the\ current\ platform."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{if}\ \_PREFERRED\_SCHEME\_API:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a87b49a0760a318ec0735ae41bbecf1e0}{\_PREFERRED\_SCHEME\_API}}(\textcolor{stringliteral}{"{}user"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_osx\_framework()\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ running\_under\_virtualenv():}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ suffixed\ =\ \textcolor{stringliteral}{"{}osx\_framework\_user"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ suffixed\ =\ f\textcolor{stringliteral}{"{}\{os.name\}\_user"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{if}\ suffixed\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ suffixed}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00096}00096\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}posix\_user"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:\ \ \textcolor{comment}{\#\ User\ scheme\ unavailable.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_user_installation_invalid}{UserInstallationInvalid}}()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}posix\_user"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00101}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a8e9b7f6f285d7f5812f273813f66b866}{00101}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a8e9b7f6f285d7f5812f273813f66b866}{\_infer\_home}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00102}00102\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ find\ a\ home\ for\ the\ current\ platform."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{if}\ \_PREFERRED\_SCHEME\_API:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a87b49a0760a318ec0735ae41bbecf1e0}{\_PREFERRED\_SCHEME\_API}}(\textcolor{stringliteral}{"{}home"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00105}00105\ \ \ \ \ suffixed\ =\ f\textcolor{stringliteral}{"{}\{os.name\}\_home"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{if}\ suffixed\ \textcolor{keywordflow}{in}\ \_AVAILABLE\_SCHEMES:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ suffixed}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}posix\_home"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00111}00111\ \textcolor{comment}{\#\ Update\ these\ keys\ if\ the\ user\ sets\ a\ custom\ home.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00112}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a43f443906d383426cee31d0c94fa6014}{00112}}\ \_HOME\_KEYS\ =\ [}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00113}00113\ \ \ \ \ \textcolor{stringliteral}{"{}installed\_base"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00114}00114\ \ \ \ \ \textcolor{stringliteral}{"{}base"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00115}00115\ \ \ \ \ \textcolor{stringliteral}{"{}installed\_platbase"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00116}00116\ \ \ \ \ \textcolor{stringliteral}{"{}platbase"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00117}00117\ \ \ \ \ \textcolor{stringliteral}{"{}prefix"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00118}00118\ \ \ \ \ \textcolor{stringliteral}{"{}exec\_prefix"{}},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00119}00119\ ]}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00120}00120\ \textcolor{keywordflow}{if}\ sysconfig.get\_config\_var(\textcolor{stringliteral}{"{}userbase"{}})\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00121}00121\ \ \ \ \ \_HOME\_KEYS.append(\textcolor{stringliteral}{"{}userbase"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00124}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a554e2b6a28bc7cac8258a43f154610df}{00124}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a554e2b6a28bc7cac8258a43f154610df}{get\_scheme}}(}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00125}00125\ \ \ \ \ dist\_name:\ str,}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00126}00126\ \ \ \ \ user:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00127}00127\ \ \ \ \ home:\ typing.Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00128}00128\ \ \ \ \ root:\ typing.Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00129}00129\ \ \ \ \ isolated:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00130}00130\ \ \ \ \ prefix:\ typing.Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00131}00131\ )\ -\/>\ Scheme:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00132}00132\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ Get\ the\ "{}scheme"{}\ corresponding\ to\ the\ input\ parameters.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00134}00134\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ :param\ dist\_name:\ the\ name\ of\ the\ package\ to\ retrieve\ the\ scheme\ for,\ used}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ in\ the\ headers\ scheme\ path}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ :param\ user:\ indicates\ to\ use\ the\ "{}user"{}\ scheme}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ :param\ home:\ indicates\ to\ use\ the\ "{}home"{}\ scheme}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ :param\ root:\ root\ under\ which\ other\ directories\ are\ re-\/based}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ :param\ isolated:\ ignored,\ but\ kept\ for\ distutils\ compatibility\ (where}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ this\ controls\ whether\ the\ user-\/site\ pydistutils.cfg\ is\ honored)}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ :param\ prefix:\ indicates\ to\ use\ the\ "{}prefix"{}\ scheme\ and\ provides\ the}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ base\ directory\ for\ the\ same}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00145}00145\ \ \ \ \ \textcolor{keywordflow}{if}\ user\ \textcolor{keywordflow}{and}\ prefix:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination}{InvalidSchemeCombination}}(\textcolor{stringliteral}{"{}-\/-\/user"{}},\ \textcolor{stringliteral}{"{}-\/-\/prefix"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ home\ \textcolor{keywordflow}{and}\ prefix:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_scheme_combination}{InvalidSchemeCombination}}(\textcolor{stringliteral}{"{}-\/-\/home"{}},\ \textcolor{stringliteral}{"{}-\/-\/prefix"{}})}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00150}00150\ \ \ \ \ \textcolor{keywordflow}{if}\ home\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ scheme\_name\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a8e9b7f6f285d7f5812f273813f66b866}{\_infer\_home}}()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{elif}\ user:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ scheme\_name\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a5f276460702a4b38a24b86242165f692}{\_infer\_user}}()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ scheme\_name\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a67da6d0997337365a42a1e82864d0153}{\_infer\_prefix}}()}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00157}00157\ \ \ \ \ \textcolor{comment}{\#\ Special\ case:\ When\ installing\ into\ a\ custom\ prefix,\ use\ posix\_prefix}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00158}00158\ \ \ \ \ \textcolor{comment}{\#\ instead\ of\ osx\_framework\_library.\ See\ \_should\_use\_osx\_framework\_prefix()}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00159}00159\ \ \ \ \ \textcolor{comment}{\#\ docstring\ for\ details.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{if}\ prefix\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ scheme\_name\ ==\ \textcolor{stringliteral}{"{}osx\_framework\_library"{}}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ scheme\_name\ =\ \textcolor{stringliteral}{"{}posix\_prefix"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}\ home\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ variables\ =\ \{k:\ home\ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ \_HOME\_KEYS\}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{elif}\ prefix\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ variables\ =\ \{k:\ prefix\ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ \_HOME\_KEYS\}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00167}00167\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ variables\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00170}00170\ \ \ \ \ paths\ =\ sysconfig.get\_paths(scheme=scheme\_name,\ vars=variables)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00172}00172\ \ \ \ \ \textcolor{comment}{\#\ Logic\ here\ is\ very\ arbitrary,\ we're\ doing\ it\ for\ compatibility,\ don't\ ask.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00173}00173\ \ \ \ \ \textcolor{comment}{\#\ 1.\ Pip\ historically\ uses\ a\ special\ header\ path\ in\ virtual\ environments.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00174}00174\ \ \ \ \ \textcolor{comment}{\#\ 2.\ If\ the\ distribution\ name\ is\ not\ known,\ distutils\ uses\ 'UNKNOWN'.\ We}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00175}00175\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ only\ do\ the\ same\ when\ not\ running\ in\ a\ virtual\ environment\ because}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00176}00176\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ pip's\ historical\ header\ path\ logic\ (see\ point\ 1)\ did\ not\ do\ this.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{if}\ running\_under\_virtualenv():}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ user:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ base\ =\ variables.get(\textcolor{stringliteral}{"{}userbase"{}},\ sys.prefix)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ base\ =\ variables.get(\textcolor{stringliteral}{"{}base"{}},\ sys.prefix)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ python\_xy\ =\ f\textcolor{stringliteral}{"{}python\{get\_major\_minor\_version()\}"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ paths[\textcolor{stringliteral}{"{}include"{}}]\ =\ os.path.join(base,\ \textcolor{stringliteral}{"{}include"{}},\ \textcolor{stringliteral}{"{}site"{}},\ python\_xy)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ dist\_name:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ dist\_name\ =\ \textcolor{stringliteral}{"{}UNKNOWN"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00187}00187\ \ \ \ \ scheme\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1scheme_1_1_scheme}{Scheme}}(}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ platlib=paths[\textcolor{stringliteral}{"{}platlib"{}}],}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ purelib=paths[\textcolor{stringliteral}{"{}purelib"{}}],}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ headers=os.path.join(paths[\textcolor{stringliteral}{"{}include"{}}],\ dist\_name),}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ scripts=paths[\textcolor{stringliteral}{"{}scripts"{}}],}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ data=paths[\textcolor{stringliteral}{"{}data"{}}],}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00193}00193\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{if}\ root\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ SCHEME\_KEYS:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ change\_root(root,\ getattr(scheme,\ key))}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ setattr(scheme,\ key,\ value)}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{return}\ scheme}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00201}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a3a258f4512c269052345d9545c7b3bda}{00201}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a3a258f4512c269052345d9545c7b3bda}{get\_bin\_prefix}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00202}00202\ \ \ \ \ \textcolor{comment}{\#\ Forcing\ to\ use\ /usr/local/bin\ for\ standard\ macOS\ framework\ installs.}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform[:6]\ ==\ \textcolor{stringliteral}{"{}darwin"{}}\ \textcolor{keywordflow}{and}\ sys.prefix[:16]\ ==\ \textcolor{stringliteral}{"{}/System/Library/"{}}:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}/usr/local/bin"{}}}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{return}\ sysconfig.get\_paths()[\textcolor{stringliteral}{"{}scripts"{}}]}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00208}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a4a460826cbf7ddfefd080d305785a8e3}{00208}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a4a460826cbf7ddfefd080d305785a8e3}{get\_purelib}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00209}00209\ \ \ \ \ \textcolor{keywordflow}{return}\ sysconfig.get\_paths()[\textcolor{stringliteral}{"{}purelib"{}}]}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00212}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a142f17e67c6be6c1d6dc7a4fd9dc6842}{00212}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__sysconfig_a142f17e67c6be6c1d6dc7a4fd9dc6842}{get\_platlib}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__sysconfig_8py_source_l00213}00213\ \ \ \ \ \textcolor{keywordflow}{return}\ sysconfig.get\_paths()[\textcolor{stringliteral}{"{}platlib"{}}]}
+
+\end{DoxyCode}

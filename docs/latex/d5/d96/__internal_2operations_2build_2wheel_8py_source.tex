@@ -1,0 +1,43 @@
+\doxysection{wheel.\+py}
+\hypertarget{__internal_2operations_2build_2wheel_8py_source}{}\label{__internal_2operations_2build_2wheel_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/operations/build/wheel.py}}
+\mbox{\hyperlink{__internal_2operations_2build_2wheel_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Optional}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyproject__hooks}{pip.\_vendor.pyproject\_hooks}}\ \textcolor{keyword}{import}\ BuildBackendHookCaller}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1subprocess}{pip.\_internal.utils.subprocess}}\ \textcolor{keyword}{import}\ runner\_with\_spinner\_message}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel_a0b14e488ae28d98d262453f3e9cd6e4d}{00009}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel_a5d6cb857ba2ab9645d20089185d8e34d}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1operations_1_1build_1_1wheel_a5d6cb857ba2ab9645d20089185d8e34d}{build\_wheel\_pep517}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00013}00013\ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00014}00014\ \ \ \ \ backend:\ BuildBackendHookCaller,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00015}00015\ \ \ \ \ metadata\_directory:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00016}00016\ \ \ \ \ tempd:\ str,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00017}00017\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00018}00018\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Build\ one\ InstallRequirement\ using\ the\ PEP\ 517\ build\ process.}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00019}00019\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Returns\ path\ to\ wheel\ if\ successfully\ built.\ Otherwise,\ returns\ None.}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{assert}\ metadata\_directory\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Destination\ directory:\ \%s"{}},\ tempd)}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ runner\ =\ runner\_with\_spinner\_message(}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Building\ wheel\ for\ \{name\}\ (pyproject.toml)"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ backend.subprocess\_runner(runner):}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ wheel\_name\ =\ backend.build\_wheel(}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempd,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ metadata\_directory=metadata\_directory,}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ logger.error(\textcolor{stringliteral}{"{}Failed\ building\ wheel\ for\ \%s"{}},\ name)}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__internal_2operations_2build_2wheel_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(tempd,\ wheel\_name)}
+
+\end{DoxyCode}

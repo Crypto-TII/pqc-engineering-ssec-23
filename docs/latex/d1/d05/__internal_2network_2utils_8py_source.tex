@@ -1,0 +1,102 @@
+\doxysection{utils.\+py}
+\hypertarget{__internal_2network_2utils_8py_source}{}\label{__internal_2network_2utils_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/utils.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/utils.py}}
+\mbox{\hyperlink{__internal_2network_2utils_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils}{00001}}\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Dict,\ Generator}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00003}00003\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models}{pip.\_vendor.requests.models}}\ \textcolor{keyword}{import}\ CONTENT\_CHUNK\_SIZE,\ Response}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ NetworkConnectionError}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00007}00007\ \textcolor{comment}{\#\ The\ following\ comments\ and\ HTTP\ headers\ were\ originally\ added\ by}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00008}00008\ \textcolor{comment}{\#\ Donald\ Stufft\ in\ git\ commit\ 22c562429a61bb77172039e480873fb239dd8c03.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00009}00009\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00010}00010\ \textcolor{comment}{\#\ We\ use\ Accept-\/Encoding:\ identity\ here\ because\ requests\ defaults\ to}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00011}00011\ \textcolor{comment}{\#\ accepting\ compressed\ responses.\ This\ breaks\ in\ a\ variety\ of\ ways}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00012}00012\ \textcolor{comment}{\#\ depending\ on\ how\ the\ server\ is\ configured.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00013}00013\ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ isn't\ a\ compressible\ file}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00014}00014\ \textcolor{comment}{\#\ \ \ and\ will\ leave\ the\ file\ alone\ and\ with\ an\ empty\ Content-\/Encoding}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00015}00015\ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ is\ already\ compressed\ and}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00016}00016\ \textcolor{comment}{\#\ \ \ will\ leave\ the\ file\ alone,\ adding\ a\ Content-\/Encoding:\ gzip\ header}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00017}00017\ \textcolor{comment}{\#\ -\/\ Some\ servers\ won't\ notice\ anything\ at\ all\ and\ will\ take\ a\ file}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00018}00018\ \textcolor{comment}{\#\ \ \ that's\ already\ been\ compressed\ and\ compress\ it\ again,\ and\ set}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00019}00019\ \textcolor{comment}{\#\ \ \ the\ Content-\/Encoding:\ gzip\ header}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00020}00020\ \textcolor{comment}{\#\ By\ setting\ this\ to\ request\ only\ the\ identity\ encoding\ we're\ hoping}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00021}00021\ \textcolor{comment}{\#\ to\ eliminate\ the\ third\ case.\ \ Hopefully\ there\ does\ not\ exist\ a\ server}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00022}00022\ \textcolor{comment}{\#\ which\ when\ given\ a\ file\ will\ notice\ it\ is\ already\ compressed\ and\ that}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00023}00023\ \textcolor{comment}{\#\ you're\ not\ asking\ for\ a\ compressed\ file\ and\ will\ then\ decompress\ it}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00024}00024\ \textcolor{comment}{\#\ before\ sending\ because\ if\ that's\ the\ case\ I\ don't\ think\ it'll\ ever\ be}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00025}00025\ \textcolor{comment}{\#\ possible\ to\ make\ this\ work.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_af9f99b630b301805c65e9be529f884ac}{00026}}\ HEADERS:\ Dict[str,\ str]\ =\ \{\textcolor{stringliteral}{"{}Accept-\/Encoding"{}}:\ \textcolor{stringliteral}{"{}identity"{}}\}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a0294c612f99a946e4244fc845b433f82}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a0294c612f99a946e4244fc845b433f82}{raise\_for\_status}}(resp:\ Response)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00030}00030\ \ \ \ \ http\_error\_msg\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(resp.reason,\ bytes):}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ attempt\ to\ decode\ utf-\/8\ first\ because\ some\ servers}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ choose\ to\ localize\ their\ reason\ strings.\ If\ the\ string}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ isn't\ utf-\/8,\ we\ fall\ back\ to\ iso-\/8859-\/1\ for\ all\ other}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ encodings.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ resp.reason.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ resp.reason.decode(\textcolor{stringliteral}{"{}iso-\/8859-\/1"{}})}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ reason\ =\ resp.reason}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}\ 400\ <=\ resp.status\_code\ <\ 500:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{resp.status\_code\}\ Client\ Error:\ \{reason\}\ for\ url:\ \{resp.url\}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{elif}\ 500\ <=\ resp.status\_code\ <\ 600:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{resp.status\_code\}\ Server\ Error:\ \{reason\}\ for\ url:\ \{resp.url\}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{if}\ http\_error\_msg:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_network_connection_error}{NetworkConnectionError}}(http\_error\_msg,\ response=resp)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00057}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a9d73e36c9600b63a9c23a32aa761c98e}{00057}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a9d73e36c9600b63a9c23a32aa761c98e}{response\_chunks}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00058}00058\ \ \ \ \ response:\ Response,\ chunk\_size:\ int\ =\ CONTENT\_CHUNK\_SIZE}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00059}00059\ )\ -\/>\ Generator[bytes,\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00060}00060\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ requests\ Response,\ provide\ the\ data\ chunks."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case\ for\ urllib3.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ response.raw.stream(}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\_size,}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ use\ decode\_content=False\ here\ because\ we\ don't}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ want\ urllib3\ to\ mess\ with\ the\ raw\ bytes\ we\ get}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ from\ the\ server.\ If\ we\ decompress\ inside\ of}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib3\ then\ we\ cannot\ verify\ the\ checksum}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ because\ the\ checksum\ will\ be\ of\ the\ compressed}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file.\ This\ breakage\ will\ only\ occur\ if\ the}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ server\ adds\ a\ Content-\/Encoding\ header,\ which}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ depends\ on\ how\ the\ server\ was\ configured:}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ isn't\ a}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ compressible\ file\ and\ will\ leave\ the\ file\ alone}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ and\ with\ an\ empty\ Content-\/Encoding}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ is}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ already\ compressed\ and\ will\ leave\ the\ file}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ alone\ and\ will\ add\ a\ Content-\/Encoding:\ gzip}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ header}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ won't\ notice\ anything\ at\ all\ and}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ will\ take\ a\ file\ that's\ already\ been\ compressed}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ and\ compress\ it\ again\ and\ set\ the}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ Content-\/Encoding:\ gzip\ header}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ By\ setting\ this\ not\ to\ decode\ automatically\ we}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hope\ to\ eliminate\ problems\ with\ the\ second\ case.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ decode\_content=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Standard\ file-\/like\ object.}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ response.raw.read(chunk\_size)}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ chunk:}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{__internal_2network_2utils_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+
+\end{DoxyCode}

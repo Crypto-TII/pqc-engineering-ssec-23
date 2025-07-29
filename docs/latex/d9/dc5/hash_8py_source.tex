@@ -1,0 +1,65 @@
+\doxysection{hash.\+py}
+\hypertarget{hash_8py_source}{}\label{hash_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/hash.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/hash.py}}
+\mbox{\hyperlink{hash_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1hash}{00001}}\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00002}00002\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00003}00003\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00004}00004\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ Values}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00005}00005\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1base__command}{pip.\_internal.cli.base\_command}}\ \textcolor{keyword}{import}\ Command}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ ERROR,\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1hashes}{pip.\_internal.utils.hashes}}\ \textcolor{keyword}{import}\ FAVORITE\_HASH,\ STRONG\_HASHES}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ read\_chunks,\ write\_output}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1hash_a0b14e488ae28d98d262453f3e9cd6e4d}{00012}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00015}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command}{00015}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command}{HashCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command}{Command}}):}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ Compute\ a\ hash\ of\ a\ local\ package\ archive.}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00018}00018\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ These\ can\ be\ used\ with\ -\/-\/hash\ in\ a\ requirements\ file\ to\ do\ repeatable}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ installs.}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command}{00023}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}\%prog\ [options]\ <file>\ ..."{}}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00024}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command}{00024}}\ \ \ \ \ ignore\_require\_venv\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00026}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command_a1168021049b96b5b9957aa2186f7f72c}{00026}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command_a1168021049b96b5b9957aa2186f7f72c}{add\_options}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/a"{}},}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/algorithm"{}},}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}algorithm"{}},}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ choices=STRONG\_HASHES,}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store"{}},}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ default=FAVORITE\_HASH,}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}The\ hash\ algorithm\ to\ use:\ one\ of\ \{\}"{}}.format(}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{},\ "{}}.join(STRONG\_HASHES)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00038}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command}{00038}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command_aed702143af1fdca26efdec21bf5c396e}{00040}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1hash_1_1_hash_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ args:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.print\_usage(sys.stderr)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ERROR}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ algorithm\ =\ options.algorithm}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ args:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ write\_output(}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s:\(\backslash\)n-\/-\/hash=\%s:\%s"{}},\ path,\ algorithm,\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1hash_ae83812bc0006a086bb3a6371a1565ba7}{\_hash\_of\_file}}(path,\ algorithm)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00053}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1hash_ae83812bc0006a086bb3a6371a1565ba7}{00053}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1hash_ae83812bc0006a086bb3a6371a1565ba7}{\_hash\_of\_file}}(path:\ str,\ algorithm:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00054}00054\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ hash\ digest\ of\ a\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00055}00055\ \ \ \ \ \textcolor{keyword}{with}\ open(path,\ \textcolor{stringliteral}{"{}rb"{}})\ \textcolor{keyword}{as}\ archive:}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ hash\ =\ hashlib.new(algorithm)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ read\_chunks(archive):}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ hash.update(chunk)}
+\DoxyCodeLine{\Hypertarget{hash_8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{return}\ hash.hexdigest()}
+
+\end{DoxyCode}

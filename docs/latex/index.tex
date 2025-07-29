@@ -1,0 +1,361 @@
+\chapter{Let us walk on the 3-\/isogeny graph\+: efficient, fast, and simple }
+\hypertarget{index}{}\label{index}\index{Let us walk on the 3-\/isogeny graph: efficient, fast, and simple@{Let us walk on the 3-\/isogeny graph: efficient, fast, and simple}}
+\label{index_md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e}%
+\Hypertarget{index_md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e}%
+
+
+\href{https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml}{\texttt{}}
+
+Accompanying repository to the manuscript titled \href{https://eprint.iacr.org/2025/691}{\texttt{“\+Let us walk on the 3-\/isogeny graph\+: efficient, fast, and simple”}}.\hypertarget{index_autotoc_md21}{}\doxysection{\texorpdfstring{Table of contents}{Table of contents}}\label{index_autotoc_md21}
+
+\begin{DoxyEnumerate}
+\item \doxylink{index_section_01}{Introduction} ~\newline
+
+\item \doxylink{index_section_02}{Setup Process}
+\begin{DoxyEnumerate}
+\item \doxylink{index_section_02_01}{Build} ~\newline
+
+\item \doxylink{index_section_02_02}{Testing}
+\item \doxylink{index_section_02_03}{Benchmarking}
+\end{DoxyEnumerate}
+\item \doxylink{index_section_03}{Reproducing the Manuscript Results}
+\begin{DoxyEnumerate}
+\item \doxylink{index_section_03_01}{Figure 3\+: Benchmarks for the 2-\/isogenies vs. 3-\/isogenies walks}
+\item \doxylink{index_section_03_02}{Figure 4\+: Benchmarks for the 3-\/isogenies walks (Our solution vs. QFESTA)}
+\end{DoxyEnumerate}
+\item \doxylink{index_section_04}{Source-\/\+Code Technical Documentation\+: Doxygen}
+\item \doxylink{index_section_05}{Integrated CI/\+CD\+: Build, Test and Benchmarking}
+\item \doxylink{index_section_06}{Additional Resources\textquotesingle{} Build Process}
+\item \doxylink{index_section_07}{Authors}
+\end{DoxyEnumerate}
+
+\label{index_section_01}%
+\Hypertarget{index_section_01}%
+ \hypertarget{index_autotoc_md22}{}\doxysection{\texorpdfstring{1. Introduction}{1. Introduction}}\label{index_autotoc_md22}
+Our paper reached several important results\+:
+\begin{DoxyItemize}
+\item This work centers on improving HASH functions (CGL Function), KEMs (QFESTA) and NIKEs (CTIDH).
+\item Our results help to propose friendly parameters for QFESTA, along with the first efficient implementation in C of the radical 3-\/isogenies.
+\item Our results speedup the d\+CTIDH-\/2048 by a 4x factor, without any considerable change in the parameter sets and allowing a straightforward integration (just replacing small isogenies of degree 3,5,7,11 and 13 by the aforementioned radical 3-\/isogenies).
+\end{DoxyItemize}
+
+A video summarizing our ideas and contribution (in a general-\/reader level) is shown below\+:
+
+\href{http://www.youtube.com/watch?feature=player_embedded&v=KhoViHztXpE}{\texttt{ }} 
+
+The You\+Tube link of our video is shown here\+: \href{https://www.youtube.com/watch?v=KhoViHztXpE}{\texttt{Let us walk on the 3-\/isogeny graph\+: efficient, fast, and simple}}.
+
+A general tree description of the source code of our project is shown below.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{📁\ pqc-\/engineering-\/ssec-\/23}
+\DoxyCodeLine{├───📁\ .github}
+\DoxyCodeLine{├───📁\ c-\/code}
+\DoxyCodeLine{├───📁\ dCTIDH}
+\DoxyCodeLine{├───📁\ docs}
+\DoxyCodeLine{├───📁\ gifs}
+\DoxyCodeLine{├───📁\ high-\/level-\/scripts}
+\DoxyCodeLine{├───📁\ obtained\_statistics\_examples}
+\DoxyCodeLine{├───📁\ reproduce\_results}
+\DoxyCodeLine{└───📄\ README.md}
+
+\end{DoxyCode}
+ In the following sections, we will cover in detail\+:
+\begin{DoxyEnumerate}
+\item How to build, test, and benchmark,
+\item How to replicate the results reported in the manuscript,
+\item How to generate the source code technical documentation using Doxygen, and
+\item A real-\/life production CI/\+CD pipeline integration.
+\end{DoxyEnumerate}
+
+\label{index_section_02}%
+\Hypertarget{index_section_02}%
+ \hypertarget{index_autotoc_md23}{}\doxysection{\texorpdfstring{2. Setup Process}{2. Setup Process}}\label{index_autotoc_md23}
+In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to \doxysectlink{md__e_1_2pqc-engineering-ssec-23_2_r_e_a_d_m_e___clion___i_d_e}{Let us walk on the 3-\/isogeny graph\+: CLion Setup}{0}.
+
+\label{index_section_02_01}%
+\Hypertarget{index_section_02_01}%
+ \hypertarget{index_autotoc_md24}{}\doxysubsection{\texorpdfstring{2.\+1. Build}{2.\+1. Build}}\label{index_autotoc_md24}
+\hypertarget{index_autotoc_md25}{}\doxysubsubsection{\texorpdfstring{System requirements}{System requirements}}\label{index_autotoc_md25}
+Our project works in any out-\/of-\/the-\/box Linux-\/based environment with some basic software requirements\+:
+\begin{DoxyItemize}
+\item Cmake
+\item Python3 (numpy and matplotlib)
+\end{DoxyItemize}
+
+To check if your system counts with the required software, simply run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/version}
+\DoxyCodeLine{python3\ -\/-\/version}
+\DoxyCodeLine{pip\ list\ |\ grep\ numpy}
+\DoxyCodeLine{pip\ list\ |\ grep\ matplotlib}
+
+\end{DoxyCode}
+ If all the requirements are met, the terminal should return installed versions like the ones below.  
+\begin{DoxyInlineImage}
+\includegraphics[height=\baselineskip,keepaspectratio=true]{numpy.png}
+\end{DoxyInlineImage}
+   
+
+To build our project, in the root directory {\ttfamily pqc-\/engineering-\/ssec-\/23}, simply run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ c-\/code}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Release\ -\/B\ cmake-\/build-\/release}
+\DoxyCodeLine{cd\ cmake-\/build-\/release}
+\DoxyCodeLine{make\ -\/j}
+
+\end{DoxyCode}
+ This will create the {\ttfamily cmake-\/build-\/release} folder with all the tests for all the supported primes\+: {\ttfamily p254}, {\ttfamily p255}, {\ttfamily p381}, {\ttfamily p383}, {\ttfamily p398}, {\ttfamily p511}, {\ttfamily p575}, {\ttfamily p592}, {\ttfamily p765}, and {\ttfamily p783}. A list of the generated tests is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{01.png}}
+\end{DoxyImageNoCaption}
+   
+
+A demo of the whole process of setup and build process is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{build_release.gif}}
+\end{DoxyImageNoCaption}
+   
+
+\label{index_section_02_02}%
+\Hypertarget{index_section_02_02}%
+ \hypertarget{index_autotoc_md26}{}\doxysubsection{\texorpdfstring{2.\+2. Testing}{2.\+2. Testing}}\label{index_autotoc_md26}
+In this section, we show how to perform the {\bfseries{testing}} of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation\+: \doxylink{c-code_2_r_e_a_d_m_e_8md}{Let us walk on the 3-\/isogeny graph\+: (Detailed) Build, Test and Benchmarking Framework Documentation}.
+
+After building as shown in the previous section, inside the {\ttfamily c-\/code/cmake-\/build-\/release} folder, locate all the possible tests with 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ls\ ./tests/}
+
+\end{DoxyCode}
+ To execute any particular test, simply select one of the following 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p254}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p255}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p381}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p383}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p398}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p511}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p575}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p592}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p765}
+\DoxyCodeLine{./tests/tests-\/ssec-\/p783}
+
+\end{DoxyCode}
+ For example, the execution of {\ttfamily ./tests/tests-\/ssec-\/p254} is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{testing.gif}}
+\end{DoxyImageNoCaption}
+   
+
+To run ALL the tests in verbose mode, simply run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ctest\ -\/V\ -\/R\ test}
+
+\end{DoxyCode}
+
+
+A demo of all the tests running in verbose mode is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{testing_verbose.gif}}
+\end{DoxyImageNoCaption}
+   
+
+\label{index_section_02_03}%
+\Hypertarget{index_section_02_03}%
+ \hypertarget{index_autotoc_md27}{}\doxysubsection{\texorpdfstring{2.\+3. Benchmarking}{2.\+3. Benchmarking}}\label{index_autotoc_md27}
+In this section, we show how to perform the {\bfseries{benchmarking}} of our source code. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation\+: \doxylink{c-code_2_r_e_a_d_m_e_8md}{Let us walk on the 3-\/isogeny graph\+: (Detailed) Build, Test and Benchmarking Framework Documentation}.
+
+For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory {\ttfamily pqc-\/engineering-\/ssec-\/23}, simply run
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pqc-\/engineering-\/ssec-\/23/c-\/code\$\ cmake\ -\/DCMAKE\_BUILD\_TYPE=Release\ -\/DBENCHMARKING=CYCLES\ -\/DARCHITECTURE=x8664\ -\/B\ cmake-\/build-\/release-\/cycles-\/x8664}
+
+\end{DoxyCode}
+ followed by 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ cmake-\/build-\/release-\/cycles-\/x8664}
+\DoxyCodeLine{make\ -\/j}
+
+\end{DoxyCode}
+
+
+{\bfseries{NOTE\+:}} Benchmarking does not work for 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Release\ -\/B\ cmake-\/build-\/release}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Debug\ -\/B\ cmake-\/build-\/debug}
+
+\end{DoxyCode}
+ In case you run the benchmarking in either one of these two build modes (without the {\ttfamily -\/DBENCHMARKING} and the {\ttfamily -\/DARCHITECTURE} flags), you will get the following error\+:
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{benchmarks_error.png}}
+\end{DoxyImageNoCaption}
+   
+
+To execute any particular benchmarking, inside the {\ttfamily cmake-\/build-\/release-\/cycles-\/x8664} folder, simply select one of the following 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p254}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p255}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p381}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p383}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p398}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p511}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p575}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p592}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p765}
+\DoxyCodeLine{benchmarks/benchmarks-\/ssec-\/p783}
+
+\end{DoxyCode}
+
+
+A demo of successful benchmarkings is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{benchmarking.gif}}
+\end{DoxyImageNoCaption}
+   
+
+\label{index_section_03}%
+\Hypertarget{index_section_03}%
+ \hypertarget{index_autotoc_md28}{}\doxysection{\texorpdfstring{3. Reproducing the Manuscript Results}{3. Reproducing the Manuscript Results}}\label{index_autotoc_md28}
+In our \href{https://eprint.iacr.org/2025/691}{\texttt{manuscript}}, several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. In order to reproduce some of the figures in the manuscript, we provide with easy-\/to-\/use scripts that wrap all the required executions of the benchmarking tests, and by using {\ttfamily numpy} and {\ttfamily matplotlib}, generate the manuscript graphs.
+
+The related code to reproduce our results is shown in the tree below.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{📁\ pqc-\/engineering-\/ssec-\/23}
+\DoxyCodeLine{├───📁\ c-\/code}
+\DoxyCodeLine{├───📁\ dCTIDH}
+\DoxyCodeLine{├───📁\ docs}
+\DoxyCodeLine{├───📁\ gifs}
+\DoxyCodeLine{├───📁\ high-\/level-\/scripts}
+\DoxyCodeLine{├───📁\ obtained\_statistics\_examples}
+\DoxyCodeLine{├───📁\ reproduce\_results}
+\DoxyCodeLine{│\ \ \ ├───📁\ manuscript\_figure\_03}
+\DoxyCodeLine{│\ \ \ │\ \ \ ├───📄\ benchmark\_graph\_03.py}
+\DoxyCodeLine{│\ \ \ │\ \ \ └───📄\ generate\_figure\_03.sh\ \ \ \ \#\ <=\ NEED\ TO\ EXECUTE}
+\DoxyCodeLine{│\ \ \ └───📁\ manuscript\_figure\_04}
+\DoxyCodeLine{│\ \ \ \ \ \ \ ├───📄\ benchmark\_graph\_04.py}
+\DoxyCodeLine{│\ \ \ \ \ \ \ └───📄\ generate\_figure\_04.sh\ \ \ \ \#\ <=\ NEED\ TO\ EXECUTE}
+\DoxyCodeLine{└───📄\ README.md}
+
+\end{DoxyCode}
+
+
+\label{index_section_03_01}%
+\Hypertarget{index_section_03_01}%
+ \hypertarget{index_autotoc_md29}{}\doxysubsection{\texorpdfstring{3.\+1. Figure 3\+: Benchmarks for the 2-\/isogenies vs. 3-\/isogenies walks}{3.\+1. Figure 3\+: Benchmarks for the 2-\/isogenies vs. 3-\/isogenies walks}}\label{index_autotoc_md29}
+Inside the {\ttfamily reproduce\+\_\+results/manuscript\+\_\+figure\+\_\+03} folder, it is necessary to give execution permissions to the script, via 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chmod\ +x\ generate\_figure\_03.sh}
+
+\end{DoxyCode}
+ Then, just simply execute it 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./generate\_figure\_03.sh}
+
+\end{DoxyCode}
+ This will automatically build with the {\ttfamily -\/DBENCHMARKING=CYCLES -\/DARCHITECTURE=x8664} flags, and perform all the statistics. At the end, a bar graph is automatically generated.
+
+A demo of how to obtain the manuscript\textquotesingle{}s Figure 03 is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{fig_03.gif}}
+\end{DoxyImageNoCaption}
+   
+
+where the original Figure 3 presented in the manuscript is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{figure_03_original.png}}
+\end{DoxyImageNoCaption}
+   
+
+\label{index_section_03_02}%
+\Hypertarget{index_section_03_02}%
+ \hypertarget{index_autotoc_md30}{}\doxysubsection{\texorpdfstring{3.\+2. Figure 4\+: Benchmarks for the 3-\/isogenies walks (Our solution vs. QFESTA)}{3.\+2. Figure 4\+: Benchmarks for the 3-\/isogenies walks (Our solution vs. QFESTA)}}\label{index_autotoc_md30}
+Similar to the previous figure, inside the {\ttfamily reproduce\+\_\+results/manuscript\+\_\+figure\+\_\+04} folder, it is necessary to give execution permissions to the script, via 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chmod\ +x\ generate\_figure\_04.sh}
+
+\end{DoxyCode}
+ Then, just simply execute it 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./generate\_figure\_04.sh}
+
+\end{DoxyCode}
+ This will automatically build with the {\ttfamily -\/DBENCHMARKING=CYCLES -\/DARCHITECTURE=x8664} flags, and perform all the statistics. At the end, a bar graph is automatically generated.
+
+A demo of how to obtain the manuscript\textquotesingle{}s Figure 03 is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{fig_04.gif}}
+\end{DoxyImageNoCaption}
+   
+
+where the original Figure 4 presented in the manuscript is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{figure_04_original.png}}
+\end{DoxyImageNoCaption}
+   
+
+\label{index_section_04}%
+\Hypertarget{index_section_04}%
+ \hypertarget{index_autotoc_md31}{}\doxysection{\texorpdfstring{4. Source-\/\+Code Technical Documentation\+: Doxygen}{4. Source-\/\+Code Technical Documentation\+: Doxygen}}\label{index_autotoc_md31}
+Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the {\ttfamily docs} folder, simply run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{doxygen\ Doxyfile}
+
+\end{DoxyCode}
+ This will generate an HTML site with interactive diagrams, and plenty of technical documentation. A demo of the generated documentation is shown below.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{doxygen.gif}}
+\end{DoxyImageNoCaption}
+   
+
+A link to a public-\/hosted version of our source-\/code documentation is shown here\+: \href{https://crypto-tii.github.io/pqc-engineering-ssec-23/}{\texttt{Let us walk on the 3-\/isogeny graph\+: Technical Documentation}}
+
+\label{index_section_05}%
+\Hypertarget{index_section_05}%
+ \hypertarget{index_autotoc_md32}{}\doxysection{\texorpdfstring{5. Integrated CI/\+CD\+: Build, Test and Benchmarking}{5. Integrated CI/\+CD\+: Build, Test and Benchmarking}}\label{index_autotoc_md32}
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/\+CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
+
+ 
+
+To provide CI/\+CD related capabilities, in our source code we provide a \href{.github/workflows/cmake-multi-platform.yml}{\texttt{cmake-\/multi-\/platform.\+yml}} file that uses {\bfseries{Docker images}} to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
+
+ 
+
+\label{index_section_06}%
+\Hypertarget{index_section_06}%
+ \hypertarget{index_autotoc_md33}{}\doxysection{\texorpdfstring{6. Additional Resources\textquotesingle{} Build Process}{6. Additional Resources\textquotesingle{} Build Process}}\label{index_autotoc_md33}
+As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation\+: \doxylink{c-code_2_r_e_a_d_m_e_8md}{Let us walk on the 3-\/isogeny graph\+: (Detailed) Build, Test and Benchmarking Framework Documentation}.
+
+As part of our experiments, we used the a modified version of {\ttfamily d\+CTIDH}. To build the modified {\ttfamily d\+CTIDH}, please refer to \doxylink{d_c_t_i_d_h_2_r_e_a_d_m_e_8md}{Let us walk on the 3-\/isogeny graph\+: d\+CTIDH modified version}.
+
+\label{index_section_07}%
+\Hypertarget{index_section_07}%
+ \hypertarget{index_autotoc_md34}{}\doxysection{\texorpdfstring{7. Authors}{7. Authors}}\label{index_autotoc_md34}
+For further information, please feel free to contact any of the authors\+: 
+
+\href{mailto:jesus.dominguez@tii.ae}{\texttt{{\bfseries{Jesús-\/\+Javier Chi-\/\+Domínguez}}}}, \href{mailto:eduardo.ochoa@tii.ae}{\texttt{{\bfseries{Eduardo Ochoa-\/\+Jiménez}}}}, \href{mailto:ricardo.pontaza@tii.ae}{\texttt{{\bfseries{Ricardo-\/\+Neftalí Pontaza-\/\+Rodas}}}}. 

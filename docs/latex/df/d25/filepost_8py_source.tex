@@ -1,0 +1,104 @@
+\doxysection{filepost.\+py}
+\hypertarget{filepost_8py_source}{}\label{filepost_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/filepost.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/filepost.py}}
+\mbox{\hyperlink{filepost_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00003}00003\ \textcolor{keyword}{import}\ binascii}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00004}00004\ \textcolor{keyword}{import}\ codecs}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00005}00005\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00006}00006\ \textcolor{keyword}{from}\ io\ \textcolor{keyword}{import}\ BytesIO}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00008}00008\ \textcolor{keyword}{from}\ .fields\ \textcolor{keyword}{import}\ RequestField}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00009}00009\ \textcolor{keyword}{from}\ .packages\ \textcolor{keyword}{import}\ six}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00010}00010\ \textcolor{keyword}{from}\ .packages.six\ \textcolor{keyword}{import}\ b}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ab462494acb3894fee8e680bb0057d319}{00012}}\ writer\ =\ codecs.lookup(\textcolor{stringliteral}{"{}utf-\/8"{}})[3]}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae4df7c6df57452d357cf9565c6eaf95c}{00015}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae4df7c6df57452d357cf9565c6eaf95c}{choose\_boundary}}():}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ Our\ embarrassingly-\/simple\ replacement\ for\ mimetools.choose\_boundary.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00019}00019\ \ \ \ \ boundary\ =\ binascii.hexlify(os.urandom(16))}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ six.PY2:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ boundary\ =\ boundary.decode(\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{return}\ boundary}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00025}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae6d039ce45dcbfb966e02c446b0befee}{00025}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae6d039ce45dcbfb966e02c446b0befee}{iter\_field\_objects}}(fields):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00026}00026\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ Iterate\ over\ fields.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00028}00028\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ Supports\ list\ of\ (k,\ v)\ tuples\ and\ dicts,\ and\ lists\ of}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ :class:\`{}\string~urllib3.fields.RequestField\`{}.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00031}00031\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(fields,\ dict):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ i\ =\ six.iteritems(fields)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ i\ =\ iter(fields)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{for}\ field\ \textcolor{keywordflow}{in}\ i:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(field,\ RequestField):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ field}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ RequestField.from\_tuples(*field)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00045}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_a16ea1d42f6d5fda11df14dc64d9efb65}{00045}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_a16ea1d42f6d5fda11df14dc64d9efb65}{iter\_fields}}(fields):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ ..\ deprecated::\ 1.6}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00048}00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ Iterate\ over\ fields.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00050}00050\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ \ \ The\ addition\ of\ :class:\`{}\string~urllib3.fields.RequestField\`{}\ makes\ this\ function}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ obsolete.\ Instead,\ use\ :func:\`{}iter\_field\_objects\`{},\ which\ returns}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ :class:\`{}\string~urllib3.fields.RequestField\`{}\ objects.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00054}00054\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ Supports\ list\ of\ (k,\ v)\ tuples\ and\ dicts.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(fields,\ dict):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ((k,\ v)\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ six.iteritems(fields))}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{return}\ ((k,\ v)\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ fields)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00063}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_abbbd92feabefb180ccf897262e6ac2d5}{00063}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_abbbd92feabefb180ccf897262e6ac2d5}{encode\_multipart\_formdata}}(fields,\ boundary=None):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00064}00064\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ Encode\ a\ dictionary\ of\ \`{}\`{}fields\`{}\`{}\ using\ the\ multipart/form-\/data\ MIME\ format.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00066}00066\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ :param\ fields:}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Dictionary\ of\ fields\ or\ list\ of\ (key,\ :class:\`{}\string~urllib3.fields.RequestField\`{}).}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00069}00069\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ :param\ boundary:}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00071}00071\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ not\ specified,\ then\ a\ random\ boundary\ will\ be\ generated\ using}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00072}00072\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :func:\`{}urllib3.filepost.choose\_boundary\`{}.}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00073}00073\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00074}00074\ \ \ \ \ body\ =\ BytesIO()}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ boundary\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ boundary\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae4df7c6df57452d357cf9565c6eaf95c}{choose\_boundary}}()}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{for}\ field\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ae6d039ce45dcbfb966e02c446b0befee}{iter\_field\_objects}}(fields):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ body.write(b(\textcolor{stringliteral}{"{}-\/-\/\%s\(\backslash\)r\(\backslash\)n"{}}\ \%\ (boundary)))}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ab462494acb3894fee8e680bb0057d319}{writer}}(body).write(field.render\_headers())}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ data\ =\ field.data}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(data,\ int):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ str(data)\ \ \textcolor{comment}{\#\ Backwards\ compatibility}}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(data,\ six.text\_type):}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1filepost_ab462494acb3894fee8e680bb0057d319}{writer}}(body).write(data)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ body.write(data)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ body.write(b\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00094}00094\ \ \ \ \ body.write(b(\textcolor{stringliteral}{"{}-\/-\/\%s-\/-\/\(\backslash\)r\(\backslash\)n"{}}\ \%\ (boundary)))}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00096}00096\ \ \ \ \ content\_type\ =\ str(\textcolor{stringliteral}{"{}multipart/form-\/data;\ boundary=\%s"{}}\ \%\ boundary)}
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{filepost_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{return}\ body.getvalue(),\ content\_type}
+
+\end{DoxyCode}

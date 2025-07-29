@@ -1,0 +1,234 @@
+\doxysection{wait.\+py}
+\hypertarget{tenacity_2wait_8py_source}{}\label{tenacity_2wait_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/wait.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/wait.py}}
+\mbox{\hyperlink{tenacity_2wait_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1wait}{00001}}\ \textcolor{comment}{\#\ Copyright\ 2016–2021\ Julien\ Danjou}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00002}00002\ \textcolor{comment}{\#\ Copyright\ 2016\ Joshua\ Harlow}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ 2013-\/2014\ Ray\ Holder}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00004}00004\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00005}00005\ \textcolor{comment}{\#\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00006}00006\ \textcolor{comment}{\#\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00007}00007\ \textcolor{comment}{\#\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00008}00008\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00009}00009\ \textcolor{comment}{\#\ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00010}00010\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00011}00011\ \textcolor{comment}{\#\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00012}00012\ \textcolor{comment}{\#\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00013}00013\ \textcolor{comment}{\#\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00014}00014\ \textcolor{comment}{\#\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00015}00015\ \textcolor{comment}{\#\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00017}00017\ \textcolor{keyword}{import}\ abc}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00018}00018\ \textcolor{keyword}{import}\ random}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00019}00019\ \textcolor{keyword}{import}\ typing}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00021}00021\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ \_utils}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00023}00023\ \textcolor{keywordflow}{if}\ typing.TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00024}00024\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{pip.\_vendor.tenacity}}\ \textcolor{keyword}{import}\ RetryCallState}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00027}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{00027}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}(abc.ABC):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Abstract\ base\ class\ for\ wait\ strategies."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00030}00030\ \ \ \ \ \textcolor{preprocessor}{@abc.abstractmethod}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00031}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a6b82b0b0fe19100c4fcda5222b4a2311}{00031}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00034}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a11591fa0d8692abd5d863d602334c4be}{00034}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a11591fa0d8692abd5d863d602334c4be}{\_\_add\_\_}}(self,\ other:\ \textcolor{stringliteral}{"{}wait\_base"{}})\ -\/>\ \textcolor{stringliteral}{"{}wait\_combine"{}}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine}{wait\_combine}}(self,\ other)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a5952469b283578c3260f85a45c96e9fd}{00037}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a5952469b283578c3260f85a45c96e9fd}{\_\_radd\_\_}}(self,\ other:\ \textcolor{stringliteral}{"{}wait\_base"{}})\ -\/>\ typing.Union[\textcolor{stringliteral}{"{}wait\_combine"{}},\ \textcolor{stringliteral}{"{}wait\_base"{}}]:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ make\ it\ possible\ to\ use\ multiple\ waits\ with\ the\ built-\/in\ sum\ function}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ other\ ==\ 0:\ \ \textcolor{comment}{\#\ type:\ ignore[comparison-\/overlap]}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base_a11591fa0d8692abd5d863d602334c4be}{\_\_add\_\_}}(other)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00044}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1wait_af4823a650699c61a9e1d3f5be82c6ea3}{00044}}\ WaitBaseT\ =\ typing.Union[wait\_base,\ typing.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ typing.Union[float,\ int]]]}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00047}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed}{00047}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed}{wait\_fixed}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00048}00048\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ strategy\ that\ waits\ a\ fixed\ amount\ of\ time\ between\ each\ retry."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00050}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_ab529c9cd073c5035b40e24bf21fccaa5}{00050}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_ab529c9cd073c5035b40e24bf21fccaa5}{\_\_init\_\_}}(self,\ wait:\ \_utils.time\_unit\_type)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00051}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_a1d174b760dbb09bc8bd6bd2b0d3ea5d2}{00051}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_a1d174b760dbb09bc8bd6bd2b0d3ea5d2}{wait\_fixed}}\ =\ \_utils.to\_seconds(wait)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00053}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_a6b82b0b0fe19100c4fcda5222b4a2311}{00053}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed_a1d174b760dbb09bc8bd6bd2b0d3ea5d2}{wait\_fixed}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00057}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none}{00057}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none}{wait\_none}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__fixed}{wait\_fixed}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00058}00058\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ strategy\ that\ doesn't\ wait\ at\ all\ before\ retrying."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00060}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none_abc1b785959b47505de72feabab160402}{00060}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none_abc1b785959b47505de72feabab160402}{\_\_init\_\_}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none_abc1b785959b47505de72feabab160402}{\_\_init\_\_}}(0)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random}{00064}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random}{wait\_random}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00065}00065\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ strategy\ that\ waits\ a\ random\ amount\ of\ time\ between\ min/max."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00067}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_aec77617618cdd9999ecc4062e861345f}{00067}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_aec77617618cdd9999ecc4062e861345f}{\_\_init\_\_}}(self,\ min:\ \_utils.time\_unit\_type\ =\ 0,\ max:\ \_utils.time\_unit\_type\ =\ 1)\ -\/>\ \textcolor{keywordtype}{None}:\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00068}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_ab0dc756915af3bef054b7fee46d110c4}{00068}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_ab0dc756915af3bef054b7fee46d110c4}{wait\_random\_min}}\ =\ \_utils.to\_seconds(min)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00069}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_aa12c3cfbe02c0026b54eb79ec8bcd440}{00069}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_aa12c3cfbe02c0026b54eb79ec8bcd440}{wait\_random\_max}}\ =\ \_utils.to\_seconds(max)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00071}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_a6b82b0b0fe19100c4fcda5222b4a2311}{00071}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_ab0dc756915af3bef054b7fee46d110c4}{wait\_random\_min}}\ +\ (random.random()\ *\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_aa12c3cfbe02c0026b54eb79ec8bcd440}{wait\_random\_max}}\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random_ab0dc756915af3bef054b7fee46d110c4}{wait\_random\_min}}))}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00075}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine}{00075}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine}{wait\_combine}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00076}00076\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Combine\ several\ waiting\ strategies."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00078}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_ab2d58fbc8dcdb15ffc2c8cc3e206e231}{00078}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_ab2d58fbc8dcdb15ffc2c8cc3e206e231}{\_\_init\_\_}}(self,\ *strategies:\ wait\_base)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00079}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_a4a16837fbc6a1f210a7894ac07894dd4}{00079}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_a4a16837fbc6a1f210a7894ac07894dd4}{wait\_funcs}}\ =\ strategies}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00081}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_a6b82b0b0fe19100c4fcda5222b4a2311}{00081}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sum(x(retry\_state=retry\_state)\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__combine_a4a16837fbc6a1f210a7894ac07894dd4}{wait\_funcs}})}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00085}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain}{00085}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain}{wait\_chain}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00086}00086\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Chain\ two\ or\ more\ waiting\ strategies.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00087}00087\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ If\ all\ strategies\ are\ exhausted,\ the\ very\ last\ strategy\ is\ used}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ thereafter.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00090}00090\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ For\ example::}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00092}00092\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00093}00093\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ @retry(wait=wait\_chain(*[wait\_fixed(1)\ for\ i\ in\ range(3)]\ +}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [wait\_fixed(2)\ for\ j\ in\ range(5)]\ +}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [wait\_fixed(5)\ for\ k\ in\ range(4)))}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ def\ wait\_chained():}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00097}00097\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ print("{}Wait\ 1s\ for\ 3\ attempts,\ 2s\ for\ 5\ attempts\ and\ 5s}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00098}00098\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thereafter."{})}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00099}00099\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00101}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_ab2d58fbc8dcdb15ffc2c8cc3e206e231}{00101}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_ab2d58fbc8dcdb15ffc2c8cc3e206e231}{\_\_init\_\_}}(self,\ *strategies:\ wait\_base)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00102}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a437ea56792397a03cdb003c1934e3a67}{00102}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a437ea56792397a03cdb003c1934e3a67}{strategies}}\ =\ strategies}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00104}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a6b82b0b0fe19100c4fcda5222b4a2311}{00104}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ wait\_func\_no\ =\ min(max(retry\_state.attempt\_number,\ 1),\ len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a437ea56792397a03cdb003c1934e3a67}{strategies}}))}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ wait\_func\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__chain_a437ea56792397a03cdb003c1934e3a67}{strategies}}[wait\_func\_no\ -\/\ 1]}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ wait\_func(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00110}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing}{00110}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing}{wait\_incrementing}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00111}00111\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ an\ incremental\ amount\ of\ time\ after\ each\ attempt.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00112}00112\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ Starting\ at\ a\ starting\ value\ and\ incrementing\ by\ a\ value\ for\ each\ attempt}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ \ \ (and\ restricting\ the\ upper\ limit\ to\ some\ maximum\ value).}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00117}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a103f8b922717270487920505f30b9aac}{00117}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a103f8b922717270487920505f30b9aac}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ start:\ \_utils.time\_unit\_type\ =\ 0,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ increment:\ \_utils.time\_unit\_type\ =\ 100,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ max:\ \_utils.time\_unit\_type\ =\ \_utils.MAX\_WAIT,\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00122}00122\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00123}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a550769bbd4e7537ff90a656f5b0c23b2}{00123}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a550769bbd4e7537ff90a656f5b0c23b2}{start}}\ =\ \_utils.to\_seconds(start)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00124}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a83f57d6ac891a46bbf06636fe04575b7}{00124}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a83f57d6ac891a46bbf06636fe04575b7}{increment}}\ =\ \_utils.to\_seconds(increment)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00125}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_aa83862769f78fffb512bc9283007ef67}{00125}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_aa83862769f78fffb512bc9283007ef67}{max}}\ =\ \_utils.to\_seconds(max)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00127}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a6b82b0b0fe19100c4fcda5222b4a2311}{00127}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ result\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a550769bbd4e7537ff90a656f5b0c23b2}{start}}\ +\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_a83f57d6ac891a46bbf06636fe04575b7}{increment}}\ *\ (retry\_state.attempt\_number\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_aa83862769f78fffb512bc9283007ef67}{max}}(0,\ min(result,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__incrementing_aa83862769f78fffb512bc9283007ef67}{max}}))}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00132}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential}{00132}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential}{wait\_exponential}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00133}00133\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ strategy\ that\ applies\ exponential\ backoff.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00134}00134\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ It\ allows\ for\ a\ customized\ multiplier\ and\ an\ ability\ to\ restrict\ the}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ upper\ and\ lower\ limits\ to\ some\ maximum\ and\ minimum\ value.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00137}00137\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ The\ intervals\ are\ fixed\ (i.e.\ there\ is\ no\ jitter),\ so\ this\ strategy\ is}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ suitable\ for\ balancing\ retries\ against\ latency\ when\ a\ required\ resource\ is}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ unavailable\ for\ an\ unknown\ duration,\ but\ *not*\ suitable\ for\ resolving}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ contention\ between\ multiple\ processes\ for\ a\ shared\ resource.\ Use}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ wait\_random\_exponential\ for\ the\ latter\ case.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00145}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_ad8e5ed9046e490319f70d5261aa77979}{00145}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_ad8e5ed9046e490319f70d5261aa77979}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ multiplier:\ typing.Union[int,\ float]\ =\ 1,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ max:\ \_utils.time\_unit\_type\ =\ \_utils.MAX\_WAIT,\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ exp\_base:\ typing.Union[int,\ float]\ =\ 2,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ min:\ \_utils.time\_unit\_type\ =\ 0,\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00151}00151\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00152}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3cf9cbfc3e637ae0660c32ceef50386f}{00152}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3cf9cbfc3e637ae0660c32ceef50386f}{multiplier}}\ =\ multiplier}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00153}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a4735a0c4d1b11f62ea44115d54a93087}{00153}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a4735a0c4d1b11f62ea44115d54a93087}{min}}\ =\ \_utils.to\_seconds(min)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{00154}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{max}}\ =\ \_utils.to\_seconds(max)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00155}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3254bb1b09d2026f5dffe79f8f79c3c6}{00155}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3254bb1b09d2026f5dffe79f8f79c3c6}{exp\_base}}\ =\ exp\_base}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00157}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a6b82b0b0fe19100c4fcda5222b4a2311}{00157}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ exp\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3254bb1b09d2026f5dffe79f8f79c3c6}{exp\_base}}\ **\ (retry\_state.attempt\_number\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a3cf9cbfc3e637ae0660c32ceef50386f}{multiplier}}\ *\ exp}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OverflowError:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{max}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{max}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{max}}(0,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a4735a0c4d1b11f62ea44115d54a93087}{min}}),\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_a4735a0c4d1b11f62ea44115d54a93087}{min}}(result,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential_aa83862769f78fffb512bc9283007ef67}{max}}))}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00166}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential}{00166}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential}{wait\_random\_exponential}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential}{wait\_exponential}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00167}00167\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Random\ wait\ with\ exponentially\ widening\ window.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00168}00168\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ \ \ An\ exponential\ backoff\ strategy\ used\ to\ mediate\ contention\ between\ multiple}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ uncoordinated\ processes\ for\ a\ shared\ resource\ in\ distributed\ systems.\ This}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ is\ the\ sense\ in\ which\ "{}exponential\ backoff"{}\ is\ meant\ in\ e.g.\ Ethernet}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ networking,\ and\ corresponds\ to\ the\ "{}Full\ Jitter"{}\ algorithm\ described\ in}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ this\ blog\ post:}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00174}00174\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ https://aws.amazon.com/blogs/architecture/exponential-\/backoff-\/and-\/jitter/}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00176}00176\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ Each\ retry\ occurs\ at\ a\ random\ time\ in\ a\ geometrically\ expanding\ interval.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00178}00178\ \textcolor{stringliteral}{\ \ \ \ It\ allows\ for\ a\ custom\ multiplier\ and\ an\ ability\ to\ restrict\ the\ upper}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ limit\ of\ the\ random\ interval\ to\ some\ maximum\ value.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00180}00180\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ Example::}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00182}00182\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00183}00183\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ wait\_random\_exponential(multiplier=0.5,\ \ \#\ initial\ window\ 0.5s}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max=60)\ \ \ \ \ \ \ \ \ \ \#\ max\ 60s\ timeout}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00185}00185\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00186}00186\ \textcolor{stringliteral}{\ \ \ \ When\ waiting\ for\ an\ unavailable\ resource\ to\ become\ available\ again,\ as}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ opposed\ to\ trying\ to\ resolve\ contention\ for\ a\ shared\ resource,\ the}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ \ \ wait\_exponential\ strategy\ (which\ uses\ a\ fixed\ interval)\ may\ be\ preferable.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00189}00189\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00190}00190\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00192}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential_a6b82b0b0fe19100c4fcda5222b4a2311}{00192}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ high\ =\ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ random.uniform(0,\ high)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00197}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter}{00197}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter}{wait\_exponential\_jitter}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__base}{wait\_base}}):}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00198}00198\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wait\ strategy\ that\ applies\ exponential\ backoff\ and\ jitter.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00199}00199\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ \ \ It\ allows\ for\ a\ customized\ initial\ wait,\ maximum\ wait\ and\ jitter.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00201}00201\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00202}00202\ \textcolor{stringliteral}{\ \ \ \ This\ implements\ the\ strategy\ described\ here:}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00203}00203\ \textcolor{stringliteral}{\ \ \ \ https://cloud.google.com/storage/docs/retry-\/strategy}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00204}00204\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00205}00205\ \textcolor{stringliteral}{\ \ \ \ The\ wait\ time\ is\ min(initial\ *\ 2**n\ +\ random.uniform(0,\ jitter),\ maximum)}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ where\ n\ is\ the\ retry\ count.}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00209}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aab9f1b895d4e4bb14548bbe8c5ecce73}{00209}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aab9f1b895d4e4bb14548bbe8c5ecce73}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ initial:\ float\ =\ 1,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ max:\ float\ =\ \_utils.MAX\_WAIT,\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ exp\_base:\ float\ =\ 2,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ jitter:\ float\ =\ 1,}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00215}00215\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00216}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a8d0dd69a20182cd1647f229af000cfa5}{00216}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a8d0dd69a20182cd1647f229af000cfa5}{initial}}\ =\ initial}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00217}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aa83862769f78fffb512bc9283007ef67}{00217}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aa83862769f78fffb512bc9283007ef67}{max}}\ =\ max}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00218}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a3254bb1b09d2026f5dffe79f8f79c3c6}{00218}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a3254bb1b09d2026f5dffe79f8f79c3c6}{exp\_base}}\ =\ exp\_base}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00219}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_af3f8e53403d67207f143a74939229829}{00219}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_af3f8e53403d67207f143a74939229829}{jitter}}\ =\ jitter}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00221}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a6b82b0b0fe19100c4fcda5222b4a2311}{00221}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a6b82b0b0fe19100c4fcda5222b4a2311}{\_\_call\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ float:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ jitter\ =\ random.uniform(0,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_af3f8e53403d67207f143a74939229829}{jitter}})}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ exp\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a3254bb1b09d2026f5dffe79f8f79c3c6}{exp\_base}}\ **\ (retry\_state.attempt\_number\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_a8d0dd69a20182cd1647f229af000cfa5}{initial}}\ *\ exp\ +\ jitter}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OverflowError:}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aa83862769f78fffb512bc9283007ef67}{max}}}
+\DoxyCodeLine{\Hypertarget{tenacity_2wait_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aa83862769f78fffb512bc9283007ef67}{max}}(0,\ min(result,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter_aa83862769f78fffb512bc9283007ef67}{max}}))}
+
+\end{DoxyCode}

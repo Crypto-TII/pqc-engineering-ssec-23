@@ -1,0 +1,309 @@
+\doxysection{Abstract\+Provider Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider}{}\label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider}\index{AbstractProvider@{AbstractProvider}}
+
+
+Inheritance diagram for Abstract\+Provider\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=169pt]{d3/d3b/classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Abstract\+Provider\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=169pt]{db/d88/classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a507502e6dc3f288bdf0d83aa329c341d}{identify}} (self, requirement\+\_\+or\+\_\+candidate)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a379126591b494cdf0b4c46ee4d441b7d}{get\+\_\+preference}} (self, identifier, resolutions, candidates, information, backtrack\+\_\+causes)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_ac7beaab81c43084f0fba7978f685324b}{find\+\_\+matches}} (self, identifier, requirements, incompatibilities)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_aaa0d7cb55a1d1ad59318015cd5530a07}{is\+\_\+satisfied\+\_\+by}} (self, requirement, candidate)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a490624e5c9b95240b382a0c23bf62359}{get\+\_\+dependencies}} (self, candidate)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Delegate class to provide the required interface for the resolver.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00001}{1}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_ac7beaab81c43084f0fba7978f685324b}\index{AbstractProvider@{AbstractProvider}!find\_matches@{find\_matches}}
+\index{find\_matches@{find\_matches}!AbstractProvider@{AbstractProvider}}
+\doxysubsubsection{\texorpdfstring{find\_matches()}{find\_matches()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_ac7beaab81c43084f0fba7978f685324b} 
+find\+\_\+matches (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{identifier}{, }\item[{}]{requirements}{, }\item[{}]{incompatibilities}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Find all possible candidates that satisfy the given constraints.
+
+:param identifier: An identifier as returned by ``identify()``. This
+    identifies the dependency matches of which should be returned.
+:param requirements: A mapping of requirements that all returned
+    candidates must satisfy. Each key is an identifier, and the value
+    an iterator of requirements for that dependency.
+:param incompatibilities: A mapping of known incompatibilities of
+    each dependency. Each key is an identifier, and the value an
+    iterator of incompatibilities known to the resolver. All
+    incompatibilities *must* be excluded from the return value.
+
+This should try to get candidates based on the requirements' types.
+For VCS, local, and archive requirements, the one-and-only match is
+returned, and for a "named" requirement, the index(es) should be
+consulted to find concrete candidates for this requirement.
+
+The return value should produce candidates ordered by preference; the
+most preferred candidate should come first. The return type may be one
+of the following:
+
+* A callable that returns an iterator that yields candidates.
+* An collection of candidates.
+* An iterable of candidates. This will be consumed immediately into a
+  list of candidates.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00063}{63}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{def\ }find\_matches(self,\ identifier,\ requirements,\ incompatibilities):}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Find\ all\ possible\ candidates\ that\ satisfy\ the\ given\ constraints.}}
+\DoxyCodeLine{00065\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ identifier:\ An\ identifier\ as\ returned\ by\ \`{}\`{}identify()\`{}\`{}.\ This}}
+\DoxyCodeLine{00067\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ identifies\ the\ dependency\ matches\ of\ which\ should\ be\ returned.}}
+\DoxyCodeLine{00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ requirements:\ A\ mapping\ of\ requirements\ that\ all\ returned}}
+\DoxyCodeLine{00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ candidates\ must\ satisfy.\ Each\ key\ is\ an\ identifier,\ and\ the\ value}}
+\DoxyCodeLine{00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ an\ iterator\ of\ requirements\ for\ that\ dependency.}}
+\DoxyCodeLine{00071\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ incompatibilities:\ A\ mapping\ of\ known\ incompatibilities\ of}}
+\DoxyCodeLine{00072\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ each\ dependency.\ Each\ key\ is\ an\ identifier,\ and\ the\ value\ an}}
+\DoxyCodeLine{00073\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ iterator\ of\ incompatibilities\ known\ to\ the\ resolver.\ All}}
+\DoxyCodeLine{00074\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ incompatibilities\ *must*\ be\ excluded\ from\ the\ return\ value.}}
+\DoxyCodeLine{00075\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00076\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ should\ try\ to\ get\ candidates\ based\ on\ the\ requirements'\ types.}}
+\DoxyCodeLine{00077\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ For\ VCS,\ local,\ and\ archive\ requirements,\ the\ one-\/and-\/only\ match\ is}}
+\DoxyCodeLine{00078\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ returned,\ and\ for\ a\ "{}named"{}\ requirement,\ the\ index(es)\ should\ be}}
+\DoxyCodeLine{00079\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ consulted\ to\ find\ concrete\ candidates\ for\ this\ requirement.}}
+\DoxyCodeLine{00080\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00081\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ return\ value\ should\ produce\ candidates\ ordered\ by\ preference;\ the}}
+\DoxyCodeLine{00082\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ most\ preferred\ candidate\ should\ come\ first.\ The\ return\ type\ may\ be\ one}}
+\DoxyCodeLine{00083\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ of\ the\ following:}}
+\DoxyCodeLine{00084\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00085\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ A\ callable\ that\ returns\ an\ iterator\ that\ yields\ candidates.}}
+\DoxyCodeLine{00086\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ An\ collection\ of\ candidates.}}
+\DoxyCodeLine{00087\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ An\ iterable\ of\ candidates.\ This\ will\ be\ consumed\ immediately\ into\ a}}
+\DoxyCodeLine{00088\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ list\ of\ candidates.}}
+\DoxyCodeLine{00089\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{00091\ }
+
+\end{DoxyCode}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a490624e5c9b95240b382a0c23bf62359}\index{AbstractProvider@{AbstractProvider}!get\_dependencies@{get\_dependencies}}
+\index{get\_dependencies@{get\_dependencies}!AbstractProvider@{AbstractProvider}}
+\doxysubsubsection{\texorpdfstring{get\_dependencies()}{get\_dependencies()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a490624e5c9b95240b382a0c23bf62359} 
+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{candidate}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get dependencies of a candidate.
+
+This should return a collection of requirements that `candidate`
+specifies as its dependencies.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00103}{103}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{def\ }get\_dependencies(self,\ candidate):}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ dependencies\ of\ a\ candidate.}}
+\DoxyCodeLine{00105\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00106\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ should\ return\ a\ collection\ of\ requirements\ that\ \`{}candidate\`{}}}
+\DoxyCodeLine{00107\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ specifies\ as\ its\ dependencies.}}
+\DoxyCodeLine{00108\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ }
+
+\end{DoxyCode}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a379126591b494cdf0b4c46ee4d441b7d}\index{AbstractProvider@{AbstractProvider}!get\_preference@{get\_preference}}
+\index{get\_preference@{get\_preference}!AbstractProvider@{AbstractProvider}}
+\doxysubsubsection{\texorpdfstring{get\_preference()}{get\_preference()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a379126591b494cdf0b4c46ee4d441b7d} 
+get\+\_\+preference (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{identifier}{, }\item[{}]{resolutions}{, }\item[{}]{candidates}{, }\item[{}]{information}{, }\item[{}]{backtrack\+\_\+causes}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Produce a sort key for given requirement based on preference.
+
+The preference is defined as "I think this requirement should be
+resolved first". The lower the return value is, the more preferred
+this group of arguments is.
+
+:param identifier: An identifier as returned by ``identify()``. This
+    identifies the dependency matches which should be returned.
+:param resolutions: Mapping of candidates currently pinned by the
+    resolver. Each key is an identifier, and the value is a candidate.
+    The candidate may conflict with requirements from ``information``.
+:param candidates: Mapping of each dependency's possible candidates.
+    Each value is an iterator of candidates.
+:param information: Mapping of requirement information of each package.
+    Each value is an iterator of *requirement information*.
+:param backtrack_causes: Sequence of requirement information that were
+    the requirements that caused the resolver to most recently backtrack.
+
+A *requirement information* instance is a named tuple with two members:
+
+* ``requirement`` specifies a requirement contributing to the current
+  list of candidates.
+* ``parent`` specifies the candidate that provides (depended on) the
+  requirement, or ``None`` to indicate a root requirement.
+
+The preference could depend on various issues, including (not
+necessarily in this order):
+
+* Is this package pinned in the current resolution result?
+* How relaxed is the requirement? Stricter ones should probably be
+  worked on first? (I don't know, actually.)
+* How many possibilities are there to satisfy this requirement? Those
+  with few left should likely be worked on first, I guess?
+* Are there any known conflicts for this requirement? We should
+  probably work on those with the most known conflicts.
+
+A sortable value should be returned (this will be used as the ``key``
+parameter of the built-in sorting function). The smaller the value is,
+the more preferred this requirement is (i.e. the sorting function
+is called with ``reverse=False``).
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00012}{12}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00019\ \ \ \ \ ):}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Produce\ a\ sort\ key\ for\ given\ requirement\ based\ on\ preference.}}
+\DoxyCodeLine{00021\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00022\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ preference\ is\ defined\ as\ "{}I\ think\ this\ requirement\ should\ be}}
+\DoxyCodeLine{00023\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ resolved\ first"{}.\ The\ lower\ the\ return\ value\ is,\ the\ more\ preferred}}
+\DoxyCodeLine{00024\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ this\ group\ of\ arguments\ is.}}
+\DoxyCodeLine{00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00026\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ identifier:\ An\ identifier\ as\ returned\ by\ \`{}\`{}identify()\`{}\`{}.\ This}}
+\DoxyCodeLine{00027\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ identifies\ the\ dependency\ matches\ which\ should\ be\ returned.}}
+\DoxyCodeLine{00028\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ resolutions:\ Mapping\ of\ candidates\ currently\ pinned\ by\ the}}
+\DoxyCodeLine{00029\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ resolver.\ Each\ key\ is\ an\ identifier,\ and\ the\ value\ is\ a\ candidate.}}
+\DoxyCodeLine{00030\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ The\ candidate\ may\ conflict\ with\ requirements\ from\ \`{}\`{}information\`{}\`{}.}}
+\DoxyCodeLine{00031\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ candidates:\ Mapping\ of\ each\ dependency's\ possible\ candidates.}}
+\DoxyCodeLine{00032\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Each\ value\ is\ an\ iterator\ of\ candidates.}}
+\DoxyCodeLine{00033\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ information:\ Mapping\ of\ requirement\ information\ of\ each\ package.}}
+\DoxyCodeLine{00034\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Each\ value\ is\ an\ iterator\ of\ *requirement\ information*.}}
+\DoxyCodeLine{00035\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ backtrack\_causes:\ Sequence\ of\ requirement\ information\ that\ were}}
+\DoxyCodeLine{00036\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ the\ requirements\ that\ caused\ the\ resolver\ to\ most\ recently\ backtrack.}}
+\DoxyCodeLine{00037\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ *requirement\ information*\ instance\ is\ a\ named\ tuple\ with\ two\ members:}}
+\DoxyCodeLine{00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00040\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ \`{}\`{}requirement\`{}\`{}\ specifies\ a\ requirement\ contributing\ to\ the\ current}}
+\DoxyCodeLine{00041\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ list\ of\ candidates.}}
+\DoxyCodeLine{00042\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ \`{}\`{}parent\`{}\`{}\ specifies\ the\ candidate\ that\ provides\ (depended\ on)\ the}}
+\DoxyCodeLine{00043\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ requirement,\ or\ \`{}\`{}None\`{}\`{}\ to\ indicate\ a\ root\ requirement.}}
+\DoxyCodeLine{00044\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00045\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ preference\ could\ depend\ on\ various\ issues,\ including\ (not}}
+\DoxyCodeLine{00046\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ necessarily\ in\ this\ order):}}
+\DoxyCodeLine{00047\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00048\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ Is\ this\ package\ pinned\ in\ the\ current\ resolution\ result?}}
+\DoxyCodeLine{00049\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ How\ relaxed\ is\ the\ requirement?\ Stricter\ ones\ should\ probably\ be}}
+\DoxyCodeLine{00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ worked\ on\ first?\ (I\ don't\ know,\ actually.)}}
+\DoxyCodeLine{00051\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ How\ many\ possibilities\ are\ there\ to\ satisfy\ this\ requirement?\ Those}}
+\DoxyCodeLine{00052\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ with\ few\ left\ should\ likely\ be\ worked\ on\ first,\ I\ guess?}}
+\DoxyCodeLine{00053\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *\ Are\ there\ any\ known\ conflicts\ for\ this\ requirement?\ We\ should}}
+\DoxyCodeLine{00054\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ probably\ work\ on\ those\ with\ the\ most\ known\ conflicts.}}
+\DoxyCodeLine{00055\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00056\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ sortable\ value\ should\ be\ returned\ (this\ will\ be\ used\ as\ the\ \`{}\`{}key\`{}\`{}}}
+\DoxyCodeLine{00057\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ parameter\ of\ the\ built-\/in\ sorting\ function).\ The\ smaller\ the\ value\ is,}}
+\DoxyCodeLine{00058\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ more\ preferred\ this\ requirement\ is\ (i.e.\ the\ sorting\ function}}
+\DoxyCodeLine{00059\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ called\ with\ \`{}\`{}reverse=False\`{}\`{}).}}
+\DoxyCodeLine{00060\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{00062\ }
+
+\end{DoxyCode}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a507502e6dc3f288bdf0d83aa329c341d}\index{AbstractProvider@{AbstractProvider}!identify@{identify}}
+\index{identify@{identify}!AbstractProvider@{AbstractProvider}}
+\doxysubsubsection{\texorpdfstring{identify()}{identify()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_a507502e6dc3f288bdf0d83aa329c341d} 
+identify (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{requirement\+\_\+or\+\_\+candidate}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Given a requirement, return an identifier for it.
+
+This is used to identify a requirement, e.g. whether two requirements
+should have their specifier parts merged.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00004}{4}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00004\ \ \ \ \ \textcolor{keyword}{def\ }identify(self,\ requirement\_or\_candidate):}
+\DoxyCodeLine{00005\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ requirement,\ return\ an\ identifier\ for\ it.}}
+\DoxyCodeLine{00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00007\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ is\ used\ to\ identify\ a\ requirement,\ e.g.\ whether\ two\ requirements}}
+\DoxyCodeLine{00008\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ should\ have\ their\ specifier\ parts\ merged.}}
+\DoxyCodeLine{00009\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{00011\ }
+
+\end{DoxyCode}
+\Hypertarget{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_aaa0d7cb55a1d1ad59318015cd5530a07}\index{AbstractProvider@{AbstractProvider}!is\_satisfied\_by@{is\_satisfied\_by}}
+\index{is\_satisfied\_by@{is\_satisfied\_by}!AbstractProvider@{AbstractProvider}}
+\doxysubsubsection{\texorpdfstring{is\_satisfied\_by()}{is\_satisfied\_by()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1resolvelib_1_1providers_1_1_abstract_provider_aaa0d7cb55a1d1ad59318015cd5530a07} 
+is\+\_\+satisfied\+\_\+by (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{requirement}{, }\item[{}]{candidate}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Whether the given requirement can be satisfied by a candidate.
+
+The candidate is guaranteed to have been generated from the
+requirement.
+
+A boolean should be returned to indicate whether ``candidate`` is a
+viable solution to the requirement.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{providers_8py_source_l00092}{92}} of file \mbox{\hyperlink{providers_8py_source}{providers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{def\ }is\_satisfied\_by(self,\ requirement,\ candidate):}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Whether\ the\ given\ requirement\ can\ be\ satisfied\ by\ a\ candidate.}}
+\DoxyCodeLine{00094\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ candidate\ is\ guaranteed\ to\ have\ been\ generated\ from\ the}}
+\DoxyCodeLine{00096\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ requirement.}}
+\DoxyCodeLine{00097\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00098\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ boolean\ should\ be\ returned\ to\ indicate\ whether\ \`{}\`{}candidate\`{}\`{}\ is\ a}}
+\DoxyCodeLine{00099\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ viable\ solution\ to\ the\ requirement.}}
+\DoxyCodeLine{00100\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError}
+\DoxyCodeLine{00102\ }
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/resolvelib/\mbox{\hyperlink{providers_8py}{providers.\+py}}\end{DoxyCompactItemize}

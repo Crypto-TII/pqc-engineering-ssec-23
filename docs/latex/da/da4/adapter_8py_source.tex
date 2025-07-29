@@ -1,0 +1,143 @@
+\doxysection{adapter.\+py}
+\hypertarget{adapter_8py_source}{}\label{adapter_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/cachecontrol/adapter.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/cachecontrol/adapter.py}}
+\mbox{\hyperlink{adapter_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1adapter}{00001}}\ \textcolor{comment}{\#\ SPDX-\/FileCopyrightText:\ 2015\ Eric\ Larson}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00002}00002\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00003}00003\ \textcolor{comment}{\#\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00005}00005\ \textcolor{keyword}{import}\ types}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00006}00006\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00007}00007\ \textcolor{keyword}{import}\ zlib}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1adapters}{pip.\_vendor.requests.adapters}}\ \textcolor{keyword}{import}\ HTTPAdapter}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00011}00011\ \textcolor{keyword}{from}\ .controller\ \textcolor{keyword}{import}\ CacheController,\ PERMANENT\_REDIRECT\_STATUSES}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00012}00012\ \textcolor{keyword}{from}\ .cache\ \textcolor{keyword}{import}\ DictCache}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00013}00013\ \textcolor{keyword}{from}\ .filewrapper\ \textcolor{keyword}{import}\ CallbackFileWrapper}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00016}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter}{00016}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter}{CacheControlAdapter}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1adapters_1_1_h_t_t_p_adapter}{HTTPAdapter}}):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00017}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_acf143416fa76f848871a205629cf0bf5}{00017}}\ \ \ \ \ invalidating\_methods\ =\ \{\textcolor{stringliteral}{"{}PUT"{}},\ \textcolor{stringliteral}{"{}PATCH"{}},\ \textcolor{stringliteral}{"{}DELETE"{}}\}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00019}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_af9584268a356e1661f972dd85079ecde}{00019}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_af9584268a356e1661f972dd85079ecde}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00020}00020\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ cache=None,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ cache\_etags=True,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ controller\_class=None,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ serializer=None,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ heuristic=None,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ cacheable\_methods=None,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ *args,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ **kw}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00029}00029\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ super(CacheControlAdapter,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_af9584268a356e1661f972dd85079ecde}{\_\_init\_\_}}(*args,\ **kw)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00031}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3c138af7067df82c4c4964d42878edc6}{00031}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3c138af7067df82c4c4964d42878edc6}{cache}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1cache_1_1_dict_cache}{DictCache}}()\ \textcolor{keywordflow}{if}\ cache\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ cache}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00032}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_afa29ef5a69e52eaed5de345b6599491d}{00032}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_afa29ef5a69e52eaed5de345b6599491d}{heuristic}}\ =\ heuristic}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00033}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a52fae3cd3325465ff7bba3866e5198a1}{00033}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a52fae3cd3325465ff7bba3866e5198a1}{cacheable\_methods}}\ =\ cacheable\_methods\ \textcolor{keywordflow}{or}\ (\textcolor{stringliteral}{"{}GET"{}},)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ controller\_factory\ =\ controller\_class\ \textcolor{keywordflow}{or}\ CacheController}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00036}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{00036}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}\ =\ controller\_factory(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3c138af7067df82c4c4964d42878edc6}{cache}},\ cache\_etags=cache\_etags,\ serializer=serializer}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3a235a391025ea02d41e9c0ef6c8980e}{00040}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3a235a391025ea02d41e9c0ef6c8980e}{send}}(self,\ request,\ cacheable\_methods=None,\ **kw):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Send\ a\ request.\ Use\ the\ request\ information\ to\ see\ if\ it}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ exists\ in\ the\ cache\ and\ cache\ the\ response\ if\ we\ need\ to\ and\ can.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ cacheable\ =\ cacheable\_methods\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a52fae3cd3325465ff7bba3866e5198a1}{cacheable\_methods}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ request.method\ \textcolor{keywordflow}{in}\ cacheable:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cached\_response\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.cached\_request(request)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ zlib.error:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cached\_response\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cached\_response:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a459c3ee2602d14343a17218e9914da28}{build\_response}}(request,\ cached\_response,\ from\_cache=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ check\ for\ etags\ and\ add\ headers\ if\ appropriate}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ request.headers.update(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.conditional\_headers(request))}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ resp\ =\ super(CacheControlAdapter,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3a235a391025ea02d41e9c0ef6c8980e}{send}}(request,\ **kw)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ resp}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00061}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a459c3ee2602d14343a17218e9914da28}{00061}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a459c3ee2602d14343a17218e9914da28}{build\_response}}(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ self,\ request,\ response,\ from\_cache=False,\ cacheable\_methods=None}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00063}00063\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Build\ a\ response\ by\ making\ a\ request\ or\ using\ the\ cache.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00066}00066\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ will\ end\ up\ calling\ send\ and\ returning\ a\ potentially}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ cached\ response}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ cacheable\ =\ cacheable\_methods\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a52fae3cd3325465ff7bba3866e5198a1}{cacheable\_methods}}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ from\_cache\ \textcolor{keywordflow}{and}\ request.method\ \textcolor{keywordflow}{in}\ cacheable:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ any\ heuristics\ that\ might\ update\ headers}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ before\ trying\ to\ cache.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_afa29ef5a69e52eaed5de345b6599491d}{heuristic}}:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_afa29ef5a69e52eaed5de345b6599491d}{heuristic}}.apply(response)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ apply\ any\ expiration\ heuristics}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\ ==\ 304:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ must\ have\ sent\ an\ ETag\ request.\ This\ could\ mean}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ we've\ been\ expired\ already\ or\ that\ we\ simply}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ have\ an\ etag.\ In\ either\ case,\ we\ want\ to\ try\ and}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ update\ the\ cache\ if\ that\ is\ the\ case.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cached\_response\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.update\_cached\_response(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ request,\ response}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cached\_response\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ response:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ from\_cache\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ are\ done\ with\ the\ server\ response,\ read\ a}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ possible\ response\ body\ (compliant\ servers\ will}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ not\ return\ one,\ but\ we\ cannot\ be\ 100\%\ sure)\ and}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ release\ the\ connection\ back\ to\ the\ pool.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.read(decode\_content=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.release\_conn()}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response\ =\ cached\_response}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ always\ cache\ the\ 301\ responses}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ int(response.status)\ \textcolor{keywordflow}{in}\ PERMANENT\_REDIRECT\_STATUSES:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.cache\_response(request,\ response)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Wrap\ the\ response\ file\ with\ a\ wrapper\ that\ will\ cache\ the}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ response\ when\ the\ stream\ has\ been\ consumed.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.\_fp\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1_callback_file_wrapper}{CallbackFileWrapper}}(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.\_fp,}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ functools.partial(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.cache\_response,\ request,\ response}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.chunked:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ super\_update\_chunk\_length\ =\ response.\_update\_chunk\_length}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\_update\_chunk\_length(self):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ super\_update\_chunk\_length()}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00116}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a4660d8e86538d534dfdc50b415af6b09}{00116}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a4660d8e86538d534dfdc50b415af6b09}{chunk\_left}}\ ==\ 0:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\_fp.\_close()}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.\_update\_chunk\_length\ =\ types.MethodType(}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_update\_chunk\_length,\ response}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ resp\ =\ super(CacheControlAdapter,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a459c3ee2602d14343a17218e9914da28}{build\_response}}(request,\ response)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ See\ if\ we\ should\ invalidate\ the\ cache.}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ request.method\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_acf143416fa76f848871a205629cf0bf5}{invalidating\_methods}}\ \textcolor{keywordflow}{and}\ resp.ok:}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ cache\_url\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8b3ad8ebe029e01be41b9692f3b4e104}{controller}}.cache\_url(request.url)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3c138af7067df82c4c4964d42878edc6}{cache}}.delete(cache\_url)}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Give\ the\ request\ a\ from\_cache\ attr\ to\ let\ people\ use\ it}}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ resp.from\_cache\ =\ from\_cache}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ resp}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00135}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8ab79e14e24aa440dcd1d9e822eb1f1c}{00135}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}(self):}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a3c138af7067df82c4c4964d42878edc6}{cache}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}()}
+\DoxyCodeLine{\Hypertarget{adapter_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ super(CacheControlAdapter,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1adapter_1_1_cache_control_adapter_a8ab79e14e24aa440dcd1d9e822eb1f1c}{close}}()}
+
+\end{DoxyCode}

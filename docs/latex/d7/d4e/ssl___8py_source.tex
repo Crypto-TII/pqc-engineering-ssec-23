@@ -1,0 +1,501 @@
+\doxysection{ssl\+\_\+.\+py}
+\hypertarget{ssl___8py_source}{}\label{ssl___8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/ssl\_.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/ssl\_.py}}
+\mbox{\hyperlink{ssl___8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl__}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00003}00003\ \textcolor{keyword}{import}\ hmac}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00004}00004\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00005}00005\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00006}00006\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00007}00007\ \textcolor{keyword}{from}\ binascii\ \textcolor{keyword}{import}\ hexlify,\ unhexlify}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00008}00008\ \textcolor{keyword}{from}\ hashlib\ \textcolor{keyword}{import}\ md5,\ sha1,\ sha256}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00010}00010\ \textcolor{keyword}{from}\ ..exceptions\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00011}00011\ \ \ \ \ InsecurePlatformWarning,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00012}00012\ \ \ \ \ ProxySchemeUnsupported,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00013}00013\ \ \ \ \ SNIMissingWarning,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00014}00014\ \ \ \ \ SSLError,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00015}00015\ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00016}00016\ \textcolor{keyword}{from}\ ..packages\ \textcolor{keyword}{import}\ six}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00017}00017\ \textcolor{keyword}{from}\ .url\ \textcolor{keyword}{import}\ BRACELESS\_IPV6\_ADDRZ\_RE,\ IPV4\_RE}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a964b85d0adcb83636393089ba06a3a5b}{00019}}\ SSLContext\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a8ef1f012a87f07e62ddf98951bc80e59}{00020}}\ SSLTransport\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00021}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___aeb7412ab564c279dcb183f542c79c8a6}{00021}}\ HAS\_SNI\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a2c31c331e4c0525f1ea81b34b9a30236}{00022}}\ IS\_PYOPENSSL\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00023}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___afd1238a09f683ef8ab7be72d1273f695}{00023}}\ IS\_SECURETRANSPORT\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a0b17f0ad1e482c06c48b92ffc0cccc06}{00024}}\ ALPN\_PROTOCOLS\ =\ [\textcolor{stringliteral}{"{}http/1.1"{}}]}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00026}00026\ \textcolor{comment}{\#\ Maps\ the\ length\ of\ a\ digest\ to\ a\ possible\ hash\ function\ producing\ this\ digest}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00027}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a4eb727e65be6f774a4cec70ccf52d2b5}{00027}}\ HASHFUNC\_MAP\ =\ \{32:\ md5,\ 40:\ sha1,\ 64:\ sha256\}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00030}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ab76a2ff409725689d2001e623e27411c}{00030}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ab76a2ff409725689d2001e623e27411c}{\_const\_compare\_digest\_backport}}(a,\ b):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ Compare\ two\ digests\ of\ equal\ length\ in\ constant\ time.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00033}00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ The\ digests\ must\ be\ of\ type\ str/bytes.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ Returns\ True\ if\ the\ digests\ match,\ and\ False\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00037}00037\ \ \ \ \ result\ =\ abs(len(a)\ -\/\ len(b))}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{for}\ left,\ right\ \textcolor{keywordflow}{in}\ zip(bytearray(a),\ bytearray(b)):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00039}00039\ \ \ \ \ \ \ \ \ result\ |=\ left\ \string^\ right}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{return}\ result\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ac1f6ed31e7b0b748f869efef45d28af4}{00043}}\ \_const\_compare\_digest\ =\ getattr(hmac,\ \textcolor{stringliteral}{"{}compare\_digest"{}},\ \_const\_compare\_digest\_backport)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00045}00045\ \textcolor{keywordflow}{try}:\ \ \textcolor{comment}{\#\ Test\ for\ SSL\ features}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{import}\ ssl}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00047}00047\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ CERT\_REQUIRED,\ wrap\_socket}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00048}00048\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00051}00051\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00052}00052\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ HAS\_SNI\ \ \textcolor{comment}{\#\ Has\ SNI?}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00053}00053\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00056}00056\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00057}00057\ \ \ \ \ \textcolor{keyword}{from}\ .ssltransport\ \textcolor{keyword}{import}\ SSLTransport}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00058}00058\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00062}00062\ \textcolor{keywordflow}{try}:\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Python\ 3.6}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00063}00063\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00065}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a4cd9874bd00fd6ebd5a26dba35df31b7}{00065}}\ \ \ \ \ PROTOCOL\_SSLv23\ =\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00066}00066\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ PROTOCOL\_SSLv23\ \textcolor{keyword}{as}\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00070}00070\ \ \ \ \ \ \ \ \ PROTOCOL\_SSLv23\ =\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00072}00072\ \ \ \ \ \ \ \ \ PROTOCOL\_SSLv23\ =\ PROTOCOL\_TLS\ =\ 2}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00074}00074\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00075}00075\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ PROTOCOL\_TLS\_CLIENT}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00076}00076\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00077}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ac50ac52c6be324e35a34f74588e8145f}{00077}}\ \ \ \ \ PROTOCOL\_TLS\_CLIENT\ =\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00080}00080\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00081}00081\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ OP\_NO\_COMPRESSION,\ OP\_NO\_SSLv2,\ OP\_NO\_SSLv3}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00082}00082\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00083}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a819e5b165400a7b6596dbb82391428f1}{00083}}\ \ \ \ \ OP\_NO\_SSLv2,\ OP\_NO\_SSLv3\ =\ 0x1000000,\ 0x2000000}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00084}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a2ca341b05db0981611c9cbdeea5eb2c8}{00084}}\ \ \ \ \ OP\_NO\_COMPRESSION\ =\ 0x20000}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00087}00087\ \textcolor{keywordflow}{try}:\ \ \textcolor{comment}{\#\ OP\_NO\_TICKET\ was\ added\ in\ Python\ 3.6}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00088}00088\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ OP\_NO\_TICKET}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00089}00089\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00090}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a372b737b7ccbebc62909128eb323f64a}{00090}}\ \ \ \ \ OP\_NO\_TICKET\ =\ 0x4000}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00093}00093\ \textcolor{comment}{\#\ A\ secure\ default.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00094}00094\ \textcolor{comment}{\#\ Sources\ for\ more\ information\ on\ TLS\ ciphers:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00095}00095\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00096}00096\ \textcolor{comment}{\#\ -\/\ https://wiki.mozilla.org/Security/Server\_Side\_TLS}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00097}00097\ \textcolor{comment}{\#\ -\/\ https://www.ssllabs.com/projects/best-\/practices/index.html}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00098}00098\ \textcolor{comment}{\#\ -\/\ https://hynek.me/articles/hardening-\/your-\/web-\/servers-\/ssl-\/ciphers/}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00099}00099\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00100}00100\ \textcolor{comment}{\#\ The\ general\ intent\ is:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00101}00101\ \textcolor{comment}{\#\ -\/\ prefer\ cipher\ suites\ that\ offer\ perfect\ forward\ secrecy\ (DHE/ECDHE),}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00102}00102\ \textcolor{comment}{\#\ -\/\ prefer\ ECDHE\ over\ DHE\ for\ better\ performance,}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00103}00103\ \textcolor{comment}{\#\ -\/\ prefer\ any\ AES-\/GCM\ and\ ChaCha20\ over\ any\ AES-\/CBC\ for\ better\ performance\ and}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00104}00104\ \textcolor{comment}{\#\ \ \ security,}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00105}00105\ \textcolor{comment}{\#\ -\/\ prefer\ AES-\/GCM\ over\ ChaCha20\ because\ hardware-\/accelerated\ AES\ is\ common,}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00106}00106\ \textcolor{comment}{\#\ -\/\ disable\ NULL\ authentication,\ MD5\ MACs,\ DSS,\ and\ other}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00107}00107\ \textcolor{comment}{\#\ \ \ insecure\ ciphers\ for\ security\ reasons.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00108}00108\ \textcolor{comment}{\#\ -\/\ NOTE:\ TLS\ 1.3\ cipher\ suites\ are\ managed\ through\ a\ different\ interface}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00109}00109\ \textcolor{comment}{\#\ \ \ not\ exposed\ by\ CPython\ (yet!)\ and\ are\ enabled\ by\ default\ if\ they're\ available.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00110}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ad8e27a192c93c94c93c9ecdda0d6bfcc}{00110}}\ DEFAULT\_CIPHERS\ =\ \textcolor{stringliteral}{"{}:"{}}.join(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00111}00111\ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ECDHE+AESGCM"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ECDHE+CHACHA20"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DHE+AESGCM"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DHE+CHACHA20"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ECDH+AESGCM"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DH+AESGCM"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ECDH+AES"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DH+AES"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}RSA+AESGCM"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}RSA+AES"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}!aNULL"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}!eNULL"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}!MD5"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}!DSS"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00126}00126\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00127}00127\ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00129}00129\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00130}00130\ \ \ \ \ \textcolor{keyword}{from}\ ssl\ \textcolor{keyword}{import}\ SSLContext\ \ \textcolor{comment}{\#\ Modern\ SSL?}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00131}00131\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00133}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context}{00133}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context}{SSLContext}}(object):\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Python\ 2}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00134}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_ace1324e69e179e967560ca69557027c7}{00134}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_ace1324e69e179e967560ca69557027c7}{\_\_init\_\_}}(self,\ protocol\_version):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00135}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_add2ec924c0f221790d7235ffb2e615cd}{00135}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_add2ec924c0f221790d7235ffb2e615cd}{protocol}}\ =\ protocol\_version}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Use\ default\ values\ from\ a\ real\ SSLContext}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00137}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_aec939a0dbb384c944617f37c20183249}{00137}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_aec939a0dbb384c944617f37c20183249}{check\_hostname}}\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00138}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abe68233596c90fd29d934854560ff5f3}{00138}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abe68233596c90fd29d934854560ff5f3}{verify\_mode}}\ =\ ssl.CERT\_NONE}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00139}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a2a1c3b022ed63388c8429131ff53e699}{00139}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a2a1c3b022ed63388c8429131ff53e699}{ca\_certs}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00140}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a849fa981f121eb25a67e4e14392840ba}{00140}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a849fa981f121eb25a67e4e14392840ba}{options}}\ =\ 0}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00141}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a54d37b10f27349aaea5a6cd0ddf953d0}{00141}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a54d37b10f27349aaea5a6cd0ddf953d0}{certfile}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00142}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_af91fec1da2e53a8620d70b56171e8b75}{00142}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_af91fec1da2e53a8620d70b56171e8b75}{keyfile}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00143}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a11399ea3f1201f0e65615f9d0025b02e}{00143}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a11399ea3f1201f0e65615f9d0025b02e}{ciphers}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00145}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a0ff98a7155a48c8760ece7e1c2f2576e}{00145}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a0ff98a7155a48c8760ece7e1c2f2576e}{load\_cert\_chain}}(self,\ certfile,\ keyfile):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a54d37b10f27349aaea5a6cd0ddf953d0}{certfile}}\ =\ certfile}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_af91fec1da2e53a8620d70b56171e8b75}{keyfile}}\ =\ keyfile}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00149}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a701810c31f422ba49e7134eff13e80ac}{00149}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a701810c31f422ba49e7134eff13e80ac}{load\_verify\_locations}}(self,\ cafile=None,\ capath=None,\ cadata=None):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a2a1c3b022ed63388c8429131ff53e699}{ca\_certs}}\ =\ cafile}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ capath\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(\textcolor{stringliteral}{"{}CA\ directories\ not\ supported\ in\ older\ Pythons"{}})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cadata\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(\textcolor{stringliteral}{"{}CA\ data\ not\ supported\ in\ older\ Pythons"{}})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00158}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_aab61ce4aa3bf511d1beebbaf475cfa13}{00158}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_aab61ce4aa3bf511d1beebbaf475cfa13}{set\_ciphers}}(self,\ cipher\_suite):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a11399ea3f1201f0e65615f9d0025b02e}{ciphers}}\ =\ cipher\_suite}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00161}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abd8422dc483787d6db0afbbd7935d2d6}{00161}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abd8422dc483787d6db0afbbd7935d2d6}{wrap\_socket}}(self,\ socket,\ server\_hostname=None,\ server\_side=False):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}A\ true\ SSLContext\ object\ is\ not\ available.\ This\ prevents\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}urllib3\ from\ configuring\ SSL\ appropriately\ and\ may\ cause\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}certain\ SSL\ connections\ to\ fail.\ You\ can\ upgrade\ to\ a\ newer\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version\ of\ Python\ to\ solve\ this.\ For\ more\ information,\ see\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}https://urllib3.readthedocs.io/en/1.26.x/advanced-\/usage.html"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\#ssl-\/warnings"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InsecurePlatformWarning,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ kwargs\ =\ \{}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}keyfile"{}}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_af91fec1da2e53a8620d70b56171e8b75}{keyfile}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}certfile"{}}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a54d37b10f27349aaea5a6cd0ddf953d0}{certfile}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ca\_certs"{}}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a2a1c3b022ed63388c8429131ff53e699}{ca\_certs}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cert\_reqs"{}}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abe68233596c90fd29d934854560ff5f3}{verify\_mode}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ssl\_version"{}}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_add2ec924c0f221790d7235ffb2e615cd}{protocol}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}server\_side"{}}:\ server\_side,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_abd8422dc483787d6db0afbbd7935d2d6}{wrap\_socket}}(socket,\ ciphers=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context_a11399ea3f1201f0e65615f9d0025b02e}{ciphers}},\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00182}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a048c15af2d6f11c15064b3abebdf33e1}{00182}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a048c15af2d6f11c15064b3abebdf33e1}{assert\_fingerprint}}(cert,\ fingerprint):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00183}00183\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ \ \ Checks\ if\ given\ fingerprint\ matches\ the\ supplied\ certificate.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00185}00185\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00186}00186\ \textcolor{stringliteral}{\ \ \ \ :param\ cert:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Certificate\ as\ bytes\ object.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ \ \ :param\ fingerprint:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00189}00189\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Fingerprint\ as\ string\ of\ hexdigits,\ can\ be\ interspersed\ by\ colons.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00190}00190\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00192}00192\ \ \ \ \ fingerprint\ =\ fingerprint.replace(\textcolor{stringliteral}{"{}:"{}},\ \textcolor{stringliteral}{"{}"{}}).lower()}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00193}00193\ \ \ \ \ digest\_length\ =\ len(fingerprint)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00194}00194\ \ \ \ \ hashfunc\ =\ HASHFUNC\_MAP.get(digest\_length)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ hashfunc:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(\textcolor{stringliteral}{"{}Fingerprint\ of\ invalid\ length:\ \{0\}"{}}.format(fingerprint))}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00198}00198\ \ \ \ \ \textcolor{comment}{\#\ We\ need\ encode()\ here\ for\ py32;\ works\ on\ py2\ and\ p33.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00199}00199\ \ \ \ \ fingerprint\_bytes\ =\ unhexlify(fingerprint.encode())}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00201}00201\ \ \ \ \ cert\_digest\ =\ hashfunc(cert).digest()}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ac1f6ed31e7b0b748f869efef45d28af4}{\_const\_compare\_digest}}(cert\_digest,\ fingerprint\_bytes):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'Fingerprints\ did\ not\ match.\ Expected\ "{}\{0\}"{},\ got\ "{}\{1\}"{}.'}.format(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fingerprint,\ hexlify(cert\_digest)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00208}00208\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00211}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___adbd304871e80c8d8c1068b586d4432a0}{00211}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___adbd304871e80c8d8c1068b586d4432a0}{resolve\_cert\_reqs}}(candidate):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00212}00212\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ Resolves\ the\ argument\ to\ a\ numeric\ constant,\ which\ can\ be\ passed\ to}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00214}00214\ \textcolor{stringliteral}{\ \ \ \ the\ wrap\_socket\ function/method\ from\ the\ ssl\ module.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ \ \ Defaults\ to\ :data:\`{}ssl.CERT\_REQUIRED\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00216}00216\ \textcolor{stringliteral}{\ \ \ \ If\ given\ a\ string\ it\ is\ assumed\ to\ be\ the\ name\ of\ the\ constant\ in\ the}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00217}00217\ \textcolor{stringliteral}{\ \ \ \ :mod:\`{}ssl\`{}\ module\ or\ its\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00218}00218\ \textcolor{stringliteral}{\ \ \ \ (So\ you\ can\ specify\ \`{}REQUIRED\`{}\ instead\ of\ \`{}CERT\_REQUIRED\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00219}00219\ \textcolor{stringliteral}{\ \ \ \ If\ it's\ neither\ \`{}None\`{}\ nor\ a\ string\ we\ assume\ it\ is\ already\ the\ numeric}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ constant\ which\ can\ directly\ be\ passed\ to\ wrap\_socket.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CERT\_REQUIRED}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(candidate,\ str):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00226}00226\ \ \ \ \ \ \ \ \ res\ =\ getattr(ssl,\ candidate,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ res\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ getattr(ssl,\ \textcolor{stringliteral}{"{}CERT\_"{}}\ +\ candidate)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00231}00231\ \ \ \ \ \textcolor{keywordflow}{return}\ candidate}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00234}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a59c7a0b2e9f2524d465685e2665205b6}{00234}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a59c7a0b2e9f2524d465685e2665205b6}{resolve\_ssl\_version}}(candidate):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00235}00235\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ \ \ like\ resolve\_cert\_reqs}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00237}00237\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ PROTOCOL\_TLS}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(candidate,\ str):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00242}00242\ \ \ \ \ \ \ \ \ res\ =\ getattr(ssl,\ candidate,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ res\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ getattr(ssl,\ \textcolor{stringliteral}{"{}PROTOCOL\_"{}}\ +\ candidate)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{return}\ candidate}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00250}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a6867168dede45ed3d7875edd8ed1b2c4}{00250}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a6867168dede45ed3d7875edd8ed1b2c4}{create\_urllib3\_context}}(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00251}00251\ \ \ \ \ ssl\_version=None,\ cert\_reqs=None,\ options=None,\ ciphers=None}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00252}00252\ ):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00253}00253\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}All\ arguments\ have\ the\ same\ meaning\ as\ \`{}\`{}ssl\_wrap\_socket\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00254}00254\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ By\ default,\ this\ function\ does\ a\ lot\ of\ the\ same\ work\ that}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \`{}\`{}ssl.create\_default\_context\`{}\`{}\ does\ on\ Python\ 3.4+.\ It:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00257}00257\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00258}00258\ \textcolor{stringliteral}{\ \ \ \ -\/\ Disables\ SSLv2,\ SSLv3,\ and\ compression}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00259}00259\ \textcolor{stringliteral}{\ \ \ \ -\/\ Sets\ a\ restricted\ set\ of\ server\ ciphers}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00260}00260\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00261}00261\ \textcolor{stringliteral}{\ \ \ \ If\ you\ wish\ to\ enable\ SSLv3,\ you\ can\ do::}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00262}00262\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00263}00263\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ from\ pip.\_vendor.urllib3.util\ import\ ssl\_}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00264}00264\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ context\ =\ ssl\_.create\_urllib3\_context()}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00265}00265\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ context.options\ \&=\ \string~ssl\_.OP\_NO\_SSLv3}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00266}00266\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00267}00267\ \textcolor{stringliteral}{\ \ \ \ You\ can\ do\ the\ same\ to\ enable\ compression\ (substituting\ \`{}\`{}COMPRESSION\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00268}00268\ \textcolor{stringliteral}{\ \ \ \ for\ \`{}\`{}SSLv3\`{}\`{}\ in\ the\ last\ line\ above).}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00269}00269\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00270}00270\ \textcolor{stringliteral}{\ \ \ \ :param\ ssl\_version:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00271}00271\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ desired\ protocol\ version\ to\ use.\ This\ will\ default\ to}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00272}00272\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ PROTOCOL\_SSLv23\ which\ will\ negotiate\ the\ highest\ protocol\ that\ both}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00273}00273\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ server\ and\ your\ installation\ of\ OpenSSL\ support.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00274}00274\ \textcolor{stringliteral}{\ \ \ \ :param\ cert\_reqs:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00275}00275\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Whether\ to\ require\ the\ certificate\ verification.\ This\ defaults\ to}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00276}00276\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}ssl.CERT\_REQUIRED\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00277}00277\ \textcolor{stringliteral}{\ \ \ \ :param\ options:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00278}00278\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Specific\ OpenSSL\ options.\ These\ default\ to\ \`{}\`{}ssl.OP\_NO\_SSLv2\`{}\`{},}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00279}00279\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}ssl.OP\_NO\_SSLv3\`{}\`{},\ \`{}\`{}ssl.OP\_NO\_COMPRESSION\`{}\`{},\ and\ \`{}\`{}ssl.OP\_NO\_TICKET\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00280}00280\ \textcolor{stringliteral}{\ \ \ \ :param\ ciphers:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00281}00281\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Which\ cipher\ suites\ to\ allow\ the\ server\ to\ select.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00282}00282\ \textcolor{stringliteral}{\ \ \ \ :returns:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00283}00283\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Constructed\ SSLContext\ object\ with\ specified\ options}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00284}00284\ \textcolor{stringliteral}{\ \ \ \ :rtype:\ SSLContext}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00285}00285\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00286}00286\ \ \ \ \ \textcolor{comment}{\#\ PROTOCOL\_TLS\ is\ deprecated\ in\ Python\ 3.10}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ssl\_version\ \textcolor{keywordflow}{or}\ ssl\_version\ ==\ PROTOCOL\_TLS:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00288}00288\ \ \ \ \ \ \ \ \ ssl\_version\ =\ PROTOCOL\_TLS\_CLIENT}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00290}00290\ \ \ \ \ context\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___1_1_s_s_l_context}{SSLContext}}(ssl\_version)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00292}00292\ \ \ \ \ context.set\_ciphers(ciphers\ \textcolor{keywordflow}{or}\ DEFAULT\_CIPHERS)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00294}00294\ \ \ \ \ \textcolor{comment}{\#\ Setting\ the\ default\ here,\ as\ we\ may\ have\ no\ ssl\ module\ on\ import}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00295}00295\ \ \ \ \ cert\_reqs\ =\ ssl.CERT\_REQUIRED\ \textcolor{keywordflow}{if}\ cert\_reqs\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ cert\_reqs}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{if}\ options\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00298}00298\ \ \ \ \ \ \ \ \ options\ =\ 0}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ SSLv2\ is\ easily\ broken\ and\ is\ considered\ harmful\ and\ dangerous}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00300}00300\ \ \ \ \ \ \ \ \ options\ |=\ OP\_NO\_SSLv2}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ SSLv3\ has\ several\ problems\ and\ is\ now\ dangerous}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00302}00302\ \ \ \ \ \ \ \ \ options\ |=\ OP\_NO\_SSLv3}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Disable\ compression\ to\ prevent\ CRIME\ attacks\ for\ OpenSSL\ 1.0+}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (issue\ \#309)}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00305}00305\ \ \ \ \ \ \ \ \ options\ |=\ OP\_NO\_COMPRESSION}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TLSv1.2\ only.\ Unless\ set\ explicitly,\ do\ not\ request\ tickets.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ may\ save\ some\ bandwidth\ on\ wire,\ and\ although\ the\ ticket\ is\ encrypted,}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ there\ is\ a\ risk\ associated\ with\ it\ being\ on\ wire,}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ the\ server\ is\ not\ rotating\ its\ ticketing\ keys\ properly.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00310}00310\ \ \ \ \ \ \ \ \ options\ |=\ OP\_NO\_TICKET}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00311}00311\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00312}00312\ \ \ \ \ context.options\ |=\ options}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00314}00314\ \ \ \ \ \textcolor{comment}{\#\ Enable\ post-\/handshake\ authentication\ for\ TLS\ 1.3,\ see\ GH\ \#1634.\ PHA\ is}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00315}00315\ \ \ \ \ \textcolor{comment}{\#\ necessary\ for\ conditional\ client\ cert\ authentication\ with\ TLS\ 1.3.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00316}00316\ \ \ \ \ \textcolor{comment}{\#\ The\ attribute\ is\ None\ for\ OpenSSL\ <=\ 1.1.0\ or\ does\ not\ exist\ in\ older}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00317}00317\ \ \ \ \ \textcolor{comment}{\#\ versions\ of\ Python.\ \ We\ only\ enable\ on\ Python\ 3.7.4+\ or\ if\ certificate}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00318}00318\ \ \ \ \ \textcolor{comment}{\#\ verification\ is\ enabled\ to\ work\ around\ Python\ issue\ \#37428}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00319}00319\ \ \ \ \ \textcolor{comment}{\#\ See:\ https://bugs.python.org/issue37428}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{if}\ (cert\_reqs\ ==\ ssl.CERT\_REQUIRED\ \textcolor{keywordflow}{or}\ sys.version\_info\ >=\ (3,\ 7,\ 4))\ \textcolor{keywordflow}{and}\ getattr(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00321}00321\ \ \ \ \ \ \ \ \ context,\ \textcolor{stringliteral}{"{}post\_handshake\_auth"{}},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00322}00322\ \ \ \ \ )\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00323}00323\ \ \ \ \ \ \ \ \ context.post\_handshake\_auth\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00325}00325\ \ \ \ \ \textcolor{keyword}{def\ }disable\_check\_hostname():}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ getattr(context,\ \textcolor{stringliteral}{"{}check\_hostname"{}},\ \textcolor{keywordtype}{None})\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00328}00328\ \ \ \ \ \ \ \ \ ):\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Python\ 3.2}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ do\ our\ own\ verification,\ including\ fingerprints\ and\ alternative}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hostnames.\ So\ disable\ it\ here}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ context.check\_hostname\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00333}00333\ \ \ \ \ \textcolor{comment}{\#\ The\ order\ of\ the\ below\ lines\ setting\ verify\_mode\ and\ check\_hostname}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00334}00334\ \ \ \ \ \textcolor{comment}{\#\ matter\ due\ to\ safe-\/guards\ SSLContext\ has\ to\ prevent\ an\ SSLContext\ with}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00335}00335\ \ \ \ \ \textcolor{comment}{\#\ check\_hostname=True,\ verify\_mode=NONE/OPTIONAL.\ This\ is\ made\ even\ more}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00336}00336\ \ \ \ \ \textcolor{comment}{\#\ complex\ because\ we\ don't\ know\ whether\ PROTOCOL\_TLS\_CLIENT\ will\ be\ used}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00337}00337\ \ \ \ \ \textcolor{comment}{\#\ or\ not\ so\ we\ don't\ know\ the\ initial\ state\ of\ the\ freshly\ created\ SSLContext.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{if}\ cert\_reqs\ ==\ ssl.CERT\_REQUIRED:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00339}00339\ \ \ \ \ \ \ \ \ context.verify\_mode\ =\ cert\_reqs}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00340}00340\ \ \ \ \ \ \ \ \ disable\_check\_hostname()}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00342}00342\ \ \ \ \ \ \ \ \ disable\_check\_hostname()}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00343}00343\ \ \ \ \ \ \ \ \ context.verify\_mode\ =\ cert\_reqs}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00345}00345\ \ \ \ \ \textcolor{comment}{\#\ Enable\ logging\ of\ TLS\ session\ keys\ via\ defacto\ standard\ environment\ variable}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00346}00346\ \ \ \ \ \textcolor{comment}{\#\ 'SSLKEYLOGFILE',\ if\ the\ feature\ is\ available\ (Python\ 3.8+).\ Skip\ empty\ values.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00347}00347\ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(context,\ \textcolor{stringliteral}{"{}keylog\_filename"{}}):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00348}00348\ \ \ \ \ \ \ \ \ sslkeylogfile\ =\ os.environ.get(\textcolor{stringliteral}{"{}SSLKEYLOGFILE"{}})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ sslkeylogfile:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ context.keylog\_filename\ =\ sslkeylogfile}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00352}00352\ \ \ \ \ \textcolor{keywordflow}{return}\ context}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00355}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a9b8c8a9b9f8e615bc1029ee74b29d4ef}{00355}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a9b8c8a9b9f8e615bc1029ee74b29d4ef}{ssl\_wrap\_socket}}(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00356}00356\ \ \ \ \ sock,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00357}00357\ \ \ \ \ keyfile=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00358}00358\ \ \ \ \ certfile=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00359}00359\ \ \ \ \ cert\_reqs=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00360}00360\ \ \ \ \ ca\_certs=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00361}00361\ \ \ \ \ server\_hostname=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00362}00362\ \ \ \ \ ssl\_version=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00363}00363\ \ \ \ \ ciphers=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00364}00364\ \ \ \ \ ssl\_context=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00365}00365\ \ \ \ \ ca\_cert\_dir=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00366}00366\ \ \ \ \ key\_password=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00367}00367\ \ \ \ \ ca\_cert\_data=None,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00368}00368\ \ \ \ \ tls\_in\_tls=False,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00369}00369\ ):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00370}00370\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00371}00371\ \textcolor{stringliteral}{\ \ \ \ All\ arguments\ except\ for\ server\_hostname,\ ssl\_context,\ and\ ca\_cert\_dir\ have}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00372}00372\ \textcolor{stringliteral}{\ \ \ \ the\ same\ meaning\ as\ they\ do\ when\ using\ :func:\`{}ssl.wrap\_socket\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00373}00373\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00374}00374\ \textcolor{stringliteral}{\ \ \ \ :param\ server\_hostname:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00375}00375\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ When\ SNI\ is\ supported,\ the\ expected\ hostname\ of\ the\ certificate}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00376}00376\ \textcolor{stringliteral}{\ \ \ \ :param\ ssl\_context:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00377}00377\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ pre-\/made\ :class:\`{}SSLContext\`{}\ object.\ If\ none\ is\ provided,\ one\ will}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00378}00378\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ be\ created\ using\ :func:\`{}create\_urllib3\_context\`{}.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00379}00379\ \textcolor{stringliteral}{\ \ \ \ :param\ ciphers:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00380}00380\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ string\ of\ ciphers\ we\ wish\ the\ client\ to\ support.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00381}00381\ \textcolor{stringliteral}{\ \ \ \ :param\ ca\_cert\_dir:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00382}00382\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ directory\ containing\ CA\ certificates\ in\ multiple\ separate\ files,\ as}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00383}00383\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ supported\ by\ OpenSSL's\ -\/CApath\ flag\ or\ the\ capath\ argument\ to}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00384}00384\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ SSLContext.load\_verify\_locations().}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00385}00385\ \textcolor{stringliteral}{\ \ \ \ :param\ key\_password:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00386}00386\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Optional\ password\ if\ the\ keyfile\ is\ encrypted.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00387}00387\ \textcolor{stringliteral}{\ \ \ \ :param\ ca\_cert\_data:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00388}00388\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Optional\ string\ containing\ CA\ certificates\ in\ PEM\ format\ suitable\ for}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00389}00389\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ passing\ as\ the\ cadata\ parameter\ to\ SSLContext.load\_verify\_locations()}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00390}00390\ \textcolor{stringliteral}{\ \ \ \ :param\ tls\_in\_tls:}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00391}00391\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Use\ SSLTransport\ to\ wrap\ the\ existing\ socket.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00392}00392\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00393}00393\ \ \ \ \ context\ =\ ssl\_context}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{if}\ context\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Note:\ This\ branch\ of\ code\ and\ all\ the\ variables\ in\ it\ are\ no\ longer}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00396}00396\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ used\ by\ urllib3\ itself.\ We\ should\ consider\ deprecating\ and\ removing}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ this\ code.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00398}00398\ \ \ \ \ \ \ \ \ context\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___a6867168dede45ed3d7875edd8ed1b2c4}{create\_urllib3\_context}}(ssl\_version,\ cert\_reqs,\ ciphers=ciphers)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{if}\ ca\_certs\ \textcolor{keywordflow}{or}\ ca\_cert\_dir\ \textcolor{keywordflow}{or}\ ca\_cert\_data:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ context.load\_verify\_locations(ca\_certs,\ ca\_cert\_dir,\ ca\_cert\_data)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (IOError,\ OSError)\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(e)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{elif}\ ssl\_context\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ hasattr(context,\ \textcolor{stringliteral}{"{}load\_default\_certs"{}}):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ try\ to\ load\ OS\ default\ certs;\ works\ well\ on\ Windows\ (require\ Python3.4+)}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00408}00408\ \ \ \ \ \ \ \ \ context.load\_default\_certs()}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00410}00410\ \ \ \ \ \textcolor{comment}{\#\ Attempt\ to\ detect\ if\ we\ get\ the\ goofy\ behavior\ of\ the}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00411}00411\ \ \ \ \ \textcolor{comment}{\#\ keyfile\ being\ encrypted\ and\ OpenSSL\ asking\ for\ the}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00412}00412\ \ \ \ \ \textcolor{comment}{\#\ passphrase\ via\ the\ terminal\ and\ instead\ error\ out.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00413}00413\ \ \ \ \ \textcolor{keywordflow}{if}\ keyfile\ \textcolor{keywordflow}{and}\ key\_password\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ad40609f8c385ef108359656aea6cf522}{\_is\_key\_file\_encrypted}}(keyfile):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_s_s_l_error}{SSLError}}(\textcolor{stringliteral}{"{}Client\ private\ key\ is\ encrypted,\ password\ is\ required"{}})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00416}00416\ \ \ \ \ \textcolor{keywordflow}{if}\ certfile:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\_password\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ context.load\_cert\_chain(certfile,\ keyfile)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ context.load\_cert\_chain(certfile,\ keyfile,\ key\_password)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(context,\ \textcolor{stringliteral}{"{}set\_alpn\_protocols"{}}):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ context.set\_alpn\_protocols(ALPN\_PROTOCOLS)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00425}00425\ \ \ \ \ \textcolor{keywordflow}{except}\ NotImplementedError:\ \ \textcolor{comment}{\#\ Defensive:\ in\ CI,\ we\ always\ have\ set\_alpn\_protocols}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00428}00428\ \ \ \ \ \textcolor{comment}{\#\ If\ we\ detect\ server\_hostname\ is\ an\ IP\ address\ then\ the\ SNI}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00429}00429\ \ \ \ \ \textcolor{comment}{\#\ extension\ should\ not\ be\ used\ according\ to\ RFC3546\ Section\ 3.1}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00430}00430\ \ \ \ \ use\_sni\_hostname\ =\ server\_hostname\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ae19a9d258a7445f057ebeff25999d7e6}{is\_ipaddress}}(server\_hostname)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00431}00431\ \ \ \ \ \textcolor{comment}{\#\ SecureTransport\ uses\ server\_hostname\ in\ certificate\ verification.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00432}00432\ \ \ \ \ send\_sni\ =\ (use\_sni\_hostname\ \textcolor{keywordflow}{and}\ HAS\_SNI)\ \textcolor{keywordflow}{or}\ (}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00433}00433\ \ \ \ \ \ \ \ \ IS\_SECURETRANSPORT\ \textcolor{keywordflow}{and}\ server\_hostname}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00434}00434\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00435}00435\ \ \ \ \ \textcolor{comment}{\#\ Do\ not\ warn\ the\ user\ if\ server\_hostname\ is\ an\ invalid\ SNI\ hostname.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00436}00436\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ HAS\_SNI\ \textcolor{keywordflow}{and}\ use\_sni\_hostname:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00437}00437\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}An\ HTTPS\ request\ has\ been\ made,\ but\ the\ SNI\ (Server\ Name\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Indication)\ extension\ to\ TLS\ is\ not\ available\ on\ this\ platform.\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}This\ may\ cause\ the\ server\ to\ present\ an\ incorrect\ TLS\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}certificate,\ which\ can\ cause\ validation\ failures.\ You\ can\ upgrade\ to\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ newer\ version\ of\ Python\ to\ solve\ this.\ For\ more\ information,\ see\ "{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}https://urllib3.readthedocs.io/en/1.26.x/advanced-\/usage.html"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\#ssl-\/warnings"{}},}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ SNIMissingWarning,}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00446}00446\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00448}00448\ \ \ \ \ \textcolor{keywordflow}{if}\ send\_sni:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00449}00449\ \ \ \ \ \ \ \ \ ssl\_sock\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___af87a4604263289222aa267b2e4c5d18a}{\_ssl\_wrap\_socket\_impl}}(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ sock,\ context,\ tls\_in\_tls,\ server\_hostname=server\_hostname}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00451}00451\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00452}00452\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00453}00453\ \ \ \ \ \ \ \ \ ssl\_sock\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___af87a4604263289222aa267b2e4c5d18a}{\_ssl\_wrap\_socket\_impl}}(sock,\ context,\ tls\_in\_tls)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00454}00454\ \ \ \ \ \textcolor{keywordflow}{return}\ ssl\_sock}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00457}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ae19a9d258a7445f057ebeff25999d7e6}{00457}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ae19a9d258a7445f057ebeff25999d7e6}{is\_ipaddress}}(hostname):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00458}00458\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Detects\ whether\ the\ hostname\ given\ is\ an\ IPv4\ or\ IPv6\ address.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00459}00459\ \textcolor{stringliteral}{\ \ \ \ Also\ detects\ IPv6\ addresses\ with\ Zone\ IDs.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00460}00460\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00461}00461\ \textcolor{stringliteral}{\ \ \ \ :param\ str\ hostname:\ Hostname\ to\ examine.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00462}00462\ \textcolor{stringliteral}{\ \ \ \ :return:\ True\ if\ the\ hostname\ is\ an\ IP\ address,\ False\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00463}00463\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00464}00464\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ six.PY2\ \textcolor{keywordflow}{and}\ isinstance(hostname,\ bytes):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ IDN\ A-\/label\ bytes\ are\ ASCII\ compatible.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00466}00466\ \ \ \ \ \ \ \ \ hostname\ =\ hostname.decode(\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00467}00467\ \ \ \ \ \textcolor{keywordflow}{return}\ bool(IPV4\_RE.match(hostname)\ \textcolor{keywordflow}{or}\ BRACELESS\_IPV6\_ADDRZ\_RE.match(hostname))}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00470}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ad40609f8c385ef108359656aea6cf522}{00470}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___ad40609f8c385ef108359656aea6cf522}{\_is\_key\_file\_encrypted}}(key\_file):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00471}00471\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Detects\ if\ a\ key\ file\ is\ encrypted\ or\ not."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00472}00472\ \ \ \ \ \textcolor{keyword}{with}\ open(key\_file,\ \textcolor{stringliteral}{"{}r"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ f:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Look\ for\ Proc-\/Type:\ 4,ENCRYPTED}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}ENCRYPTED"{}}\ \textcolor{keywordflow}{in}\ line:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00478}00478\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00481}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___af87a4604263289222aa267b2e4c5d18a}{00481}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1ssl___af87a4604263289222aa267b2e4c5d18a}{\_ssl\_wrap\_socket\_impl}}(sock,\ ssl\_context,\ tls\_in\_tls,\ server\_hostname=None):}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00482}00482\ \ \ \ \ \textcolor{keywordflow}{if}\ tls\_in\_tls:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ SSLTransport:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Import\ error,\ ssl\ is\ not\ available.}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_proxy_scheme_unsupported}{ProxySchemeUnsupported}}(}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}TLS\ in\ TLS\ requires\ support\ for\ the\ 'ssl'\ module"{}}}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00489}00489\ \ \ \ \ \ \ \ \ SSLTransport.\_validate\_ssl\_context\_for\_tls\_in\_tls(ssl\_context)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1ssltransport_1_1_s_s_l_transport}{SSLTransport}}(sock,\ ssl\_context,\ server\_hostname)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00492}00492\ \ \ \ \ \textcolor{keywordflow}{if}\ server\_hostname:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ssl\_context.wrap\_socket(sock,\ server\_hostname=server\_hostname)}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00494}00494\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ssl___8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ssl\_context.wrap\_socket(sock)}
+
+\end{DoxyCode}

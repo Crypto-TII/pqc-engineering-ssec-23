@@ -1,0 +1,83 @@
+\doxysection{pip.\+\_\+internal.\+utils.\+inject\+\_\+securetransport Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport}{}\label{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport}\index{pip.\_internal.utils.inject\_securetransport@{pip.\_internal.utils.inject\_securetransport}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+None \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d}{inject\+\_\+securetransport}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}A helper module that injects SecureTransport, on import.
+
+The import should be done as early as possible, to ensure all requests and
+sessions (or whatever) are created after injecting SecureTransport.
+
+Note that we only do the injection on macOS, when the linked OpenSSL is too
+old to handle TLSv1.2.
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d}\index{pip.\_internal.utils.inject\_securetransport@{pip.\_internal.utils.inject\_securetransport}!inject\_securetransport@{inject\_securetransport}}
+\index{inject\_securetransport@{inject\_securetransport}!pip.\_internal.utils.inject\_securetransport@{pip.\_internal.utils.inject\_securetransport}}
+\doxysubsubsection{\texorpdfstring{inject\_securetransport()}{inject\_securetransport()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d} 
+ None inject\+\_\+securetransport (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{inject__securetransport_8py_source_l00013}{13}} of file \mbox{\hyperlink{inject__securetransport_8py_source}{inject\+\_\+securetransport.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00013\ \textcolor{keyword}{def\ }inject\_securetransport()\ -\/>\ None:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{\#\ Only\ relevant\ on\ macOS}}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ !=\ \textcolor{stringliteral}{"{}darwin"{}}:}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{import}\ ssl}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{\#\ Checks\ for\ OpenSSL\ 1.0.1}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{if}\ ssl.OPENSSL\_VERSION\_NUMBER\ >=\ 0x1000100F:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib}{pip.\_vendor.urllib3.contrib}}\ \textcolor{keyword}{import}\ securetransport}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{except}\ (ImportError,\ OSError):}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ securetransport.inject\_into\_urllib3()}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{inject__securetransport_8py_source_l00013}{inject\+\_\+securetransport()}}.
+
+
+
+Referenced by \mbox{\hyperlink{inject__securetransport_8py_source_l00013}{inject\+\_\+securetransport()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=192pt]{d7/d24/namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=192pt]{d7/d24/namespacepip_1_1__internal_1_1utils_1_1inject__securetransport_a4e39bde7970fcf1d89cd14a09b435d1d_icgraph}
+\end{center}
+\end{figure}

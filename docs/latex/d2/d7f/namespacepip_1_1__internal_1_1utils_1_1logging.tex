@@ -1,0 +1,321 @@
+\doxysection{pip.\+\_\+internal.\+utils.\+logging Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging}{}\label{namespacepip_1_1__internal_1_1utils_1_1logging}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_better_rotating_file_handler}{Better\+Rotating\+File\+Handler}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_broken_stdout_logging_error}{Broken\+Stdout\+Logging\+Error}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_exclude_logger_filter}{Exclude\+Logger\+Filter}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_indented_renderable}{Indented\+Renderable}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_indenting_formatter}{Indenting\+Formatter}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_max_level_filter}{Max\+Level\+Filter}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1logging_1_1_rich_pip_stream_handler}{Rich\+Pip\+Stream\+Handler}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_a45dc25f5b930d09e5fe91b8f63508c71}{\+\_\+is\+\_\+broken\+\_\+pipe\+\_\+error}} (Type\mbox{[}Base\+Exception\mbox{]} exc\+\_\+class, Base\+Exception exc)
+\item 
+Generator\mbox{[}None, None, None\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_a4793330747dbe4e389e7b2c1fc358276}{indent\+\_\+log}} (int \mbox{\hyperlink{j-invariants_8m_ac23fb295847684aaafd24830017a8180}{num}}=2)
+\item 
+int \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_ae70c12940666badcecb7262bead64a13}{get\+\_\+indentation}} ()
+\item 
+int \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_a6836811ed28092b5a7e138449a47ee58}{setup\+\_\+logging}} (int verbosity, bool no\+\_\+color, Optional\mbox{[}str\mbox{]} user\+\_\+log\+\_\+file)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_a4928973a6e990ef7bc7a15eca4436db5}{\+\_\+log\+\_\+state}} = threading.\+local()
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1logging_ae935ab86f301195af452360f266008fb}{subprocess\+\_\+logger}} = get\+Logger("{}pip.\+subprocessor"{})
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_a45dc25f5b930d09e5fe91b8f63508c71}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!\_is\_broken\_pipe\_error@{\_is\_broken\_pipe\_error}}
+\index{\_is\_broken\_pipe\_error@{\_is\_broken\_pipe\_error}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{\_is\_broken\_pipe\_error()}{\_is\_broken\_pipe\_error()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_a45dc25f5b930d09e5fe91b8f63508c71} 
+ bool \+\_\+is\+\_\+broken\+\_\+pipe\+\_\+error (\begin{DoxyParamCaption}\item[{Type\mbox{[}Base\+Exception\mbox{]}}]{exc\+\_\+class}{, }\item[{Base\+Exception}]{exc}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00041}{41}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00041\ \textcolor{keyword}{def\ }\_is\_broken\_pipe\_error(exc\_class:\ Type[BaseException],\ exc:\ BaseException)\ -\/>\ bool:}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{if}\ exc\_class\ \textcolor{keywordflow}{is}\ BrokenPipeError:}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{\#\ On\ Windows,\ a\ broken\ pipe\ can\ show\ up\ as\ EINVAL\ rather\ than\ EPIPE:}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{\#\ https://bugs.python.org/issue19612}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{\#\ https://bugs.python.org/issue30418}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ WINDOWS:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{return}\ isinstance(exc,\ OSError)\ \textcolor{keywordflow}{and}\ exc.errno\ \textcolor{keywordflow}{in}\ (errno.EINVAL,\ errno.EPIPE)}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{@contextlib.contextmanager}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00181}{Rich\+Pip\+Stream\+Handler.\+handle\+Error()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d2/d7f/namespacepip_1_1__internal_1_1utils_1_1logging_a45dc25f5b930d09e5fe91b8f63508c71_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_ae70c12940666badcecb7262bead64a13}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!get\_indentation@{get\_indentation}}
+\index{get\_indentation@{get\_indentation}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{get\_indentation()}{get\_indentation()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_ae70c12940666badcecb7262bead64a13} 
+ int get\+\_\+indentation (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00069}{69}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00069\ \textcolor{keyword}{def\ }get\_indentation()\ -\/>\ int:}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(\_log\_state,\ \textcolor{stringliteral}{"{}indentation"{}},\ 0)}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00153}{Rich\+Pip\+Stream\+Handler.\+emit()}}, \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00107}{Indenting\+Formatter.\+format()}}, and \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00055}{indent\+\_\+log()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d2/d7f/namespacepip_1_1__internal_1_1utils_1_1logging_ae70c12940666badcecb7262bead64a13_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_a4793330747dbe4e389e7b2c1fc358276}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!indent\_log@{indent\_log}}
+\index{indent\_log@{indent\_log}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{indent\_log()}{indent\_log()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_a4793330747dbe4e389e7b2c1fc358276} 
+ Generator\mbox{[}None, None, None\mbox{]} indent\+\_\+log (\begin{DoxyParamCaption}\item[{int }]{num}{ = {\ttfamily 2}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}A context manager which will cause the log output to be indented for any
+log messages emitted inside it.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00055}{55}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00055\ \textcolor{keyword}{def\ }indent\_log(num:\ int\ =\ 2)\ -\/>\ Generator[\textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00057\ \textcolor{stringliteral}{\ \ \ \ A\ context\ manager\ which\ will\ cause\ the\ log\ output\ to\ be\ indented\ for\ any}}
+\DoxyCodeLine{00058\ \textcolor{stringliteral}{\ \ \ \ log\ messages\ emitted\ inside\ it.}}
+\DoxyCodeLine{00059\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{\#\ For\ thread-\/safety}}
+\DoxyCodeLine{00061\ \ \ \ \ \_log\_state.indentation\ =\ get\_indentation()}
+\DoxyCodeLine{00062\ \ \ \ \ \_log\_state.indentation\ +=\ num}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{finally}:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \_log\_state.indentation\ -\/=\ num}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00069}{get\+\_\+indentation()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{d2/d7f/namespacepip_1_1__internal_1_1utils_1_1logging_a4793330747dbe4e389e7b2c1fc358276_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_a6836811ed28092b5a7e138449a47ee58}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!setup\_logging@{setup\_logging}}
+\index{setup\_logging@{setup\_logging}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{setup\_logging()}{setup\_logging()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_a6836811ed28092b5a7e138449a47ee58} 
+ int setup\+\_\+logging (\begin{DoxyParamCaption}\item[{int}]{verbosity}{, }\item[{bool}]{no\+\_\+color}{, }\item[{Optional\mbox{[}str\mbox{]}}]{user\+\_\+log\+\_\+file}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Configures and sets up all of the logging
+
+Returns the requested logging level, as its integer value.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00226}{226}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00226\ \textcolor{keyword}{def\ }setup\_logging(verbosity:\ int,\ no\_color:\ bool,\ user\_log\_file:\ Optional[str])\ -\/>\ int:}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Configures\ and\ sets\ up\ all\ of\ the\ logging}}
+\DoxyCodeLine{00228\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00229\ \textcolor{stringliteral}{\ \ \ \ Returns\ the\ requested\ logging\ level,\ as\ its\ integer\ value.}}
+\DoxyCodeLine{00230\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{\#\ Determine\ the\ level\ to\ be\ logging\ at.}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keywordflow}{if}\ verbosity\ >=\ 2:}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ level\_number\ =\ logging.DEBUG}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordflow}{elif}\ verbosity\ ==\ 1:}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ level\_number\ =\ VERBOSE}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordflow}{elif}\ verbosity\ ==\ -\/1:}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ level\_number\ =\ logging.WARNING}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keywordflow}{elif}\ verbosity\ ==\ -\/2:}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ level\_number\ =\ logging.ERROR}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordflow}{elif}\ verbosity\ <=\ -\/3:}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ level\_number\ =\ logging.CRITICAL}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ level\_number\ =\ logging.INFO}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ level\ =\ logging.getLevelName(level\_number)}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{\#\ The\ "{}root"{}\ logger\ should\ match\ the\ "{}console"{}\ level\ *unless*\ we\ also\ need}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{\#\ to\ log\ to\ a\ user\ log\ file.}}
+\DoxyCodeLine{00250\ \ \ \ \ include\_user\_log\ =\ user\_log\_file\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{if}\ include\_user\_log:}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ additional\_log\_file\ =\ user\_log\_file}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ root\_level\ =\ \textcolor{stringliteral}{"{}DEBUG"{}}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ additional\_log\_file\ =\ \textcolor{stringliteral}{"{}/dev/null"{}}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ root\_level\ =\ level}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{comment}{\#\ Disable\ any\ logging\ besides\ WARNING\ unless\ we\ have\ DEBUG\ level\ logging}}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{\#\ enabled\ for\ vendored\ libraries.}}
+\DoxyCodeLine{00260\ \ \ \ \ vendored\_log\_level\ =\ \textcolor{stringliteral}{"{}WARNING"{}}\ \textcolor{keywordflow}{if}\ level\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}INFO"{}},\ \textcolor{stringliteral}{"{}ERROR"{}}]\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}DEBUG"{}}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{comment}{\#\ Shorthands\ for\ clarity}}
+\DoxyCodeLine{00263\ \ \ \ \ log\_streams\ =\ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stdout"{}}:\ \textcolor{stringliteral}{"{}ext://sys.stdout"{}},}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stderr"{}}:\ \textcolor{stringliteral}{"{}ext://sys.stderr"{}},}
+\DoxyCodeLine{00266\ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ handler\_classes\ =\ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stream"{}}:\ \textcolor{stringliteral}{"{}pip.\_internal.utils.logging.RichPipStreamHandler"{}},}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}file"{}}:\ \textcolor{stringliteral}{"{}pip.\_internal.utils.logging.BetterRotatingFileHandler"{}},}
+\DoxyCodeLine{00270\ \ \ \ \ \}}
+\DoxyCodeLine{00271\ \ \ \ \ handlers\ =\ [\textcolor{stringliteral}{"{}console"{}},\ \textcolor{stringliteral}{"{}console\_errors"{}},\ \textcolor{stringliteral}{"{}console\_subprocess"{}}]\ +\ (}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}user\_log"{}}]\ \textcolor{keywordflow}{if}\ include\_user\_log\ \textcolor{keywordflow}{else}\ []}
+\DoxyCodeLine{00273\ \ \ \ \ )}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \ \ \ \ logging.config.dictConfig(}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version"{}}:\ 1,}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}disable\_existing\_loggers"{}}:\ \textcolor{keyword}{False},}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filters"{}}:\ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}exclude\_warnings"{}}:\ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}()"{}}:\ \textcolor{stringliteral}{"{}pip.\_internal.utils.logging.MaxLevelFilter"{}},}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ logging.WARNING,}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}restrict\_to\_subprocess"{}}:\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}()"{}}:\ \textcolor{stringliteral}{"{}logging.Filter"{}},}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\ subprocess\_logger.name,}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}exclude\_subprocess"{}}:\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}()"{}}:\ \textcolor{stringliteral}{"{}pip.\_internal.utils.logging.ExcludeLoggerFilter"{}},}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\ subprocess\_logger.name,}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}formatters"{}}:\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}indent"{}}:\ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}()"{}}:\ IndentingFormatter,}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}format"{}}:\ \textcolor{stringliteral}{"{}\%(message)s"{}},}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}indent\_with\_timestamp"{}}:\ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}()"{}}:\ IndentingFormatter,}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}format"{}}:\ \textcolor{stringliteral}{"{}\%(message)s"{}},}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}add\_timestamp"{}}:\ \textcolor{keyword}{True},}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}handlers"{}}:\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}console"{}}:\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ level,}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}class"{}}:\ handler\_classes[\textcolor{stringliteral}{"{}stream"{}}],}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no\_color"{}}:\ no\_color,}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stream"{}}:\ log\_streams[\textcolor{stringliteral}{"{}stdout"{}}],}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filters"{}}:\ [\textcolor{stringliteral}{"{}exclude\_subprocess"{}},\ \textcolor{stringliteral}{"{}exclude\_warnings"{}}],}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}formatter"{}}:\ \textcolor{stringliteral}{"{}indent"{}},}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}console\_errors"{}}:\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ \textcolor{stringliteral}{"{}WARNING"{}},}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}class"{}}:\ handler\_classes[\textcolor{stringliteral}{"{}stream"{}}],}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no\_color"{}}:\ no\_color,}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stream"{}}:\ log\_streams[\textcolor{stringliteral}{"{}stderr"{}}],}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filters"{}}:\ [\textcolor{stringliteral}{"{}exclude\_subprocess"{}}],}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}formatter"{}}:\ \textcolor{stringliteral}{"{}indent"{}},}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ handler\ responsible\ for\ logging\ to\ the\ console\ messages}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ from\ the\ "{}subprocessor"{}\ logger.}}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}console\_subprocess"{}}:\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ level,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}class"{}}:\ handler\_classes[\textcolor{stringliteral}{"{}stream"{}}],}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}stream"{}}:\ log\_streams[\textcolor{stringliteral}{"{}stderr"{}}],}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no\_color"{}}:\ no\_color,}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filters"{}}:\ [\textcolor{stringliteral}{"{}restrict\_to\_subprocess"{}}],}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}formatter"{}}:\ \textcolor{stringliteral}{"{}indent"{}},}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}user\_log"{}}:\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ \textcolor{stringliteral}{"{}DEBUG"{}},}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}class"{}}:\ handler\_classes[\textcolor{stringliteral}{"{}file"{}}],}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filename"{}}:\ additional\_log\_file,}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}encoding"{}}:\ \textcolor{stringliteral}{"{}utf-\/8"{}},}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}delay"{}}:\ \textcolor{keyword}{True},}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}formatter"{}}:\ \textcolor{stringliteral}{"{}indent\_with\_timestamp"{}},}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}root"{}}:\ \{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}level"{}}:\ root\_level,}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}handlers"{}}:\ handlers,}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}loggers"{}}:\ \{\textcolor{stringliteral}{"{}pip.\_vendor"{}}:\ \{\textcolor{stringliteral}{"{}level"{}}:\ vendored\_log\_level\}\},}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00346\ \ \ \ \ )}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keywordflow}{return}\ level\_number}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_a4928973a6e990ef7bc7a15eca4436db5}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!\_log\_state@{\_log\_state}}
+\index{\_log\_state@{\_log\_state}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{\_log\_state}{\_log\_state}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_a4928973a6e990ef7bc7a15eca4436db5} 
+\+\_\+log\+\_\+state = threading.\+local()\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00031}{31}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1logging_ae935ab86f301195af452360f266008fb}\index{pip.\_internal.utils.logging@{pip.\_internal.utils.logging}!subprocess\_logger@{subprocess\_logger}}
+\index{subprocess\_logger@{subprocess\_logger}!pip.\_internal.utils.logging@{pip.\_internal.utils.logging}}
+\doxysubsubsection{\texorpdfstring{subprocess\_logger}{subprocess\_logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1logging_ae935ab86f301195af452360f266008fb} 
+subprocess\+\_\+logger = get\+Logger("{}pip.\+subprocessor"{})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2utils_2logging_8py_source_l00032}{32}} of file \mbox{\hyperlink{__internal_2utils_2logging_8py_source}{logging.\+py}}.
+

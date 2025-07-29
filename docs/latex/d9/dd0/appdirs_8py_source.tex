@@ -1,0 +1,58 @@
+\doxysection{appdirs.\+py}
+\hypertarget{appdirs_8py_source}{}\label{appdirs_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/appdirs.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/appdirs.py}}
+\mbox{\hyperlink{appdirs_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00002}00002\ \textcolor{stringliteral}{This\ code\ wraps\ the\ vendored\ appdirs\ module\ to\ so\ the\ return\ values\ are}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00003}00003\ \textcolor{stringliteral}{compatible\ for\ the\ current\ pip\ code\ base.}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00005}00005\ \textcolor{stringliteral}{The\ intention\ is\ to\ rewrite\ current\ usages\ gradually,\ keeping\ the\ tests\ pass,}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00006}00006\ \textcolor{stringliteral}{and\ eventually\ drop\ this\ after\ all\ usages\ are\ changed.}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00007}00007\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00009}00009\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00010}00010\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00011}00011\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor}{pip.\_vendor}}\ \textcolor{keyword}{import}\ platformdirs\ \textcolor{keyword}{as}\ \_appdirs}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_ab414f6de50ce0bf54bd7f5f0a9935d0d}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_ab414f6de50ce0bf54bd7f5f0a9935d0d}{user\_cache\_dir}}(appname:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{return}\ \_appdirs.user\_cache\_dir(appname,\ appauthor=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_a0490d137d01d48cccc342ddc4ee129da}{00020}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_a0490d137d01d48cccc342ddc4ee129da}{\_macos\_user\_config\_dir}}(appname:\ str,\ roaming:\ bool\ =\ \textcolor{keyword}{True})\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00021}00021\ \ \ \ \ \textcolor{comment}{\#\ Use\ \string~/Application\ Support/pip,\ if\ the\ directory\ exists.}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00022}00022\ \ \ \ \ path\ =\ \_appdirs.user\_data\_dir(appname,\ appauthor=\textcolor{keyword}{False},\ roaming=roaming)}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isdir(path):}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00026}00026\ \ \ \ \ \textcolor{comment}{\#\ Use\ a\ Linux-\/like\ \string~/.config/pip,\ by\ default.}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00027}00027\ \ \ \ \ linux\_like\_path\ =\ \textcolor{stringliteral}{"{}\string~/.config/"{}}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}\ appname:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ linux\_like\_path\ =\ os.path.join(linux\_like\_path,\ appname)}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.expanduser(linux\_like\_path)}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00034}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_a4cf55a5f4281d3d209330dce8c7ef4f9}{00034}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_a4cf55a5f4281d3d209330dce8c7ef4f9}{user\_config\_dir}}(appname:\ str,\ roaming:\ bool\ =\ \textcolor{keyword}{True})\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}darwin"{}}:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_a0490d137d01d48cccc342ddc4ee129da}{\_macos\_user\_config\_dir}}(appname,\ roaming)}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{return}\ \_appdirs.user\_config\_dir(appname,\ appauthor=\textcolor{keyword}{False},\ roaming=roaming)}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00041}00041\ \textcolor{comment}{\#\ for\ the\ discussion\ regarding\ site\_config\_dir\ locations}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00042}00042\ \textcolor{comment}{\#\ see\ <https://github.com/pypa/pip/issues/1733>}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_aa81a534b85041ee8f47e98651fb29ac2}{00043}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1appdirs_aa81a534b85041ee8f47e98651fb29ac2}{site\_config\_dirs}}(appname:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}darwin"{}}:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\_appdirs.site\_data\_dir(appname,\ appauthor=\textcolor{keyword}{False},\ multipath=\textcolor{keyword}{True})]}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00047}00047\ \ \ \ \ dirval\ =\ \_appdirs.site\_config\_dir(appname,\ appauthor=\textcolor{keyword}{False},\ multipath=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}win32"{}}:}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [dirval]}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00051}00051\ \ \ \ \ \textcolor{comment}{\#\ Unix-\/y\ system.\ Look\ in\ /etc\ as\ well.}}
+\DoxyCodeLine{\Hypertarget{appdirs_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{return}\ dirval.split(os.pathsep)\ +\ [\textcolor{stringliteral}{"{}/etc"{}}]}
+
+\end{DoxyCode}

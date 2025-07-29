@@ -1,0 +1,155 @@
+\doxysection{repr.\+py}
+\hypertarget{repr_8py_source}{}\label{repr_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/repr.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/repr.py}}
+\mbox{\hyperlink{repr_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr}{00001}}\ \textcolor{keyword}{import}\ inspect}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00002}00002\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ partial}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00004}00004\ \ \ \ \ Any,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00005}00005\ \ \ \ \ Callable,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00006}00006\ \ \ \ \ Iterable,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00007}00007\ \ \ \ \ List,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00008}00008\ \ \ \ \ Optional,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00009}00009\ \ \ \ \ Tuple,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00010}00010\ \ \ \ \ Type,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00011}00011\ \ \ \ \ TypeVar,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00012}00012\ \ \ \ \ Union,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00013}00013\ \ \ \ \ overload,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00014}00014\ )}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_adf1f3edb9115acb0a1e04209b7a9937b}{00016}}\ T\ =\ TypeVar(\textcolor{stringliteral}{"{}T"{}})}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a28287671eaf7406afd604bd055ba4066}{00019}}\ Result\ =\ Iterable[Union[Any,\ Tuple[Any],\ Tuple[str,\ Any],\ Tuple[str,\ Any,\ Any]]]}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_ab2c05ad250ca4f09b7a35fd9764fff4a}{00020}}\ RichReprResult\ =\ Result}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_repr_error}{00023}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_repr_error}{ReprError}}(Exception):}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}An\ error\ occurred\ when\ attempting\ to\ build\ a\ repr."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00027}00027\ @overload}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00028}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{00028}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{auto}}(cls:\ Optional[Type[T]])\ -\/>\ Type[T]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00029}00029\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00032}00032\ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00033}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abfa2220edaa423618775b6e867278084}{00033}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{auto}}(*,\ angular:\ bool\ =\ \textcolor{keyword}{False})\ -\/>\ Callable[[Type[T]],\ Type[T]]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00034}00034\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a56631a0c12466003385ca6808260bc87}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{auto}}(}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00038}00038\ \ \ \ \ cls:\ Optional[Type[T]]\ =\ \textcolor{keywordtype}{None},\ *,\ angular:\ Optional[bool]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00039}00039\ )\ -\/>\ Union[Type[T],\ Callable[[Type[T]],\ Type[T]]]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Class\ decorator\ to\ create\ \_\_repr\_\_\ from\ \_\_rich\_repr\_\_"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{def\ }do\_replace(cls:\ Type[T],\ angular:\ Optional[bool]\ =\ \textcolor{keywordtype}{None})\ -\/>\ Type[T]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }auto\_repr(self:\ T)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Create\ repr\ string\ from\ \_\_rich\_repr\_\_"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ repr\_str:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ repr\_str.append}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ angular:\ bool\ =\ getattr(self.\_\_rich\_repr\_\_,\ \textcolor{stringliteral}{"{}angular"{}},\ \textcolor{keyword}{False})\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ arg\ \textcolor{keywordflow}{in}\ self.\_\_rich\_repr\_\_():\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(arg,\ tuple):}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(arg)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(repr(arg[0]))}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key,\ value,\ *default\ =\ arg}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(repr(value))}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ default\ \textcolor{keywordflow}{and}\ default[0]\ ==\ value:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(f\textcolor{stringliteral}{"{}\{key\}=\{value!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(repr(arg))}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ angular:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<\{self.\_\_class\_\_.\_\_name\_\_\}\ \{'\ '.join(repr\_str)\}>"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{self.\_\_class\_\_.\_\_name\_\_\}(\{',\ '.join(repr\_str)\})"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }auto\_rich\_repr(self:\ Type[T])\ -\/>\ Result:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Auto\ generate\ \_\_rich\_rep\_\_\ from\ signature\ of\ \_\_init\_\_"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ signature\ =\ inspect.signature(self.\_\_init\_\_)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ name,\ param\ \textcolor{keywordflow}{in}\ signature.parameters.items():}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ param.kind\ ==\ param.POSITIONAL\_ONLY:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ getattr(self,\ name)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ param.kind\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ param.POSITIONAL\_OR\_KEYWORD,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ param.KEYWORD\_ONLY,}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ param.default\ ==\ param.empty:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ getattr(self,\ param.name)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ param.name,\ getattr(self,\ param.name),\ param.default}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ error:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_repr_error}{ReprError}}(}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Failed\ to\ auto\ generate\ \_\_rich\_repr\_\_;\ \{error\}"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\ \textcolor{keyword}{from}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ hasattr(cls,\ \textcolor{stringliteral}{"{}\_\_rich\_repr\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ auto\_rich\_repr.\_\_doc\_\_\ =\ \textcolor{stringliteral}{"{}Build\ a\ rich\ repr"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ cls.\_\_rich\_repr\_\_\ =\ auto\_rich\_repr\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ auto\_repr.\_\_doc\_\_\ =\ \textcolor{stringliteral}{"{}Return\ repr(self)"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ cls.\_\_repr\_\_\ =\ auto\_repr\ \ \textcolor{comment}{\#\ type:\ ignore[assignment]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ angular\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ cls.\_\_rich\_repr\_\_.angular\ =\ angular\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{if}\ cls\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ partial(do\_replace,\ angular=angular)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ do\_replace(cls,\ angular=angular)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00104}00104\ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00105}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abda9373a1faf62a431d7242bbb039287}{00105}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abda9373a1faf62a431d7242bbb039287}{rich\_repr}}(cls:\ Optional[Type[T]])\ -\/>\ Type[T]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00106}00106\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00109}00109\ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00110}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abbd57822800aa702a0e5a9f5b04066a2}{00110}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abda9373a1faf62a431d7242bbb039287}{rich\_repr}}(*,\ angular:\ bool\ =\ \textcolor{keyword}{False})\ -\/>\ Callable[[Type[T]],\ Type[T]]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00111}00111\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00114}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_af63def82d2abf6217c972834f9cd332f}{00114}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_abda9373a1faf62a431d7242bbb039287}{rich\_repr}}(}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00115}00115\ \ \ \ \ cls:\ Optional[Type[T]]\ =\ \textcolor{keywordtype}{None},\ *,\ angular:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00116}00116\ )\ -\/>\ Union[Type[T],\ Callable[[Type[T]],\ Type[T]]]:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{if}\ cls\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{auto}}(angular=angular)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a9cf59a66f31026df98a634e4ae454ba2}{auto}}(cls)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00123}00123\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00125}00125\ \ \ \ \ \textcolor{preprocessor}{@auto}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_foo}{00126}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_foo}{Foo}}:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00127}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_foo_aec83ca0f92c083c90f491552001d68a9}{00127}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_foo_aec83ca0f92c083c90f491552001d68a9}{\_\_rich\_repr\_\_}}(self)\ -\/>\ Result:}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}foo"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}bar"{}},\ \{\textcolor{stringliteral}{"{}shopping"{}}:\ [\textcolor{stringliteral}{"{}eggs"{}},\ \textcolor{stringliteral}{"{}ham"{}},\ \textcolor{stringliteral}{"{}pineapple"{}}]\}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}buy"{}},\ \textcolor{stringliteral}{"{}hand\ sanitizer"{}}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00132}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_afdba98970961edb29f88241b9d99d890}{00132}}\ \ \ \ \ foo\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1repr_1_1_foo}{Foo}}()}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00133}00133\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1console}{pip.\_vendor.rich.console}}\ \textcolor{keyword}{import}\ Console}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00135}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a59b27486da7ae78f25305f338b4b2fce}{00135}}\ \ \ \ \ console\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1console_1_1_console}{Console}}()}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00137}00137\ \ \ \ \ console.rule(\textcolor{stringliteral}{"{}Standard\ repr"{}})}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00138}00138\ \ \ \ \ console.print(foo)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00140}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_a5558ace5433f9aabbf0a0ec059900d94}{00140}}\ \ \ \ \ console.print(foo,\ width=60)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00141}00141\ \ \ \ \ console.print(foo,\ width=30)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00143}00143\ \ \ \ \ console.rule(\textcolor{stringliteral}{"{}Angular\ repr"{}})}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00144}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr_aedd37222fbf38941d5c860a970ea4b64}{00144}}\ \ \ \ \ Foo.\_\_rich\_repr\_\_.angular\ =\ \textcolor{keyword}{True}\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00146}00146\ \ \ \ \ console.print(foo)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00148}00148\ \ \ \ \ console.print(foo,\ width=60)}
+\DoxyCodeLine{\Hypertarget{repr_8py_source_l00149}00149\ \ \ \ \ console.print(foo,\ width=30)}
+
+\end{DoxyCode}

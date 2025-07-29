@@ -1,0 +1,248 @@
+\doxysection{self\+\_\+outdated\+\_\+check.\+py}
+\hypertarget{self__outdated__check_8py_source}{}\label{self__outdated__check_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/self\_outdated\_check.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/self\_outdated\_check.py}}
+\mbox{\hyperlink{self__outdated__check_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check}{00001}}\ \textcolor{keyword}{import}\ datetime}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00002}00002\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00003}00003\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00004}00004\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00005}00005\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00006}00006\ \textcolor{keyword}{import}\ optparse}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00007}00007\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00008}00008\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00009}00009\ \textcolor{keyword}{from}\ dataclasses\ \textcolor{keyword}{import}\ dataclass}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00010}00010\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Callable,\ Dict,\ Optional}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1version}{pip.\_vendor.packaging.version}}\ \textcolor{keyword}{import}\ parse\ \textcolor{keyword}{as}\ parse\_version}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1console}{pip.\_vendor.rich.console}}\ \textcolor{keyword}{import}\ Group}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1markup}{pip.\_vendor.rich.markup}}\ \textcolor{keyword}{import}\ escape}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1text}{pip.\_vendor.rich.text}}\ \textcolor{keyword}{import}\ Text}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1collector}{pip.\_internal.index.collector}}\ \textcolor{keyword}{import}\ LinkCollector}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1package__finder}{pip.\_internal.index.package\_finder}}\ \textcolor{keyword}{import}\ PackageFinder}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00019}00019\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata}{pip.\_internal.metadata}}\ \textcolor{keyword}{import}\ get\_default\_environment}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00020}00020\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1base}{pip.\_internal.metadata.base}}\ \textcolor{keyword}{import}\ DistributionVersion}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00021}00021\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1selection__prefs}{pip.\_internal.models.selection\_prefs}}\ \textcolor{keyword}{import}\ SelectionPreferences}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00022}00022\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1session}{pip.\_internal.network.session}}\ \textcolor{keyword}{import}\ PipSession}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat}{pip.\_internal.utils.compat}}\ \textcolor{keyword}{import}\ WINDOWS}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00024}00024\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints}{pip.\_internal.utils.entrypoints}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00025}00025\ \ \ \ \ get\_best\_invocation\_for\_this\_pip,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00026}00026\ \ \ \ \ get\_best\_invocation\_for\_this\_python,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00027}00027\ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00028}00028\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1filesystem}{pip.\_internal.utils.filesystem}}\ \textcolor{keyword}{import}\ adjacent\_tmp\_file,\ check\_path\_owner,\ replace}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00029}00029\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ ensure\_dir}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00031}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a4a2edfe8f8760afd1689e98f760ef3b7}{00031}}\ \_DATE\_FMT\ =\ \textcolor{stringliteral}{"{}\%Y-\/\%m-\/\%dT\%H:\%M:\%SZ"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00034}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a0b14e488ae28d98d262453f3e9cd6e4d}{00034}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a29f0a40c07a479bff00364f81f0ae559}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a29f0a40c07a479bff00364f81f0ae559}{\_get\_statefile\_name}}(key:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00038}00038\ \ \ \ \ key\_bytes\ =\ key.encode()}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00039}00039\ \ \ \ \ name\ =\ hashlib.sha224(key\_bytes).hexdigest()}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{return}\ name}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00043}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state}{00043}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state}{SelfCheckState}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00044}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a414fc9709dbc801604c54483869313ae}{00044}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a414fc9709dbc801604c54483869313ae}{\_\_init\_\_}}(self,\ cache\_dir:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00045}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{00045}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}:\ Dict[str,\ Any]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{00046}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Try\ to\ load\ the\ existing\ state}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cache\_dir:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}}\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cache\_dir,\ \textcolor{stringliteral}{"{}selfcheck"{}},\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a29f0a40c07a479bff00364f81f0ae559}{\_get\_statefile\_name}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_acd54a6529c2d8f1a7b19d06d8c4a76f8}{key}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}},\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keyword}{as}\ statefile:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}\ =\ json.load(statefile)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (OSError,\ ValueError,\ KeyError):}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Explicitly\ suppressing\ exceptions,\ since\ we\ don't\ want\ to}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ error\ out\ if\ the\ cache\ file\ is\ invalid.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00061}00061\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00062}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_acd54a6529c2d8f1a7b19d06d8c4a76f8}{00062}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_acd54a6529c2d8f1a7b19d06d8c4a76f8}{key}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sys.prefix}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00065}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a50e129081bf67c10f8d899303c95a40e}{00065}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a50e129081bf67c10f8d899303c95a40e}{get}}(self,\ current\_time:\ datetime.datetime)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ we\ have\ a\ not-\/outdated\ version\ loaded\ already."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}last\_check"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}pypi\_version"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ seven\_days\_in\_seconds\ =\ 7\ *\ 24\ *\ 60\ *\ 60}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Determine\ if\ we\ need\ to\ refresh\ the\ state}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ last\_check\ =\ datetime.datetime.strptime(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}[\textcolor{stringliteral}{"{}last\_check"{}}],\ \_DATE\_FMT)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ seconds\_since\_last\_check\ =\ (current\_time\ -\/\ last\_check).total\_seconds()}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ seconds\_since\_last\_check\ >\ seven\_days\_in\_seconds:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a9d425a409c13123278f7902f8badf150}{\_state}}[\textcolor{stringliteral}{"{}pypi\_version"{}}]}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00086}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a1776ec563ab6b486174725bcb31e2272}{00086}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a1776ec563ab6b486174725bcb31e2272}{set}}(self,\ pypi\_version:\ str,\ current\_time:\ datetime.datetime)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we\ do\ not\ have\ a\ path\ to\ cache\ in,\ don't\ bother\ saving.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ to\ make\ sure\ that\ we\ own\ the\ directory}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ check\_path\_owner(os.path.dirname(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}})):}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Now\ that\ we've\ ensured\ the\ directory\ is\ owned\ by\ this\ user,\ we'll\ go}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ahead\ and\ make\ sure\ that\ all\ our\ directories\ are\ created.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ ensure\_dir(os.path.dirname(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}}))}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ state\ =\ \{}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Include\ the\ key\ so\ it's\ easy\ to\ tell\ which\ pip\ wrote\ the}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}key"{}}:\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_acd54a6529c2d8f1a7b19d06d8c4a76f8}{key}},}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}last\_check"{}}:\ current\_time.strftime(\_DATE\_FMT),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pypi\_version"{}}:\ pypi\_version,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ text\ =\ json.dumps(state,\ sort\_keys=\textcolor{keyword}{True},\ separators=(\textcolor{stringliteral}{"{},"{}},\ \textcolor{stringliteral}{"{}:"{}}))}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ adjacent\_tmp\_file(self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ f.write(text.encode())}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Since\ we\ have\ a\ prefix-\/specific\ state\ file,\ we\ can\ just}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ overwrite\ whatever\ is\ there,\ no\ need\ to\ check.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ replace(f.name,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state_a6e3795c14433600dbb8de8d77bdc3502}{\_statefile\_path}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Best\ effort.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00121}00121\ \textcolor{preprocessor}{@dataclass}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00122}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_upgrade_prompt}{00122}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_upgrade_prompt}{UpgradePrompt}}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00123}00123\ \ \ \ \ old:\ str}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00124}00124\ \ \ \ \ new:\ str}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_upgrade_prompt_a7fc4de5616214d14613789b4971ad8f5}{00126}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_upgrade_prompt_a7fc4de5616214d14613789b4971ad8f5}{\_\_rich\_\_}}(self)\ -\/>\ Group:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ WINDOWS:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ pip\_cmd\ =\ f\textcolor{stringliteral}{"{}\{get\_best\_invocation\_for\_this\_python()\}\ -\/m\ pip"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ pip\_cmd\ =\ get\_best\_invocation\_for\_this\_pip()}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ notice\ =\ \textcolor{stringliteral}{"{}[bold][[reset][blue]notice[reset][bold]][reset]"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1console_1_1_group}{Group}}(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ Text.from\_markup(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{notice\}\ A\ new\ release\ of\ pip\ is\ available:\ "{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}[red]\{self.old\}[reset]\ -\/>\ [green]\{self.new\}[reset]"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ Text.from\_markup(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{notice\}\ To\ update,\ run:\ "{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}[green]\{escape(pip\_cmd)\}\ install\ -\/-\/upgrade\ pip"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00146}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a8feb3f5175aba91fa91d8236043393d4}{00146}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a8feb3f5175aba91fa91d8236043393d4}{was\_installed\_by\_pip}}(pkg:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00147}00147\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Checks\ whether\ pkg\ was\ installed\ by\ pip}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00148}00148\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00149}00149\ \textcolor{stringliteral}{\ \ \ \ This\ is\ used\ not\ to\ display\ the\ upgrade\ message\ when\ pip\ is\ in\ fact}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ installed\ by\ system\ package\ manager,\ such\ as\ dnf\ on\ Fedora.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00152}00152\ \ \ \ \ dist\ =\ get\_default\_environment().get\_distribution(pkg)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{return}\ dist\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{"{}pip"{}}\ ==\ dist.installer}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00156}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_af81841bcbb4ff2137dc4c60b21c49244}{00156}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_af81841bcbb4ff2137dc4c60b21c49244}{\_get\_current\_remote\_pip\_version}}(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00157}00157\ \ \ \ \ session:\ PipSession,\ options:\ optparse.Values}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00158}00158\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00159}00159\ \ \ \ \ \textcolor{comment}{\#\ Lets\ use\ PackageFinder\ to\ see\ what\ the\ latest\ pip\ version\ is}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00160}00160\ \ \ \ \ link\_collector\ =\ LinkCollector.create(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ session,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ options=options,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ suppress\_no\_index=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00164}00164\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00166}00166\ \ \ \ \ \textcolor{comment}{\#\ Pass\ allow\_yanked=False\ so\ we\ don't\ suggest\ upgrading\ to\ a}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00167}00167\ \ \ \ \ \textcolor{comment}{\#\ yanked\ version.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00168}00168\ \ \ \ \ selection\_prefs\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1selection__prefs_1_1_selection_preferences}{SelectionPreferences}}(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ allow\_yanked=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ allow\_all\_prereleases=\textcolor{keyword}{False},\ \ \textcolor{comment}{\#\ Explicitly\ set\ to\ False}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00171}00171\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00173}00173\ \ \ \ \ finder\ =\ PackageFinder.create(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ link\_collector=link\_collector,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ selection\_prefs=selection\_prefs,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00176}00176\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00177}00177\ \ \ \ \ best\_candidate\ =\ finder.find\_best\_candidate(\textcolor{stringliteral}{"{}pip"{}}).best\_candidate}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00178}00178\ \ \ \ \ \textcolor{keywordflow}{if}\ best\_candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{return}\ str(best\_candidate.version)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00184}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a9664b83c5738cad52507a3c12938b39d}{00184}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a9664b83c5738cad52507a3c12938b39d}{\_self\_version\_check\_logic}}(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00185}00185\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00186}00186\ \ \ \ \ state:\ SelfCheckState,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00187}00187\ \ \ \ \ current\_time:\ datetime.datetime,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00188}00188\ \ \ \ \ local\_version:\ DistributionVersion,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00189}00189\ \ \ \ \ get\_remote\_version:\ Callable[[],\ Optional[str]],}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00190}00190\ )\ -\/>\ Optional[UpgradePrompt]:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00191}00191\ \ \ \ \ remote\_version\_str\ =\ state.get(current\_time)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{if}\ remote\_version\_str\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ remote\_version\_str\ =\ get\_remote\_version()}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ remote\_version\_str\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}No\ remote\ pip\ version\ found"{}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ state.set(remote\_version\_str,\ current\_time)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00199}00199\ \ \ \ \ remote\_version\ =\ parse\_version(remote\_version\_str)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00200}00200\ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Remote\ version\ of\ pip:\ \%s"{}},\ remote\_version)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00201}00201\ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Local\ version\ of\ pip:\ \ \%s"{}},\ local\_version)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00203}00203\ \ \ \ \ pip\_installed\_by\_pip\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a8feb3f5175aba91fa91d8236043393d4}{was\_installed\_by\_pip}}(\textcolor{stringliteral}{"{}pip"{}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00204}00204\ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Was\ pip\ installed\ by\ pip?\ \%s"{}},\ pip\_installed\_by\_pip)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ pip\_installed\_by\_pip:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}\ \ \textcolor{comment}{\#\ Only\ suggest\ upgrade\ if\ pip\ is\ installed\ by\ pip.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00208}00208\ \ \ \ \ local\_version\_is\_older\ =\ (}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ local\_version\ <\ remote\_version}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ local\_version.base\_version\ !=\ remote\_version.base\_version}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00211}00211\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{if}\ local\_version\_is\_older:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_upgrade_prompt}{UpgradePrompt}}(old=str(local\_version),\ new=remote\_version\_str)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00218}\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_affb9b88380a4c18cf37b9d78dbf4ed75}{00218}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_affb9b88380a4c18cf37b9d78dbf4ed75}{pip\_self\_version\_check}}(session:\ PipSession,\ options:\ optparse.Values)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00219}00219\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ for\ an\ update\ for\ pip.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00220}00220\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ Limit\ the\ frequency\ of\ checks\ to\ once\ per\ week.\ State\ is\ stored\ either\ in}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00222}00222\ \textcolor{stringliteral}{\ \ \ \ the\ active\ virtualenv\ or\ in\ the\ user's\ USER\_CACHE\_DIR\ keyed\ off\ the\ prefix}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00223}00223\ \textcolor{stringliteral}{\ \ \ \ of\ the\ pip\ script\ path.}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00224}00224\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00225}00225\ \ \ \ \ installed\_dist\ =\ get\_default\_environment().get\_distribution(\textcolor{stringliteral}{"{}pip"{}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ installed\_dist:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ upgrade\_prompt\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1self__outdated__check_a9664b83c5738cad52507a3c12938b39d}{\_self\_version\_check\_logic}}(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ state=\mbox{\hyperlink{classpip_1_1__internal_1_1self__outdated__check_1_1_self_check_state}{SelfCheckState}}(cache\_dir=options.cache\_dir),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ current\_time=datetime.datetime.utcnow(),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ local\_version=installed\_dist.version,}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ get\_remote\_version=functools.partial(}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_get\_current\_remote\_pip\_version,\ session,\ options}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ upgrade\_prompt\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(\textcolor{stringliteral}{"{}[present-\/rich]\ \%s"{}},\ upgrade\_prompt)}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ logger.warning(\textcolor{stringliteral}{"{}There\ was\ an\ error\ checking\ the\ latest\ version\ of\ pip."{}})}
+\DoxyCodeLine{\Hypertarget{self__outdated__check_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}See\ below\ for\ error"{}},\ exc\_info=\textcolor{keyword}{True})}
+
+\end{DoxyCode}

@@ -1,0 +1,115 @@
+\doxysection{Server\+Proxy Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy}{}\label{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy}\index{ServerProxy@{ServerProxy}}
+
+
+Inheritance diagram for Server\+Proxy\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=150pt]{da/db3/classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Server\+Proxy\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=150pt]{d9/d49/classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_ac85a2704629f63829bab7db40a566abd}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, uri, \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}kwargs)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_aee145bfca8e9b2eaf3cd3c47157be9a3}{timeout}} = kwargs.\+pop(\textquotesingle{}timeout\textquotesingle{}, None)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_a5a45e8fb7e1c3415e2b59b6437c832f4}{transport}} = t
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{distlib_2util_8py_source_l01536}{1536}} of file \mbox{\hyperlink{distlib_2util_8py_source}{util.\+py}}.
+
+
+
+\label{doc-constructors}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_ac85a2704629f63829bab7db40a566abd}\index{ServerProxy@{ServerProxy}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!ServerProxy@{ServerProxy}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_ac85a2704629f63829bab7db40a566abd} 
+\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{uri}{, }\item[{\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{kwargs}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{distlib_2util_8py_source_l01537}{1537}} of file \mbox{\hyperlink{distlib_2util_8py_source}{util.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{01537\ \ \ \ \ \textcolor{keyword}{def\ }\_\_init\_\_(self,\ uri,\ **kwargs):}
+\DoxyCodeLine{01538\ \ \ \ \ \ \ \ \ self.timeout\ =\ timeout\ =\ kwargs.pop(\textcolor{stringliteral}{'timeout'},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{01539\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ above\ classes\ only\ come\ into\ play\ if\ a\ timeout}}
+\DoxyCodeLine{01540\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ is\ specified}}
+\DoxyCodeLine{01541\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ timeout\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{01542\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ scheme\ =\ splittype(uri)\ \ \#\ deprecated\ as\ of\ Python\ 3.8}}
+\DoxyCodeLine{01543\ \ \ \ \ \ \ \ \ \ \ \ \ scheme\ =\ urlparse(uri)[0]}
+\DoxyCodeLine{01544\ \ \ \ \ \ \ \ \ \ \ \ \ use\_datetime\ =\ kwargs.get(\textcolor{stringliteral}{'use\_datetime'},\ 0)}
+\DoxyCodeLine{01545\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ scheme\ ==\ \textcolor{stringliteral}{'https'}:}
+\DoxyCodeLine{01546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tcls\ =\ SafeTransport}
+\DoxyCodeLine{01547\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{01548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tcls\ =\ Transport}
+\DoxyCodeLine{01549\ \ \ \ \ \ \ \ \ \ \ \ \ kwargs[\textcolor{stringliteral}{'transport'}]\ =\ t\ =\ tcls(timeout,\ use\_datetime=use\_datetime)}
+\DoxyCodeLine{01550\ \ \ \ \ \ \ \ \ \ \ \ \ self.transport\ =\ t}
+\DoxyCodeLine{01551\ \ \ \ \ \ \ \ \ xmlrpclib.ServerProxy.\_\_init\_\_(self,\ uri,\ **kwargs)}
+\DoxyCodeLine{01552\ }
+\DoxyCodeLine{01553\ \textcolor{comment}{\#}}
+\DoxyCodeLine{01554\ \textcolor{comment}{\#\ CSV\ functionality.\ This\ is\ provided\ because\ on\ 2.x,\ the\ csv\ module\ can't}}
+\DoxyCodeLine{01555\ \textcolor{comment}{\#\ handle\ Unicode.\ However,\ we\ need\ to\ deal\ with\ Unicode\ in\ e.g.\ RECORD\ files.}}
+\DoxyCodeLine{01556\ \textcolor{comment}{\#}}
+\DoxyCodeLine{01557\ }
+
+\end{DoxyCode}
+
+
+\label{doc-variable-members}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_aee145bfca8e9b2eaf3cd3c47157be9a3}\index{ServerProxy@{ServerProxy}!timeout@{timeout}}
+\index{timeout@{timeout}!ServerProxy@{ServerProxy}}
+\doxysubsubsection{\texorpdfstring{timeout}{timeout}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_aee145bfca8e9b2eaf3cd3c47157be9a3} 
+timeout = kwargs.\+pop(\textquotesingle{}timeout\textquotesingle{}, None)}
+
+
+
+Definition at line \mbox{\hyperlink{distlib_2util_8py_source_l01538}{1538}} of file \mbox{\hyperlink{distlib_2util_8py_source}{util.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{connection_8py_source_l00161}{HTTPConnection.\+\_\+new\+\_\+conn()}}, \mbox{\hyperlink{distlib_2util_8py_source_l01429}{HTTPSConnection.\+connect()}}, and \mbox{\hyperlink{connection_8py_source_l00231}{HTTPConnection.\+request()}}.
+
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_a5a45e8fb7e1c3415e2b59b6437c832f4}\index{ServerProxy@{ServerProxy}!transport@{transport}}
+\index{transport@{transport}!ServerProxy@{ServerProxy}}
+\doxysubsubsection{\texorpdfstring{transport}{transport}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1distlib_1_1util_1_1_server_proxy_a5a45e8fb7e1c3415e2b59b6437c832f4} 
+transport = t}
+
+
+
+Definition at line \mbox{\hyperlink{distlib_2util_8py_source_l01550}{1550}} of file \mbox{\hyperlink{distlib_2util_8py_source}{util.\+py}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/distlib/\mbox{\hyperlink{distlib_2util_8py}{util.\+py}}\end{DoxyCompactItemize}

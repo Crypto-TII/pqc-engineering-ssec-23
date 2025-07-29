@@ -1,0 +1,196 @@
+\doxysection{serialize.\+py}
+\hypertarget{serialize_8py_source}{}\label{serialize_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/cachecontrol/serialize.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/cachecontrol/serialize.py}}
+\mbox{\hyperlink{serialize_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize}{00001}}\ \textcolor{comment}{\#\ SPDX-\/FileCopyrightText:\ 2015\ Eric\ Larson}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00002}00002\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00003}00003\ \textcolor{comment}{\#\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00005}00005\ \textcolor{keyword}{import}\ base64}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00006}00006\ \textcolor{keyword}{import}\ io}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00007}00007\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00008}00008\ \textcolor{keyword}{import}\ zlib}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor}{pip.\_vendor}}\ \textcolor{keyword}{import}\ msgpack}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1structures}{pip.\_vendor.requests.structures}}\ \textcolor{keyword}{import}\ CaseInsensitiveDict}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00013}00013\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ HTTPResponse,\ pickle,\ text\_type}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_aa5b6d4df8599080228e759271deb3da2}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_aa5b6d4df8599080228e759271deb3da2}{\_b64\_decode\_bytes}}(b):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{return}\ base64.b64decode(b.encode(\textcolor{stringliteral}{"{}ascii"{}}))}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{00020}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(s):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_aa5b6d4df8599080228e759271deb3da2}{\_b64\_decode\_bytes}}(s).decode(\textcolor{stringliteral}{"{}utf8"{}})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_aeaf88a84a8d23b173155bdc957056aa0}{00024}}\ \_default\_body\_read\ =\ object()}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00027}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer}{00027}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer}{Serializer}}(object):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00028}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a1fad9808e365cc828a29662c70118920}{00028}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a1fad9808e365cc828a29662c70118920}{dumps}}(self,\ request,\ response,\ body=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ response\_headers\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1structures_1_1_case_insensitive_dict}{CaseInsensitiveDict}}(response.headers)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ body\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ When\ a\ body\ isn't\ passed\ in,\ we'll\ read\ the\ response.\ We}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ also\ update\ the\ response\ with\ a\ new\ file\ handler\ to\ be}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ sure\ it\ acts\ as\ though\ it\ was\ never\ read.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ response.read(decode\_content=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ response.\_fp\ =\ io.BytesIO(body)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ NOTE:\ This\ is\ all\ a\ bit\ weird,\ but\ it's\ really\ important\ that\ on}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ Python\ 2.x\ these\ objects\ are\ unicode\ and\ not\ str,\ even\ when}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ they\ contain\ only\ ascii.\ The\ problem\ here\ is\ that\ msgpack}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ understands\ the\ difference\ between\ unicode\ and\ bytes\ and\ we}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ have\ it\ set\ to\ differentiate\ between\ them,\ however\ Python\ 2}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ doesn't\ know\ the\ difference.\ Forcing\ these\ to\ unicode\ will\ be}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ enough\ to\ have\ msgpack\ know\ the\ difference.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ data\ =\ \{}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}response"{}}:\ \{}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}body"{}}:\ body,\ \ \textcolor{comment}{\#\ Empty\ bytestring\ if\ body\ is\ stored\ separately}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}headers"{}}:\ dict(}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (text\_type(k),\ text\_type(v))\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ response.headers.items()}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}status"{}}:\ response.status,}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}version"{}}:\ response.version,}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}reason"{}}:\ text\_type(response.reason),}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}strict"{}}:\ response.strict,}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{u"{}decode\_content"{}}:\ response.decode\_content,}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Construct\ our\ vary\ headers}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ data[\textcolor{stringliteral}{u"{}vary"{}}]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{u"{}vary"{}}\ \textcolor{keywordflow}{in}\ response\_headers:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ varied\_headers\ =\ response\_headers[\textcolor{stringliteral}{u"{}vary"{}}].split(\textcolor{stringliteral}{"{},"{}})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ header\ \textcolor{keywordflow}{in}\ varied\_headers:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ header\ =\ text\_type(header).strip()}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ header\_value\ =\ request.headers.get(header,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ header\_value\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ header\_value\ =\ text\_type(header\_value)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[\textcolor{stringliteral}{u"{}vary"{}}][header]\ =\ header\_value}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ b\textcolor{stringliteral}{"{},"{}}.join([b\textcolor{stringliteral}{"{}cc=4"{}},\ msgpack.dumps(data,\ use\_bin\_type=\textcolor{keyword}{True})])}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ab856bfa1619fdd2bd4b8106c0ac80ff6}{00072}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ab856bfa1619fdd2bd4b8106c0ac80ff6}{loads}}(self,\ request,\ data,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Short\ circuit\ if\ we've\ been\ given\ an\ empty\ set\ of\ data}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ data:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Determine\ what\ version\ of\ the\ serializer\ the\ data\ was\ serialized}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ with}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ ver,\ data\ =\ data.split(b\textcolor{stringliteral}{"{},"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ ver\ =\ b\textcolor{stringliteral}{"{}cc=0"{}}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Make\ sure\ that\ our\ "{}ver"{}\ is\ actually\ a\ version\ and\ isn't\ a\ false}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ positive\ from\ a\ ,\ being\ in\ the\ data\ stream.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ver[:3]\ !=\ b\textcolor{stringliteral}{"{}cc="{}}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ ver\ +\ data}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ ver\ =\ b\textcolor{stringliteral}{"{}cc=0"{}}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Get\ the\ version\ number\ out\ of\ the\ cc=N}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ ver\ =\ ver.split(b\textcolor{stringliteral}{"{}="{}},\ 1)[-\/1].decode(\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Dispatch\ to\ the\ actual\ load\ method\ for\ the\ given\ version}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(self,\ \textcolor{stringliteral}{"{}\_loads\_v\{\}"{}}.format(ver))(request,\ data,\ body\_file)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ a\ version\ we\ don't\ have\ a\ loads\ function\ for,\ so\ we'll}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ just\ treat\ it\ as\ a\ miss\ and\ return\ None}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00102}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_aa68fcdc5601515bd88f63acaaadccb45}{00102}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_aa68fcdc5601515bd88f63acaaadccb45}{prepare\_response}}(self,\ request,\ cached,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Verify\ our\ vary\ headers\ match\ and\ construct\ a\ real\ urllib3}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00104}00104\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ HTTPResponse\ object.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00105}00105\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case\ the\ '*'\ Vary\ value\ as\ it\ means\ we\ cannot\ actually}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ determine\ if\ the\ cached\ response\ is\ suitable\ for\ this\ request.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ case\ is\ also\ handled\ in\ the\ controller\ code\ when\ creating}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ cache\ entry,\ but\ is\ left\ here\ for\ backwards\ compatibility.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}*"{}}\ \textcolor{keywordflow}{in}\ cached.get(\textcolor{stringliteral}{"{}vary"{}},\ \{\}):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ensure\ that\ the\ Vary\ headers\ for\ the\ cached\ response\ match\ our}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ request}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ header,\ value\ \textcolor{keywordflow}{in}\ cached.get(\textcolor{stringliteral}{"{}vary"{}},\ \{\}).items():}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ request.headers.get(header,\ \textcolor{keywordtype}{None})\ !=\ value:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ body\_raw\ =\ cached[\textcolor{stringliteral}{"{}response"{}}].pop(\textcolor{stringliteral}{"{}body"{}})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ headers\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1structures_1_1_case_insensitive_dict}{CaseInsensitiveDict}}(data=cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}headers"{}}])}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ headers.get(\textcolor{stringliteral}{"{}transfer-\/encoding"{}},\ \textcolor{stringliteral}{"{}"{}})\ ==\ \textcolor{stringliteral}{"{}chunked"{}}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ headers.pop(\textcolor{stringliteral}{"{}transfer-\/encoding"{}})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}headers"{}}]\ =\ headers}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ body\_file\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ io.BytesIO(body\_raw)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ body\_file}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ TypeError:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ can\ happen\ if\ cachecontrol\ serialized\ to\ v1\ format\ (pickle)}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ using\ Python\ 2.\ A\ Python\ 2\ str(byte\ string)\ will\ be\ unpickled\ as}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ Python\ 3\ str\ (unicode\ string),\ which\ will\ cause\ the\ above\ to}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ fail\ with:}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ TypeError:\ 'str'\ does\ not\ support\ the\ buffer\ interface}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ body\ =\ io.BytesIO(body\_raw.encode(\textcolor{stringliteral}{"{}utf8"{}}))}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1response_1_1_h_t_t_p_response}{HTTPResponse}}(body=body,\ preload\_content=\textcolor{keyword}{False},\ **cached[\textcolor{stringliteral}{"{}response"{}}])}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00143}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ae36e9e9dbb6440367a66f3a7febecc38}{00143}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ae36e9e9dbb6440367a66f3a7febecc38}{\_loads\_v0}}(self,\ request,\ data,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ original\ legacy\ cache\ data.\ This\ doesn't\ contain\ enough}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ information\ to\ construct\ everything\ we\ need,\ so\ we'll\ treat\ this\ as}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ miss.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00149}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ab4b4b86c558da99c28c59e8c54aa0824}{00149}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_ab4b4b86c558da99c28c59e8c54aa0824}{\_loads\_v1}}(self,\ request,\ data,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ cached\ =\ pickle.loads(data)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.prepare\_response(request,\ cached,\ body\_file)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00157}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a6650099c584dacfe2caba6debbebc770}{00157}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a6650099c584dacfe2caba6debbebc770}{\_loads\_v2}}(self,\ request,\ data,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ body\_file\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ cached\ =\ json.loads(zlib.decompress(data).decode(\textcolor{stringliteral}{"{}utf8"{}}))}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (ValueError,\ zlib.error):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ need\ to\ decode\ the\ items\ that\ we've\ base64\ encoded}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}body"{}}]\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_aa5b6d4df8599080228e759271deb3da2}{\_b64\_decode\_bytes}}(cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}body"{}}])}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}headers"{}}]\ =\ dict(}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(k),\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(v))}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}headers"{}}].items()}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}reason"{}}]\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(cached[\textcolor{stringliteral}{"{}response"{}}][\textcolor{stringliteral}{"{}reason"{}}])}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ cached[\textcolor{stringliteral}{"{}vary"{}}]\ =\ dict(}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(k),\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1cachecontrol_1_1serialize_a515cfe9be68687b95aa31bf72839b292}{\_b64\_decode\_str}}(v)\ \textcolor{keywordflow}{if}\ v\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ v)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ cached[\textcolor{stringliteral}{"{}vary"{}}].items()}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_aa68fcdc5601515bd88f63acaaadccb45}{prepare\_response}}(request,\ cached,\ body\_file)}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00178}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a7d551f24f80f5dbb4594ddc6063058e3}{00178}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a7d551f24f80f5dbb4594ddc6063058e3}{\_loads\_v3}}(self,\ request,\ data,\ body\_file):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Due\ to\ Python\ 2\ encoding\ issues,\ it's\ impossible\ to\ know\ for\ sure}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ exactly\ how\ to\ load\ v3\ entries,\ thus\ we'll\ treat\ these\ as\ a\ miss\ so}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ they\ get\ rewritten\ out\ as\ v4\ entries.}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00184}\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a196cc44feb08787efdda10d775668361}{00184}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1serialize_1_1_serializer_a196cc44feb08787efdda10d775668361}{\_loads\_v4}}(self,\ request,\ data,\ body\_file=None):}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ cached\ =\ msgpack.loads(data,\ raw=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{serialize_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.prepare\_response(request,\ cached,\ body\_file)}
+
+\end{DoxyCode}

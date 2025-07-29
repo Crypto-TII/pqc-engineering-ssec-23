@@ -1,0 +1,63 @@
+\doxysection{packaging.\+py}
+\hypertarget{packaging_8py_source}{}\label{packaging_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/packaging.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/packaging.py}}
+\mbox{\hyperlink{packaging_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging}{00001}}\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00002}00002\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00003}00003\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00004}00004\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ NewType,\ Optional,\ Tuple,\ cast}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00006}00006\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging}{pip.\_vendor.packaging}}\ \textcolor{keyword}{import}\ specifiers,\ version}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements}{pip.\_vendor.packaging.requirements}}\ \textcolor{keyword}{import}\ Requirement}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00009}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_a007c69b8b7013e3be9631bf1b81323ed}{00009}}\ NormalizedExtra\ =\ NewType(\textcolor{stringliteral}{"{}NormalizedExtra"{}},\ str)}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00011}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_a0b14e488ae28d98d262453f3e9cd6e4d}{00011}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00014}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_a35a3f7731646b158e6859d6a3dfe5e29}{00014}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_a35a3f7731646b158e6859d6a3dfe5e29}{check\_requires\_python}}(}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00015}00015\ \ \ \ \ requires\_python:\ Optional[str],\ version\_info:\ Tuple[int,\ ...]}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00016}00016\ )\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ Check\ if\ the\ given\ Python\ version\ matches\ a\ "{}Requires-\/Python"{}\ specifier.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00019}00019\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ :param\ version\_info:\ A\ 3-\/tuple\ of\ ints\ representing\ a\ Python}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ major-\/minor-\/micro\ version\ to\ check\ (e.g.\ \`{}sys.version\_info[:3]\`{}).}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00022}00022\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ :return:\ \`{}True\`{}\ if\ the\ given\ Python\ version\ satisfies\ the\ requirement.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Otherwise,\ return\ \`{}False\`{}.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ :raises\ InvalidSpecifier:\ If\ \`{}requires\_python\`{}\ has\ an\ invalid\ format.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}\ requires\_python\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ package\ provides\ no\ information}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00031}00031\ \ \ \ \ requires\_python\_specifier\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_specifier_set}{specifiers.SpecifierSet}}(requires\_python)}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00033}00033\ \ \ \ \ python\_version\ =\ version.parse(\textcolor{stringliteral}{"{}."{}}.join(map(str,\ version\_info)))}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{return}\ python\_version\ \textcolor{keywordflow}{in}\ requires\_python\_specifier}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00037}00037\ \textcolor{preprocessor}{@functools.lru\_cache(maxsize=512)}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_aa39b9e154742277a748c415074cb535b}{00038}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_aa39b9e154742277a748c415074cb535b}{get\_requirement}}(req\_string:\ str)\ -\/>\ Requirement:}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00039}00039\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Construct\ a\ packaging.Requirement\ object\ with\ caching"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00040}00040\ \ \ \ \ \textcolor{comment}{\#\ Parsing\ requirement\ strings\ is\ expensive,\ and\ is\ also\ expected\ to\ happen}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00041}00041\ \ \ \ \ \textcolor{comment}{\#\ with\ a\ low\ diversity\ of\ different\ arguments\ (at\ least\ relative\ the\ number}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00042}00042\ \ \ \ \ \textcolor{comment}{\#\ constructed).\ This\ method\ adds\ a\ cache\ to\ requirement\ object\ creation\ to}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00043}00043\ \ \ \ \ \textcolor{comment}{\#\ minimize\ repeated\ parsing\ of\ the\ same\ string\ to\ construct\ equivalent}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00044}00044\ \ \ \ \ \textcolor{comment}{\#\ Requirement\ objects.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement}{Requirement}}(req\_string)}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00048}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_adb435128d99c19dbf2a73f7391e9f85e}{00048}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging_adb435128d99c19dbf2a73f7391e9f85e}{safe\_extra}}(extra:\ str)\ -\/>\ NormalizedExtra:}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ an\ arbitrary\ string\ to\ a\ standard\ 'extra'\ name}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00050}00050\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ \ \ Any\ runs\ of\ non-\/alphanumeric\ characters\ are\ replaced\ with\ a\ single\ '\_',}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ and\ the\ result\ is\ always\ lowercased.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00053}00053\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ This\ function\ is\ duplicated\ from\ \`{}\`{}pkg\_resources\`{}\`{}.\ Note\ that\ this\ is\ not}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ the\ same\ to\ either\ \`{}\`{}canonicalize\_name\`{}\`{}\ or\ \`{}\`{}\_egg\_link\_name\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{packaging_8py_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{return}\ cast(NormalizedExtra,\ re.sub(\textcolor{stringliteral}{"{}[\string^A-\/Za-\/z0-\/9.-\/]+"{}},\ \textcolor{stringliteral}{"{}\_"{}},\ extra).lower())}
+
+\end{DoxyCode}

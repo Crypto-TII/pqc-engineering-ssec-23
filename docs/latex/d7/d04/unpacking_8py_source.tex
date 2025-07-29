@@ -1,0 +1,263 @@
+\doxysection{unpacking.\+py}
+\hypertarget{unpacking_8py_source}{}\label{unpacking_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/unpacking.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/unpacking.py}}
+\mbox{\hyperlink{unpacking_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Utilities\ related\ archives.}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00002}00002\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00004}00004\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00005}00005\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00006}00006\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00007}00007\ \textcolor{keyword}{import}\ stat}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00008}00008\ \textcolor{keyword}{import}\ tarfile}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00009}00009\ \textcolor{keyword}{import}\ zipfile}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00010}00010\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Iterable,\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00011}00011\ \textcolor{keyword}{from}\ zipfile\ \textcolor{keyword}{import}\ ZipInfo}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ InstallationError}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1filetypes}{pip.\_internal.utils.filetypes}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00015}00015\ \ \ \ \ BZ2\_EXTENSIONS,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00016}00016\ \ \ \ \ TAR\_EXTENSIONS,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00017}00017\ \ \ \ \ XZ\_EXTENSIONS,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00018}00018\ \ \ \ \ ZIP\_EXTENSIONS,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00019}00019\ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00020}00020\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ ensure\_dir}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a0b14e488ae28d98d262453f3e9cd6e4d}{00022}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00025}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a2d49e2978a121bad364ce115163cc52a}{00025}}\ SUPPORTED\_EXTENSIONS\ =\ ZIP\_EXTENSIONS\ +\ TAR\_EXTENSIONS}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00027}00027\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{import}\ bz2\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00030}00030\ \ \ \ \ SUPPORTED\_EXTENSIONS\ +=\ BZ2\_EXTENSIONS}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00031}00031\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00032}00032\ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}bz2\ module\ is\ not\ available"{}})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00034}00034\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00035}00035\ \ \ \ \ \textcolor{comment}{\#\ Only\ for\ Python\ 3.3+}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{import}\ lzma\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00038}00038\ \ \ \ \ SUPPORTED\_EXTENSIONS\ +=\ XZ\_EXTENSIONS}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00039}00039\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00040}00040\ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}lzma\ module\ is\ not\ available"{}})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_af0f6c2a138b90a3f8509e104e711247a}{00043}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_af0f6c2a138b90a3f8509e104e711247a}{current\_umask}}()\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00044}00044\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ current\ umask\ which\ involves\ having\ to\ set\ it\ temporarily."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00045}00045\ \ \ \ \ mask\ =\ os.umask(0)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00046}00046\ \ \ \ \ os.umask(mask)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{return}\ mask}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00050}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a00692ba5e206beb08b428fba04480597}{00050}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a00692ba5e206beb08b428fba04480597}{split\_leading\_dir}}(path:\ str)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00051}00051\ \ \ \ \ path\ =\ path.lstrip(\textcolor{stringliteral}{"{}/"{}}).lstrip(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}/"{}}\ \textcolor{keywordflow}{in}\ path\ \textcolor{keywordflow}{and}\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ (\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}\ \textcolor{keywordflow}{in}\ path\ \textcolor{keywordflow}{and}\ path.find(\textcolor{stringliteral}{"{}/"{}})\ <\ path.find(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}))\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ path}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00054}00054\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path.split(\textcolor{stringliteral}{"{}/"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}\ \textcolor{keywordflow}{in}\ path:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path.split(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [path,\ \textcolor{stringliteral}{"{}"{}}]}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00062}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a37780b46b0d1d9317c8eccf175225dc5}{00062}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a37780b46b0d1d9317c8eccf175225dc5}{has\_leading\_dir}}(paths:\ Iterable[str])\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00063}00063\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ true\ if\ all\ the\ paths\ have\ the\ same\ leading\ path\ name}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ (i.e.,\ everything\ is\ in\ one\ subdirectory\ in\ an\ archive)"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00065}00065\ \ \ \ \ common\_prefix\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ paths:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ prefix,\ rest\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a00692ba5e206beb08b428fba04480597}{split\_leading\_dir}}(path)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ prefix:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ common\_prefix\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ common\_prefix\ =\ prefix}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ prefix\ !=\ common\_prefix:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00077}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a35e36944c8599945de0120df6ebfb1b6}{00077}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a35e36944c8599945de0120df6ebfb1b6}{is\_within\_directory}}(directory:\ str,\ target:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00078}00078\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00079}00079\ \textcolor{stringliteral}{\ \ \ \ Return\ true\ if\ the\ absolute\ path\ of\ target\ is\ within\ the\ directory}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00080}00080\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00081}00081\ \ \ \ \ abs\_directory\ =\ os.path.abspath(directory)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00082}00082\ \ \ \ \ abs\_target\ =\ os.path.abspath(target)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00084}00084\ \ \ \ \ prefix\ =\ os.path.commonprefix([abs\_directory,\ abs\_target])}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{return}\ prefix\ ==\ abs\_directory}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00088}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a45246969f08c73a1507a2ffaee1178fd}{00088}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a45246969f08c73a1507a2ffaee1178fd}{set\_extracted\_file\_to\_default\_mode\_plus\_executable}}(path:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00089}00089\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ Make\ file\ present\ at\ path\ have\ execute\ for\ user/group/world}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ (chmod\ +x)\ is\ no-\/op\ on\ windows\ per\ python\ docs}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00093}00093\ \ \ \ \ os.chmod(path,\ (0o777\ \&\ \string~\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_af0f6c2a138b90a3f8509e104e711247a}{current\_umask}}()\ |\ 0o111))}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00096}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ae4f7ac75282bfddedfd46778640a939b}{00096}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ae4f7ac75282bfddedfd46778640a939b}{zip\_item\_is\_executable}}(info:\ ZipInfo)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00097}00097\ \ \ \ \ mode\ =\ info.external\_attr\ >>\ 16}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00098}00098\ \ \ \ \ \textcolor{comment}{\#\ if\ mode\ and\ regular\ file\ and\ any\ execute\ permissions\ for}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00099}00099\ \ \ \ \ \textcolor{comment}{\#\ user/group/world?}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{return}\ bool(mode\ \textcolor{keywordflow}{and}\ stat.S\_ISREG(mode)\ \textcolor{keywordflow}{and}\ mode\ \&\ 0o111)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00103}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ac3a79feb22c41075d3280473b06ed62b}{00103}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ac3a79feb22c41075d3280473b06ed62b}{unzip\_file}}(filename:\ str,\ location:\ str,\ flatten:\ bool\ =\ \textcolor{keyword}{True})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00104}00104\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00105}00105\ \textcolor{stringliteral}{\ \ \ \ Unzip\ the\ file\ (with\ path\ \`{}filename\`{})\ to\ the\ destination\ \`{}location\`{}.\ \ All}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00106}00106\ \textcolor{stringliteral}{\ \ \ \ files\ are\ written\ based\ on\ system\ defaults\ and\ umask\ (i.e.\ permissions\ are}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00107}00107\ \textcolor{stringliteral}{\ \ \ \ not\ preserved),\ except\ that\ regular\ file\ members\ with\ any\ execute}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00108}00108\ \textcolor{stringliteral}{\ \ \ \ permissions\ (user,\ group,\ or\ world)\ have\ "{}chmod\ +x"{}\ applied\ after\ being}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00109}00109\ \textcolor{stringliteral}{\ \ \ \ written.\ Note\ that\ for\ windows,\ any\ execute\ changes\ using\ os.chmod\ are}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00110}00110\ \textcolor{stringliteral}{\ \ \ \ no-\/ops\ per\ the\ python\ docs.}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00111}00111\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00112}00112\ \ \ \ \ ensure\_dir(location)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00113}00113\ \ \ \ \ zipfp\ =\ open(filename,\ \textcolor{stringliteral}{"{}rb"{}})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00114}00114\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ zip\ =\ zipfile.ZipFile(zipfp,\ allowZip64=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ leading\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a37780b46b0d1d9317c8eccf175225dc5}{has\_leading\_dir}}(zip.namelist())\ \textcolor{keywordflow}{and}\ flatten}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ info\ \textcolor{keywordflow}{in}\ zip.infolist():}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ name\ =\ info.filename}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ name}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ leading:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a00692ba5e206beb08b428fba04480597}{split\_leading\_dir}}(name)[1]}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ os.path.join(location,\ fn)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ dir\ =\ os.path.dirname(fn)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a35e36944c8599945de0120df6ebfb1b6}{is\_within\_directory}}(location,\ fn):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ message\ =\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ zip\ file\ (\{\})\ has\ a\ file\ (\{\})\ trying\ to\ install\ "{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}outside\ target\ directory\ (\{\})"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(message.format(filename,\ fn,\ location))}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ fn.endswith(\textcolor{stringliteral}{"{}/"{}})\ \textcolor{keywordflow}{or}\ fn.endswith(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ directory}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ensure\_dir(fn)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ensure\_dir(dir)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ use\ read()\ to\ avoid\ allocating\ an\ arbitrarily\ large}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ chunk\ of\ memory\ for\ the\ file's\ content}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp\ =\ zip.open(name)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(fn,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ destfp:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shutil.copyfileobj(fp,\ destfp)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{finally}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp.close()}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ae4f7ac75282bfddedfd46778640a939b}{zip\_item\_is\_executable}}(info):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a45246969f08c73a1507a2ffaee1178fd}{set\_extracted\_file\_to\_default\_mode\_plus\_executable}}(fn)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00145}00145\ \ \ \ \ \textcolor{keywordflow}{finally}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ zipfp.close()}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00149}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_aeeaa12c1dac293795c7407df64bb96b8}{00149}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_aeeaa12c1dac293795c7407df64bb96b8}{untar\_file}}(filename:\ str,\ location:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00150}00150\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ Untar\ the\ file\ (with\ path\ \`{}filename\`{})\ to\ the\ destination\ \`{}location\`{}.}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00152}00152\ \textcolor{stringliteral}{\ \ \ \ All\ files\ are\ written\ based\ on\ system\ defaults\ and\ umask\ (i.e.\ permissions}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00153}00153\ \textcolor{stringliteral}{\ \ \ \ are\ not\ preserved),\ except\ that\ regular\ file\ members\ with\ any\ execute}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00154}00154\ \textcolor{stringliteral}{\ \ \ \ permissions\ (user,\ group,\ or\ world)\ have\ "{}chmod\ +x"{}\ applied\ after\ being}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00155}00155\ \textcolor{stringliteral}{\ \ \ \ written.\ \ Note\ that\ for\ windows,\ any\ execute\ changes\ using\ os.chmod\ are}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00156}00156\ \textcolor{stringliteral}{\ \ \ \ no-\/ops\ per\ the\ python\ docs.}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00157}00157\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00158}00158\ \ \ \ \ ensure\_dir(location)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{if}\ filename.lower().endswith(\textcolor{stringliteral}{"{}.gz"{}})\ \textcolor{keywordflow}{or}\ filename.lower().endswith(\textcolor{stringliteral}{"{}.tgz"{}}):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ mode\ =\ \textcolor{stringliteral}{"{}r:gz"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{elif}\ filename.lower().endswith(BZ2\_EXTENSIONS):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ mode\ =\ \textcolor{stringliteral}{"{}r:bz2"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{elif}\ filename.lower().endswith(XZ\_EXTENSIONS):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ mode\ =\ \textcolor{stringliteral}{"{}r:xz"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{elif}\ filename.lower().endswith(\textcolor{stringliteral}{"{}.tar"{}}):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ mode\ =\ \textcolor{stringliteral}{"{}r"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00167}00167\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ determine\ compression\ type\ for\ file\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ filename,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ mode\ =\ \textcolor{stringliteral}{"{}r:*"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00173}00173\ \ \ \ \ tar\ =\ tarfile.open(filename,\ mode,\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00174}00174\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ leading\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a37780b46b0d1d9317c8eccf175225dc5}{has\_leading\_dir}}([member.name\ \textcolor{keywordflow}{for}\ member\ \textcolor{keywordflow}{in}\ tar.getmembers()])}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ member\ \textcolor{keywordflow}{in}\ tar.getmembers():}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ member.name}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ leading:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fn\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a00692ba5e206beb08b428fba04480597}{split\_leading\_dir}}(fn)[1]}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.path.join(location,\ fn)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a35e36944c8599945de0120df6ebfb1b6}{is\_within\_directory}}(location,\ path):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ message\ =\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ tar\ file\ (\{\})\ has\ a\ file\ (\{\})\ trying\ to\ install\ "{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}outside\ target\ directory\ (\{\})"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(message.format(filename,\ path,\ location))}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ member.isdir():}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ensure\_dir(path)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ member.issym():}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tar.\_extract\_member(member,\ path)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Some\ corrupt\ tar\ files\ seem\ to\ produce\ this}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (specifically\ bad\ symlinks)}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}In\ the\ tar\ file\ \%s\ the\ member\ \%s\ is\ invalid:\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ member.name,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exc,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp\ =\ tar.extractfile(member)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (KeyError,\ AttributeError)\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Some\ corrupt\ tar\ files\ seem\ to\ produce\ this}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (specifically\ bad\ symlinks)}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}In\ the\ tar\ file\ \%s\ the\ member\ \%s\ is\ invalid:\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ member.name,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exc,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ensure\_dir(os.path.dirname(path))}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ fp\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(path,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ destfp:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shutil.copyfileobj(fp,\ destfp)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp.close()}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ the\ timestamp\ (useful\ for\ cython\ compiled\ files)}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tar.utime(member,\ path)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ member\ have\ any\ execute\ permissions\ for\ user/group/world?}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ member.mode\ \&\ 0o111:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a45246969f08c73a1507a2ffaee1178fd}{set\_extracted\_file\_to\_default\_mode\_plus\_executable}}(path)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{finally}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ tar.close()}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00229}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a2e4ec14ef37f131edfc2e29f087047e7}{00229}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_a2e4ec14ef37f131edfc2e29f087047e7}{unpack\_file}}(}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00230}00230\ \ \ \ \ filename:\ str,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00231}00231\ \ \ \ \ location:\ str,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00232}00232\ \ \ \ \ content\_type:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00233}00233\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00234}00234\ \ \ \ \ filename\ =\ os.path.realpath(filename)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00235}00235\ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ content\_type\ ==\ \textcolor{stringliteral}{"{}application/zip"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ filename.lower().endswith(ZIP\_EXTENSIONS)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ zipfile.is\_zipfile(filename)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00239}00239\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_ac3a79feb22c41075d3280473b06ed62b}{unzip\_file}}(filename,\ location,\ flatten=\textcolor{keywordflow}{not}\ filename.endswith(\textcolor{stringliteral}{"{}.whl"{}}))}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{elif}\ (}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ content\_type\ ==\ \textcolor{stringliteral}{"{}application/x-\/gzip"{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ tarfile.is\_tarfile(filename)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ filename.lower().endswith(TAR\_EXTENSIONS\ +\ BZ2\_EXTENSIONS\ +\ XZ\_EXTENSIONS)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00245}00245\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1unpacking_aeeaa12c1dac293795c7407df64bb96b8}{untar\_file}}(filename,\ location)}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ FIXME:\ handle?}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ FIXME:\ magic\ signatures?}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ logger.critical(}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ unpack\ file\ \%s\ (downloaded\ from\ \%s,\ content-\/type:\ \%s);\ "{}}}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cannot\ detect\ archive\ format"{}},}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ filename,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ location,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ content\_type,}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{unpacking_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(f\textcolor{stringliteral}{"{}Cannot\ determine\ archive\ format\ of\ \{location\}"{}})}
+
+\end{DoxyCode}

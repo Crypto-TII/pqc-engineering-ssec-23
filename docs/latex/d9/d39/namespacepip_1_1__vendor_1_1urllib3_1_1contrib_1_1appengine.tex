@@ -1,0 +1,148 @@
+\doxysection{pip.\+\_\+vendor.\+urllib3.\+contrib.\+appengine Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine}{}\label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_manager}{App\+Engine\+Manager}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_platform_error}{App\+Engine\+Platform\+Error}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_platform_warning}{App\+Engine\+Platform\+Warning}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a812035656353aef51ffa05b630439d08}{urlfetch}} = None
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_ab09a63eb35b270b5cdbead1983ebdccb}{log}} = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a320bc0bafa373e6fc804aae0c0868fed}{is\+\_\+appengine}} = \+\_\+appengine\+\_\+environ.\+is\+\_\+appengine
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a4ca9285828346ca7c8299d7a97f4d46f}{is\+\_\+appengine\+\_\+sandbox}} = \+\_\+appengine\+\_\+environ.\+is\+\_\+appengine\+\_\+sandbox
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a531e4e9779fc7cb7e8957995c608eef3}{is\+\_\+local\+\_\+appengine}} = \+\_\+appengine\+\_\+environ.\+is\+\_\+local\+\_\+appengine
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a3e6192a2a14964dd57ac4241503c333e}{is\+\_\+prod\+\_\+appengine}} = \+\_\+appengine\+\_\+environ.\+is\+\_\+prod\+\_\+appengine
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_aa37cbb34608a802561228230e918627f}{is\+\_\+prod\+\_\+appengine\+\_\+mvms}} = \+\_\+appengine\+\_\+environ.\+is\+\_\+prod\+\_\+appengine\+\_\+mvms
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}This module provides a pool manager that uses Google App Engine's
+`URLFetch Service <https://cloud.google.com/appengine/docs/python/urlfetch>`_.
+
+Example usage::
+
+    from pip._vendor.urllib3 import PoolManager
+    from pip._vendor.urllib3.contrib.appengine import AppEngineManager, is_appengine_sandbox
+
+    if is_appengine_sandbox():
+        # AppEngineManager uses AppEngine's URLFetch API behind the scenes
+        http = AppEngineManager()
+    else:
+        # PoolManager uses a socket-level API behind the scenes
+        http = PoolManager()
+
+    r = http.request('GET', 'https://google.com/')
+
+There are `limitations <https://cloud.google.com/appengine/docs/python/\
+urlfetch/#Python_Quotas_and_limits>`_ to the URLFetch service and it may not be
+the best choice for your application. There are three options for using
+urllib3 on Google App Engine:
+
+1. You can use :class:`AppEngineManager` with URLFetch. URLFetch is
+   cost-effective in many circumstances as long as your usage is within the
+   limitations.
+2. You can use a normal :class:`~urllib3.PoolManager` by enabling sockets.
+   Sockets also have `limitations and restrictions
+   <https://cloud.google.com/appengine/docs/python/sockets/\
+   #limitations-and-restrictions>`_ and have a lower free quota than URLFetch.
+   To use sockets, be sure to specify the following in your ``app.yaml``::
+
+        env_variables:
+            GAE_USE_SOCKETS_HTTPLIB : 'true'
+
+3. If you are using `App Engine Flexible
+<https://cloud.google.com/appengine/docs/flexible/>`_, you can use the standard
+:class:`PoolManager` without any configuration or special environment variables.
+\end{DoxyVerb}
+ 
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a320bc0bafa373e6fc804aae0c0868fed}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!is\_appengine@{is\_appengine}}
+\index{is\_appengine@{is\_appengine}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{is\_appengine}{is\_appengine}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a320bc0bafa373e6fc804aae0c0868fed} 
+is\+\_\+appengine = \+\_\+appengine\+\_\+environ.\+is\+\_\+appengine}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00310}{310}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a4ca9285828346ca7c8299d7a97f4d46f}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!is\_appengine\_sandbox@{is\_appengine\_sandbox}}
+\index{is\_appengine\_sandbox@{is\_appengine\_sandbox}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{is\_appengine\_sandbox}{is\_appengine\_sandbox}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a4ca9285828346ca7c8299d7a97f4d46f} 
+is\+\_\+appengine\+\_\+sandbox = \+\_\+appengine\+\_\+environ.\+is\+\_\+appengine\+\_\+sandbox}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00311}{311}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a531e4e9779fc7cb7e8957995c608eef3}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!is\_local\_appengine@{is\_local\_appengine}}
+\index{is\_local\_appengine@{is\_local\_appengine}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{is\_local\_appengine}{is\_local\_appengine}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a531e4e9779fc7cb7e8957995c608eef3} 
+is\+\_\+local\+\_\+appengine = \+\_\+appengine\+\_\+environ.\+is\+\_\+local\+\_\+appengine}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00312}{312}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a3e6192a2a14964dd57ac4241503c333e}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!is\_prod\_appengine@{is\_prod\_appengine}}
+\index{is\_prod\_appengine@{is\_prod\_appengine}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{is\_prod\_appengine}{is\_prod\_appengine}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a3e6192a2a14964dd57ac4241503c333e} 
+is\+\_\+prod\+\_\+appengine = \+\_\+appengine\+\_\+environ.\+is\+\_\+prod\+\_\+appengine}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00313}{313}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{appengine_8py_source_l00245}{App\+Engine\+Manager.\+\_\+urlfetch\+\_\+response\+\_\+to\+\_\+http\+\_\+response()}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_aa37cbb34608a802561228230e918627f}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!is\_prod\_appengine\_mvms@{is\_prod\_appengine\_mvms}}
+\index{is\_prod\_appengine\_mvms@{is\_prod\_appengine\_mvms}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{is\_prod\_appengine\_mvms}{is\_prod\_appengine\_mvms}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_aa37cbb34608a802561228230e918627f} 
+is\+\_\+prod\+\_\+appengine\+\_\+mvms = \+\_\+appengine\+\_\+environ.\+is\+\_\+prod\+\_\+appengine\+\_\+mvms}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00314}{314}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_ab09a63eb35b270b5cdbead1983ebdccb}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!log@{log}}
+\index{log@{log}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{log}{log}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_ab09a63eb35b270b5cdbead1983ebdccb} 
+log = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00068}{68}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a812035656353aef51ffa05b630439d08}\index{pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}!urlfetch@{urlfetch}}
+\index{urlfetch@{urlfetch}!pip.\_vendor.urllib3.contrib.appengine@{pip.\_vendor.urllib3.contrib.appengine}}
+\doxysubsubsection{\texorpdfstring{urlfetch}{urlfetch}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_a812035656353aef51ffa05b630439d08} 
+urlfetch = None}
+
+
+
+Definition at line \mbox{\hyperlink{appengine_8py_source_l00065}{65}} of file \mbox{\hyperlink{appengine_8py_source}{appengine.\+py}}.
+

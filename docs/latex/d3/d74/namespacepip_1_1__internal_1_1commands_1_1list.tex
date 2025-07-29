@@ -1,0 +1,169 @@
+\doxysection{pip.\+\_\+internal.\+commands.\+list Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1commands_1_1list}{}\label{namespacepip_1_1__internal_1_1commands_1_1list}\index{pip.\_internal.commands.list@{pip.\_internal.commands.list}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1___dist_with_latest_info}{\+\_\+\+Dist\+With\+Latest\+Info}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1list_1_1_list_command}{List\+Command}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Tuple\mbox{[}List\mbox{[}List\mbox{[}str\mbox{]}\mbox{]}, List\mbox{[}str\mbox{]}\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d}{format\+\_\+for\+\_\+columns}} ("{}\+\_\+\+Processed\+Dists"{} pkgs, Values options)
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65}{format\+\_\+for\+\_\+json}} ("{}\+\_\+\+Processed\+Dists"{} packages, Values options)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a1f9171002b076320a802cea3f71f0a2c}{\+\_\+\+Processed\+Dists}}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1list_a0b14e488ae28d98d262453f3e9cd6e4d}{logger}} = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d}\index{pip.\_internal.commands.list@{pip.\_internal.commands.list}!format\_for\_columns@{format\_for\_columns}}
+\index{format\_for\_columns@{format\_for\_columns}!pip.\_internal.commands.list@{pip.\_internal.commands.list}}
+\doxysubsubsection{\texorpdfstring{format\_for\_columns()}{format\_for\_columns()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d} 
+ Tuple\mbox{[}List\mbox{[}List\mbox{[}str\mbox{]}\mbox{]}, List\mbox{[}str\mbox{]}\mbox{]} format\+\_\+for\+\_\+columns (\begin{DoxyParamCaption}\item[{"{}\+\_\+\+Processed\+Dists"{}}]{pkgs}{, }\item[{Values }]{options}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Convert the package data into something usable
+by output_package_listing_columns.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{list_8py_source_l00306}{306}} of file \mbox{\hyperlink{list_8py_source}{list.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00308\ )\ -\/>\ Tuple[List[List[str]],\ List[str]]:}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00310\ \textcolor{stringliteral}{\ \ \ \ Convert\ the\ package\ data\ into\ something\ usable}}
+\DoxyCodeLine{00311\ \textcolor{stringliteral}{\ \ \ \ by\ output\_package\_listing\_columns.}}
+\DoxyCodeLine{00312\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00313\ \ \ \ \ header\ =\ [\textcolor{stringliteral}{"{}Package"{}},\ \textcolor{stringliteral}{"{}Version"{}}]}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ running\_outdated\ =\ options.outdated}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordflow}{if}\ running\_outdated:}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ header.extend([\textcolor{stringliteral}{"{}Latest"{}},\ \textcolor{stringliteral}{"{}Type"{}}])}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ has\_editables\ =\ any(x.editable\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ pkgs)}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordflow}{if}\ has\_editables:}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Editable\ project\ location"{}})}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Location"{}})}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ header.append(\textcolor{stringliteral}{"{}Installer"{}})}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ data\ =\ []}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordflow}{for}\ proj\ \textcolor{keywordflow}{in}\ pkgs:}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ we're\ working\ on\ the\ 'outdated'\ list,\ separate\ out\ the}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ latest\_version\ and\ type}}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ row\ =\ [proj.raw\_name,\ str(proj.version)]}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ running\_outdated:}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(str(proj.latest\_version))}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.latest\_filetype)}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ has\_editables:}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.editable\_project\_location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ row.append(proj.installer)}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ data.append(row)}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keywordflow}{return}\ data,\ header}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{list_8py_source_l00270}{List\+Command.\+output\+\_\+package\+\_\+listing()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/d74/namespacepip_1_1__internal_1_1commands_1_1list_a6282a194d03c30dc6d8cb61826e8033d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65}\index{pip.\_internal.commands.list@{pip.\_internal.commands.list}!format\_for\_json@{format\_for\_json}}
+\index{format\_for\_json@{format\_for\_json}!pip.\_internal.commands.list@{pip.\_internal.commands.list}}
+\doxysubsubsection{\texorpdfstring{format\_for\_json()}{format\_for\_json()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65} 
+ str format\+\_\+for\+\_\+json (\begin{DoxyParamCaption}\item[{"{}\+\_\+\+Processed\+Dists"{}}]{packages}{, }\item[{Values}]{options}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{list_8py_source_l00351}{351}} of file \mbox{\hyperlink{list_8py_source}{list.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00351\ \textcolor{keyword}{def\ }format\_for\_json(packages:\ \textcolor{stringliteral}{"{}\_ProcessedDists"{}},\ options:\ Values)\ -\/>\ str:}
+\DoxyCodeLine{00352\ \ \ \ \ data\ =\ []}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keywordflow}{for}\ dist\ \textcolor{keywordflow}{in}\ packages:}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ info\ =\ \{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\ dist.raw\_name,}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}version"{}}:\ str(dist.version),}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.verbose\ >=\ 1:}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}location"{}}]\ =\ dist.location\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}installer"{}}]\ =\ dist.installer}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.outdated:}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}latest\_version"{}}]\ =\ str(dist.latest\_version)}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}latest\_filetype"{}}]\ =\ dist.latest\_filetype}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ editable\_project\_location\ =\ dist.editable\_project\_location}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ editable\_project\_location:}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ info[\textcolor{stringliteral}{"{}editable\_project\_location"{}}]\ =\ editable\_project\_location}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ data.append(info)}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordflow}{return}\ json.dumps(data)}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{list_8py_source_l00270}{List\+Command.\+output\+\_\+package\+\_\+listing()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/d74/namespacepip_1_1__internal_1_1commands_1_1list_a457213e8c78fe80f9abb0b491c877c65_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_a1f9171002b076320a802cea3f71f0a2c}\index{pip.\_internal.commands.list@{pip.\_internal.commands.list}!\_ProcessedDists@{\_ProcessedDists}}
+\index{\_ProcessedDists@{\_ProcessedDists}!pip.\_internal.commands.list@{pip.\_internal.commands.list}}
+\doxysubsubsection{\texorpdfstring{\_ProcessedDists}{\_ProcessedDists}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1commands_1_1list_a1f9171002b076320a802cea3f71f0a2c} 
+\+\_\+\+Processed\+Dists\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{list_8py_source_l00033}{33}} of file \mbox{\hyperlink{list_8py_source}{list.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1commands_1_1list_a0b14e488ae28d98d262453f3e9cd6e4d}\index{pip.\_internal.commands.list@{pip.\_internal.commands.list}!logger@{logger}}
+\index{logger@{logger}!pip.\_internal.commands.list@{pip.\_internal.commands.list}}
+\doxysubsubsection{\texorpdfstring{logger}{logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1commands_1_1list_a0b14e488ae28d98d262453f3e9cd6e4d} 
+logger = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{list_8py_source_l00036}{36}} of file \mbox{\hyperlink{list_8py_source}{list.\+py}}.
+

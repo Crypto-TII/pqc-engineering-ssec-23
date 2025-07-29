@@ -1,0 +1,70 @@
+\doxysection{random\+\_\+walks2.\+py}
+\hypertarget{random__walks2_8py_source}{}\label{random__walks2_8py_source}\index{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/high-\/level-\/scripts/random\_walks2.py@{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/high-\/level-\/scripts/random\_walks2.py}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00001}00001\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00003}00003\ \textcolor{comment}{\#\ SageMath\ imports}}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00004}00004\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacesage_1_1all}{sage.all}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00005}00005\ \ \ \ \ EllipticCurve,}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00006}00006\ )}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00010}00010\ \textcolor{keyword}{def\ }to\_mont(j,\ setup):}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00011}00011\ \ \ \ \ Fq\ =\ setup[\textcolor{stringliteral}{'Fq'}]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00012}00012\ \ \ \ \ Rx\ =\ setup[\textcolor{stringliteral}{'Rx'}]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00013}00013\ \ \ \ \ x\ =\ Rx.gens()[0]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00014}00014\ \ \ \ \ p\ =\ Fq.characteristic()}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00016}00016\ \ \ \ \ choices\ =\ (j*(x**2\ -\/\ 4)\ -\/\ 256*((x**2\ -\/\ 3)**3)).roots()}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00017}00017\ \ \ \ \ good\ =\ choices\ !=\ []}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{for}\ (r,\_)\ \textcolor{keywordflow}{in}\ choices:}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00020}00020\ \ \ \ \ \ \ \ \ A\ =\ r}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ Ea\ =\ EllipticCurve(Fq,\ [0,\ A,\ 0,\ 1,\ 0])}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ good\ =\ good\ \textcolor{keywordflow}{and}\ (Ea.random\_point()\ *\ (p\ +\ 1)\ ==\ Ea(0))}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00023}00023\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00024}00024\ \ \ \ \ assert(good)}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{return}\ A}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00029}00029\ \textcolor{keyword}{def\ }random\_walk2(j0\_prev,\ j0,\ path,\ setup):}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00030}00030\ \ \ \ \ Fq\ =\ setup[\textcolor{stringliteral}{'Fq'}]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00031}00031\ \ \ \ \ Rx\ =\ setup[\textcolor{stringliteral}{'Rx'}]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00032}00032\ \ \ \ \ one\_half\ =\ 1\ /\ Fq(2)}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00034}00034\ \ \ \ \ jk\ =\ j0}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00035}00035\ \ \ \ \ jk\_prev\ =\ j0\_prev}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ range(0,\ len(path),\ 1):}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ Dk\ =\ jk**4\ -\/\ 2976*(jk**3)\ +\ 2*(jk**2)*jk\_prev\ +\ 2532192*(jk**2)\ -\/\ 2976*jk*jk\_prev\ -\/\ 645205500*jk\ -\/\ 3*(jk\_prev**2)\ +\ 324000*jk\_prev\ -\/\ 8748000000}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ Dk\_sqrt\ =\ setup[\textcolor{stringliteral}{'sqrt'}](Dk,\ check=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ Dk\_sqrts\ =\ [Dk\_sqrt,\ -\/Dk\_sqrt]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ jk\_next\ =\ (jk**2\ -\/\ 1488*jk\ -\/\ jk\_prev\ +\ 162000\ +\ Dk\_sqrts[path[k]])\ *\ one\_half}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ jk\_prev\ =\ jk}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ jk\ =\ jk\_next}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{return}\ jk}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00048}00048\ \textcolor{keyword}{def\ }cgl\_hash2(message,\ setup,\ verbose=True):}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00049}00049\ \ \ \ \ p\ =\ setup[\textcolor{stringliteral}{'Fq'}].characteristic()}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00051}00051\ \ \ \ \ \textcolor{comment}{\#\ SHAKE\_256\ algorithm\ from\ the\ hashlib\ module.}}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00052}00052\ \ \ \ \ s\ =\ hashlib.shake\_256()}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00053}00053\ \ \ \ \ s.update(message)}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00054}00054\ \ \ \ \ digest\ =\ s.hexdigest(p.bit\_length()\ //\ 8)}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00055}00055\ \ \ \ \ path\ =\ bin(int(digest,\ 16))[2:p.bit\_length()\ +\ 2]}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{if}\ verbose:}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{'\(\backslash\)nCGL\ Hash\ function\ over\ the\ 2-\/isogeny\ graph\ (CGLHash2)'})}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Symmetric\ primitive:\(\backslash\)t\{s.name\}'})}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Message\ digest\ size:\(\backslash\)t\{len(digest)\ //\ 2\}\ bytes'})}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'Random\ path\ of\ size:\(\backslash\)t\{len(path)\}\ steps'})}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00063}00063\ \ \ \ \ jE\ =\ random\_walk2(setup[\textcolor{stringliteral}{'j₋₁'}],\ setup[\textcolor{stringliteral}{'j₀'}],\ [\ int(b)\ \textcolor{keywordflow}{for}\ b\ \textcolor{keywordflow}{in}\ path\ ],\ setup)}
+\DoxyCodeLine{\Hypertarget{random__walks2_8py_source_l00064}00064\ \ \ \ \ \textcolor{keywordflow}{return}\ jE}
+
+\end{DoxyCode}

@@ -1,0 +1,995 @@
+\doxysection{html.\+py}
+\hypertarget{html_8py_source}{}\label{html_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pygments/formatters/html.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pygments/formatters/html.py}}
+\mbox{\hyperlink{html_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00002}00002\ \textcolor{stringliteral}{\ \ \ \ pygments.formatters.html}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00003}00003\ \textcolor{stringliteral}{\ \ \ \ \string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00005}00005\ \textcolor{stringliteral}{\ \ \ \ Formatter\ for\ HTML\ output.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00007}00007\ \textcolor{stringliteral}{\ \ \ \ :copyright:\ Copyright\ 2006-\/2023\ by\ the\ Pygments\ team,\ see\ AUTHORS.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ :license:\ BSD,\ see\ LICENSE\ for\ details.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00009}00009\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00011}00011\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00012}00012\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00013}00013\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00014}00014\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00015}00015\ \textcolor{keyword}{from}\ io\ \textcolor{keyword}{import}\ StringIO}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatter}{pip.\_vendor.pygments.formatter}}\ \textcolor{keyword}{import}\ Formatter}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1token}{pip.\_vendor.pygments.token}}\ \textcolor{keyword}{import}\ Token,\ Text,\ STANDARD\_TYPES}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00019}00019\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1util}{pip.\_vendor.pygments.util}}\ \textcolor{keyword}{import}\ get\_bool\_opt,\ get\_int\_opt,\ get\_list\_opt}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00021}00021\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{import}\ ctags}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00023}00023\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a3bc66509e192dd26f9df44c4da9ea581}{00024}}\ \ \ \ \ ctags\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00026}00026\ \_\_all\_\_\ =\ [\textcolor{stringliteral}{'HtmlFormatter'}]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a407e9837b2920a1ec87c20a2013a8552}{00029}}\ \_escape\_html\_table\ =\ \{}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00030}00030\ \ \ \ \ ord(\textcolor{stringliteral}{'\&'}):\ \textcolor{stringliteral}{'\&amp;'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00031}00031\ \ \ \ \ ord(\textcolor{stringliteral}{'<'}):\ \textcolor{stringliteral}{'\&lt;'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00032}00032\ \ \ \ \ ord(\textcolor{stringliteral}{'>'}):\ \textcolor{stringliteral}{'\&gt;'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00033}00033\ \ \ \ \ ord(\textcolor{stringliteral}{'"{}'}):\ \textcolor{stringliteral}{'\&quot;'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00034}00034\ \ \ \ \ ord(\textcolor{stringliteral}{"{}'"{}}):\ \textcolor{stringliteral}{'\&\#39;'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00035}00035\ \}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a37174304116f41735c443966188194ae}{00038}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a37174304116f41735c443966188194ae}{escape\_html}}(text,\ table=\_escape\_html\_table):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00039}00039\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Escape\ \&,\ <,\ >\ as\ well\ as\ single\ and\ double\ quotes\ for\ HTML."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{return}\ text.translate(table)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_aeeee14e8795ea13b3ee7aeb56345f547}{00043}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_aeeee14e8795ea13b3ee7aeb56345f547}{webify}}(color):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ color.startswith(\textcolor{stringliteral}{'calc'})\ \textcolor{keywordflow}{or}\ color.startswith(\textcolor{stringliteral}{'var'}):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'\#'}\ +\ color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00050}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_ab1ac0a60c1c8188d8afe5dc6e6344cc7}{00050}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_ab1ac0a60c1c8188d8afe5dc6e6344cc7}{\_get\_ttype\_class}}(ttype):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00051}00051\ \ \ \ \ fname\ =\ STANDARD\_TYPES.get(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{if}\ fname:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fname}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00054}00054\ \ \ \ \ aname\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{while}\ fname\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ aname\ =\ \textcolor{stringliteral}{'-\/'}\ +\ ttype[-\/1]\ +\ aname}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ ttype\ =\ ttype.parent}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ fname\ =\ STANDARD\_TYPES.get(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{return}\ fname\ +\ aname}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00062}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a6e2001f38b1fb3a5d424a169664f111f}{00062}}\ CSSFILE\_TEMPLATE\ =\ \textcolor{stringliteral}{'''\(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00063}00063\ \textcolor{stringliteral}{/*}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00064}00064\ \textcolor{stringliteral}{generated\ by\ Pygments\ <https://pygments.org/>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00065}00065\ \textcolor{stringliteral}{Copyright\ 2006-\/2023\ by\ the\ Pygments\ team.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00066}00066\ \textcolor{stringliteral}{Licensed\ under\ the\ BSD\ license,\ see\ LICENSE\ for\ details.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00067}00067\ \textcolor{stringliteral}{*/}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00068}00068\ \textcolor{stringliteral}{\%(styledefs)s}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00069}00069\ \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00071}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_a43d188818971924880db59977918d7f0}{00071}}\ DOC\_HEADER\ =\ \textcolor{stringliteral}{'''\(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00072}00072\ \textcolor{stringliteral}{<!DOCTYPE\ html\ PUBLIC\ "{}-\///W3C//DTD\ HTML\ 4.01//EN"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00073}00073\ \textcolor{stringliteral}{\ \ \ "{}http://www.w3.org/TR/html4/strict.dtd"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00074}00074\ \textcolor{stringliteral}{<!-\/-\/}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00075}00075\ \textcolor{stringliteral}{generated\ by\ Pygments\ <https://pygments.org/>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00076}00076\ \textcolor{stringliteral}{Copyright\ 2006-\/2023\ by\ the\ Pygments\ team.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00077}00077\ \textcolor{stringliteral}{Licensed\ under\ the\ BSD\ license,\ see\ LICENSE\ for\ details.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00078}00078\ \textcolor{stringliteral}{-\/-\/>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00079}00079\ \textcolor{stringliteral}{<html>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00080}00080\ \textcolor{stringliteral}{<head>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ <title>\%(title)s</title>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ <meta\ http-\/equiv="{}content-\/type"{}\ content="{}text/html;\ charset=\%(encoding)s"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00083}00083\ \textcolor{stringliteral}{\ \ <style\ type="{}text/css"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00084}00084\ \textcolor{stringliteral}{'''}\ +\ CSSFILE\_TEMPLATE\ +\ \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ </style>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00086}00086\ \textcolor{stringliteral}{</head>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00087}00087\ \textcolor{stringliteral}{<body>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00088}00088\ \textcolor{stringliteral}{<h2>\%(title)s</h2>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00089}00089\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00090}00090\ \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00092}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_ac81d78f5abb5812589cdb53317dfbeb7}{00092}}\ DOC\_HEADER\_EXTERNALCSS\ =\ \textcolor{stringliteral}{'''\(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00093}00093\ \textcolor{stringliteral}{<!DOCTYPE\ html\ PUBLIC\ "{}-\///W3C//DTD\ HTML\ 4.01//EN"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ "{}http://www.w3.org/TR/html4/strict.dtd"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00095}00095\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00096}00096\ \textcolor{stringliteral}{<html>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00097}00097\ \textcolor{stringliteral}{<head>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00098}00098\ \textcolor{stringliteral}{\ \ <title>\%(title)s</title>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00099}00099\ \textcolor{stringliteral}{\ \ <meta\ http-\/equiv="{}content-\/type"{}\ content="{}text/html;\ charset=\%(encoding)s"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00100}00100\ \textcolor{stringliteral}{\ \ <link\ rel="{}stylesheet"{}\ href="{}\%(cssfile)s"{}\ type="{}text/css"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00101}00101\ \textcolor{stringliteral}{</head>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00102}00102\ \textcolor{stringliteral}{<body>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00103}00103\ \textcolor{stringliteral}{<h2>\%(title)s</h2>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00104}00104\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00105}00105\ \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00107}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_ab68f6422ea15716074037101e58b56cf}{00107}}\ DOC\_FOOTER\ =\ \textcolor{stringliteral}{'''\(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00108}00108\ \textcolor{stringliteral}{</body>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00109}00109\ \textcolor{stringliteral}{</html>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00110}00110\ \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00113}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00113}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{HtmlFormatter}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter}{Formatter}}):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00114}00114\ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ Format\ tokens\ as\ HTML\ 4\ \`{}\`{}<span>\`{}\`{}\ tags.\ By\ default,\ the\ content\ is\ enclosed}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ \ \ in\ a\ \`{}\`{}<pre>\`{}\`{}\ tag,\ itself\ wrapped\ in\ a\ \`{}\`{}<div>\`{}\`{}\ tag\ (but\ see\ the\ \`{}nowrap\`{}\ option).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00117}00117\ \textcolor{stringliteral}{\ \ \ \ The\ \`{}\`{}<div>\`{}\`{}'s\ CSS\ class\ can\ be\ set\ by\ the\ \`{}cssclass\`{}\ option.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00118}00118\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ If\ the\ \`{}linenos\`{}\ option\ is\ set\ to\ \`{}\`{}"{}table"{}\`{}\`{},\ the\ \`{}\`{}<pre>\`{}\`{}\ is}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00120}00120\ \textcolor{stringliteral}{\ \ \ \ additionally\ wrapped\ inside\ a\ \`{}\`{}<table>\`{}\`{}\ which\ has\ one\ row\ and\ two}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ cells:\ one\ containing\ the\ line\ numbers\ and\ one\ containing\ the\ code.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00122}00122\ \textcolor{stringliteral}{\ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00123}00123\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00124}00124\ \textcolor{stringliteral}{\ \ \ \ ..\ sourcecode::\ html}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00125}00125\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ <div\ class="{}highlight"{}\ >}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ <table><tr>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ <td\ class="{}linenos"{}\ title="{}click\ to\ toggle"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ onclick="{}with\ (this.firstChild.style)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ display\ =\ (display\ ==\ '')\ ?\ 'none'\ :\ ''\ \}"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ <pre>1}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ 2</pre>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ </td>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ <td\ class="{}code"{}>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ <pre><span\ class="{}Ke"{}>def\ </span><span\ class="{}NaFu"{}>foo</span>(bar):}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ <span\ class="{}Ke"{}>pass</span>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ </pre>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ </td>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ </tr></table></div>}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00140}00140\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ (whitespace\ added\ to\ improve\ clarity).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00142}00142\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ A\ list\ of\ lines\ can\ be\ specified\ using\ the\ \`{}hl\_lines\`{}\ option\ to\ make\ these}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ lines\ highlighted\ (as\ of\ Pygments\ 0.11).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00145}00145\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ With\ the\ \`{}full\`{}\ option,\ a\ complete\ HTML\ 4\ document\ is\ output,\ including}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00147}00147\ \textcolor{stringliteral}{\ \ \ \ the\ style\ definitions\ inside\ a\ \`{}\`{}<style>\`{}\`{}\ tag,\ or\ in\ a\ separate\ file\ if}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00148}00148\ \textcolor{stringliteral}{\ \ \ \ the\ \`{}cssfile\`{}\ option\ is\ given.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00149}00149\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ When\ \`{}tagsfile\`{}\ is\ set\ to\ the\ path\ of\ a\ ctags\ index\ file,\ it\ is\ used\ to}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ generate\ hyperlinks\ from\ names\ to\ their\ definition.\ \ You\ must\ enable}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00152}00152\ \textcolor{stringliteral}{\ \ \ \ \`{}lineanchors\`{}\ and\ run\ ctags\ with\ the\ \`{}-\/n\`{}\ option\ for\ this\ to\ work.\ \ The}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00153}00153\ \textcolor{stringliteral}{\ \ \ \ \`{}python-\/ctags\`{}\ module\ from\ PyPI\ must\ be\ installed\ to\ use\ this\ feature;}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00154}00154\ \textcolor{stringliteral}{\ \ \ \ otherwise\ a\ \`{}RuntimeError\`{}\ will\ be\ raised.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00155}00155\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00156}00156\ \textcolor{stringliteral}{\ \ \ \ The\ \`{}get\_style\_defs(arg='')\`{}\ method\ of\ a\ \`{}HtmlFormatter\`{}\ returns\ a\ string}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00157}00157\ \textcolor{stringliteral}{\ \ \ \ containing\ CSS\ rules\ for\ the\ CSS\ classes\ used\ by\ the\ formatter.\ The}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ \ \ argument\ \`{}arg\`{}\ can\ be\ used\ to\ specify\ additional\ CSS\ selectors\ that}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00159}00159\ \textcolor{stringliteral}{\ \ \ \ are\ prepended\ to\ the\ classes.\ A\ call\ \`{}fmter.get\_style\_defs('td\ .code')\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ \ \ would\ result\ in\ the\ following\ CSS\ classes:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00161}00161\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00162}00162\ \textcolor{stringliteral}{\ \ \ \ ..\ sourcecode::\ css}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00163}00163\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00164}00164\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ td\ .code\ .kw\ \{\ font-\/weight:\ bold;\ color:\ \#00FF00\ \}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00165}00165\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ td\ .code\ .cm\ \{\ color:\ \#999999\ \}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00166}00166\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00167}00167\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00168}00168\ \textcolor{stringliteral}{\ \ \ \ If\ you\ have\ Pygments\ 0.6\ or\ higher,\ you\ can\ also\ pass\ a\ list\ or\ tuple\ to\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ \ \ \`{}get\_style\_defs()\`{}\ method\ to\ request\ multiple\ prefixes\ for\ the\ tokens:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00170}00170\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ ..\ sourcecode::\ python}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00172}00172\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ formatter.get\_style\_defs(['div.syntax\ pre',\ 'pre.syntax'])}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00174}00174\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ The\ output\ would\ then\ look\ like\ this:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00176}00176\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ ..\ sourcecode::\ css}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00178}00178\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ div.syntax\ pre\ .kw,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ pre.syntax\ .kw\ \{\ font-\/weight:\ bold;\ color:\ \#00FF00\ \}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ div.syntax\ pre\ .cm,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00182}00182\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ pre.syntax\ .cm\ \{\ color:\ \#999999\ \}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00183}00183\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00184}00184\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00185}00185\ \textcolor{stringliteral}{\ \ \ \ Additional\ options\ accepted:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00186}00186\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ \`{}nowrap\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ \`{}\`{}True\`{}\`{},\ don't\ add\ a\ \`{}\`{}<pre>\`{}\`{}\ and\ a\ \`{}\`{}<div>\`{}\`{}\ tag}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00189}00189\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ around\ the\ tokens.\ This\ disables\ most\ other\ options\ (default:\ \`{}\`{}False\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00190}00190\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00191}00191\ \textcolor{stringliteral}{\ \ \ \ \`{}full\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00192}00192\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Tells\ the\ formatter\ to\ output\ a\ "{}full"{}\ document,\ i.e.\ a\ complete}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00193}00193\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ self-\/contained\ document\ (default:\ \`{}\`{}False\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00194}00194\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ \ \ \`{}title\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ \`{}full\`{}\ is\ true,\ the\ title\ that\ should\ be\ used\ to\ caption\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ document\ (default:\ \`{}\`{}''\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00198}00198\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00199}00199\ \textcolor{stringliteral}{\ \ \ \ \`{}style\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ style\ to\ use,\ can\ be\ a\ string\ or\ a\ Style\ subclass\ (default:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00201}00201\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}'default'\`{}\`{}).\ This\ option\ has\ no\ effect\ if\ the\ \`{}cssfile\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00202}00202\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ \`{}noclobber\_cssfile\`{}\ option\ are\ given\ and\ the\ file\ specified\ in}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00203}00203\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}cssfile\`{}\ exists.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00204}00204\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00205}00205\ \textcolor{stringliteral}{\ \ \ \ \`{}noclasses\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ true,\ token\ \`{}\`{}<span>\`{}\`{}\ tags\ (as\ well\ as\ line\ number\ elements)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ not\ use\ CSS\ classes,\ but\ inline\ styles.\ This\ is\ not\ recommended}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ larger\ pieces\ of\ code\ since\ it\ increases\ output\ size\ by\ quite\ a\ bit}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ (default:\ \`{}\`{}False\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00210}00210\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00211}00211\ \textcolor{stringliteral}{\ \ \ \ \`{}classprefix\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Since\ the\ token\ types\ use\ relatively\ short\ class\ names,\ they\ may\ clash}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ with\ some\ of\ your\ own\ class\ names.\ In\ this\ case\ you\ can\ use\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00214}00214\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}classprefix\`{}\ option\ to\ give\ a\ string\ to\ prepend\ to\ all\ Pygments-\/generated}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ CSS\ class\ names\ for\ token\ types.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00216}00216\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Note\ that\ this\ option\ also\ affects\ the\ output\ of\ \`{}get\_style\_defs()\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00217}00217\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00218}00218\ \textcolor{stringliteral}{\ \ \ \ \`{}cssclass\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00219}00219\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ CSS\ class\ for\ the\ wrapping\ \`{}\`{}<div>\`{}\`{}\ tag\ (default:\ \`{}\`{}'highlight'\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ you\ set\ this\ option,\ the\ default\ selector\ for\ \`{}get\_style\_defs()\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ be\ this\ class.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00222}00222\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00223}00223\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.9}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00224}00224\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ If\ you\ select\ the\ \`{}\`{}'table'\`{}\`{}\ line\ numbers,\ the\ wrapping\ table\ will}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00225}00225\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ have\ a\ CSS\ class\ of\ this\ string\ plus\ \`{}\`{}'table'\`{}\`{},\ the\ default\ is}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00226}00226\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ accordingly\ \`{}\`{}'highlighttable'\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00227}00227\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00228}00228\ \textcolor{stringliteral}{\ \ \ \ \`{}cssstyles\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00229}00229\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Inline\ CSS\ styles\ for\ the\ wrapping\ \`{}\`{}<div>\`{}\`{}\ tag\ (default:\ \`{}\`{}''\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00230}00230\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00231}00231\ \textcolor{stringliteral}{\ \ \ \ \`{}prestyles\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00232}00232\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Inline\ CSS\ styles\ for\ the\ \`{}\`{}<pre>\`{}\`{}\ tag\ (default:\ \`{}\`{}''\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00233}00233\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00234}00234\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.11}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00235}00235\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ \ \ \`{}cssfile\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00237}00237\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ the\ \`{}full\`{}\ option\ is\ true\ and\ this\ option\ is\ given,\ it\ must\ be\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00238}00238\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ name\ of\ an\ external\ file.\ If\ the\ filename\ does\ not\ include\ an\ absolute}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00239}00239\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ path,\ the\ file's\ path\ will\ be\ assumed\ to\ be\ relative\ to\ the\ main\ output}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00240}00240\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ file's\ path,\ if\ the\ latter\ can\ be\ found.\ The\ stylesheet\ is\ then\ written}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00241}00241\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ to\ this\ file\ instead\ of\ the\ HTML\ file.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00242}00242\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.6}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00244}00244\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ \ \ \`{}noclobber\_cssfile\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ \`{}cssfile\`{}\ is\ given\ and\ the\ specified\ file\ exists,\ the\ css\ file\ will}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00247}00247\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ not\ be\ overwritten.\ This\ allows\ the\ use\ of\ the\ \`{}full\`{}\ option\ in}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00248}00248\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ combination\ with\ a\ user\ specified\ css\ file.\ Default\ is\ \`{}\`{}False\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00249}00249\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00250}00250\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 1.1}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00251}00251\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00252}00252\ \textcolor{stringliteral}{\ \ \ \ \`{}linenos\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ \`{}\`{}'table'\`{}\`{},\ output\ line\ numbers\ as\ a\ table\ with\ two\ cells,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00254}00254\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ one\ containing\ the\ line\ numbers,\ the\ other\ the\ whole\ code.\ \ This\ is}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ copy-\/and-\/paste-\/friendly,\ but\ may\ cause\ alignment\ problems\ with\ some}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ browsers\ or\ fonts.\ \ If\ set\ to\ \`{}\`{}'inline'\`{}\`{},\ the\ line\ numbers\ will\ be}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00257}00257\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ integrated\ in\ the\ \`{}\`{}<pre>\`{}\`{}\ tag\ that\ contains\ the\ code\ (that\ setting}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00258}00258\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ *new\ in\ Pygments\ 0.8*).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00259}00259\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00260}00260\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ For\ compatibility\ with\ Pygments\ 0.7\ and\ earlier,\ every\ true\ value}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00261}00261\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ except\ \`{}\`{}'inline'\`{}\`{}\ means\ the\ same\ as\ \`{}\`{}'table'\`{}\`{}\ (in\ particular,\ that}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00262}00262\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ means\ also\ \`{}\`{}True\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00263}00263\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00264}00264\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ default\ value\ is\ \`{}\`{}False\`{}\`{},\ which\ means\ no\ line\ numbers\ at\ all.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00265}00265\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00266}00266\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ **Note:**\ with\ the\ default\ ("{}table"{})\ line\ number\ mechanism,\ the\ line}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00267}00267\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ numbers\ and\ code\ can\ have\ different\ line\ heights\ in\ Internet\ Explorer}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00268}00268\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ unless\ you\ give\ the\ enclosing\ \`{}\`{}<pre>\`{}\`{}\ tags\ an\ explicit\ \`{}\`{}line-\/height\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00269}00269\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ CSS\ property\ (you\ get\ the\ default\ line\ spacing\ with\ \`{}\`{}line-\/height:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00270}00270\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 125\%\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00271}00271\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00272}00272\ \textcolor{stringliteral}{\ \ \ \ \`{}hl\_lines\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00273}00273\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Specify\ a\ list\ of\ lines\ to\ be\ highlighted.\ The\ line\ numbers\ are\ always}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00274}00274\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ relative\ to\ the\ input\ (i.e.\ the\ first\ line\ is\ line\ 1)\ and\ are}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00275}00275\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ independent\ of\ \`{}linenostart\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00276}00276\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00277}00277\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.11}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00278}00278\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00279}00279\ \textcolor{stringliteral}{\ \ \ \ \`{}linenostart\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00280}00280\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ line\ number\ for\ the\ first\ line\ (default:\ \`{}\`{}1\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00281}00281\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00282}00282\ \textcolor{stringliteral}{\ \ \ \ \`{}linenostep\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00283}00283\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ a\ number\ n\ >\ 1,\ only\ every\ nth\ line\ number\ is\ printed.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00284}00284\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00285}00285\ \textcolor{stringliteral}{\ \ \ \ \`{}linenospecial\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00286}00286\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ a\ number\ n\ >\ 0,\ every\ nth\ line\ number\ is\ given\ the\ CSS}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00287}00287\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ class\ \`{}\`{}"{}special"{}\`{}\`{}\ (default:\ \`{}\`{}0\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00288}00288\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00289}00289\ \textcolor{stringliteral}{\ \ \ \ \`{}nobackground\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00290}00290\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ \`{}\`{}True\`{}\`{},\ the\ formatter\ won't\ output\ the\ background\ color}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00291}00291\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ the\ wrapping\ element\ (this\ automatically\ defaults\ to\ \`{}\`{}False\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00292}00292\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ when\ there\ is\ no\ wrapping\ element\ [eg:\ no\ argument\ for\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00293}00293\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}get\_syntax\_defs\`{}\ method\ given])\ (default:\ \`{}\`{}False\`{}\`{}).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00294}00294\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00295}00295\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.6}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00296}00296\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00297}00297\ \textcolor{stringliteral}{\ \ \ \ \`{}lineseparator\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00298}00298\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ string\ is\ output\ between\ lines\ of\ code.\ It\ defaults\ to\ \`{}\`{}"{}\(\backslash\)n"{}\`{}\`{},}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00299}00299\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ which\ is\ enough\ to\ break\ a\ line\ inside\ \`{}\`{}<pre>\`{}\`{}\ tags,\ but\ you\ can}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00300}00300\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ e.g.\ set\ it\ to\ \`{}\`{}"{}<br>"{}\`{}\`{}\ to\ get\ HTML\ line\ breaks.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00301}00301\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00302}00302\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.7}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00303}00303\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00304}00304\ \textcolor{stringliteral}{\ \ \ \ \`{}lineanchors\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00305}00305\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ a\ nonempty\ string,\ e.g.\ \`{}\`{}foo\`{}\`{},\ the\ formatter\ will\ wrap\ each}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00306}00306\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ output\ line\ in\ an\ anchor\ tag\ with\ an\ \`{}\`{}id\`{}\`{}\ (and\ \`{}name\`{})\ of\ \`{}\`{}foo-\/linenumber\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00307}00307\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ allows\ easy\ linking\ to\ certain\ lines.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00308}00308\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00309}00309\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 0.9}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00310}00310\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00311}00311\ \textcolor{stringliteral}{\ \ \ \ \`{}linespans\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00312}00312\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ a\ nonempty\ string,\ e.g.\ \`{}\`{}foo\`{}\`{},\ the\ formatter\ will\ wrap\ each}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00313}00313\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ output\ line\ in\ a\ span\ tag\ with\ an\ \`{}\`{}id\`{}\`{}\ of\ \`{}\`{}foo-\/linenumber\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00314}00314\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ allows\ easy\ access\ to\ lines\ via\ javascript.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00315}00315\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00316}00316\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 1.6}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00317}00317\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00318}00318\ \textcolor{stringliteral}{\ \ \ \ \`{}anchorlinenos\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00319}00319\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ \`{}True\`{},\ will\ wrap\ line\ numbers\ in\ <a>\ tags.\ Used\ in}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00320}00320\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ combination\ with\ \`{}linenos\`{}\ and\ \`{}lineanchors\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00321}00321\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00322}00322\ \textcolor{stringliteral}{\ \ \ \ \`{}tagsfile\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00323}00323\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ set\ to\ the\ path\ of\ a\ ctags\ file,\ wrap\ names\ in\ anchor\ tags\ that}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00324}00324\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ link\ to\ their\ definitions.\ \`{}lineanchors\`{}\ should\ be\ used,\ and\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00325}00325\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ tags\ file\ should\ specify\ line\ numbers\ (see\ the\ \`{}-\/n\`{}\ option\ to\ ctags).}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00326}00326\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00327}00327\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 1.6}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00328}00328\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00329}00329\ \textcolor{stringliteral}{\ \ \ \ \`{}tagurlformat\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00330}00330\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ string\ formatting\ pattern\ used\ to\ generate\ links\ to\ ctags\ definitions.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00331}00331\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Available\ variables\ are\ \`{}\%(path)s\`{},\ \`{}\%(fname)s\`{}\ and\ \`{}\%(fext)s\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00332}00332\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Defaults\ to\ an\ empty\ string,\ resulting\ in\ just\ \`{}\#prefix-\/number\`{}\ links.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00333}00333\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00334}00334\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 1.6}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00335}00335\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00336}00336\ \textcolor{stringliteral}{\ \ \ \ \`{}filename\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00337}00337\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ string\ used\ to\ generate\ a\ filename\ when\ rendering\ \`{}\`{}<pre>\`{}\`{}\ blocks,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00338}00338\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ example\ if\ displaying\ source\ code.\ If\ \`{}linenos\`{}\ is\ set\ to}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00339}00339\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}'table'\`{}\`{}\ then\ the\ filename\ will\ be\ rendered\ in\ an\ initial\ row}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00340}00340\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ containing\ a\ single\ \`{}<th>\`{}\ which\ spans\ both\ columns.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00341}00341\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00342}00342\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 2.1}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00343}00343\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00344}00344\ \textcolor{stringliteral}{\ \ \ \ \`{}wrapcode\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00345}00345\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Wrap\ the\ code\ inside\ \`{}\`{}<pre>\`{}\`{}\ blocks\ using\ \`{}\`{}<code>\`{}\`{},\ as\ recommended}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00346}00346\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ by\ the\ HTML5\ specification.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00347}00347\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00348}00348\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 2.4}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00349}00349\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00350}00350\ \textcolor{stringliteral}{\ \ \ \ \`{}debug\_token\_types\`{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00351}00351\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Add\ \`{}\`{}title\`{}\`{}\ attributes\ to\ all\ token\ \`{}\`{}<span>\`{}\`{}\ tags\ that\ show\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00352}00352\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ name\ of\ the\ token.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00353}00353\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00354}00354\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ versionadded::\ 2.10}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00355}00355\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00356}00356\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00357}00357\ \textcolor{stringliteral}{\ \ \ \ **Subclassing\ the\ HTML\ formatter**}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00358}00358\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00359}00359\ \textcolor{stringliteral}{\ \ \ \ ..\ versionadded::\ 0.7}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00360}00360\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00361}00361\ \textcolor{stringliteral}{\ \ \ \ The\ HTML\ formatter\ is\ now\ built\ in\ a\ way\ that\ allows\ easy\ subclassing,\ thus}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00362}00362\ \textcolor{stringliteral}{\ \ \ \ customizing\ the\ output\ HTML\ code.\ The\ \`{}format()\`{}\ method\ calls}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00363}00363\ \textcolor{stringliteral}{\ \ \ \ \`{}self.\_format\_lines()\`{}\ which\ returns\ a\ generator\ that\ yields\ tuples\ of\ \`{}\`{}(1,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00364}00364\ \textcolor{stringliteral}{\ \ \ \ line)\`{}\`{},\ where\ the\ \`{}\`{}1\`{}\`{}\ indicates\ that\ the\ \`{}\`{}line\`{}\`{}\ is\ a\ line\ of\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00365}00365\ \textcolor{stringliteral}{\ \ \ \ formatted\ source\ code.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00366}00366\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00367}00367\ \textcolor{stringliteral}{\ \ \ \ If\ the\ \`{}nowrap\`{}\ option\ is\ set,\ the\ generator\ is\ the\ iterated\ over\ and\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00368}00368\ \textcolor{stringliteral}{\ \ \ \ resulting\ HTML\ is\ output.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00369}00369\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00370}00370\ \textcolor{stringliteral}{\ \ \ \ Otherwise,\ \`{}format()\`{}\ calls\ \`{}self.wrap()\`{},\ which\ wraps\ the\ generator\ with}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00371}00371\ \textcolor{stringliteral}{\ \ \ \ other\ generators.\ These\ may\ add\ some\ HTML\ code\ to\ the\ one\ generated\ by}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00372}00372\ \textcolor{stringliteral}{\ \ \ \ \`{}\_format\_lines()\`{},\ either\ by\ modifying\ the\ lines\ generated\ by\ the\ latter,}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00373}00373\ \textcolor{stringliteral}{\ \ \ \ then\ yielding\ them\ again\ with\ \`{}\`{}(1,\ line)\`{}\`{},\ and/or\ by\ yielding\ other\ HTML}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00374}00374\ \textcolor{stringliteral}{\ \ \ \ code\ before\ or\ after\ the\ lines,\ with\ \`{}\`{}(0,\ html)\`{}\`{}.\ The\ distinction\ between}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00375}00375\ \textcolor{stringliteral}{\ \ \ \ source\ lines\ and\ other\ code\ makes\ it\ possible\ to\ wrap\ the\ generator\ multiple}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00376}00376\ \textcolor{stringliteral}{\ \ \ \ times.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00377}00377\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00378}00378\ \textcolor{stringliteral}{\ \ \ \ The\ default\ \`{}wrap()\`{}\ implementation\ adds\ a\ \`{}\`{}<div>\`{}\`{}\ and\ a\ \`{}\`{}<pre>\`{}\`{}\ tag.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00379}00379\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00380}00380\ \textcolor{stringliteral}{\ \ \ \ A\ custom\ \`{}HtmlFormatter\`{}\ subclass\ could\ look\ like\ this:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00381}00381\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00382}00382\ \textcolor{stringliteral}{\ \ \ \ ..\ sourcecode::\ python}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00383}00383\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00384}00384\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ class\ CodeHtmlFormatter(HtmlFormatter):}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00385}00385\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00386}00386\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ def\ wrap(self,\ source,\ *,\ include\_div):}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00387}00387\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ self.\_wrap\_code(source)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00388}00388\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00389}00389\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ def\ \_wrap\_code(self,\ source):}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00390}00390\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yield\ 0,\ '<code>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00391}00391\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ i,\ t\ in\ source:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00392}00392\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ i\ ==\ 1:}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00393}00393\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ it's\ a\ line\ of\ formatted\ code}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00394}00394\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t\ +=\ '<br>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00395}00395\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yield\ i,\ t}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00396}00396\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yield\ 0,\ '</code>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00397}00397\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00398}00398\ \textcolor{stringliteral}{\ \ \ \ This\ results\ in\ wrapping\ the\ formatted\ lines\ with\ a\ \`{}\`{}<code>\`{}\`{}\ tag,\ where\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00399}00399\ \textcolor{stringliteral}{\ \ \ \ source\ lines\ are\ broken\ using\ \`{}\`{}<br>\`{}\`{}\ tags.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00400}00400\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00401}00401\ \textcolor{stringliteral}{\ \ \ \ After\ calling\ \`{}wrap()\`{},\ the\ \`{}format()\`{}\ method\ also\ adds\ the\ "{}line\ numbers"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00402}00402\ \textcolor{stringliteral}{\ \ \ \ and/or\ "{}full\ document"{}\ wrappers\ if\ the\ respective\ options\ are\ set.\ Then,\ all}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00403}00403\ \textcolor{stringliteral}{\ \ \ \ HTML\ yielded\ by\ the\ wrapped\ generator\ is\ output.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00404}00404\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00406}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00406}}\ \ \ \ \ name\ =\ \textcolor{stringliteral}{'HTML'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00407}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00407}}\ \ \ \ \ aliases\ =\ [\textcolor{stringliteral}{'html'}]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00408}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00408}}\ \ \ \ \ filenames\ =\ [\textcolor{stringliteral}{'*.html'},\ \textcolor{stringliteral}{'*.htm'}]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00410}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a58552cfd41aaa780a4c104c4a2c75b67}{00410}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a58552cfd41aaa780a4c104c4a2c75b67}{\_\_init\_\_}}(self,\ **options):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ Formatter.\_\_init\_\_(self,\ **options)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00412}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00412}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_a051e403214cb6872ad3fe4e50302a6ee}{title}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_a051e403214cb6872ad3fe4e50302a6ee}{title}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00413}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab9110301592767cb066bd5e780f46fd3}{00413}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab9110301592767cb066bd5e780f46fd3}{nowrap}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'nowrap'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00414}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{00414}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'noclasses'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00415}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a84d0092a2526357be1c97bec31f2ae5b}{00415}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a84d0092a2526357be1c97bec31f2ae5b}{classprefix}}\ =\ options.get(\textcolor{stringliteral}{'classprefix'},\ \textcolor{stringliteral}{''})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00416}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9938add5f7595eb757ff3cae666786f}{00416}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9938add5f7595eb757ff3cae666786f}{cssclass}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'cssclass'},\ \textcolor{stringliteral}{'highlight'}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00417}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae9ac60040fd38cbb8e1536dfe624a94c}{00417}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae9ac60040fd38cbb8e1536dfe624a94c}{cssstyles}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'cssstyles'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00418}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6ea9924a03241313a5583f3858f81db6}{00418}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6ea9924a03241313a5583f3858f81db6}{prestyles}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'prestyles'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00419}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{00419}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'cssfile'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00420}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a62a38f050450c8d7eca7c951d46821f8}{00420}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a62a38f050450c8d7eca7c951d46821f8}{noclobber\_cssfile}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'noclobber\_cssfile'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00421}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a799e3305d5ffb3a7d38cf1c7657cea9f}{00421}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a799e3305d5ffb3a7d38cf1c7657cea9f}{tagsfile}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'tagsfile'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00422}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4abd84b412e8f25a54cccff71bdba9bb}{00422}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4abd84b412e8f25a54cccff71bdba9bb}{tagurlformat}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'tagurlformat'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00423}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{00423}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{filename}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(options.get(\textcolor{stringliteral}{'filename'},\ \textcolor{stringliteral}{''}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00424}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8b0dbce8babbb95c4013963fa861958d}{00424}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8b0dbce8babbb95c4013963fa861958d}{wrapcode}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'wrapcode'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00425}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a595d41f3828fd2e2a01b04e3dd4ff433}{00425}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a595d41f3828fd2e2a01b04e3dd4ff433}{span\_element\_openers}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00426}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a09c3d3ab58b0e911d2eb49b04913d1e5}{00426}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a09c3d3ab58b0e911d2eb49b04913d1e5}{debug\_token\_types}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'debug\_token\_types'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a799e3305d5ffb3a7d38cf1c7657cea9f}{tagsfile}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ctags:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{'The\ "{}ctags"{}\ package\ must\ to\ be\ installed\ '}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'to\ be\ able\ to\ use\ the\ "{}tagsfile"{}\ feature.'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00432}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a96cf755033ed38b5e06b2c1cc7e485db}{00432}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a96cf755033ed38b5e06b2c1cc7e485db}{\_ctags}}\ =\ ctags.CTags(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a799e3305d5ffb3a7d38cf1c7657cea9f}{tagsfile}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ linenos\ =\ options.get(\textcolor{stringliteral}{'linenos'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ linenos\ ==\ \textcolor{stringliteral}{'inline'}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00436}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{00436}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ =\ 2}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ linenos:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ compatibility\ with\ <=\ 0.7}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ =\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ =\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00442}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{00442}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{linenostart}}\ =\ abs(get\_int\_opt(options,\ \textcolor{stringliteral}{'linenostart'},\ 1))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00443}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a017ecf4e1dfab1a9616f2b6eef01e45b}{00443}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a017ecf4e1dfab1a9616f2b6eef01e45b}{linenostep}}\ =\ abs(get\_int\_opt(options,\ \textcolor{stringliteral}{'linenostep'},\ 1))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00444}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a437032e1e64439cfbf4c0d8b4553fb22}{00444}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a437032e1e64439cfbf4c0d8b4553fb22}{linenospecial}}\ =\ abs(get\_int\_opt(options,\ \textcolor{stringliteral}{'linenospecial'},\ 0))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00445}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7440f455c8f185ea33d4884749441fc6}{00445}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7440f455c8f185ea33d4884749441fc6}{nobackground}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'nobackground'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00446}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afdbe6cb3957d92111b30cb4d3bdd9dde}{00446}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afdbe6cb3957d92111b30cb4d3bdd9dde}{lineseparator}}\ =\ options.get(\textcolor{stringliteral}{'lineseparator'},\ \textcolor{stringliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00447}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{00447}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}}\ =\ options.get(\textcolor{stringliteral}{'lineanchors'},\ \textcolor{stringliteral}{''})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00448}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{00448}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{linespans}}\ =\ options.get(\textcolor{stringliteral}{'linespans'},\ \textcolor{stringliteral}{''})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00449}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af3774e6480912caea1064405ca80acf0}{00449}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af3774e6480912caea1064405ca80acf0}{anchorlinenos}}\ =\ get\_bool\_opt(options,\ \textcolor{stringliteral}{'anchorlinenos'},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00450}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7e8f360072b50f598abd3d98f7a5d21c}{00450}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7e8f360072b50f598abd3d98f7a5d21c}{hl\_lines}}\ =\ set()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00451}00451\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ lineno\ \textcolor{keywordflow}{in}\ get\_list\_opt(options,\ \textcolor{stringliteral}{'hl\_lines'},\ []):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7e8f360072b50f598abd3d98f7a5d21c}{hl\_lines}}.add(int(lineno))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a07c626ff4269da1ea1b38e8ffaf8aa22}{\_create\_stylesheet}}()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00458}00458\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00459}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a81958dca1ad1ecbf793bb76a187c6d3a}{00459}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a81958dca1ad1ecbf793bb76a187c6d3a}{\_get\_css\_class}}(self,\ ttype):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ css\ class\ of\ this\ token\ type\ prefixed\ with}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00461}00461\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ classprefix\ option."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ ttypeclass\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_ab1ac0a60c1c8188d8afe5dc6e6344cc7}{\_get\_ttype\_class}}(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ttypeclass:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a84d0092a2526357be1c97bec31f2ae5b}{classprefix}}\ +\ ttypeclass}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00467}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5285672da41e358f28e927e6e6257cb0}{00467}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5285672da41e358f28e927e6e6257cb0}{\_get\_css\_classes}}(self,\ ttype):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ CSS\ classes\ of\ this\ token\ type\ prefixed\ with\ the\ classprefix\ option."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ cls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a81958dca1ad1ecbf793bb76a187c6d3a}{\_get\_css\_class}}(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ttype\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ STANDARD\_TYPES:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ ttype\ =\ ttype.parent}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ cls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a81958dca1ad1ecbf793bb76a187c6d3a}{\_get\_css\_class}}(ttype)\ +\ \textcolor{stringliteral}{'\ '}\ +\ cls}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00475}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9a25e0ab4d65a543330c025b8f1d4a2b}{00475}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9a25e0ab4d65a543330c025b8f1d4a2b}{\_get\_css\_inline\_styles}}(self,\ ttype):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ the\ inline\ CSS\ styles\ for\ this\ token\ type."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ cclass\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{ttype2class}}.get(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ cclass\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ ttype\ =\ ttype.parent}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ cclass\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{ttype2class}}.get(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cclass\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00483}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a07c626ff4269da1ea1b38e8ffaf8aa22}{00483}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a07c626ff4269da1ea1b38e8ffaf8aa22}{\_create\_stylesheet}}(self):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ t2c\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{ttype2class}}\ =\ \{Token:\ \textcolor{stringliteral}{''}\}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ c2s\ =\ self.class2style\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00486}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00486}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ ttype,\ ndef\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ name\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a81958dca1ad1ecbf793bb76a187c6d3a}{\_get\_css\_class}}(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'color'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'color:\ \%s;\ '}\ \%\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_aeeee14e8795ea13b3ee7aeb56345f547}{webify}}(ndef[\textcolor{stringliteral}{'color'}])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'bold'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'font-\/weight:\ bold;\ '}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'italic'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'font-\/style:\ italic;\ '}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'underline'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'text-\/decoration:\ underline;\ '}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'bgcolor'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'background-\/color:\ \%s;\ '}\ \%\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_aeeee14e8795ea13b3ee7aeb56345f547}{webify}}(ndef[\textcolor{stringliteral}{'bgcolor'}])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ndef[\textcolor{stringliteral}{'border'}]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ +=\ \textcolor{stringliteral}{'border:\ 1px\ solid\ \%s;\ '}\ \%\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html_aeeee14e8795ea13b3ee7aeb56345f547}{webify}}(ndef[\textcolor{stringliteral}{'border'}])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t2c[ttype]\ =\ name}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ save\ len(ttype)\ to\ enable\ ordering\ the\ styles\ by}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hierarchy\ (necessary\ for\ CSS\ cascading\ rules!)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c2s[name]\ =\ (style[:-\/2],\ ttype,\ len(ttype))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00507}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a84c4c74e596b7c21549c82ddc163c95b}{00507}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a84c4c74e596b7c21549c82ddc163c95b}{get\_style\_defs}}(self,\ arg=None):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00509}00509\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Return\ CSS\ style\ definitions\ for\ the\ classes\ produced\ by\ the\ current}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00510}00510\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ highlighting\ style.\ \`{}\`{}arg\`{}\`{}\ can\ be\ a\ string\ or\ list\ of\ selectors\ to}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00511}00511\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ insert\ before\ the\ token\ type\ classes.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00512}00512\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ style\_lines\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ style\_lines.extend(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ade2ab61afbcab17e1a03f8f3be1d6227}{get\_linenos\_style\_defs}}())}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ style\_lines.extend(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a47f89409ef351ace670f178a2e95f794}{get\_background\_style\_defs}}(arg))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ style\_lines.extend(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8a7e9c7e994a5d5c80756962851071c4}{get\_token\_style\_defs}}(arg))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00519}00519\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'\(\backslash\)n'}.join(style\_lines)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00521}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8a7e9c7e994a5d5c80756962851071c4}{00521}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8a7e9c7e994a5d5c80756962851071c4}{get\_token\_style\_defs}}(self,\ arg=None):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ prefix\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6c2144637f5564384ae96c71b3cf2139}{get\_css\_prefix}}(arg)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ styles\ =\ [}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ (level,\ ttype,\ cls,\ style)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cls,\ (style,\ ttype,\ level)\ \textcolor{keywordflow}{in}\ self.class2style.items()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cls\ \textcolor{keywordflow}{and}\ style}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ styles.sort()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ lines\ =\ [}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'\%s\ \{\ \%s\ \}\ /*\ \%s\ */'}\ \%\ (prefix(cls),\ style,\ repr(ttype)[6:])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (level,\ ttype,\ cls,\ style)\ \textcolor{keywordflow}{in}\ styles}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lines}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00538}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a47f89409ef351ace670f178a2e95f794}{00538}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a47f89409ef351ace670f178a2e95f794}{get\_background\_style\_defs}}(self,\ arg=None):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00539}00539\ \ \ \ \ \ \ \ \ prefix\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6c2144637f5564384ae96c71b3cf2139}{get\_css\_prefix}}(arg)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ bg\_color\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.background\_color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ hl\_color\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.highlight\_color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00542}00542\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ lines\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ arg\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7440f455c8f185ea33d4884749441fc6}{nobackground}}\ \textcolor{keywordflow}{and}\ bg\_color\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ text\_style\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00547}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{00547}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ Text\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{ttype2class}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text\_style\ =\ \textcolor{stringliteral}{'\ '}\ +\ self.class2style[self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a37987ef2bf14185e127e0a1326ea3d03}{ttype2class}}[Text]][0]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ lines.insert(}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ \textcolor{stringliteral}{'\%s\{\ background:\ \%s;\%s\ \}'}\ \%\ (}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prefix(\textcolor{stringliteral}{''}),\ bg\_color,\ text\_style}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hl\_color\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ lines.insert(}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ \textcolor{stringliteral}{'\%s\ \{\ background-\/color:\ \%s\ \}'}\ \%\ (prefix(\textcolor{stringliteral}{'hll'}),\ hl\_color)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lines}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00561}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ade2ab61afbcab17e1a03f8f3be1d6227}{00561}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ade2ab61afbcab17e1a03f8f3be1d6227}{get\_linenos\_style\_defs}}(self):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ lines\ =\ [}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'pre\ \{\ \%s\ \}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a390b7dcac99e16169ea00fafa07b8e2f}{\_pre\_style}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'td.linenos\ .normal\ \{\ \%s\ \}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{\_linenos\_style}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'span.linenos\ \{\ \%s\ \}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{\_linenos\_style}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'td.linenos\ .special\ \{\ \%s\ \}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{\_linenos\_special\_style}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'span.linenos.special\ \{\ \%s\ \}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{\_linenos\_special\_style}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00569}00569\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00570}00570\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lines}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00572}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6c2144637f5564384ae96c71b3cf2139}{00572}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6c2144637f5564384ae96c71b3cf2139}{get\_css\_prefix}}(self,\ arg):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ arg\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ arg\ =\ (\textcolor{stringliteral}{'cssclass'}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_a02eacfd40be9042ceb0f07547365203d}{options}}\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'.'}+self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9938add5f7595eb757ff3cae666786f}{cssclass}}\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{''})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(arg,\ str):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ args\ =\ [arg]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00577}00577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ args\ =\ list(arg)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }prefix(cls):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cls:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cls\ =\ \textcolor{stringliteral}{'.'}\ +\ cls}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ arg\ \textcolor{keywordflow}{in}\ args:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp.append((arg\ \textcolor{keywordflow}{and}\ arg\ +\ \textcolor{stringliteral}{'\ '}\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{''})\ +\ cls)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{',\ '}.join(tmp)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ prefix}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00590}00590\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00591}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_acfab09a7c406df6a750314ce0d024ce6}{00591}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a390b7dcac99e16169ea00fafa07b8e2f}{\_pre\_style}}(self):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'line-\/height:\ 125\%;'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00594}00594\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00595}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{00595}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{\_linenos\_style}}(self):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00596}00596\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'color:\ \%s;\ background-\/color:\ \%s;\ padding-\/left:\ 5px;\ padding-\/right:\ 5px;'}\ \%\ (}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.line\_number\_color,}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.line\_number\_background\_color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00599}00599\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00601}00601\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00602}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{00602}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{\_linenos\_special\_style}}(self):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00603}00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{'color:\ \%s;\ background-\/color:\ \%s;\ padding-\/left:\ 5px;\ padding-\/right:\ 5px;'}\ \%\ (}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.line\_number\_special\_color,}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.line\_number\_special\_background\_color}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00608}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{00608}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afd61582913d4b32cef9f9e097a787054}{\_decodeifneeded}}(self,\ value):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(value,\ bytes):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00610}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00610}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_ae9a6322071c15eeb3a13271e7bf74899}{encoding}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value.decode(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_ae9a6322071c15eeb3a13271e7bf74899}{encoding}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value.decode()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00615}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a189e7653c4db3a766d761800e4158de8}{00615}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a189e7653c4db3a766d761800e4158de8}{\_wrap\_full}}(self,\ inner,\ outfile):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00617}00617\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isabs(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}}):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00618}00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it's\ an\ absolute\ filename}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cssfilename\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename\ =\ outfile.name}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ filename\ \textcolor{keywordflow}{or}\ filename[0]\ ==\ \textcolor{stringliteral}{'<'}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ pseudo\ files,\ e.g.\ name\ ==\ '<fdopen>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ AttributeError}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cssfilename\ =\ os.path.join(os.path.dirname(filename),}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00628}00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{'Note:\ Cannot\ determine\ output\ file\ name,\ '}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'using\ current\ directory\ as\ base\ for\ the\ CSS\ file\ name'},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00631}00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file=sys.stderr)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cssfilename\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00633}00633\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ write\ CSS\ file\ only\ if\ noclobber\_cssfile\ isn't\ given\ as\ an\ option.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00634}00634\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00635}00635\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.exists(cssfilename)\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a62a38f050450c8d7eca7c951d46821f8}{noclobber\_cssfile}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00636}00636\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(cssfilename,\ \textcolor{stringliteral}{"{}w"{}},\ encoding=\textcolor{stringliteral}{"{}utf-\/8"{}})\ \textcolor{keyword}{as}\ cf:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00637}00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cf.write(CSSFILE\_TEMPLATE\ \%}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00638}00638\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{'styledefs'}:\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa63fabd9124635a37b0951e0f2edf37b}{get\_style\_defs}}(\textcolor{stringliteral}{'body'})\})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00639}00639\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OSError\ \textcolor{keyword}{as}\ err:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00640}00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ err.strerror\ =\ \textcolor{stringliteral}{'Error\ writing\ CSS\ file:\ '}\ +\ err.strerror}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00641}00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00643}00643\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (DOC\_HEADER\_EXTERNALCSS\ \%}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00644}00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dict(title=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_a051e403214cb6872ad3fe4e50302a6ee}{title}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00645}00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cssfile=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a54067ce0635da4d5bb98ccd5160a8ae1}{cssfile}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00646}00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ encoding=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_ae9a6322071c15eeb3a13271e7bf74899}{encoding}}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00647}00647\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00648}00648\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (DOC\_HEADER\ \%}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dict(title=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_a051e403214cb6872ad3fe4e50302a6ee}{title}},}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00650}00650\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ styledefs=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa63fabd9124635a37b0951e0f2edf37b}{get\_style\_defs}}(\textcolor{stringliteral}{'body'}),}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ encoding=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_ae9a6322071c15eeb3a13271e7bf74899}{encoding}}))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00653}00653\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ inner}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00654}00654\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ DOC\_FOOTER}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00656}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8edb9560ea298ea054087ead750cb377}{00656}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8edb9560ea298ea054087ead750cb377}{\_wrap\_tablelinenos}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00657}00657\ \ \ \ \ \ \ \ \ dummyoutfile\ =\ StringIO()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00658}00658\ \ \ \ \ \ \ \ \ lncount\ =\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00659}00659\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ t,\ line\ \textcolor{keywordflow}{in}\ inner:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lncount\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00662}00662\ \ \ \ \ \ \ \ \ \ \ \ \ dummyoutfile.write(line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00663}00663\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00664}00664\ \ \ \ \ \ \ \ \ fl\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{linenostart}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00665}00665\ \ \ \ \ \ \ \ \ mw\ =\ len(str(lncount\ +\ fl\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00666}00666\ \ \ \ \ \ \ \ \ sp\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a437032e1e64439cfbf4c0d8b4553fb22}{linenospecial}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00667}00667\ \ \ \ \ \ \ \ \ st\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a017ecf4e1dfab1a9616f2b6eef01e45b}{linenostep}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00668}00668\ \ \ \ \ \ \ \ \ anchor\_name\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{linespans}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00669}00669\ \ \ \ \ \ \ \ \ aln\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af3774e6480912caea1064405ca80acf0}{anchorlinenos}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00670}00670\ \ \ \ \ \ \ \ \ nocls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00671}00671\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00672}00672\ \ \ \ \ \ \ \ \ lines\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00673}00673\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00674}00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(fl,\ fl+lncount):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ print\_line\ =\ i\ \%\ st\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ special\_line\ =\ sp\ \textcolor{keywordflow}{and}\ i\ \%\ sp\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00677}00677\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ print\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'\%*d'}\ \%\ (mw,\ i)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ aln:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'<a\ href="{}\#\%s-\/\%d"{}>\%s</a>'}\ \%\ (anchor\_name,\ i,\ line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'\ '}\ *\ mw}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00684}00684\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ nocls:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ special\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{\_linenos\_special\_style}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{\_linenos\_style}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ special\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ class="{}special"{}'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ class="{}normal"{}'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00695}00695\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'<span\%s>\%s</span>'}\ \%\ (style,\ line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ lines.append(line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00701}00701\ \ \ \ \ \ \ \ \ ls\ =\ \textcolor{stringliteral}{'\(\backslash\)n'}.join(lines)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00702}00702\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ a\ filename\ was\ specified,\ we\ can't\ put\ it\ into\ the\ code\ table\ as\ it}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00704}00704\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ would\ misalign\ the\ line\ numbers.\ Hence\ we\ emit\ a\ separate\ row\ for\ it.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00705}00705\ \ \ \ \ \ \ \ \ filename\_tr\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00706}00706\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{filename}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ \ \ \ \ filename\_tr\ =\ (}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'<tr><th\ colspan="{}2"{}\ class="{}filename"{}>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'<span\ class="{}filename"{}>'}\ +\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{filename}}\ +\ \textcolor{stringliteral}{'</span>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00710}00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'</th></tr>'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ case\ you\ wonder\ about\ the\ seemingly\ redundant\ <div>\ here:\ since\ the}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ content\ in\ the\ other\ cell\ also\ is\ wrapped\ in\ a\ div,\ some\ browsers\ in}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00714}00714\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ some\ configurations\ seem\ to\ mess\ up\ the\ formatting...}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00715}00715\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (f\textcolor{stringliteral}{'<table\ class="{}\{self.cssclass\}table"{}>'}\ +\ filename\_tr\ +}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'<tr><td\ class="{}linenos"{}><div\ class="{}linenodiv"{}><pre>'}\ +}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ ls\ +\ \textcolor{stringliteral}{'</pre></div></td><td\ class="{}code"{}>'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00718}00718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'<div>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ dummyoutfile.getvalue()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00720}00720\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'</div>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'</td></tr></table>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00723}00723\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00724}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a77457a4339afc04be8ab4bd6471d4012}{00724}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a77457a4339afc04be8ab4bd6471d4012}{\_wrap\_inlinelinenos}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00725}00725\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ need\ a\ list\ of\ lines\ since\ we\ need\ the\ width\ of\ a\ single\ number\ :(}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ inner\_lines\ =\ list(inner)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00727}00727\ \ \ \ \ \ \ \ \ sp\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a437032e1e64439cfbf4c0d8b4553fb22}{linenospecial}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00728}00728\ \ \ \ \ \ \ \ \ st\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a017ecf4e1dfab1a9616f2b6eef01e45b}{linenostep}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00729}00729\ \ \ \ \ \ \ \ \ num\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{linenostart}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00730}00730\ \ \ \ \ \ \ \ \ mw\ =\ len(str(len(inner\_lines)\ +\ num\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ anchor\_name\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{linespans}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ aln\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af3774e6480912caea1064405ca80acf0}{anchorlinenos}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00733}00733\ \ \ \ \ \ \ \ \ nocls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00734}00734\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00735}00735\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ \_,\ inner\_line\ \textcolor{keywordflow}{in}\ inner\_lines:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ print\_line\ =\ num\ \%\ st\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ special\_line\ =\ sp\ \textcolor{keywordflow}{and}\ num\ \%\ sp\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00738}00738\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ print\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'\%*d'}\ \%\ (mw,\ num)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00742}00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \textcolor{stringliteral}{'\ '}\ *\ mw}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00743}00743\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00744}00744\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ nocls:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00745}00745\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ special\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00746}00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4b1087fb3f4171dc53ccdc422554a9a6}{\_linenos\_special\_style}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00748}00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a04e5dc423c80611d973b737b607245e7}{\_linenos\_style}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00749}00749\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00750}00750\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ special\_line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ class="{}linenos\ special"{}'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{'\ class="{}linenos"{}'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00754}00754\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00755}00755\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00756}00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ linenos\ =\ \textcolor{stringliteral}{'<span\%s>\%s</span>'}\ \%\ (style,\ line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00757}00757\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ linenos\ =\ line}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00759}00759\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ aln:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ (\textcolor{stringliteral}{'<a\ href="{}\#\%s-\/\%d"{}>\%s</a>'}\ \%\ (anchor\_name,\ num,\ linenos)\ +}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inner\_line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00763}00763\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00764}00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ linenos\ +\ inner\_line}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ \ \ \ \ num\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00766}00766\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00767}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab70b80f2d9e8eea18a9f26519ea6e065}{00767}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab70b80f2d9e8eea18a9f26519ea6e065}{\_wrap\_lineanchors}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ s\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00769}00769\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ subtract\ 1\ since\ we\ have\ to\ increment\ i\ *before*\ yielding}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ i\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{linenostart}}\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00771}00771\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ t,\ line\ \textcolor{keywordflow}{in}\ inner:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00774}00774\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ href\ =\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{'\ href="{}\#\%s-\/\%d"{}'}\ \%\ (s,\ i)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{'<a\ id="{}\%s-\/\%d"{}\ name="{}\%s-\/\%d"{}\%s></a>'}\ \%\ (s,\ i,\ s,\ i,\ href)\ +\ line}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00776}00776\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ line}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00778}00778\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00779}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8039219840b9b91e0a066e76297844aa}{00779}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8039219840b9b91e0a066e76297844aa}{\_wrap\_linespans}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ s\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{linespans}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00781}00781\ \ \ \ \ \ \ \ \ i\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a87633b8358229bafb243905f881c8b12}{linenostart}}\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00782}00782\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ t,\ line\ \textcolor{keywordflow}{in}\ inner:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00783}00783\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00785}00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{'<span\ id="{}\%s-\/\%d"{}>\%s</span>'}\ \%\ (s,\ i,\ line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00786}00786\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00787}00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ line}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00788}00788\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00789}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9b8d57660bb808f2e5a6c5db52ae811c}{00789}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9b8d57660bb808f2e5a6c5db52ae811c}{\_wrap\_div}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00790}00790\ \ \ \ \ \ \ \ \ style\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00791}00791\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7440f455c8f185ea33d4884749441fc6}{nobackground}}\ \textcolor{keywordflow}{and}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00792}00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.background\_color\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00793}00793\ \ \ \ \ \ \ \ \ \ \ \ \ style.append(\textcolor{stringliteral}{'background:\ \%s'}\ \%\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.background\_color,))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00794}00794\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae9ac60040fd38cbb8e1536dfe624a94c}{cssstyles}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00795}00795\ \ \ \ \ \ \ \ \ \ \ \ \ style.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae9ac60040fd38cbb8e1536dfe624a94c}{cssstyles}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00796}00796\ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{';\ '}.join(style)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00798}00798\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (\textcolor{stringliteral}{'<div'}\ +\ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9938add5f7595eb757ff3cae666786f}{cssclass}}\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'\ class="{}\%s"{}'}\ \%\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9938add5f7595eb757ff3cae666786f}{cssclass}})\ +}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (style\ \textcolor{keywordflow}{and}\ (\textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ style))\ +\ \textcolor{stringliteral}{'>'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00800}00800\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ inner}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00801}00801\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'</div>\(\backslash\)n'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00802}00802\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00803}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a086c00a45d922c15ce9c6a046521c44b}{00803}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a086c00a45d922c15ce9c6a046521c44b}{\_wrap\_pre}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00804}00804\ \ \ \ \ \ \ \ \ style\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00805}00805\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6ea9924a03241313a5583f3858f81db6}{prestyles}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00806}00806\ \ \ \ \ \ \ \ \ \ \ \ \ style.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6ea9924a03241313a5583f3858f81db6}{prestyles}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00807}00807\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00808}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a390b7dcac99e16169ea00fafa07b8e2f}{00808}}\ \ \ \ \ \ \ \ \ \ \ \ \ style.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a390b7dcac99e16169ea00fafa07b8e2f}{\_pre\_style}})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00809}00809\ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{';\ '}.join(style)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00810}00810\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00811}00811\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{filename}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ !=\ 1:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (\textcolor{stringliteral}{'<span\ class="{}filename"{}>'}\ +\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2ff994e16bf9521154de4cf659a3b689}{filename}}\ +\ \textcolor{stringliteral}{'</span>'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00814}00814\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ empty\ span\ here\ is\ to\ keep\ leading\ empty\ lines\ from\ being}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00815}00815\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ignored\ by\ HTML\ parsers}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00816}00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ (\textcolor{stringliteral}{'<pre'}\ +\ (style\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'\ style="{}\%s"{}'}\ \%\ style)\ +\ \textcolor{stringliteral}{'><span></span>'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00817}00817\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ inner}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'</pre>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00819}00819\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00820}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5c509d6a79aebc2fad9358fe936a6cba}{00820}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5c509d6a79aebc2fad9358fe936a6cba}{\_wrap\_code}}(self,\ inner):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00821}00821\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'<code>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00822}00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ inner}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00823}00823\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 0,\ \textcolor{stringliteral}{'</code>'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00824}00824\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00825}00825\ \ \ \ \ \textcolor{preprocessor}{@functools.lru\_cache(maxsize=100)}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00826}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab5af16c591decec57876f7e929da76a2}{00826}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab5af16c591decec57876f7e929da76a2}{\_translate\_parts}}(self,\ value):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00827}00827\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}HTML-\/escape\ a\ value\ and\ split\ it\ by\ newlines."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00828}00828\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value.translate(\_escape\_html\_table).split(\textcolor{stringliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00829}00829\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00830}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a1208cf2af24703b7b97aaf613afde426}{00830}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a1208cf2af24703b7b97aaf613afde426}{\_format\_lines}}(self,\ tokensource):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00831}00831\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00832}00832\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Just\ format\ the\ tokens,\ without\ any\ wrapping\ tags.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00833}00833\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Yield\ individual\ lines.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00834}00834\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00835}00835\ \ \ \ \ \ \ \ \ nocls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00836}00836\ \ \ \ \ \ \ \ \ lsep\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_afdbe6cb3957d92111b30cb4d3bdd9dde}{lineseparator}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00837}00837\ \ \ \ \ \ \ \ \ tagsfile\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a799e3305d5ffb3a7d38cf1c7657cea9f}{tagsfile}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00838}00838\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00839}00839\ \ \ \ \ \ \ \ \ lspan\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00840}00840\ \ \ \ \ \ \ \ \ line\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00841}00841\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ ttype,\ value\ \textcolor{keywordflow}{in}\ tokensource:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cspan\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a595d41f3828fd2e2a01b04e3dd4ff433}{span\_element\_openers}}[ttype]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00845}00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ title\ =\ \textcolor{stringliteral}{'\ title="{}\%s"{}'}\ \%\ \textcolor{stringliteral}{'.'}.join(ttype)\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a09c3d3ab58b0e911d2eb49b04913d1e5}{debug\_token\_types}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ nocls:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ css\_style\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9a25e0ab4d65a543330c025b8f1d4a2b}{\_get\_css\_inline\_styles}}(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ css\_style:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ css\_style\ =\ self.class2style[css\_style][0]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cspan\ =\ \textcolor{stringliteral}{'<span\ style="{}\%s"{}\%s>'}\ \%\ (css\_style,\ title)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cspan\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00854}00854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ css\_class\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5285672da41e358f28e927e6e6257cb0}{\_get\_css\_classes}}(ttype)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ css\_class:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cspan\ =\ \textcolor{stringliteral}{'<span\ class="{}\%s"{}\%s>'}\ \%\ (css\_class,\ title)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cspan\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a595d41f3828fd2e2a01b04e3dd4ff433}{span\_element\_openers}}[ttype]\ =\ cspan}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00861}00861\ \ \ \ \ \ \ \ \ \ \ \ \ parts\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab5af16c591decec57876f7e929da76a2}{\_translate\_parts}}(value)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00862}00862\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ tagsfile\ \textcolor{keywordflow}{and}\ ttype\ \textcolor{keywordflow}{in}\ Token.Name:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename,\ linenumber\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ac8b8050fca7f197bc76ed9841eb8effe}{\_lookup\_ctag}}(value)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ linenumber:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base,\ filename\ =\ os.path.split(filename)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ base:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base\ +=\ \textcolor{stringliteral}{'/'}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename,\ extension\ =\ os.path.splitext(filename)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a4abd84b412e8f25a54cccff71bdba9bb}{tagurlformat}}\ \%\ \{\textcolor{stringliteral}{'path'}:\ base,\ \textcolor{stringliteral}{'fname'}:\ filename,}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'fext'}:\ extension\}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parts[0]\ =\ \textcolor{stringliteral}{"{}<a\ href=\(\backslash\)"{}\%s\#\%s-\/\%d\(\backslash\)"{}>\%s"{}}\ \%\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (url,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}},\ linenumber,\ parts[0])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parts[-\/1]\ =\ parts[-\/1]\ +\ \textcolor{stringliteral}{"{}</a>"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00875}00875\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00876}00876\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ for\ all\ but\ the\ last\ line}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ part\ \textcolor{keywordflow}{in}\ parts[:-\/1]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00879}00879\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Also\ check\ for\ part\ being\ non-\/empty,\ so\ we\ avoid\ creating}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ empty\ <span>\ tags}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ lspan\ !=\ cspan\ \textcolor{keywordflow}{and}\ part:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line.extend(((lspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ cspan,\ part,}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (cspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ lsep))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ both\ are\ the\ same,\ or\ the\ current\ part\ was\ empty}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line.extend((part,\ (lspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ lsep))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{''}.join(line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ []}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ part:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{''}.join((cspan,\ part,\ (cspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ lsep))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00891}00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ lsep}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ for\ the\ last\ line}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line\ \textcolor{keywordflow}{and}\ parts[-\/1]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ lspan\ !=\ cspan:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00895}00895\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line.extend(((lspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ cspan,\ parts[-\/1]))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lspan\ =\ cspan}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line.append(parts[-\/1])}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00899}00899\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ parts[-\/1]:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00900}00900\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ [cspan,\ parts[-\/1]]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lspan\ =\ cspan}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00902}00902\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ else\ we\ neither\ have\ to\ open\ a\ new\ span\ nor\ set\ lspan}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00903}00903\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00904}00904\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ line.extend(((lspan\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{'</span>'}),\ lsep))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{''}.join(line)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00907}00907\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00908}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ac8b8050fca7f197bc76ed9841eb8effe}{00908}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ac8b8050fca7f197bc76ed9841eb8effe}{\_lookup\_ctag}}(self,\ token):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00909}00909\ \ \ \ \ \ \ \ \ entry\ =\ ctags.TagEntry()}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00910}00910\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a96cf755033ed38b5e06b2c1cc7e485db}{\_ctags}}.find(entry,\ token.encode(),\ 0):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00911}00911\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ entry[\textcolor{stringliteral}{'file'}],\ entry[\textcolor{stringliteral}{'lineNumber'}]}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00912}00912\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00913}00913\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00914}00914\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00915}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a03c35208bfffd96453690ea8239f5de2}{00915}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a03c35208bfffd96453690ea8239f5de2}{\_highlight\_lines}}(self,\ tokensource):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00916}00916\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00917}00917\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Highlighted\ the\ lines\ specified\ in\ the\ \`{}hl\_lines\`{}\ option\ by}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00918}00918\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ post-\/processing\ the\ token\ stream\ coming\ from\ \`{}\_format\_lines\`{}.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00919}00919\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00920}00920\ \ \ \ \ \ \ \ \ hls\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7e8f360072b50f598abd3d98f7a5d21c}{hl\_lines}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00921}00921\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00922}00922\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i,\ (t,\ value)\ \textcolor{keywordflow}{in}\ enumerate(tokensource):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t\ !=\ 1:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ t,\ value}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ i\ +\ 1\ \textcolor{keywordflow}{in}\ hls:\ \ \textcolor{comment}{\#\ i\ +\ 1\ because\ Python\ indexes\ start\ at\ 0}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a3fdc294c66ae7528ba60baa84ccf2311}{noclasses}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00928}00928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.highlight\_color\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00929}00929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style\ =\ (\textcolor{stringliteral}{'\ style="{}background-\/color:\ \%s"{}'}\ \%}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00930}00930\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_aa510d394c6f2524f1fd21d373143d08d}{style}}.highlight\_color,))}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00931}00931\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{'<span\%s>\%s</span>'}\ \%\ (style,\ value)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00932}00932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00933}00933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ \textcolor{stringliteral}{'<span\ class="{}hll"{}>\%s</span>'}\ \%\ value}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00934}00934\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00935}00935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ 1,\ value}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00936}00936\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00937}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a422ab717ba68c7b57509153f59f4935a}{00937}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a422ab717ba68c7b57509153f59f4935a}{wrap}}(self,\ source):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00938}00938\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00939}00939\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Wrap\ the\ \`{}\`{}source\`{}\`{},\ which\ is\ a\ generator\ yielding}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00940}00940\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ individual\ lines,\ in\ custom\ generators.\ See\ docstring}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00941}00941\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ \`{}format\`{}.\ Can\ be\ overridden.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00942}00942\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00943}00943\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00944}00944\ \ \ \ \ \ \ \ \ output\ =\ source}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00945}00945\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8b0dbce8babbb95c4013963fa861958d}{wrapcode}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00946}00946\ \ \ \ \ \ \ \ \ \ \ \ \ output\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a5c509d6a79aebc2fad9358fe936a6cba}{\_wrap\_code}}(output)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00947}00947\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00948}00948\ \ \ \ \ \ \ \ \ output\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a086c00a45d922c15ce9c6a046521c44b}{\_wrap\_pre}}(output)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00949}00949\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00950}00950\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ output}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00951}00951\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00952}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9cca1d8bf13f4a419ffa6a4b7292989}{00952}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_af9cca1d8bf13f4a419ffa6a4b7292989}{format\_unencoded}}(self,\ tokensource,\ outfile):}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00953}00953\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00954}00954\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ formatting\ process\ uses\ several\ nested\ generators;\ which\ of}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00955}00955\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ them\ are\ used\ is\ determined\ by\ the\ user's\ options.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00956}00956\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00957}00957\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Each\ generator\ should\ take\ at\ least\ one\ argument,\ \`{}\`{}inner\`{}\`{},}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00958}00958\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ wrap\ the\ pieces\ of\ text\ generated\ by\ this.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00959}00959\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00960}00960\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Always\ yield\ 2-\/tuples:\ (code,\ text).\ If\ "{}code"{}\ is\ 1,\ the\ text}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00961}00961\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\ part\ of\ the\ original\ tokensource\ being\ highlighted,\ if\ it's}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00962}00962\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 0,\ the\ text\ is\ some\ piece\ of\ wrapping.\ This\ makes\ it\ possible\ to}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00963}00963\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ use\ several\ different\ wrappers\ that\ process\ the\ original\ source}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00964}00964\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ linewise,\ e.g.\ line\ number\ generators.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00965}00965\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00966}00966\ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a1208cf2af24703b7b97aaf613afde426}{\_format\_lines}}(tokensource)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00967}00967\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00968}00968\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ As\ a\ special\ case,\ we\ wrap\ line\ numbers\ before\ line\ highlighting}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00969}00969\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ so\ the\ line\ numbers\ get\ wrapped\ in\ the\ highlighting\ tag.}}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00970}00970\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab9110301592767cb066bd5e780f46fd3}{nowrap}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00971}00971\ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a77457a4339afc04be8ab4bd6471d4012}{\_wrap\_inlinelinenos}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00972}00972\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00973}00973\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a7e8f360072b50f598abd3d98f7a5d21c}{hl\_lines}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00974}00974\ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a03c35208bfffd96453690ea8239f5de2}{\_highlight\_lines}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00975}00975\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00976}00976\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab9110301592767cb066bd5e780f46fd3}{nowrap}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00977}00977\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a2bc8d8ab6ac843af4b1cd12eea003f2f}{lineanchors}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00978}00978\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ab70b80f2d9e8eea18a9f26519ea6e065}{\_wrap\_lineanchors}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00979}00979\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_ae71e6104a41907a6081e657eb984f37b}{linespans}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00980}00980\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8039219840b9b91e0a066e76297844aa}{\_wrap\_linespans}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00981}00981\ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a422ab717ba68c7b57509153f59f4935a}{wrap}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00982}00982\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a6fe40f34ba011ba166cd10285e4c23ea}{linenos}}\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00983}00983\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a8edb9560ea298ea054087ead750cb377}{\_wrap\_tablelinenos}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00984}00984\ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a9b8d57660bb808f2e5a6c5db52ae811c}{\_wrap\_div}}(source)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00985}\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter}{00985}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatter_1_1_formatter_acad24a54a63bdaae5e7ecf64163987ed}{full}}:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00986}00986\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ source\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter_a189e7653c4db3a766d761800e4158de8}{\_wrap\_full}}(source,\ outfile)}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00987}00987\ }
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00988}00988\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ t,\ piece\ \textcolor{keywordflow}{in}\ source:}
+\DoxyCodeLine{\Hypertarget{html_8py_source_l00989}00989\ \ \ \ \ \ \ \ \ \ \ \ \ outfile.write(piece)}
+
+\end{DoxyCode}

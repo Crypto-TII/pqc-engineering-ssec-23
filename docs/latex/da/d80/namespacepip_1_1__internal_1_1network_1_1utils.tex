@@ -1,0 +1,129 @@
+\doxysection{pip.\+\_\+internal.\+network.\+utils Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1network_1_1utils}{}\label{namespacepip_1_1__internal_1_1network_1_1utils}\index{pip.\_internal.network.utils@{pip.\_internal.network.utils}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+None \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a0294c612f99a946e4244fc845b433f82}{raise\+\_\+for\+\_\+status}} (\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{Response}} resp)
+\item 
+Generator\mbox{[}bytes, None, None\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_a9d73e36c9600b63a9c23a32aa761c98e}{response\+\_\+chunks}} (\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{Response}} response, int chunk\+\_\+size=CONTENT\+\_\+\+CHUNK\+\_\+\+SIZE)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+dict \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils_af9f99b630b301805c65e9be529f884ac}{HEADERS}} = \{"{}Accept-\/Encoding"{}\+: "{}identity"{}\}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1utils_a0294c612f99a946e4244fc845b433f82}\index{pip.\_internal.network.utils@{pip.\_internal.network.utils}!raise\_for\_status@{raise\_for\_status}}
+\index{raise\_for\_status@{raise\_for\_status}!pip.\_internal.network.utils@{pip.\_internal.network.utils}}
+\doxysubsubsection{\texorpdfstring{raise\_for\_status()}{raise\_for\_status()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1utils_a0294c612f99a946e4244fc845b433f82} 
+ None raise\+\_\+for\+\_\+status (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{Response}}}]{resp}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2network_2utils_8py_source_l00029}{29}} of file \mbox{\hyperlink{__internal_2network_2utils_8py_source}{utils.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00029\ \textcolor{keyword}{def\ }raise\_for\_status(resp:\ Response)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00030\ \ \ \ \ http\_error\_msg\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(resp.reason,\ bytes):}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ attempt\ to\ decode\ utf-\/8\ first\ because\ some\ servers}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ choose\ to\ localize\ their\ reason\ strings.\ If\ the\ string}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ isn't\ utf-\/8,\ we\ fall\ back\ to\ iso-\/8859-\/1\ for\ all\ other}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ encodings.}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ resp.reason.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ reason\ =\ resp.reason.decode(\textcolor{stringliteral}{"{}iso-\/8859-\/1"{}})}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ reason\ =\ resp.reason}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{if}\ 400\ <=\ resp.status\_code\ <\ 500:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{resp.status\_code\}\ Client\ Error:\ \{reason\}\ for\ url:\ \{resp.url\}"{}}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{elif}\ 500\ <=\ resp.status\_code\ <\ 600:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ http\_error\_msg\ =\ (}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{resp.status\_code\}\ Server\ Error:\ \{reason\}\ for\ url:\ \{resp.url\}"{}}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{if}\ http\_error\_msg:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NetworkConnectionError(http\_error\_msg,\ response=resp)}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1utils_a9d73e36c9600b63a9c23a32aa761c98e}\index{pip.\_internal.network.utils@{pip.\_internal.network.utils}!response\_chunks@{response\_chunks}}
+\index{response\_chunks@{response\_chunks}!pip.\_internal.network.utils@{pip.\_internal.network.utils}}
+\doxysubsubsection{\texorpdfstring{response\_chunks()}{response\_chunks()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1utils_a9d73e36c9600b63a9c23a32aa761c98e} 
+ Generator\mbox{[}bytes, None, None\mbox{]} response\+\_\+chunks (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1models_1_1_response}{Response}}}]{response}{, }\item[{int }]{chunk\+\_\+size}{ = {\ttfamily CONTENT\+\_\+CHUNK\+\_\+SIZE}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Given a requests Response, provide the data chunks.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2network_2utils_8py_source_l00057}{57}} of file \mbox{\hyperlink{__internal_2network_2utils_8py_source}{utils.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00059\ )\ -\/>\ Generator[bytes,\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ requests\ Response,\ provide\ the\ data\ chunks."{}"{}"{}}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case\ for\ urllib3.}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ response.raw.stream(}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\_size,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ use\ decode\_content=False\ here\ because\ we\ don't}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ want\ urllib3\ to\ mess\ with\ the\ raw\ bytes\ we\ get}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ from\ the\ server.\ If\ we\ decompress\ inside\ of}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib3\ then\ we\ cannot\ verify\ the\ checksum}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ because\ the\ checksum\ will\ be\ of\ the\ compressed}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file.\ This\ breakage\ will\ only\ occur\ if\ the}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ server\ adds\ a\ Content-\/Encoding\ header,\ which}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ depends\ on\ how\ the\ server\ was\ configured:}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ isn't\ a}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ compressible\ file\ and\ will\ leave\ the\ file\ alone}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ and\ with\ an\ empty\ Content-\/Encoding}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ will\ notice\ that\ the\ file\ is}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ already\ compressed\ and\ will\ leave\ the\ file}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ alone\ and\ will\ add\ a\ Content-\/Encoding:\ gzip}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ header}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ Some\ servers\ won't\ notice\ anything\ at\ all\ and}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ will\ take\ a\ file\ that's\ already\ been\ compressed}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ and\ compress\ it\ again\ and\ set\ the}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ Content-\/Encoding:\ gzip\ header}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ By\ setting\ this\ not\ to\ decode\ automatically\ we}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hope\ to\ eliminate\ problems\ with\ the\ second\ case.}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ decode\_content=\textcolor{keyword}{False},}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Standard\ file-\/like\ object.}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ response.raw.read(chunk\_size)}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ chunk:}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ chunk}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1utils_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1utils_af9f99b630b301805c65e9be529f884ac}\index{pip.\_internal.network.utils@{pip.\_internal.network.utils}!HEADERS@{HEADERS}}
+\index{HEADERS@{HEADERS}!pip.\_internal.network.utils@{pip.\_internal.network.utils}}
+\doxysubsubsection{\texorpdfstring{HEADERS}{HEADERS}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1utils_af9f99b630b301805c65e9be529f884ac} 
+dict HEADERS = \{"{}Accept-\/Encoding"{}\+: "{}identity"{}\}}
+
+
+
+Definition at line \mbox{\hyperlink{__internal_2network_2utils_8py_source_l00026}{26}} of file \mbox{\hyperlink{__internal_2network_2utils_8py_source}{utils.\+py}}.
+

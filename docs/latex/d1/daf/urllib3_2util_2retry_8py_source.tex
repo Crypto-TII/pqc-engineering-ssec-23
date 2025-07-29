@@ -1,0 +1,626 @@
+\doxysection{retry.\+py}
+\hypertarget{urllib3_2util_2retry_8py_source}{}\label{urllib3_2util_2retry_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/retry.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/retry.py}}
+\mbox{\hyperlink{urllib3_2util_2retry_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1retry}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00003}00003\ \textcolor{keyword}{import}\ email}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00004}00004\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00005}00005\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00006}00006\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00007}00007\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00008}00008\ \textcolor{keyword}{from}\ collections\ \textcolor{keyword}{import}\ namedtuple}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00009}00009\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ takewhile}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00011}00011\ \textcolor{keyword}{from}\ ..exceptions\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00012}00012\ \ \ \ \ ConnectTimeoutError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00013}00013\ \ \ \ \ InvalidHeader,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00014}00014\ \ \ \ \ MaxRetryError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00015}00015\ \ \ \ \ ProtocolError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00016}00016\ \ \ \ \ ProxyError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00017}00017\ \ \ \ \ ReadTimeoutError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00018}00018\ \ \ \ \ ResponseError,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00019}00019\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00020}00020\ \textcolor{keyword}{from}\ ..packages\ \textcolor{keyword}{import}\ six}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1retry_ab09a63eb35b270b5cdbead1983ebdccb}{00022}}\ log\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00025}00025\ \textcolor{comment}{\#\ Data\ structure\ for\ representing\ the\ metadata\ of\ requests\ that\ result\ in\ a\ retry.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1retry_a99366ddaf81835351e5b5285d79b0907}{00026}}\ RequestHistory\ =\ namedtuple(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00027}00027\ \ \ \ \ \textcolor{stringliteral}{"{}RequestHistory"{}},\ [\textcolor{stringliteral}{"{}method"{}},\ \textcolor{stringliteral}{"{}url"{}},\ \textcolor{stringliteral}{"{}error"{}},\ \textcolor{stringliteral}{"{}status"{}},\ \textcolor{stringliteral}{"{}redirect\_location"{}}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00028}00028\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00031}00031\ \textcolor{comment}{\#\ TODO:\ In\ v2\ we\ can\ remove\ this\ sentinel\ and\ metaclass\ with\ deprecated\ options.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00032}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1retry_a66473d824208815aa3f2b1096fe402cd}{00032}}\ \_Default\ =\ object()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00035}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta}{00035}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta}{\_RetryMeta}}(type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00036}00036\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ae9f8188a076fd48baa5f229b105df5e0}{00037}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ae9f8188a076fd48baa5f229b105df5e0}{DEFAULT\_METHOD\_WHITELIST}}(cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.DEFAULT\_METHOD\_WHITELIST'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_ALLOWED\_METHODS'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ab69b0b4dcb78597b590ce90060327520}{DEFAULT\_ALLOWED\_METHODS}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00045}00045\ \ \ \ \ \textcolor{preprocessor}{@DEFAULT\_METHOD\_WHITELIST.setter}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a3b2815624f25ad817a2c4f1d9e138e42}{00046}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ae9f8188a076fd48baa5f229b105df5e0}{DEFAULT\_METHOD\_WHITELIST}}(cls,\ value):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.DEFAULT\_METHOD\_WHITELIST'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_ALLOWED\_METHODS'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00052}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ab69b0b4dcb78597b590ce90060327520}{00052}}\ \ \ \ \ \ \ \ \ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_ab69b0b4dcb78597b590ce90060327520}{DEFAULT\_ALLOWED\_METHODS}}\ =\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00054}00054\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00055}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a3e3684e46e034d5f2f25e63f6c761a3a}{00055}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a3e3684e46e034d5f2f25e63f6c761a3a}{DEFAULT\_REDIRECT\_HEADERS\_BLACKLIST}}(cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.DEFAULT\_REDIRECT\_HEADERS\_BLACKLIST'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a4fdc9b65c4b0a99073e4a9cd8756ce40}{DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00063}00063\ \ \ \ \ \textcolor{preprocessor}{@DEFAULT\_REDIRECT\_HEADERS\_BLACKLIST.setter}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_adff09e52f31289d3760089640419f66d}{00064}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a3e3684e46e034d5f2f25e63f6c761a3a}{DEFAULT\_REDIRECT\_HEADERS\_BLACKLIST}}(cls,\ value):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.DEFAULT\_REDIRECT\_HEADERS\_BLACKLIST'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00070}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a4fdc9b65c4b0a99073e4a9cd8756ce40}{00070}}\ \ \ \ \ \ \ \ \ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a4fdc9b65c4b0a99073e4a9cd8756ce40}{DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT}}\ =\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00072}00072\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00073}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a83aa813f49f24f86a90e6f97ac32f4c8}{00073}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a83aa813f49f24f86a90e6f97ac32f4c8}{BACKOFF\_MAX}}(cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.BACKOFF\_MAX'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_BACKOFF\_MAX'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_af6bd7a75b81fcb3aafbf660b34bd68a2}{DEFAULT\_BACKOFF\_MAX}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00081}00081\ \ \ \ \ \textcolor{preprocessor}{@BACKOFF\_MAX.setter}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00082}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a2b6e4522013c17154630e7021175bab2}{00082}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_a83aa813f49f24f86a90e6f97ac32f4c8}{BACKOFF\_MAX}}(cls,\ value):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'Retry.BACKOFF\_MAX'\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'Retry.DEFAULT\_BACKOFF\_MAX'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00088}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_af6bd7a75b81fcb3aafbf660b34bd68a2}{00088}}\ \ \ \ \ \ \ \ \ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1___retry_meta_af6bd7a75b81fcb3aafbf660b34bd68a2}{DEFAULT\_BACKOFF\_MAX}}\ =\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00091}00091\ \textcolor{preprocessor}{@six.add\_metaclass(\_RetryMeta)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00092}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry}{00092}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry}{Retry}}(object):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00093}00093\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Retry\ configuration.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00094}00094\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ Each\ retry\ attempt\ will\ create\ a\ new\ Retry\ object\ with\ updated\ values,\ so}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ they\ can\ be\ safely\ reused.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00097}00097\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00098}00098\ \textcolor{stringliteral}{\ \ \ \ Retries\ can\ be\ defined\ as\ a\ default\ for\ a\ pool::}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00099}00099\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00100}00100\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ retries\ =\ Retry(connect=5,\ read=2,\ redirect=5)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00101}00101\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ http\ =\ PoolManager(retries=retries)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00102}00102\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/')}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00103}00103\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00104}00104\ \textcolor{stringliteral}{\ \ \ \ Or\ per-\/request\ (which\ overrides\ the\ default\ for\ the\ pool)::}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00105}00105\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00106}00106\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/',\ retries=Retry(10))}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00107}00107\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00108}00108\ \textcolor{stringliteral}{\ \ \ \ Retries\ can\ be\ disabled\ by\ passing\ \`{}\`{}False\`{}\`{}::}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00109}00109\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00110}00110\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/',\ retries=False)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00111}00111\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00112}00112\ \textcolor{stringliteral}{\ \ \ \ Errors\ will\ be\ wrapped\ in\ :class:\`{}\string~urllib3.exceptions.MaxRetryError\`{}\ unless}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ retries\ are\ disabled,\ in\ which\ case\ the\ causing\ exception\ will\ be\ raised.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00114}00114\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ total:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Total\ number\ of\ retries\ to\ allow.\ Takes\ precedence\ over\ other\ counts.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00117}00117\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}None\`{}\`{}\ to\ remove\ this\ constraint\ and\ fall\ back\ on\ other}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ counts.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00120}00120\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00122}00122\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00123}00123\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}False\`{}\`{}\ to\ disable\ and\ imply\ \`{}\`{}raise\_on\_redirect=False\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00124}00124\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ connect:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ How\ many\ connection-\/related\ errors\ to\ retry\ on.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00127}00127\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ are\ errors\ raised\ before\ the\ request\ is\ sent\ to\ the\ remote\ server,}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ which\ we\ assume\ has\ not\ triggered\ the\ server\ to\ process\ the\ request.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00130}00130\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry\ of\ this\ type.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00132}00132\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ read:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ How\ many\ times\ to\ retry\ on\ read\ errors.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00135}00135\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ errors\ are\ raised\ after\ the\ request\ was\ sent\ to\ the\ server,\ so\ the}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request\ may\ have\ side-\/effects.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00138}00138\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry\ of\ this\ type.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00140}00140\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ redirect:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ How\ many\ redirects\ to\ perform.\ Limit\ this\ to\ avoid\ infinite\ redirect}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ loops.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00144}00144\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ redirect\ is\ a\ HTTP\ response\ with\ a\ status\ code\ 301,\ 302,\ 303,\ 307\ or}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 308.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00147}00147\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00148}00148\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry\ of\ this\ type.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00149}00149\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}False\`{}\`{}\ to\ disable\ and\ imply\ \`{}\`{}raise\_on\_redirect=False\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00151}00151\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00152}00152\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ status:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00153}00153\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ How\ many\ times\ to\ retry\ on\ bad\ status\ codes.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00154}00154\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00155}00155\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ are\ retries\ made\ on\ responses,\ where\ status\ code\ matches}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00156}00156\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \`{}\`{}status\_forcelist\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00157}00157\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry\ of\ this\ type.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00159}00159\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ \ \ :param\ int\ other:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00161}00161\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ How\ many\ times\ to\ retry\ on\ other\ errors.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00162}00162\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00163}00163\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Other\ errors\ are\ errors\ that\ are\ not\ connect,\ read,\ redirect\ or\ status\ errors.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00164}00164\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ These\ errors\ might\ be\ raised\ after\ the\ request\ was\ sent\ to\ the\ server,\ so\ the}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00165}00165\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request\ might\ have\ side-\/effects.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00166}00166\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00167}00167\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ \`{}\`{}0\`{}\`{}\ to\ fail\ on\ the\ first\ retry\ of\ this\ type.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00168}00168\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ \`{}\`{}total\`{}\`{}\ is\ not\ set,\ it's\ a\ good\ idea\ to\ set\ this\ to\ 0\ to\ account}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ unexpected\ edge\ cases\ and\ avoid\ infinite\ retry\ loops.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00171}00171\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ :param\ iterable\ allowed\_methods:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ of\ uppercased\ HTTP\ method\ verbs\ that\ we\ should\ retry\ on.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00174}00174\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ By\ default,\ we\ only\ retry\ on\ methods\ which\ are\ considered\ to\ be}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00176}00176\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ idempotent\ (multiple\ requests\ with\ the\ same\ parameters\ end\ with\ the}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ same\ state).\ See\ :attr:\`{}Retry.DEFAULT\_ALLOWED\_METHODS\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00178}00178\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Set\ to\ a\ \`{}\`{}False\`{}\`{}\ value\ to\ retry\ on\ any\ verb.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00180}00180\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ warning::}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00182}00182\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00183}00183\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Previously\ this\ parameter\ was\ named\ \`{}\`{}method\_whitelist\`{}\`{},\ that}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ usage\ is\ deprecated\ in\ v1.26.0\ and\ will\ be\ removed\ in\ v2.0.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00185}00185\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00186}00186\ \textcolor{stringliteral}{\ \ \ \ :param\ iterable\ status\_forcelist:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ set\ of\ integer\ HTTP\ status\ codes\ that\ we\ should\ force\ a\ retry\ on.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ retry\ is\ initiated\ if\ the\ request\ method\ is\ in\ \`{}\`{}allowed\_methods\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00189}00189\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ the\ response\ status\ code\ is\ in\ \`{}\`{}status\_forcelist\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00190}00190\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00191}00191\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ By\ default,\ this\ is\ disabled\ with\ \`{}\`{}None\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00192}00192\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00193}00193\ \textcolor{stringliteral}{\ \ \ \ :param\ float\ backoff\_factor:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00194}00194\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ A\ backoff\ factor\ to\ apply\ between\ attempts\ after\ the\ second\ try}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ (most\ errors\ are\ resolved\ immediately\ by\ a\ second\ try\ without\ a}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ delay).\ urllib3\ will\ sleep\ for::}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00197}00197\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00198}00198\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \{backoff\ factor\}\ *\ (2\ **\ (\{number\ of\ total\ retries\}\ -\/\ 1))}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00199}00199\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ seconds.\ If\ the\ backoff\_factor\ is\ 0.1,\ then\ :func:\`{}.sleep\`{}\ will\ sleep}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00201}00201\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ for\ [0.0s,\ 0.2s,\ 0.4s,\ ...]\ between\ retries.\ It\ will\ never\ be\ longer}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00202}00202\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ than\ :attr:\`{}Retry.DEFAULT\_BACKOFF\_MAX\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00203}00203\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00204}00204\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ By\ default,\ backoff\ is\ disabled\ (set\ to\ 0).}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00205}00205\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ :param\ bool\ raise\_on\_redirect:\ Whether,\ if\ the\ number\ of\ redirects\ is}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ exhausted,\ to\ raise\ a\ MaxRetryError,\ or\ to\ return\ a\ response\ with\ a}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response\ code\ in\ the\ 3xx\ range.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00209}00209\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00210}00210\ \textcolor{stringliteral}{\ \ \ \ :param\ bool\ raise\_on\_status:\ Similar\ meaning\ to\ \`{}\`{}raise\_on\_redirect\`{}\`{}:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00211}00211\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ whether\ we\ should\ raise\ an\ exception,\ or\ return\ a\ response,}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ status\ falls\ in\ \`{}\`{}status\_forcelist\`{}\`{}\ range\ and\ retries\ have}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ been\ exhausted.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00214}00214\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ \ \ :param\ tuple\ history:\ The\ history\ of\ the\ request\ encountered\ during}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00216}00216\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ each\ call\ to\ :meth:\`{}\string~Retry.increment\`{}.\ The\ list\ is\ in\ the\ order}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00217}00217\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ requests\ occurred.\ Each\ list\ item\ is\ of\ class\ :class:\`{}RequestHistory\`{}.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00218}00218\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00219}00219\ \textcolor{stringliteral}{\ \ \ \ :param\ bool\ respect\_retry\_after\_header:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Whether\ to\ respect\ Retry-\/After\ header\ on\ status\ codes\ defined\ as}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :attr:\`{}Retry.RETRY\_AFTER\_STATUS\_CODES\`{}\ or\ not.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00222}00222\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00223}00223\ \textcolor{stringliteral}{\ \ \ \ :param\ iterable\ remove\_headers\_on\_redirect:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00224}00224\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Sequence\ of\ headers\ to\ remove\ from\ the\ request\ when\ a\ response}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00225}00225\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indicating\ a\ redirect\ is\ returned\ before\ firing\ off\ the\ redirected}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00226}00226\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00227}00227\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00229}00229\ \ \ \ \ \textcolor{comment}{\#:\ Default\ methods\ to\ be\ used\ for\ \`{}\`{}allowed\_methods``}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00230}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ab69b0b4dcb78597b590ce90060327520}{00230}}\ \ \ \ \ DEFAULT\_ALLOWED\_METHODS\ =\ frozenset(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}HEAD"{}},\ \textcolor{stringliteral}{"{}GET"{}},\ \textcolor{stringliteral}{"{}PUT"{}},\ \textcolor{stringliteral}{"{}DELETE"{}},\ \textcolor{stringliteral}{"{}OPTIONS"{}},\ \textcolor{stringliteral}{"{}TRACE"{}}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00232}00232\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00234}00234\ \ \ \ \ \textcolor{comment}{\#:\ Default\ status\ codes\ to\ be\ used\ for\ \`{}\`{}status\_forcelist``}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00235}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a40c32915b0469c8123e3628381d0edbf}{00235}}\ \ \ \ \ RETRY\_AFTER\_STATUS\_CODES\ =\ frozenset([413,\ 429,\ 503])}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00237}00237\ \ \ \ \ \textcolor{comment}{\#:\ Default\ headers\ to\ be\ used\ for\ \`{}\`{}remove\_headers\_on\_redirect``}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00238}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4fdc9b65c4b0a99073e4a9cd8756ce40}{00238}}\ \ \ \ \ DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT\ =\ frozenset([\textcolor{stringliteral}{"{}Authorization"{}}])}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00240}00240\ \ \ \ \ \textcolor{comment}{\#:\ Maximum\ backoff\ time.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00241}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_af6bd7a75b81fcb3aafbf660b34bd68a2}{00241}}\ \ \ \ \ DEFAULT\_BACKOFF\_MAX\ =\ 120}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00243}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a59bfbf6c03379afb88be45ad66aa6c29}{00243}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a59bfbf6c03379afb88be45ad66aa6c29}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ total=10,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ connect=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ read=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ redirect=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ status=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ other=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ allowed\_methods=\_Default,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ status\_forcelist=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ backoff\_factor=0,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ raise\_on\_redirect=True,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ raise\_on\_status=True,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ history=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ respect\_retry\_after\_header=True,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ remove\_headers\_on\_redirect=\_Default,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Deprecated,\ remove\ in\ v2.0}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ method\_whitelist=\_Default,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00261}00261\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ method\_whitelist\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \_Default:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ allowed\_methods\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \_Default:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ both\ 'allowed\_methods'\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'method\_whitelist'\ together\ is\ not\ allowed.\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Instead\ only\ use\ 'allowed\_methods'"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'method\_whitelist'\ with\ Retry\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'allowed\_methods'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stacklevel=2,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ allowed\_methods\ =\ method\_whitelist}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ allowed\_methods\ \textcolor{keywordflow}{is}\ \_Default:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ allowed\_methods\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ab69b0b4dcb78597b590ce90060327520}{DEFAULT\_ALLOWED\_METHODS}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ remove\_headers\_on\_redirect\ \textcolor{keywordflow}{is}\ \_Default:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ remove\_headers\_on\_redirect\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4fdc9b65c4b0a99073e4a9cd8756ce40}{DEFAULT\_REMOVE\_HEADERS\_ON\_REDIRECT}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00282}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{00282}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ =\ total}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00283}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aff57d75543eea1f9c0135f9e0daeaa1a}{00283}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aff57d75543eea1f9c0135f9e0daeaa1a}{connect}}\ =\ connect}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00284}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c367e3ba9ccb3bb1245574128c02fca}{00284}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c367e3ba9ccb3bb1245574128c02fca}{read}}\ =\ read}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00285}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a015eb90e0de9f16e87bd149d4b9ce959}{00285}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a015eb90e0de9f16e87bd149d4b9ce959}{status}}\ =\ status}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9aa1885567e8884c59f033e8b44ac95d}{00286}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9aa1885567e8884c59f033e8b44ac95d}{other}}\ =\ other}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ redirect\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}\ \textcolor{keywordflow}{or}\ total\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ redirect\ =\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ raise\_on\_redirect\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00292}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a870871305b53395d8975ba1895480df5}{00292}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a870871305b53395d8975ba1895480df5}{redirect}}\ =\ redirect}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00293}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a86815279e0c8da6ca1b620c201fd9e58}{00293}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a86815279e0c8da6ca1b620c201fd9e58}{status\_forcelist}}\ =\ status\_forcelist\ \textcolor{keywordflow}{or}\ set()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00294}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{00294}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{allowed\_methods}}\ =\ allowed\_methods}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00295}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa75e17179c6ad6cf0f16a03ff2bc029f}{00295}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa75e17179c6ad6cf0f16a03ff2bc029f}{backoff\_factor}}\ =\ backoff\_factor}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00296}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a014c123e928aad4c064a419519dc4516}{00296}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a014c123e928aad4c064a419519dc4516}{raise\_on\_redirect}}\ =\ raise\_on\_redirect}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00297}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c586e2a45859a45b139af9d75576f6c}{00297}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c586e2a45859a45b139af9d75576f6c}{raise\_on\_status}}\ =\ raise\_on\_status}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00298}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa343580fb5c5b2a386527b269f2c47c3}{00298}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa343580fb5c5b2a386527b269f2c47c3}{history}}\ =\ history\ \textcolor{keywordflow}{or}\ tuple()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00299}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a750e5b802114a26e0539a6d76545efef}{00299}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a750e5b802114a26e0539a6d76545efef}{respect\_retry\_after\_header}}\ =\ respect\_retry\_after\_header}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00300}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a5ee6446943e3067533ee2749eec9e428}{00300}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a5ee6446943e3067533ee2749eec9e428}{remove\_headers\_on\_redirect}}\ =\ frozenset(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ [h.lower()\ \textcolor{keywordflow}{for}\ h\ \textcolor{keywordflow}{in}\ remove\_headers\_on\_redirect]}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00304}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ab0cdd0056394d638f6ec4d383f6526a3}{00304}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ab0cdd0056394d638f6ec4d383f6526a3}{new}}(self,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ params\ =\ dict(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ total=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ connect=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aff57d75543eea1f9c0135f9e0daeaa1a}{connect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ read=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c367e3ba9ccb3bb1245574128c02fca}{read}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ redirect=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a870871305b53395d8975ba1895480df5}{redirect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ status=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a015eb90e0de9f16e87bd149d4b9ce959}{status}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ other=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9aa1885567e8884c59f033e8b44ac95d}{other}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ status\_forcelist=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a86815279e0c8da6ca1b620c201fd9e58}{status\_forcelist}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ backoff\_factor=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa75e17179c6ad6cf0f16a03ff2bc029f}{backoff\_factor}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ raise\_on\_redirect=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a014c123e928aad4c064a419519dc4516}{raise\_on\_redirect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ raise\_on\_status=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c586e2a45859a45b139af9d75576f6c}{raise\_on\_status}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ history=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa343580fb5c5b2a386527b269f2c47c3}{history}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ remove\_headers\_on\_redirect=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a5ee6446943e3067533ee2749eec9e428}{remove\_headers\_on\_redirect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ respect\_retry\_after\_header=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a750e5b802114a26e0539a6d76545efef}{respect\_retry\_after\_header}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO:\ If\ already\ given\ in\ **kw\ we\ use\ what's\ given\ to\ us}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ not\ given\ we\ need\ to\ figure\ out\ what\ to\ pass.\ We\ decide}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ based\ on\ whether\ our\ class\ has\ the\ 'method\_whitelist'\ property}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ and\ if\ so\ we\ pass\ the\ deprecated\ 'method\_whitelist'\ otherwise}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ use\ 'allowed\_methods'.\ Remove\ in\ v2.0}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}method\_whitelist"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ kw\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{"{}allowed\_methods"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ kw:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}method\_whitelist"{}}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ae55534cfed72fbc20108277a88fdc073}{\_\_dict\_\_}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'method\_whitelist'\ with\ Retry\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'allowed\_methods'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params[\textcolor{stringliteral}{"{}method\_whitelist"{}}]\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{allowed\_methods}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params[\textcolor{stringliteral}{"{}allowed\_methods"{}}]\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{allowed\_methods}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ params.update(kw)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type(self)(**params)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00340}00340\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00341}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a8d441f81ca635296574ffb7ca2b53569}{00341}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a8d441f81ca635296574ffb7ca2b53569}{from\_int}}(cls,\ retries,\ redirect=True,\ default=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Backwards-\/compatibility\ for\ the\ old\ retries\ format."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retries\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ retries\ =\ default\ \textcolor{keywordflow}{if}\ default\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ad20935afa9af8d1f162c113cfbbf111d}{DEFAULT}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(retries,\ Retry):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ retries}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ redirect\ =\ bool(redirect)\ \textcolor{keywordflow}{and}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ new\_retries\ =\ cls(retries,\ redirect=redirect)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ log.debug(\textcolor{stringliteral}{"{}Converted\ retries\ value:\ \%r\ -\/>\ \%r"{}},\ retries,\ new\_retries)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_retries}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00354}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ae2d8977301e1af45fae6a8fd30d551b8}{00354}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ae2d8977301e1af45fae6a8fd30d551b8}{get\_backoff\_time}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Formula\ for\ computing\ the\ current\ backoff}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00356}00356\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00357}00357\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ float}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00358}00358\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ want\ to\ consider\ only\ the\ last\ consecutive\ errors\ sequence\ (Ignore\ redirects).}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ consecutive\_errors\_len\ =\ len(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ list(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ takewhile(\textcolor{keyword}{lambda}\ x:\ x.redirect\_location\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None},\ reversed(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa343580fb5c5b2a386527b269f2c47c3}{history}}))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ consecutive\_errors\_len\ <=\ 1:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ backoff\_value\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa75e17179c6ad6cf0f16a03ff2bc029f}{backoff\_factor}}\ *\ (2\ **\ (consecutive\_errors\_len\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ min(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_af6bd7a75b81fcb3aafbf660b34bd68a2}{DEFAULT\_BACKOFF\_MAX}},\ backoff\_value)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00371}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9c09068e7ab6c81e4a5d1a301bab395b}{00371}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9c09068e7ab6c81e4a5d1a301bab395b}{parse\_retry\_after}}(self,\ retry\_after):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Whitespace:\ https://tools.ietf.org/html/rfc7230\#section-\/3.2.4}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ re.match(\textcolor{stringliteral}{r"{}\string^\(\backslash\)s*[0-\/9]+\(\backslash\)s*\$"{}},\ retry\_after):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ seconds\ =\ int(retry\_after)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00375}00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ retry\_date\_tuple\ =\ email.utils.parsedate\_tz(retry\_after)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_date\_tuple\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_invalid_header}{InvalidHeader}}(\textcolor{stringliteral}{"{}Invalid\ Retry-\/After\ header:\ \%s"{}}\ \%\ retry\_after)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_date\_tuple[9]\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:\ \ \textcolor{comment}{\#\ Python\ 2}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Assume\ UTC\ if\ no\ timezone\ was\ specified}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ On\ Python2.7,\ parsedate\_tz\ returns\ None\ for\ a\ timezone\ offset}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ instead\ of\ 0\ if\ no\ timezone\ is\ given,\ where\ mktime\_tz\ treats}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ None\ timezone\ offset\ as\ local\ time.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_date\_tuple\ =\ retry\_date\_tuple[:9]\ +\ (0,)\ +\ retry\_date\_tuple[10:]}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ retry\_date\ =\ email.utils.mktime\_tz(retry\_date\_tuple)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ seconds\ =\ retry\_date\ -\/\ time.time()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ seconds\ <\ 0:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ seconds\ =\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seconds}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00394}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ac09d3f187c15508aa49b8061a4eb9cb7}{00394}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ac09d3f187c15508aa49b8061a4eb9cb7}{get\_retry\_after}}(self,\ response):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ value\ of\ Retry-\/After\ in\ seconds."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ retry\_after\ =\ response.headers.get(\textcolor{stringliteral}{"{}Retry-\/After"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_after\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9c09068e7ab6c81e4a5d1a301bab395b}{parse\_retry\_after}}(retry\_after)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00404}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2321f3dbf45f2519db29c3ecf0acfb80}{00404}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2321f3dbf45f2519db29c3ecf0acfb80}{sleep\_for\_retry}}(self,\ response=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ retry\_after\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ac09d3f187c15508aa49b8061a4eb9cb7}{get\_retry\_after}}(response)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ retry\_after:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ time.sleep(retry\_after)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00412}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a837ac71f69d2b467c4b4c4ad9d93bf70}{00412}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a837ac71f69d2b467c4b4c4ad9d93bf70}{\_sleep\_backoff}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ backoff\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ae2d8977301e1af45fae6a8fd30d551b8}{get\_backoff\_time}}()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ backoff\ <=\ 0:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ time.sleep(backoff)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00418}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aae495bb7a79f3bcd8841df59e3a4ac8f}{00418}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aae495bb7a79f3bcd8841df59e3a4ac8f}{sleep}}(self,\ response=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Sleep\ between\ retry\ attempts.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00420}00420\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00421}00421\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ method\ will\ respect\ a\ server's\ \`{}\`{}Retry-\/After\`{}\`{}\ response\ header}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00422}00422\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ sleep\ the\ duration\ of\ the\ time\ requested.\ If\ that\ is\ not\ present,\ it}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00423}00423\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ use\ an\ exponential\ backoff.\ By\ default,\ the\ backoff\ factor\ is\ 0\ and}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00424}00424\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ this\ method\ will\ return\ immediately.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00425}00425\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a750e5b802114a26e0539a6d76545efef}{respect\_retry\_after\_header}}\ \textcolor{keywordflow}{and}\ response:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ slept\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2321f3dbf45f2519db29c3ecf0acfb80}{sleep\_for\_retry}}(response)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ slept:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a837ac71f69d2b467c4b4c4ad9d93bf70}{\_sleep\_backoff}}()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00434}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_acc313ca8fc66871cf3f7959c1121e9f5}{00434}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_acc313ca8fc66871cf3f7959c1121e9f5}{\_is\_connection\_error}}(self,\ err):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Errors\ when\ we're\ fairly\ sure\ that\ the\ server\ did\ not\ receive\ the}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00436}00436\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request,\ so\ it\ should\ be\ safe\ to\ retry.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00437}00437\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(err,\ ProxyError):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ err.original\_error}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ isinstance(err,\ ConnectTimeoutError)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00442}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a43a1a3b18f01a10a1fc9eb99414cd6c2}{00442}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a43a1a3b18f01a10a1fc9eb99414cd6c2}{\_is\_read\_error}}(self,\ err):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Errors\ that\ occur\ after\ the\ request\ has\ been\ started,\ so\ we\ should}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00444}00444\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ assume\ that\ the\ server\ began\ processing\ it.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00445}00445\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ isinstance(err,\ (ReadTimeoutError,\ ProtocolError))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00448}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aeda6b34008e0733b33db2ba8fbf28ac2}{00448}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aeda6b34008e0733b33db2ba8fbf28ac2}{\_is\_method\_retryable}}(self,\ method):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00449}00449\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Checks\ if\ a\ given\ HTTP\ method\ should\ be\ retried\ upon,\ depending\ if}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00450}00450\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ it\ is\ included\ in\ the\ allowed\_methods}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00451}00451\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO:\ For\ now\ favor\ if\ the\ Retry\ implementation\ sets\ its\ own\ method\_whitelist}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ property\ outside\ of\ our\ constructor\ to\ avoid\ breaking\ custom\ implementations.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}method\_whitelist"{}}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ae55534cfed72fbc20108277a88fdc073}{\_\_dict\_\_}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'method\_whitelist'\ with\ Retry\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'allowed\_methods'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00459}00459\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ allowed\_methods\ =\ self.method\_whitelist}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ allowed\_methods\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{allowed\_methods}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ allowed\_methods\ \textcolor{keywordflow}{and}\ method.upper()\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ allowed\_methods:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00466}00466\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00468}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a608e9ec5de71472012e46fae49293ea3}{00468}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a608e9ec5de71472012e46fae49293ea3}{is\_retry}}(self,\ method,\ status\_code,\ has\_retry\_after=False):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Is\ this\ method/status\ code\ retryable?\ (Based\ on\ allowlists\ and\ control}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00470}00470\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ variables\ such\ as\ the\ number\ of\ total\ retries\ to\ allow,\ whether\ to}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00471}00471\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ respect\ the\ Retry-\/After\ header,\ whether\ this\ header\ is\ present,\ and}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00472}00472\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ whether\ the\ returned\ status\ code\ is\ on\ the\ list\ of\ status\ codes\ to}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00473}00473\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ be\ retried\ upon\ on\ the\ presence\ of\ the\ aforementioned\ header)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00474}00474\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aeda6b34008e0733b33db2ba8fbf28ac2}{\_is\_method\_retryable}}(method):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a86815279e0c8da6ca1b620c201fd9e58}{status\_forcelist}}\ \textcolor{keywordflow}{and}\ status\_code\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a86815279e0c8da6ca1b620c201fd9e58}{status\_forcelist}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a750e5b802114a26e0539a6d76545efef}{respect\_retry\_after\_header}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ has\_retry\_after}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ (status\_code\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a40c32915b0469c8123e3628381d0edbf}{RETRY\_AFTER\_STATUS\_CODES}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00487}00487\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00488}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a09c0bb23c0c52983ea2ceb96c264f2e0}{00488}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a09c0bb23c0c52983ea2ceb96c264f2e0}{is\_exhausted}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Are\ we\ out\ of\ retries?"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ retry\_counts\ =\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aff57d75543eea1f9c0135f9e0daeaa1a}{connect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c367e3ba9ccb3bb1245574128c02fca}{read}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a870871305b53395d8975ba1895480df5}{redirect}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a015eb90e0de9f16e87bd149d4b9ce959}{status}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9aa1885567e8884c59f033e8b44ac95d}{other}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ retry\_counts\ =\ list(filter(\textcolor{keywordtype}{None},\ retry\_counts))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ retry\_counts:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ min(retry\_counts)\ <\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00504}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a57d19c638a84bf3d94a7ba14a8cc3dcf}{00504}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a57d19c638a84bf3d94a7ba14a8cc3dcf}{increment}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ method=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ url=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ response=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ error=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \_pool=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \_stacktrace=None,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00512}00512\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ new\ Retry\ object\ with\ incremented\ retry\ counters.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00514}00514\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00515}00515\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ response:\ A\ response\ object,\ or\ None,\ if\ the\ server\ did\ not}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00516}00516\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ return\ a\ response.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00517}00517\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :type\ response:\ :class:\`{}\string~urllib3.response.HTTPResponse\`{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00518}00518\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ Exception\ error:\ An\ error\ encountered\ during\ the\ request,\ or}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00519}00519\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ None\ if\ the\ response\ was\ received\ successfully.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00520}00520\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00521}00521\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ A\ new\ \`{}\`{}Retry\`{}\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00522}00522\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}\ \textcolor{keywordflow}{and}\ error:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Disabled,\ indicate\ to\ re-\/raise\ the\ error.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ six.reraise(type(error),\ error,\ \_stacktrace)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ total\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a2c1a52cd37ed38e861bba51c47c1802a}{total}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ total\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ total\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00531}00531\ \ \ \ \ \ \ \ \ connect\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aff57d75543eea1f9c0135f9e0daeaa1a}{connect}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00532}00532\ \ \ \ \ \ \ \ \ read\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a4c367e3ba9ccb3bb1245574128c02fca}{read}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ redirect\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a870871305b53395d8975ba1895480df5}{redirect}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ status\_count\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a015eb90e0de9f16e87bd149d4b9ce959}{status}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00535}00535\ \ \ \ \ \ \ \ \ other\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a9aa1885567e8884c59f033e8b44ac95d}{other}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ cause\ =\ \textcolor{stringliteral}{"{}unknown"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ status\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ redirect\_location\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ error\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_acc313ca8fc66871cf3f7959c1121e9f5}{\_is\_connection\_error}}(error):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Connect\ retry?}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ connect\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ six.reraise(type(error),\ error,\ \_stacktrace)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ connect\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ connect\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00546}00546\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ error\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a43a1a3b18f01a10a1fc9eb99414cd6c2}{\_is\_read\_error}}(error):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Read\ retry?}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ read\ \textcolor{keywordflow}{is}\ \textcolor{keyword}{False}\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aeda6b34008e0733b33db2ba8fbf28ac2}{\_is\_method\_retryable}}(method):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ six.reraise(type(error),\ error,\ \_stacktrace)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ read\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ read\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ error:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Other\ retry?}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ other\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ other\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ response\ \textcolor{keywordflow}{and}\ response.get\_redirect\_location():}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Redirect\ retry?}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ redirect\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirect\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ cause\ =\ \textcolor{stringliteral}{"{}too\ many\ redirects"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ redirect\_location\ =\ response.get\_redirect\_location()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ status\ =\ response.status}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Incrementing\ because\ of\ a\ server\ error\ like\ a\ 500\ in}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ status\_forcelist\ and\ the\ given\ method\ is\ in\ the\ allowed\_methods}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00570}00570\ \ \ \ \ \ \ \ \ \ \ \ \ cause\ =\ ResponseError.GENERIC\_ERROR}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response\ \textcolor{keywordflow}{and}\ response.status:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00572}00572\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ status\_count\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ status\_count\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cause\ =\ ResponseError.SPECIFIC\_ERROR.format(status\_code=response.status)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ status\ =\ response.status}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00576}00576\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00577}00577\ \ \ \ \ \ \ \ \ history\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa343580fb5c5b2a386527b269f2c47c3}{history}}\ +\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1retry_a99366ddaf81835351e5b5285d79b0907}{RequestHistory}}(method,\ url,\ error,\ status,\ redirect\_location),}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00579}00579\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00581}00581\ \ \ \ \ \ \ \ \ new\_retry\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ab0cdd0056394d638f6ec4d383f6526a3}{new}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ total=total,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ connect=connect,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ read=read,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ redirect=redirect,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ status=status\_count,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ other=other,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ history=history,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00589}00589\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00590}00590\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\_retry.is\_exhausted():}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_max_retry_error}{MaxRetryError}}(\_pool,\ url,\ error\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_response_error}{ResponseError}}(cause))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ log.debug(\textcolor{stringliteral}{"{}Incremented\ Retry\ for\ (url='\%s'):\ \%r"{}},\ url,\ new\_retry)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00595}00595\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00596}00596\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_retry}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00598}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a61a1f3a6a4df93d491cd753f617782a2}{00598}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a61a1f3a6a4df93d491cd753f617782a2}{\_\_repr\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00599}00599\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{cls.\_\_name\_\_\}(total=\{self.total\},\ connect=\{self.connect\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}read=\{self.read\},\ redirect=\{self.redirect\},\ status=\{self.status\})"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00602}00602\ \ \ \ \ \ \ \ \ ).format(cls=type(self),\ self=self)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00604}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa5ba53f00590465d61d924cf8b40bfbe}{00604}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_aa5ba53f00590465d61d924cf8b40bfbe}{\_\_getattr\_\_}}(self,\ item):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ item\ ==\ \textcolor{stringliteral}{"{}method\_whitelist"{}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Remove\ this\ deprecated\ alias\ in\ v2.0}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Using\ 'method\_whitelist'\ with\ Retry\ is\ deprecated\ and\ "{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}will\ be\ removed\ in\ v2.0.\ Use\ 'allowed\_methods'\ instead"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_a52c8e6ec5d5efdc7c0bc5c9edd2b8298}{allowed\_methods}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(super(Retry,\ self),\ item)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00615}00615\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(Retry,\ item)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00617}00617\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00619}00619\ \textcolor{comment}{\#\ For\ backwards\ compatibility\ (equivalent\ to\ pre-\/v1.9):}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2retry_8py_source_l00620}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry_ad20935afa9af8d1f162c113cfbbf111d}{00620}}\ Retry.DEFAULT\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1retry_1_1_retry}{Retry}}(3)}
+
+\end{DoxyCode}

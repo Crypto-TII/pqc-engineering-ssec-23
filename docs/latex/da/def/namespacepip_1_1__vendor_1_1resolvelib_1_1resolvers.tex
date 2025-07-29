@@ -1,0 +1,223 @@
+\doxysection{pip.\+\_\+vendor.\+resolvelib.\+resolvers Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers}{}\label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_criterion}{Criterion}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_inconsistent_candidate}{Inconsistent\+Candidate}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_requirements_conflicted}{Requirements\+Conflicted}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolution}{Resolution}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolution_error}{Resolution\+Error}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolution_impossible}{Resolution\+Impossible}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolution_too_deep}{Resolution\+Too\+Deep}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolver}{Resolver}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1resolvelib_1_1resolvers_1_1_resolver_exception}{Resolver\+Exception}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a920573a7d914ffc9c267f8e8e3b91cd5}{\+\_\+has\+\_\+route\+\_\+to\+\_\+root}} (criteria, key, all\+\_\+keys, connected)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_acc9c78f4c7a3c2bba76bd0181f132736}{\+\_\+build\+\_\+result}} (state)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28642bf234a70e66a49cb11eacbc3989}{Requirement\+Information}}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} = collections.\+namedtuple("{}State"{}, "{}mapping criteria backtrack\+\_\+causes"{})
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28287671eaf7406afd604bd055ba4066}{Result}} = collections.\+namedtuple("{}Result"{}, "{}mapping graph criteria"{})
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_acc9c78f4c7a3c2bba76bd0181f132736}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}!\_build\_result@{\_build\_result}}
+\index{\_build\_result@{\_build\_result}!pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection{\texorpdfstring{\_build\_result()}{\_build\_result()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_acc9c78f4c7a3c2bba76bd0181f132736} 
+\+\_\+build\+\_\+result (\begin{DoxyParamCaption}\item[{}]{state}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{resolvers_8py_source_l00482}{482}} of file \mbox{\hyperlink{resolvers_8py_source}{resolvers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00482\ \textcolor{keyword}{def\ }\_build\_result(state):}
+\DoxyCodeLine{00483\ \ \ \ \ mapping\ =\ state.mapping}
+\DoxyCodeLine{00484\ \ \ \ \ all\_keys\ =\ \{id(v):\ k\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ mapping.items()\}}
+\DoxyCodeLine{00485\ \ \ \ \ all\_keys[id(\textcolor{keywordtype}{None})]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ graph\ =\ DirectedGraph()}
+\DoxyCodeLine{00488\ \ \ \ \ graph.add(\textcolor{keywordtype}{None})\ \ \textcolor{comment}{\#\ Sentinel\ as\ root\ dependencies'\ parent.}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ connected\ =\ \{\textcolor{keywordtype}{None}\}}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ criterion\ \textcolor{keywordflow}{in}\ state.criteria.items():}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ \_has\_route\_to\_root(state.criteria,\ key,\ all\_keys,\ connected):}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ graph:}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ graph.add(key)}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ p\ \textcolor{keywordflow}{in}\ criterion.iter\_parent():}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pkey\ =\ all\_keys[id(p)]}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pkey\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ graph:}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ graph.add(pkey)}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ graph.connect(pkey,\ key)}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keywordflow}{return}\ Result(}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ mapping=\{k:\ v\ \textcolor{keywordflow}{for}\ k,\ v\ \textcolor{keywordflow}{in}\ mapping.items()\ \textcolor{keywordflow}{if}\ k\ \textcolor{keywordflow}{in}\ connected\},}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ graph=graph,}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ criteria=state.criteria,}
+\DoxyCodeLine{00509\ \ \ \ \ )}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{resolvers_8py_source_l00460}{\+\_\+has\+\_\+route\+\_\+to\+\_\+root()}}, and \mbox{\hyperlink{resolvers_8py_source_l00479}{Result}}.
+
+
+
+Referenced by \mbox{\hyperlink{resolvers_8py_source_l00517}{Resolver.\+resolve()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=286pt]{da/def/namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_acc9c78f4c7a3c2bba76bd0181f132736_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{da/def/namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_acc9c78f4c7a3c2bba76bd0181f132736_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a920573a7d914ffc9c267f8e8e3b91cd5}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}!\_has\_route\_to\_root@{\_has\_route\_to\_root}}
+\index{\_has\_route\_to\_root@{\_has\_route\_to\_root}!pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection{\texorpdfstring{\_has\_route\_to\_root()}{\_has\_route\_to\_root()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a920573a7d914ffc9c267f8e8e3b91cd5} 
+\+\_\+has\+\_\+route\+\_\+to\+\_\+root (\begin{DoxyParamCaption}\item[{}]{criteria}{, }\item[{}]{key}{, }\item[{}]{all\+\_\+keys}{, }\item[{}]{connected}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{resolvers_8py_source_l00460}{460}} of file \mbox{\hyperlink{resolvers_8py_source}{resolvers.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00460\ \textcolor{keyword}{def\ }\_has\_route\_to\_root(criteria,\ key,\ all\_keys,\ connected):}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{in}\ connected:}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ criteria:}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keywordflow}{for}\ p\ \textcolor{keywordflow}{in}\ criteria[key].iter\_parent():}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ pkey\ =\ all\_keys[id(p)]}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pkey\ \textcolor{keywordflow}{in}\ connected:}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ connected.add(key)}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_has\_route\_to\_root(criteria,\ pkey,\ all\_keys,\ connected):}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ connected.add(key)}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{resolvers_8py_source_l00460}{\+\_\+has\+\_\+route\+\_\+to\+\_\+root()}}.
+
+
+
+Referenced by \mbox{\hyperlink{resolvers_8py_source_l00482}{\+\_\+build\+\_\+result()}}, and \mbox{\hyperlink{resolvers_8py_source_l00460}{\+\_\+has\+\_\+route\+\_\+to\+\_\+root()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=179pt]{da/def/namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a920573a7d914ffc9c267f8e8e3b91cd5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{da/def/namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a920573a7d914ffc9c267f8e8e3b91cd5_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28642bf234a70e66a49cb11eacbc3989}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}!RequirementInformation@{RequirementInformation}}
+\index{RequirementInformation@{RequirementInformation}!pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection{\texorpdfstring{RequirementInformation}{RequirementInformation}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28642bf234a70e66a49cb11eacbc3989} 
+Requirement\+Information}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ collections.namedtuple(}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{stringliteral}{"{}RequirementInformation"{}},\ [\textcolor{stringliteral}{"{}requirement"{}},\ \textcolor{stringliteral}{"{}parent"{}}]}
+\DoxyCodeLine{00003\ )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{resolvers_8py_source_l00008}{8}} of file \mbox{\hyperlink{resolvers_8py_source}{resolvers.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{resolvers_8py_source_l00138}{Resolution.\+\_\+add\+\_\+to\+\_\+criteria()}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28287671eaf7406afd604bd055ba4066}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}!Result@{Result}}
+\index{Result@{Result}!pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection{\texorpdfstring{Result}{Result}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a28287671eaf7406afd604bd055ba4066} 
+Result = collections.\+namedtuple("{}Result"{}, "{}mapping graph criteria"{})}
+
+
+
+Definition at line \mbox{\hyperlink{resolvers_8py_source_l00479}{479}} of file \mbox{\hyperlink{resolvers_8py_source}{resolvers.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{resolvers_8py_source_l00482}{\+\_\+build\+\_\+result()}}.
+
+\Hypertarget{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a5d74787dedbc4e11c1ab15bf487e61f8}\index{pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}!State@{State}}
+\index{State@{State}!pip.\_vendor.resolvelib.resolvers@{pip.\_vendor.resolvelib.resolvers}}
+\doxysubsubsection{\texorpdfstring{State}{State}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1resolvelib_1_1resolvers_a5d74787dedbc4e11c1ab15bf487e61f8} 
+State = collections.\+namedtuple("{}State"{}, "{}mapping criteria backtrack\+\_\+causes"{})}
+
+
+
+Definition at line \mbox{\hyperlink{resolvers_8py_source_l00102}{102}} of file \mbox{\hyperlink{resolvers_8py_source}{resolvers.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{resolvers_8py_source_l00124}{Resolution.\+\_\+push\+\_\+new\+\_\+state()}}, and \mbox{\hyperlink{resolvers_8py_source_l00381}{Resolution.\+resolve()}}.
+

@@ -1,0 +1,61 @@
+\doxysection{pip.\+\_\+internal.\+network.\+lazy\+\_\+wheel Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1network_1_1lazy__wheel}{}\label{namespacepip_1_1__internal_1_1network_1_1lazy__wheel}\index{pip.\_internal.network.lazy\_wheel@{pip.\_internal.network.lazy\_wheel}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1lazy__wheel_1_1_h_t_t_p_range_request_unsupported}{HTTPRange\+Request\+Unsupported}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1lazy__wheel_1_1_lazy_zip_over_h_t_t_p}{Lazy\+Zip\+Over\+HTTP}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution}{Base\+Distribution}} \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1lazy__wheel_a2cc73b617d4e4bececd1b63cb4dbc4cf}{dist\+\_\+from\+\_\+wheel\+\_\+url}} (str name, str url, Pip\+Session session)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Lazy ZIP over HTTP\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1lazy__wheel_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1network_1_1lazy__wheel_a2cc73b617d4e4bececd1b63cb4dbc4cf}\index{pip.\_internal.network.lazy\_wheel@{pip.\_internal.network.lazy\_wheel}!dist\_from\_wheel\_url@{dist\_from\_wheel\_url}}
+\index{dist\_from\_wheel\_url@{dist\_from\_wheel\_url}!pip.\_internal.network.lazy\_wheel@{pip.\_internal.network.lazy\_wheel}}
+\doxysubsubsection{\texorpdfstring{dist\_from\_wheel\_url()}{dist\_from\_wheel\_url()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1network_1_1lazy__wheel_a2cc73b617d4e4bececd1b63cb4dbc4cf} 
+ \mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution}{Base\+Distribution}} dist\+\_\+from\+\_\+wheel\+\_\+url (\begin{DoxyParamCaption}\item[{str}]{name}{, }\item[{str}]{url}{, }\item[{Pip\+Session}]{session}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Return a distribution object from the given wheel URL.
+
+This uses HTTP range requests to only fetch the portion of the wheel
+containing metadata, just enough for the object to be constructed.
+If such requests are not supported, HTTPRangeRequestUnsupported
+is raised.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{lazy__wheel_8py_source_l00023}{23}} of file \mbox{\hyperlink{lazy__wheel_8py_source}{lazy\+\_\+wheel.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00023\ \textcolor{keyword}{def\ }dist\_from\_wheel\_url(name:\ str,\ url:\ str,\ session:\ PipSession)\ -\/>\ BaseDistribution:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ distribution\ object\ from\ the\ given\ wheel\ URL.}}
+\DoxyCodeLine{00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00026\ \textcolor{stringliteral}{\ \ \ \ This\ uses\ HTTP\ range\ requests\ to\ only\ fetch\ the\ portion\ of\ the\ wheel}}
+\DoxyCodeLine{00027\ \textcolor{stringliteral}{\ \ \ \ containing\ metadata,\ just\ enough\ for\ the\ object\ to\ be\ constructed.}}
+\DoxyCodeLine{00028\ \textcolor{stringliteral}{\ \ \ \ If\ such\ requests\ are\ not\ supported,\ HTTPRangeRequestUnsupported}}
+\DoxyCodeLine{00029\ \textcolor{stringliteral}{\ \ \ \ is\ raised.}}
+\DoxyCodeLine{00030\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{with}\ LazyZipOverHTTP(url,\ session)\ \textcolor{keyword}{as}\ zf:}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ For\ read-\/only\ ZIP\ files,\ ZipFile\ only\ needs\ methods\ read,}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ seek,\ seekable\ and\ tell,\ not\ the\ whole\ IO\ protocol.}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ wheel\ =\ MemoryWheel(zf.name,\ zf)\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ After\ context\ manager\ exit,\ wheel.name}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ is\ an\ invalid\ file\ by\ intention.}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_wheel\_distribution(wheel,\ canonicalize\_name(name))}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ }
+
+\end{DoxyCode}

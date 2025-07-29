@@ -1,0 +1,412 @@
+\doxysection{E\+:/pqc-\/engineering-\/ssec-\/23/d\+CTIDH/src/\+CTIDH/ctidh.c File Reference}
+\hypertarget{src_2_c_t_i_d_h_2ctidh_8c}{}\label{src_2_c_t_i_d_h_2ctidh_8c}\index{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/CTIDH/ctidh.c@{E:/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/CTIDH/ctidh.c}}
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include "{}ctidh.\+h"{}}\newline
+{\ttfamily \#include "{}isogeny\+\_\+walks.\+h"{}}\newline
+{\ttfamily \#include "{}../common/primes.\+h"{}}\newline
+{\ttfamily \#include "{}../common/int64mask.\+h"{}}\newline
+{\ttfamily \#include "{}../common/elligator.\+h"{}}\newline
+{\ttfamily \#include "{}../common/random.\+h"{}}\newline
+{\ttfamily \#include "{}../common/fp/fp-\/counters.\+h"{}}\newline
+Include dependency graph for ctidh.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/dd0/src_2_c_t_i_d_h_2ctidh_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_ad6eaa6451c6422920550bf06f4169b6d}{fulltorsion\+\_\+points}} (\mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}} u, \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}} const \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}})
+\item 
+void \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_a3d7a2d4a7501eca430997c1af6984de8}{action}} (\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} \texorpdfstring{$\ast$}{*}out, \mbox{\hyperlink{structpublic__key}{public\+\_\+key}} const \texorpdfstring{$\ast$}{*}in, \mbox{\hyperlink{structprivate__key}{private\+\_\+key}} const \texorpdfstring{$\ast$}{*}priv)
+\item 
+bool \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_a16c24b59d32ee85588cc61c9770e378b}{csidh}} (\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} \texorpdfstring{$\ast$}{*}out, \mbox{\hyperlink{structpublic__key}{public\+\_\+key}} const \texorpdfstring{$\ast$}{*}in, \mbox{\hyperlink{structprivate__key}{private\+\_\+key}} const \texorpdfstring{$\ast$}{*}priv)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \mbox{\hyperlink{structpublic__key}{public\+\_\+key}} \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_ae5a97e9debf3707d97dfb35dc631a0ca}{base}} = \{.A = \{0\}, .seed = ELLIGATOR\+\_\+\+SEED\}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_a3d7a2d4a7501eca430997c1af6984de8}\index{ctidh.c@{ctidh.c}!action@{action}}
+\index{action@{action}!ctidh.c@{ctidh.c}}
+\doxysubsubsection{\texorpdfstring{action()}{action()}}
+{\footnotesize\ttfamily \label{src_2_c_t_i_d_h_2ctidh_8c_a3d7a2d4a7501eca430997c1af6984de8} 
+void action (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} \texorpdfstring{$\ast$}{*}}]{out}{, }\item[{\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} const \texorpdfstring{$\ast$}{*}}]{in}{, }\item[{\mbox{\hyperlink{structprivate__key}{private\+\_\+key}} const \texorpdfstring{$\ast$}{*}}]{priv}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source_l00176}{176}} of file \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source}{ctidh.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00177\ \{}
+\DoxyCodeLine{00178\ \textcolor{comment}{//\ \#if\ !defined(\_M1\_)\ \&\&\ !defined(\_M2\_)\ \&\&\ !defined(\_M3\_)\ \&\&\ !defined(\_M4\_)\ \&\&\ !defined(\_M5\_)}}
+\DoxyCodeLine{00179\ \textcolor{comment}{//\ \ \ printf("{}\(\backslash\)nNOT\ using\ radical\ 3-\/isogenies\ (action).\(\backslash\)n\(\backslash\)n"{});}}
+\DoxyCodeLine{00180\ \textcolor{comment}{//\ \#else}}
+\DoxyCodeLine{00181\ \textcolor{comment}{//\ \ \ printf("{}\(\backslash\)nUsing\ 2\string^\%ld\ radical\ 3-\/isogenies.\(\backslash\)n\(\backslash\)n"{},\ batch\_start[0]\ -\/\ 1);}}
+\DoxyCodeLine{00182\ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ init\_counters();}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{structproj}{proj}}\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}};}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x,\ in-\/>A);}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z,\ \mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}});}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{structproj}{proj}}\ A24;}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{mont_8h_a1983214d89665bc95ea846ba0d45114b}{xA24}}(\&A24,\ \&A);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{structproj}{proj}}\ Points[2];}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ seed;}
+\DoxyCodeLine{00195\ \ \ fp\_set(seed,\ in-\/>seed);}
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{fp-gmp_8h_aa73022969fcd23d0d81d0b7115248d5d}{fp\_enc}}(seed,\ seed);}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{elligator_8h_ab62f777855b4aeae0423f37feb8386e2}{elligator\_seeded}}(\&Points[0],\ \&Points[1],\ \&A24,\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ *)seed);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ clearpublicprimes(\&Points[0],\ \&A24);}
+\DoxyCodeLine{00200\ \ \ clearpublicprimes(\&Points[1],\ \&A24);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \textcolor{comment}{//\ clear\ ells\ replaced\ by\ radical\ 3-\/isogenies}}
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0];\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00204\ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00207\ \ \ \}}
+\DoxyCodeLine{00208\ \ \ \textcolor{comment}{//\ clear\ ells\ not\ used\ in\ the\ keyspace}}
+\DoxyCodeLine{00209\ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ primes\_num;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00210\ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00213\ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{comment}{//\ collect\ primes\ not\ used\ in\ the\ key\ ...}}
+\DoxyCodeLine{00216\ \ \ int16\_t\ unused[\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1];}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ int16\_t\ u\ =\ 0;}
+\DoxyCodeLine{00219\ \ \ int16\_t\ e\ =\ 0;}
+\DoxyCodeLine{00220\ \ \ int16\_t\ w\ =\ 0;}
+\DoxyCodeLine{00221\ \ \ \textcolor{keywordflow}{for}\ (e\ =\ 0;\ e\ <=\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1];\ e++)}
+\DoxyCodeLine{00222\ \ \ \{}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&u,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&e,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&w,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ unused[u]\ =\ e;}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ int64\_t\ mov\ =\ -\/int64mask\_equal((int64\_t)e,\ (int64\_t)priv-\/>ells[w]);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ t1,\ t2;}
+\DoxyCodeLine{00234\ \ \ \ \ t1[0]\ =\ u;}
+\DoxyCodeLine{00235\ \ \ \ \ t2[0]\ =\ u\ +\ 1;}
+\DoxyCodeLine{00236\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a5324909527d54f9d1ec902b743b5133c}{fp\_cmov}}(\&t1,\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ *)\&t2,\ 1\ -\/\ mov);}
+\DoxyCodeLine{00237\ \ \ \ \ u\ =\ t1[0];}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ t1[0]\ =\ w;}
+\DoxyCodeLine{00240\ \ \ \ \ t2[0]\ =\ w\ +\ 1;}
+\DoxyCodeLine{00241\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a5324909527d54f9d1ec902b743b5133c}{fp\_cmov}}(\&t1,\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ *)\&t2,\ mov);}
+\DoxyCodeLine{00242\ \ \ \ \ w\ =\ t1[0];}
+\DoxyCodeLine{00243\ \ \ \}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \textcolor{comment}{//\ ...\ and\ remove\ them\ from\ our\ points}}
+\DoxyCodeLine{00246\ \ \ int16\_t\ tmp\_b\ =\ 0;}
+\DoxyCodeLine{00247\ \ \ \textcolor{keywordflow}{for}\ (u\ =\ 0;\ u\ <=\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ -\/\ WOMBATKEYS;\ u++)}
+\DoxyCodeLine{00248\ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ int16\_t\ t\ =\ unused[u];}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[tmp\_b])}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ tmp\_b++;}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ int64\_t\ dac\ =\ lookup(t,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}});}
+\DoxyCodeLine{00254\ \ \ \ \ int64\_t\ daclen\ =\ lookup(t,\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}});}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[tmp\_b]);}
+\DoxyCodeLine{00257\ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[tmp\_b]);}
+\DoxyCodeLine{00258\ \ \ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \mbox{\hyperlink{structproj}{proj}}\ ramifications[2\ *\ WOMBATKEYS]\ =\ \{0\};}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{int}\ inner,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ block\ =\ 0,\ \textcolor{comment}{//\ current\ size\ of\ ramifications}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ pos,\ \ \ \ \ \ \ \textcolor{comment}{//\ index\ of\ the\ current\ small\ odd\ prime\ to\ be\ processed}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ k\ =\ 0;\ \ \ \ \ \textcolor{comment}{//\ strategy\ element}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ int64\_t\ moves\ =\ 0,\ \textcolor{comment}{//\ required\ for\ reaching\ an\ torsion-\/(l\_pos)\ point}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ xmul\_counter[WOMBATKEYS]\ =\ \{0\},}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ Plen\ =\ 0;}
+\DoxyCodeLine{00270\ \ \ (void)pos;}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ int8\_t\ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}}\ =\ 0;}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ proj\_copy(\&ramifications[0],\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *)\&Points[0]);\ \textcolor{comment}{//\ point\ on\ E[\(\backslash\)pi\ +\ 1]}}
+\DoxyCodeLine{00275\ \ \ proj\_copy(\&ramifications[1],\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *)\&Points[1]);\ \textcolor{comment}{//\ point\ on\ E[\(\backslash\)pi\ -\/\ 1]}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ int16\_t\ current\_batch\ =\ 0;\ \textcolor{comment}{//primes\_batches\ -\/\ 1;}}
+\DoxyCodeLine{00278\ \ \ int16\_t\ current\_batch\_inner\ =\ \mbox{\hyperlink{primes_8h_a950dc149fa08d10049e01546ca3562b3}{batch\_numkeys}}[current\_batch];}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{structproj}{proj}}\ Points\_[2\ *\ WOMBATKEYS]\ =\ \{0\};}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \textcolor{comment}{//\ \#pragma\ unroll\ WOMBATKEYS}}
+\DoxyCodeLine{00283\ \ \ \textcolor{comment}{//int64\_t\ tmp\_cost\ =\ fpmul+fpsqr;}}
+\DoxyCodeLine{00284\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ =\ WOMBATKEYS\ -\/\ 1;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ >=\ 0;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}-\/-\/)}
+\DoxyCodeLine{00285\ \ \ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{if}\ ((WOMBATKEYS\ -\/\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ -\/\ 1)\ >\ \mbox{\hyperlink{primes_8h_a3a6da910ef8a7d99406350469d1fba82}{batch\_keybounds\_stop}}[current\_batch])}
+\DoxyCodeLine{00287\ \ \ \ \ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ current\_batch++;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ current\_batch\_inner\ =\ \mbox{\hyperlink{primes_8h_a950dc149fa08d10049e01546ca3562b3}{batch\_numkeys}}[current\_batch];}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \ \ uint16\_t\ flip\_index\ =\ WOMBATKEYS\ -\/\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ -\/1;}
+\DoxyCodeLine{00294\ \ \ \ \ uint16\_t\ current\_ell\_index\ =\ priv-\/>ells[flip\_index];}
+\DoxyCodeLine{00295\ \ \ \ \ uint64\_t\ current\_ell\ =\ lookup(current\_ell\_index,\ \mbox{\hyperlink{primes_8h_a137794744a03163a524ebb2aac2105c0}{primes}});}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{comment}{//\ 0\ -\/>\ dummy,\ 1\ -\/>\ +\ direction,\ 2\ -\/>\ -\/\ direction}}
+\DoxyCodeLine{00297\ \ \ \ \ int64\_t\ direction\ =\ priv-\/>directions[flip\_index];}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ uint64\_t\ lowerend\_ell\ =\ \mbox{\hyperlink{primes_8h_a137794744a03163a524ebb2aac2105c0}{primes}}[\mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[current\_batch]\ +\ \mbox{\hyperlink{primes_8h_a950dc149fa08d10049e01546ca3562b3}{batch\_numkeys}}[current\_batch]\ -\/\ current\_batch\_inner];}
+\DoxyCodeLine{00300\ \ \ \ \ uint64\_t\ upperend\_ell\ =\ \mbox{\hyperlink{primes_8h_a137794744a03163a524ebb2aac2105c0}{primes}}[\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[current\_batch]\ -\/\ current\_batch\_inner\ +\ 1];}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{//\ conditional\ swap\ based\ on\ direction}}
+\DoxyCodeLine{00304\ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}}\ =\ -\/int64mask\_equal(direction,\ (int64\_t)2);}
+\DoxyCodeLine{00305\ \ \ \ \ proj\_cswap(\&ramifications[0+\ 2\ *\ block],\ \&ramifications[1+\ 2\ *\ block],\ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}});}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ tmp\_b\ =\ primes\_batches-\/1;}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keywordflow}{while}\ (moves\ <\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}})}
+\DoxyCodeLine{00309\ \ \ \ \ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ block\ +=\ 1;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ proj\_copy(\&ramifications[0\ +\ 2\ *\ block],\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *)\&ramifications[0\ +\ 2\ *\ (block\ -\/\ 1)]);\ \textcolor{comment}{//\ point\ on\ E[\(\backslash\)pi\ +\ 1]}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ proj\_copy(\&ramifications[1\ +\ 2\ *\ block],\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *)\&ramifications[1\ +\ 2\ *\ (block\ -\/\ 1)]);\ \textcolor{comment}{//\ point\ on\ E[\(\backslash\)pi\ -\/\ 1]}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \textcolor{comment}{//\ \#pragma\ unroll}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (inner\ =\ moves;\ inner\ <\ (moves\ +\ \mbox{\hyperlink{primes_8h_a13808516eae49ebd8e85930b3d04e825}{strategy}}[k]);\ inner++)}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ pos\ =\ WOMBATKEYS\ -\/\ inner\ -\/1;}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ \mbox{\hyperlink{primes_8h_a0c186a4875e68bfc39a2688c42d12e26}{batch\_keybounds\_start}}[tmp\_b])}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ tmp\_b-\/-\/;}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ int64\_t\ dac\ =\ lookup(priv-\/>ells[pos],\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}});}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ int64\_t\ daclen\ =\ lookup(priv-\/>ells[pos],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}});}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(moves\ +\ \mbox{\hyperlink{primes_8h_a13808516eae49ebd8e85930b3d04e825}{strategy}}[k]\ <\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}})}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&ramifications[0\ +\ 2\ *\ block],\ \&A24,\ 0,\ \&ramifications[0\ +\ 2\ *\ block],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[tmp\_b]);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&ramifications[1\ +\ 2\ *\ block],\ \&A24,\ 0,\ \&ramifications[1\ +\ 2\ *\ block],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[tmp\_b]);}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{\ \textcolor{comment}{//\ current\ block}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&ramifications[0\ +\ 2\ *\ block],\ \&A24,\ 0,\ \&ramifications[0\ +\ 2\ *\ block],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[tmp\_b]);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \ \ xmul\_counter[block]\ =\ \mbox{\hyperlink{primes_8h_a13808516eae49ebd8e85930b3d04e825}{strategy}}[k];\ \textcolor{comment}{//\ the\ k-\/th\ element\ is\ used\ for\ next\ iteration\ on\ moves}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ moves\ +=\ \mbox{\hyperlink{primes_8h_a13808516eae49ebd8e85930b3d04e825}{strategy}}[k];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ moves\ is\ incremented}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ k\ +=\ 1;}
+\DoxyCodeLine{00338\ \ \ \ \ \}\ }
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{//\ how\ many\ points\ should\ be\ evaluated?}}
+\DoxyCodeLine{00341\ \ \ \ \ Plen\ =\ 2\ *\ block;}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ }
+\DoxyCodeLine{00344\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Anew;}
+\DoxyCodeLine{00345\ \ \ \ \ proj\_copy(\&Anew,\ \&A);}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ Plen;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00347\ \ \ \ \ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \textcolor{comment}{//\ backup\ for\ the\ dummy\ case}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ proj\_copy(\&Points\_[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \&ramifications[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00350\ \ \ \ \ \}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \mbox{\hyperlink{mont_8h_ac3af9f03d84babaea6d4d2faea220ba1}{xISOG\_matryoshka}}(\&Anew,\ Points\_,\ Plen,\ \&ramifications[0\ +\ 2\ *\ block],\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{comment}{//\ copy\ back}}
+\DoxyCodeLine{00356\ \ \ \ \ proj\_cmov(\&A,\ \&Anew,\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{00357\ \ \ \ \ \mbox{\hyperlink{mont_8h_a1983214d89665bc95ea846ba0d45114b}{xA24}}(\&A24,\ \&A);}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ Plen;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00361\ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ proj\_cmov(\&ramifications[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \&Points\_[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \textcolor{comment}{//\ in\ case\ of\ dummy,\ we\ still\ need\ to\ "{}remove"{}\ degree}}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ }
+\DoxyCodeLine{00366\ \ \ \ \ \ \ int64\_t\ dac\ =\ lookup(current\_ell\_index,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}});}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ int64\_t\ daclen\ =\ lookup(current\_ell\_index,\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}});}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&ramifications[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \&A24,\ 0,\ \&ramifications[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ dac,\ daclen,\ \mbox{\hyperlink{primes_8h_a258b7d004311e956a8eac8954d5d184d}{batch\_maxdac}}[current\_batch]);}
+\DoxyCodeLine{00370\ \ \ \ \ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{comment}{//\ Configuring\ for\ the\ next\ iteration}}
+\DoxyCodeLine{00374\ \ \ \ \ moves\ -\/=\ xmul\_counter[block];}
+\DoxyCodeLine{00375\ \ \ \ \ xmul\_counter[block]\ =\ 0;}
+\DoxyCodeLine{00376\ \ \ \ \ block\ -\/=\ 1;}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{comment}{//\ swap\ back\ based\ on\ direction}}
+\DoxyCodeLine{00378\ \ \ \ \ proj\_cswap(\&ramifications[0+\ 2\ *\ block],\ \&ramifications[1+\ 2\ *\ block],\ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}});}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \ \ \ \ current\_batch\_inner-\/-\/;}
+\DoxyCodeLine{00381\ \ \ \}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#if\ defined(\_M0\_)}}
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a4fe5cafb16f3d0021f55eca85d443683}{fp\_inv}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);}
+\DoxyCodeLine{00385\ \ \ \ \ fp\_mul2(\&\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x,\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ *)\&\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);}
+\DoxyCodeLine{00386\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(out-\/>\mbox{\hyperlink{structpublic__key_a72d8790e9a07d07ac5b6e1a33a632dc5}{A}},\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x);}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00388\ \ \ \ \ \mbox{\hyperlink{c-code_2src_2isogeny__walks_8h_aabca2fefba993020f78751d17d6b468c}{isogeny\_walks\_3\_fp}}(out-\/>\mbox{\hyperlink{structpublic__key_a72d8790e9a07d07ac5b6e1a33a632dc5}{A}},\ A,\ priv-\/>radical\_length,\ priv-\/>radical\_direction);}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ctidh_8h_source_l00040}{public\+\_\+key\+::A}}, \mbox{\hyperlink{primes_8h_source_l00057}{batch\+\_\+keybounds\+\_\+start}}, \mbox{\hyperlink{primes_8h_source_l00058}{batch\+\_\+keybounds\+\_\+stop}}, \mbox{\hyperlink{primes_8h_source_l00060}{batch\+\_\+maxdac}}, \mbox{\hyperlink{primes_8h_source_l00059}{batch\+\_\+numkeys}}, \mbox{\hyperlink{primes_8h_source_l00055}{batch\+\_\+start}}, \mbox{\hyperlink{primes_8h_source_l00056}{batch\+\_\+stop}}, \mbox{\hyperlink{ctidh_8h_source_l00033}{private\+\_\+key\+::directions}}, \mbox{\hyperlink{elligator_8h_source_l00008}{elligator\+\_\+seeded}}, \mbox{\hyperlink{ctidh_8h_source_l00032}{private\+\_\+key\+::ells}}, \mbox{\hyperlink{fp-gmp_8h_source_l00048}{fp\+\_\+1}}, \mbox{\hyperlink{fp-gmp_8h_source_l00323}{fp\+\_\+cmov}}, \mbox{\hyperlink{fp-gmp_8h_source_l00079}{fp\+\_\+copy}}, \mbox{\hyperlink{fp-gmp_8h_source_l00055}{fp\+\_\+enc}}, \mbox{\hyperlink{fp-gmp_8h_source_l00088}{fp\+\_\+inv}}, \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}, \mbox{\hyperlink{c-code_2src_2isogeny__walks__3__fp_8c_source_l00217}{isogeny\+\_\+walks\+\_\+3\+\_\+fp()}}, \mbox{\hyperlink{prime__search_8m_source_l00012}{j}}, \mbox{\hyperlink{primes_8h_source_l00051}{primes}}, \mbox{\hyperlink{primes_8h_source_l00052}{primes\+\_\+dac}}, \mbox{\hyperlink{primes_8h_source_l00053}{primes\+\_\+daclen}}, \mbox{\hyperlink{ctidh_8h_source_l00035}{private\+\_\+key\+::radical\+\_\+direction}}, \mbox{\hyperlink{ctidh_8h_source_l00034}{private\+\_\+key\+::radical\+\_\+length}}, \mbox{\hyperlink{ctidh_8h_source_l00041}{public\+\_\+key\+::seed}}, \mbox{\hyperlink{primes2047m1l226_8c_source_l00079}{strategy}}, \mbox{\hyperlink{benchmarks__main_8c_source_l00009}{swap()}}, \mbox{\hyperlink{mont_8h_source_l00017}{x\+A24}}, \mbox{\hyperlink{mont_8h_source_l00024}{x\+ISOG\+\_\+matryoshka}}, and \mbox{\hyperlink{mont_8h_source_l00021}{x\+MUL\+\_\+dac}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{db/d3f/src_2_c_t_i_d_h_2ctidh_8c_a3d7a2d4a7501eca430997c1af6984de8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_a16c24b59d32ee85588cc61c9770e378b}\index{ctidh.c@{ctidh.c}!csidh@{csidh}}
+\index{csidh@{csidh}!ctidh.c@{ctidh.c}}
+\doxysubsubsection{\texorpdfstring{csidh()}{csidh()}}
+{\footnotesize\ttfamily \label{src_2_c_t_i_d_h_2ctidh_8c_a16c24b59d32ee85588cc61c9770e378b} 
+bool csidh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} \texorpdfstring{$\ast$}{*}}]{out}{, }\item[{\mbox{\hyperlink{structpublic__key}{public\+\_\+key}} const \texorpdfstring{$\ast$}{*}}]{in}{, }\item[{\mbox{\hyperlink{structprivate__key}{private\+\_\+key}} const \texorpdfstring{$\ast$}{*}}]{priv}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source_l00394}{394}} of file \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source}{ctidh.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00395\ \{}
+\DoxyCodeLine{00396\ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{ctidh_8h_a2ead90c83cecd062dd9dc5229a729612}{validate}}(in))}
+\DoxyCodeLine{00397\ \ \ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_afe624b010306dd35023fcd3ccbcf3378}{fp\_random}}(out-\/>\mbox{\hyperlink{structpublic__key_a72d8790e9a07d07ac5b6e1a33a632dc5}{A}});}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00400\ \ \ \}}
+\DoxyCodeLine{00401\ \ \ \mbox{\hyperlink{ctidh_8h_a9aee97121de573073646701bc150f4b0}{action}}(out,\ in,\ priv);}
+\DoxyCodeLine{00402\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00403\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ctidh_8h_source_l00040}{public\+\_\+key\+::A}}, \mbox{\hyperlink{ctidh_8h_source_l00054}{action}}, \mbox{\hyperlink{fp-gmp_8h_source_l00085}{fp\+\_\+random}}, and \mbox{\hyperlink{ctidh_8h_source_l00053}{validate}}.
+
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_ad6eaa6451c6422920550bf06f4169b6d}\index{ctidh.c@{ctidh.c}!fulltorsion\_points@{fulltorsion\_points}}
+\index{fulltorsion\_points@{fulltorsion\_points}!ctidh.c@{ctidh.c}}
+\doxysubsubsection{\texorpdfstring{fulltorsion\_points()}{fulltorsion\_points()}}
+{\footnotesize\ttfamily \label{src_2_c_t_i_d_h_2ctidh_8c_ad6eaa6451c6422920550bf06f4169b6d} 
+void fulltorsion\+\_\+points (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}}]{u}{, }\item[{\mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}} const}]{a}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source_l00103}{103}} of file \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source}{ctidh.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Tp,\ Tm,\ Pp[\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1],\ Pm[\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1],\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}};}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ Convert\ curve\ to\ projective\ Montgomery\ form\ (A'\ +\ 2C\ :\ 4C)}}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_ad0b6e5afb2fdd4f50fd2714fc59931ab}{fp\_copy}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x,\ \mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}});}
+\DoxyCodeLine{00110\ \ \ \ \ fp\_set1(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);}
+\DoxyCodeLine{00111\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);\ \textcolor{comment}{//\ 2C}}
+\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.x,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);\ \textcolor{comment}{//\ A'\ +\ 2C}}
+\DoxyCodeLine{00113\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(\mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z,\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}}.z);\ \textcolor{comment}{//\ 4C}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ fp\_set0(u);\ \textcolor{comment}{//\ u\ <-\/\ 0}}
+\DoxyCodeLine{00116\ \ \ \ \ uint8\_t\ boolp\ =\ 0,\ boolm\ =\ 0;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00119\ \ \ \ \ \{}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&A,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}}));}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&boolp,\ \textcolor{keyword}{sizeof}(uint8\_t));}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&boolm,\ \textcolor{keyword}{sizeof}(uint8\_t));}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&Tp,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}}));}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Pp,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ (\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1\ -\/\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0]));}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Pm,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ (\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1\ -\/\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0]));}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_a80f123b780aa89ca8990f737ca4cb107}{fp\_add}}(u,\ u,\ \mbox{\hyperlink{fp-gmp_8h_a4ec3519815103a8a92bd612f933abbb1}{fp\_1}});\ \textcolor{comment}{//\ u\ <-\/\ u\ +\ 1\ ...\ Recall,\ 1\ must\ be\ in\ Montgomery\ domain}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{elligator_8h_ab62f777855b4aeae0423f37feb8386e2}{elligator\_seeded}}(\&Tp,\ \&Tm,\ \&A,\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}\ *)u);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ clearpublicprimes(\&Tp,\ \&A);}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ clearpublicprimes(\&Tm,\ \&A);}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clear\ ells\ replaced\ by\ radical\ 3-\/isogenies}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0];\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Tp,\ \&A,\ 0,\ \&Tp,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Tm,\ \&A,\ 0,\ \&Tm,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clear\ ells\ not\ used\ in\ the\ keyspace}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ primes\_num;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Tp,\ \&A,\ 0,\ \&Tp,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mont_8h_a33bcb2a867a845121bac1591c68456d1}{xMUL\_dac}}(\&Tm,\ \&A,\ 0,\ \&Tm,\ \mbox{\hyperlink{primes_8h_a56cb00c68833427c91926115f0eb70f0}{primes\_dac}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}],\ \mbox{\hyperlink{primes_8h_a91122dc998b135229e3bbde3ed578d80}{primes\_daclen}}[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Checking\ if\ Tp\ is\ an\ order\ (p+1)/(2\string^e)}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ proj\_copy(\&Pp[0],\ \&Tp);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ctidh_8h_aef94c206880c1495cff4b5fa89212810}{cofactor\_multiples}}(Pp,\ A,\ 0,\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ boolp\ =\ 1;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0];\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ (int)(\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1);\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ boolp\ \&=\ (1\ -\/\ fp\_iszero(Pp[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}].z));}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (1\ -\/\ boolp)}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/>\ This\ can\ be\ removed\ for\ wd1\ style}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Checking\ if\ Tm\ is\ an\ order\ (p+1)/(2\string^e)}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ proj\_copy(\&Pm[0],\ \&Tm);}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ctidh_8h_aef94c206880c1495cff4b5fa89212810}{cofactor\_multiples}}(Pm,\ A,\ 0,\ \mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ boolm\ =\ 1;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ \mbox{\hyperlink{primes_8h_a63de22a96a777bab244dd0850f58fed9}{batch\_start}}[0];\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <\ (int)(\mbox{\hyperlink{primes_8h_acc9e03579591509b3edb49d07bc8cca6}{batch\_stop}}[primes\_batches\ -\/\ 1]\ +\ 1);\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ boolm\ \&=\ (1\ -\/\ fp\_iszero(Pm[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}].z));}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (1\ -\/\ boolm)}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ <-\/-\/-\/}}
+\DoxyCodeLine{00170\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ ((1\ -\/\ boolp)\ |\ (1\ -\/\ boolm));}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \mbox{\hyperlink{fp-gmp_8h_afe9d15f0be91f1759f096d7c20655fb0}{fp\_dec}}(u,\ (uint64\_t\ *\textcolor{keyword}{const})u);}
+\DoxyCodeLine{00173\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{to__model_8m_source_l00012}{a}}, \mbox{\hyperlink{primes_8h_source_l00055}{batch\+\_\+start}}, \mbox{\hyperlink{primes_8h_source_l00056}{batch\+\_\+stop}}, \mbox{\hyperlink{ctidh_8h_source_l00055}{cofactor\+\_\+multiples}}, \mbox{\hyperlink{elligator_8h_source_l00008}{elligator\+\_\+seeded}}, \mbox{\hyperlink{fp-gmp_8h_source_l00048}{fp\+\_\+1}}, \mbox{\hyperlink{fp-gmp_8h_source_l00064}{fp\+\_\+add}}, \mbox{\hyperlink{fp-gmp_8h_source_l00079}{fp\+\_\+copy}}, \mbox{\hyperlink{fp-gmp_8h_source_l00058}{fp\+\_\+dec}}, \mbox{\hyperlink{prime__search_8m_source_l00012}{j}}, \mbox{\hyperlink{primes_8h_source_l00052}{primes\+\_\+dac}}, \mbox{\hyperlink{primes_8h_source_l00053}{primes\+\_\+daclen}}, and \mbox{\hyperlink{mont_8h_source_l00021}{x\+MUL\+\_\+dac}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{src_2_c_t_i_d_h_2ctidh_8c_ae5a97e9debf3707d97dfb35dc631a0ca}\index{ctidh.c@{ctidh.c}!base@{base}}
+\index{base@{base}!ctidh.c@{ctidh.c}}
+\doxysubsubsection{\texorpdfstring{base}{base}}
+{\footnotesize\ttfamily \label{src_2_c_t_i_d_h_2ctidh_8c_ae5a97e9debf3707d97dfb35dc631a0ca} 
+const \mbox{\hyperlink{structpublic__key}{public\+\_\+key}} base = \{.A = \{0\}, .seed = ELLIGATOR\+\_\+\+SEED\}}
+
+
+
+Definition at line \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source_l00029}{29}} of file \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source}{ctidh.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00029\ \{.A\ =\ \{0\},\ .seed\ =\ ELLIGATOR\_SEED\};\ \textcolor{comment}{/*\ A\ =\ 0\ */}}
+
+\end{DoxyCode}

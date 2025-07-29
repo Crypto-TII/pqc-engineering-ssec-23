@@ -1,0 +1,91 @@
+\doxysection{pip.\+\_\+internal.\+utils.\+encoding Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding}{}\label{namespacepip_1_1__internal_1_1utils_1_1encoding}\index{pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1encoding_a13e094bb3ad33002b5376b92d3766709}{auto\+\_\+decode}} (bytes data)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1encoding_a817c6422d547f940759d20eb791b35ec}{BOMS}}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1encoding_aa905f2e0bfc6de510cebec6f152eafcf}{ENCODING\+\_\+\+RE}} = re.\+compile(rb"{}coding\mbox{[}\+:=\mbox{]}\textbackslash{}s\texorpdfstring{$\ast$}{*}(\mbox{[}-\/\textbackslash{}w.\mbox{]}+)"{})
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding_a13e094bb3ad33002b5376b92d3766709}\index{pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}!auto\_decode@{auto\_decode}}
+\index{auto\_decode@{auto\_decode}!pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}}
+\doxysubsubsection{\texorpdfstring{auto\_decode()}{auto\_decode()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1encoding_a13e094bb3ad33002b5376b92d3766709} 
+ str auto\+\_\+decode (\begin{DoxyParamCaption}\item[{bytes}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Check a bytes string for a BOM to correctly detect the encoding
+
+Fallback to locale.getpreferredencoding(False) like open() on Python3\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{encoding_8py_source_l00020}{20}} of file \mbox{\hyperlink{encoding_8py_source}{encoding.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00020\ \textcolor{keyword}{def\ }auto\_decode(data:\ bytes)\ -\/>\ str:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ a\ bytes\ string\ for\ a\ BOM\ to\ correctly\ detect\ the\ encoding}}
+\DoxyCodeLine{00022\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00023\ \textcolor{stringliteral}{\ \ \ \ Fallback\ to\ locale.getpreferredencoding(False)\ like\ open()\ on\ Python3"{}"{}"{}}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{for}\ bom,\ encoding\ \textcolor{keywordflow}{in}\ BOMS:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ data.startswith(bom):}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data[len(bom)\ :].decode(encoding)}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{\#\ Lets\ check\ the\ first\ two\ lines\ as\ in\ PEP263}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ data.split(b\textcolor{stringliteral}{"{}\(\backslash\)n"{}})[:2]:}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line[0:1]\ ==\ b\textcolor{stringliteral}{"{}\#"{}}\ \textcolor{keywordflow}{and}\ ENCODING\_RE.search(line):}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ ENCODING\_RE.search(line)}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ result\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ encoding\ =\ result.groups()[0].decode(\textcolor{stringliteral}{"{}ascii"{}})}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data.decode(encoding)}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{return}\ data.decode(}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ locale.getpreferredencoding(\textcolor{keyword}{False})\ \textcolor{keywordflow}{or}\ sys.getdefaultencoding(),}
+\DoxyCodeLine{00036\ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding_a817c6422d547f940759d20eb791b35ec}\index{pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}!BOMS@{BOMS}}
+\index{BOMS@{BOMS}!pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}}
+\doxysubsubsection{\texorpdfstring{BOMS}{BOMS}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1encoding_a817c6422d547f940759d20eb791b35ec} 
+list BOMS}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [}
+\DoxyCodeLine{00002\ \ \ \ \ (codecs.BOM\_UTF8,\ \textcolor{stringliteral}{"{}utf-\/8"{}}),}
+\DoxyCodeLine{00003\ \ \ \ \ (codecs.BOM\_UTF16,\ \textcolor{stringliteral}{"{}utf-\/16"{}}),}
+\DoxyCodeLine{00004\ \ \ \ \ (codecs.BOM\_UTF16\_BE,\ \textcolor{stringliteral}{"{}utf-\/16-\/be"{}}),}
+\DoxyCodeLine{00005\ \ \ \ \ (codecs.BOM\_UTF16\_LE,\ \textcolor{stringliteral}{"{}utf-\/16-\/le"{}}),}
+\DoxyCodeLine{00006\ \ \ \ \ (codecs.BOM\_UTF32,\ \textcolor{stringliteral}{"{}utf-\/32"{}}),}
+\DoxyCodeLine{00007\ \ \ \ \ (codecs.BOM\_UTF32\_BE,\ \textcolor{stringliteral}{"{}utf-\/32-\/be"{}}),}
+\DoxyCodeLine{00008\ \ \ \ \ (codecs.BOM\_UTF32\_LE,\ \textcolor{stringliteral}{"{}utf-\/32-\/le"{}}),}
+\DoxyCodeLine{00009\ ]}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{encoding_8py_source_l00007}{7}} of file \mbox{\hyperlink{encoding_8py_source}{encoding.\+py}}.
+
+\Hypertarget{namespacepip_1_1__internal_1_1utils_1_1encoding_aa905f2e0bfc6de510cebec6f152eafcf}\index{pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}!ENCODING\_RE@{ENCODING\_RE}}
+\index{ENCODING\_RE@{ENCODING\_RE}!pip.\_internal.utils.encoding@{pip.\_internal.utils.encoding}}
+\doxysubsubsection{\texorpdfstring{ENCODING\_RE}{ENCODING\_RE}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1utils_1_1encoding_aa905f2e0bfc6de510cebec6f152eafcf} 
+ENCODING\+\_\+\+RE = re.\+compile(rb"{}coding\mbox{[}\+:=\mbox{]}\textbackslash{}s\texorpdfstring{$\ast$}{*}(\mbox{[}-\/\textbackslash{}w.\mbox{]}+)"{})}
+
+
+
+Definition at line \mbox{\hyperlink{encoding_8py_source_l00017}{17}} of file \mbox{\hyperlink{encoding_8py_source}{encoding.\+py}}.
+

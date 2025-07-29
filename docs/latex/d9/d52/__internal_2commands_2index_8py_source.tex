@@ -1,0 +1,145 @@
+\doxysection{index.\+py}
+\hypertarget{__internal_2commands_2index_8py_source}{}\label{__internal_2commands_2index_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/index.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/index.py}}
+\mbox{\hyperlink{__internal_2commands_2index_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1index}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00002}00002\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ Values}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Iterable,\ List,\ Optional,\ Union}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1version}{pip.\_vendor.packaging.version}}\ \textcolor{keyword}{import}\ LegacyVersion,\ Version}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli}{pip.\_internal.cli}}\ \textcolor{keyword}{import}\ cmdoptions}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1req__command}{pip.\_internal.cli.req\_command}}\ \textcolor{keyword}{import}\ IndexGroupCommand}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ ERROR,\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1search}{pip.\_internal.commands.search}}\ \textcolor{keyword}{import}\ print\_dist\_installation\_info}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ CommandError,\ DistributionNotFound,\ PipError}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1collector}{pip.\_internal.index.collector}}\ \textcolor{keyword}{import}\ LinkCollector}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1index_1_1package__finder}{pip.\_internal.index.package\_finder}}\ \textcolor{keyword}{import}\ PackageFinder}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1selection__prefs}{pip.\_internal.models.selection\_prefs}}\ \textcolor{keyword}{import}\ SelectionPreferences}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1target__python}{pip.\_internal.models.target\_python}}\ \textcolor{keyword}{import}\ TargetPython}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00016}00016\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1session}{pip.\_internal.network.session}}\ \textcolor{keyword}{import}\ PipSession}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ write\_output}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1index_a0b14e488ae28d98d262453f3e9cd6e4d}{00019}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00022}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command}{00022}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command}{IndexCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_index_group_command}{IndexGroupCommand}}):}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ Inspect\ information\ available\ from\ package\ indexes.}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00027}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command}{00027}}\ \ \ \ \ ignore\_require\_venv\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00028}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command}{00028}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \%prog\ versions\ <package>}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00032}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a1168021049b96b5b9957aa2186f7f72c}{00032}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a1168021049b96b5b9957aa2186f7f72c}{add\_options}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00033}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command}{00033}}\ \ \ \ \ \ \ \ \ cmdoptions.add\_target\_python\_options(self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.ignore\_requires\_python())}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.pre())}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.no\_binary())}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.only\_binary())}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ index\_opts\ =\ cmdoptions.make\_option\_group(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ cmdoptions.index\_group,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ index\_opts)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00048}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_aed702143af1fdca26efdec21bf5c396e}{00048}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ handlers\ =\ \{}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}versions"{}}:\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a3cf92d8f62f7e7b9a3553b7a7e1d02f3}{get\_available\_package\_versions}},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip\ index\ is\ currently\ an\ experimental\ command.\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}It\ may\ be\ removed/changed\ in\ a\ future\ release\ "{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}without\ prior\ warning."{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Determine\ action}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ args\ \textcolor{keywordflow}{or}\ args[0]\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ handlers:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Need\ an\ action\ (\%s)\ to\ perform."{}},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{},\ "{}}.join(sorted(handlers)),}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ERROR}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ action\ =\ args[0]}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Error\ handling\ happens\ here,\ not\ in\ the\ action-\/handlers.}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ handlers[action](options,\ args[1:])}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ PipError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ logger.error(e.args[0])}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ERROR}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00078}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a2b770b45d4aa3b574f4133bda8c35e96}{00078}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a2b770b45d4aa3b574f4133bda8c35e96}{\_build\_package\_finder}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ options:\ Values,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ session:\ PipSession,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ target\_python:\ Optional[TargetPython]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ ignore\_requires\_python:\ Optional[bool]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00084}00084\ \ \ \ \ )\ -\/>\ PackageFinder:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00086}00086\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Create\ a\ package\ finder\ appropriate\ to\ the\ index\ command.}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00087}00087\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ link\_collector\ =\ LinkCollector.create(session,\ options=options)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Pass\ allow\_yanked=False\ to\ ignore\ yanked\ versions.}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ selection\_prefs\ =\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1selection__prefs_1_1_selection_preferences}{SelectionPreferences}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ allow\_yanked=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ allow\_all\_prereleases=options.pre,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_requires\_python=ignore\_requires\_python,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ PackageFinder.create(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ link\_collector=link\_collector,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ selection\_prefs=selection\_prefs,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ target\_python=target\_python,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a3cf92d8f62f7e7b9a3553b7a7e1d02f3}{00103}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a3cf92d8f62f7e7b9a3553b7a7e1d02f3}{get\_available\_package\_versions}}(self,\ options:\ Values,\ args:\ List[Any])\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(args)\ !=\ 1:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_command_error}{CommandError}}(\textcolor{stringliteral}{"{}You\ need\ to\ specify\ exactly\ one\ argument"{}})}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ target\_python\ =\ cmdoptions.make\_target\_python(options)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ query\ =\ args[0]}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_session_command_mixin_a0d90b1dcd4101874eb11e7fe220e6494}{\_build\_session}}(options)\ \textcolor{keyword}{as}\ session:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ finder\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1index_1_1_index_command_a2b770b45d4aa3b574f4133bda8c35e96}{\_build\_package\_finder}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options=options,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ session=session,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_python=target\_python,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ignore\_requires\_python=options.ignore\_requires\_python,}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ versions:\ Iterable[Union[LegacyVersion,\ Version]]\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ candidate.version\ \textcolor{keywordflow}{for}\ candidate\ \textcolor{keywordflow}{in}\ finder.find\_all\_candidates(query)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.pre:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Remove\ prereleases}}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ versions\ =\ (}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version\ \textcolor{keywordflow}{for}\ version\ \textcolor{keywordflow}{in}\ versions\ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ version.is\_prerelease}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ versions\ =\ set(versions)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ versions:}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_distribution_not_found}{DistributionNotFound}}(}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}No\ matching\ distribution\ found\ for\ \{\}"{}}.format(query)}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ formatted\_versions\ =\ [str(ver)\ \textcolor{keywordflow}{for}\ ver\ \textcolor{keywordflow}{in}\ sorted(versions,\ reverse=\textcolor{keyword}{True})]}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ latest\ =\ formatted\_versions[0]}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ write\_output(\textcolor{stringliteral}{"{}\{\}\ (\{\})"{}}.format(query,\ latest))}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ write\_output(\textcolor{stringliteral}{"{}Available\ versions:\ \{\}"{}}.format(\textcolor{stringliteral}{"{},\ "{}}.join(formatted\_versions)))}
+\DoxyCodeLine{\Hypertarget{__internal_2commands_2index_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ print\_dist\_installation\_info(query,\ latest)}
+
+\end{DoxyCode}

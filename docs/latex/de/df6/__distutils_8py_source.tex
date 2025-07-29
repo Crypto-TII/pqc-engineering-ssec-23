@@ -1,0 +1,179 @@
+\doxysection{\+\_\+distutils.\+py}
+\hypertarget{__distutils_8py_source}{}\label{__distutils_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/locations/\_distutils.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/locations/\_distutils.py}}
+\mbox{\hyperlink{__distutils_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Locations\ where\ we\ look\ for\ configs,\ install\ stuff,\ etc"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00003}00003\ \textcolor{comment}{\#\ The\ following\ comment\ should\ be\ removed\ at\ some\ point\ in\ the\ future.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00004}00004\ \textcolor{comment}{\#\ mypy:\ strict-\/optional=False}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00006}00006\ \textcolor{comment}{\#\ If\ pip's\ going\ to\ use\ distutils,\ it\ should\ not\ be\ using\ the\ copy\ that\ setuptools}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00007}00007\ \textcolor{comment}{\#\ might\ have\ injected\ into\ the\ environment.\ This\ is\ done\ by\ removing\ the\ injected}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00008}00008\ \textcolor{comment}{\#\ shim,\ if\ it's\ injected.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00009}00009\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00010}00010\ \textcolor{comment}{\#\ See\ https://github.com/pypa/pip/issues/8761\ for\ the\ original\ discussion\ and}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00011}00011\ \textcolor{comment}{\#\ rationale\ for\ why\ this\ is\ done\ within\ pip.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00012}00012\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00013}00013\ \ \ \ \ \_\_import\_\_(\textcolor{stringliteral}{"{}\_distutils\_hack"{}}).remove\_shim()}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00014}00014\ \textcolor{keywordflow}{except}\ (ImportError,\ AttributeError):}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00015}00015\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00017}00017\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00018}00018\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00019}00019\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00020}00020\ \textcolor{keyword}{from}\ distutils.cmd\ \textcolor{keyword}{import}\ Command\ \textcolor{keyword}{as}\ DistutilsCommand}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00021}00021\ \textcolor{keyword}{from}\ distutils.command.install\ \textcolor{keyword}{import}\ SCHEME\_KEYS}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00022}00022\ \textcolor{keyword}{from}\ distutils.command.install\ \textcolor{keyword}{import}\ install\ \textcolor{keyword}{as}\ distutils\_install\_command}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00023}00023\ \textcolor{keyword}{from}\ distutils.sysconfig\ \textcolor{keyword}{import}\ get\_python\_lib}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00024}00024\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Dict,\ List,\ Optional,\ Union,\ cast}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00026}00026\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1scheme}{pip.\_internal.models.scheme}}\ \textcolor{keyword}{import}\ Scheme}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00027}00027\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat}{pip.\_internal.utils.compat}}\ \textcolor{keyword}{import}\ WINDOWS}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00028}00028\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1virtualenv}{pip.\_internal.utils.virtualenv}}\ \textcolor{keyword}{import}\ running\_under\_virtualenv}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00030}00030\ \textcolor{keyword}{from}\ .base\ \textcolor{keyword}{import}\ get\_major\_minor\_version}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00032}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a0b14e488ae28d98d262453f3e9cd6e4d}{00032}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00035}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a1d1f473b134b63256906feddcb3c7569}{00035}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a1d1f473b134b63256906feddcb3c7569}{distutils\_scheme}}(}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00036}00036\ \ \ \ \ dist\_name:\ str,}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00037}00037\ \ \ \ \ user:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00038}00038\ \ \ \ \ home:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00039}00039\ \ \ \ \ root:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00040}00040\ \ \ \ \ isolated:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00041}00041\ \ \ \ \ prefix:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00042}00042\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00043}00043\ \ \ \ \ ignore\_config\_files:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00044}00044\ )\ -\/>\ Dict[str,\ str]:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00045}00045\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ Return\ a\ distutils\ install\ scheme}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{from}\ distutils.dist\ \textcolor{keyword}{import}\ Distribution}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00050}00050\ \ \ \ \ dist\_args:\ Dict[str,\ Union[str,\ List[str]]]\ =\ \{\textcolor{stringliteral}{"{}name"{}}:\ dist\_name\}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{if}\ isolated:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ dist\_args[\textcolor{stringliteral}{"{}script\_args"{}}]\ =\ [\textcolor{stringliteral}{"{}-\/-\/no-\/user-\/cfg"{}}]}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00054}00054\ \ \ \ \ d\ =\ Distribution(dist\_args)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ignore\_config\_files:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ d.parse\_config\_files()}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Typeshed\ does\ not\ include\ find\_config\_files()\ for\ some\ reason.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ paths\ =\ d.find\_config\_files()\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Ignore\ distutils\ configs\ in\ \%s\ due\ to\ encoding\ errors."{}},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{},\ "{}}.join(os.path.basename(p)\ \textcolor{keywordflow}{for}\ p\ \textcolor{keywordflow}{in}\ paths),}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00065}00065\ \ \ \ \ obj:\ Optional[DistutilsCommand]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00066}00066\ \ \ \ \ obj\ =\ d.get\_command\_obj(\textcolor{stringliteral}{"{}install"{}},\ create=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00067}00067\ \ \ \ \ \textcolor{keyword}{assert}\ obj\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00068}00068\ \ \ \ \ i\ =\ cast(distutils\_install\_command,\ obj)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00069}00069\ \ \ \ \ \textcolor{comment}{\#\ NOTE:\ setting\ user\ or\ home\ has\ the\ side-\/effect\ of\ creating\ the\ home\ dir}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00070}00070\ \ \ \ \ \textcolor{comment}{\#\ or\ user\ base\ for\ installations\ during\ finalize\_options()}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00071}00071\ \ \ \ \ \textcolor{comment}{\#\ ideally,\ we'd\ prefer\ a\ scheme\ class\ that\ has\ no\ side-\/effects.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00072}00072\ \ \ \ \ \textcolor{keyword}{assert}\ \textcolor{keywordflow}{not}\ (user\ \textcolor{keywordflow}{and}\ prefix),\ f\textcolor{stringliteral}{"{}user=\{user\}\ prefix=\{prefix\}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00073}00073\ \ \ \ \ \textcolor{keyword}{assert}\ \textcolor{keywordflow}{not}\ (home\ \textcolor{keywordflow}{and}\ prefix),\ f\textcolor{stringliteral}{"{}home=\{home\}\ prefix=\{prefix\}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00074}00074\ \ \ \ \ i.user\ =\ user\ \textcolor{keywordflow}{or}\ i.user}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ user\ \textcolor{keywordflow}{or}\ home:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ i.prefix\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00077}00077\ \ \ \ \ i.prefix\ =\ prefix\ \textcolor{keywordflow}{or}\ i.prefix}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00078}00078\ \ \ \ \ i.home\ =\ home\ \textcolor{keywordflow}{or}\ i.home}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00079}00079\ \ \ \ \ i.root\ =\ root\ \textcolor{keywordflow}{or}\ i.root}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00080}00080\ \ \ \ \ i.finalize\_options()}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00082}00082\ \ \ \ \ scheme\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00083}00083\ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ SCHEME\_KEYS:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ scheme[key]\ =\ getattr(i,\ \textcolor{stringliteral}{"{}install\_"{}}\ +\ key)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00086}00086\ \ \ \ \ \textcolor{comment}{\#\ install\_lib\ specified\ in\ setup.cfg\ should\ install\ *everything*}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00087}00087\ \ \ \ \ \textcolor{comment}{\#\ into\ there\ (i.e.\ it\ takes\ precedence\ over\ both\ purelib\ and}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00088}00088\ \ \ \ \ \textcolor{comment}{\#\ platlib).\ \ Note,\ i.install\_lib\ is\ *always*\ set\ after}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00089}00089\ \ \ \ \ \textcolor{comment}{\#\ finalize\_options();\ we\ only\ want\ to\ override\ here\ if\ the\ user}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00090}00090\ \ \ \ \ \textcolor{comment}{\#\ has\ explicitly\ requested\ it\ hence\ going\ back\ to\ the\ config}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}install\_lib"{}}\ \textcolor{keywordflow}{in}\ d.get\_option\_dict(\textcolor{stringliteral}{"{}install"{}}):}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ scheme.update(dict(purelib=i.install\_lib,\ platlib=i.install\_lib))}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{if}\ running\_under\_virtualenv():}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ home:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ prefix\ =\ home}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ user:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ prefix\ =\ i.install\_userbase}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ prefix\ =\ i.prefix}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ scheme[\textcolor{stringliteral}{"{}headers"{}}]\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ prefix,}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}include"{}},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}site"{}},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}python\{get\_major\_minor\_version()\}"{}},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ dist\_name,}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ root\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ path\_no\_drive\ =\ os.path.splitdrive(os.path.abspath(scheme[\textcolor{stringliteral}{"{}headers"{}}]))[1]}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ scheme[\textcolor{stringliteral}{"{}headers"{}}]\ =\ os.path.join(root,\ path\_no\_drive[1:])}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{return}\ scheme}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00116}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a7a306759a8f509cc5ba60d68e9a6312c}{00116}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a7a306759a8f509cc5ba60d68e9a6312c}{get\_scheme}}(}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00117}00117\ \ \ \ \ dist\_name:\ str,}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00118}00118\ \ \ \ \ user:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00119}00119\ \ \ \ \ home:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00120}00120\ \ \ \ \ root:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00121}00121\ \ \ \ \ isolated:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00122}00122\ \ \ \ \ prefix:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00123}00123\ )\ -\/>\ Scheme:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00124}00124\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ Get\ the\ "{}scheme"{}\ corresponding\ to\ the\ input\ parameters.\ The\ distutils}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ documentation\ provides\ the\ context\ for\ the\ available\ schemes:}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ https://docs.python.org/3/install/index.html\#alternate-\/installation}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00128}00128\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ :param\ dist\_name:\ the\ name\ of\ the\ package\ to\ retrieve\ the\ scheme\ for,\ used}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ in\ the\ headers\ scheme\ path}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ :param\ user:\ indicates\ to\ use\ the\ "{}user"{}\ scheme}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ :param\ home:\ indicates\ to\ use\ the\ "{}home"{}\ scheme\ and\ provides\ the\ base}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ directory\ for\ the\ same}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ \ \ :param\ root:\ root\ under\ which\ other\ directories\ are\ re-\/based}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ :param\ isolated:\ equivalent\ to\ -\/-\/no-\/user-\/cfg,\ i.e.\ do\ not\ consider}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \string~/.pydistutils.cfg\ (posix)\ or\ \string~/pydistutils.cfg\ (non-\/posix)\ for}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ scheme\ paths}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ :param\ prefix:\ indicates\ to\ use\ the\ "{}prefix"{}\ scheme\ and\ provides\ the}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ base\ directory\ for\ the\ same}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00141}00141\ \ \ \ \ scheme\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a1d1f473b134b63256906feddcb3c7569}{distutils\_scheme}}(dist\_name,\ user,\ home,\ root,\ isolated,\ prefix)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00142}00142\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__internal_1_1models_1_1scheme_1_1_scheme}{Scheme}}(}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ platlib=scheme[\textcolor{stringliteral}{"{}platlib"{}}],}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ purelib=scheme[\textcolor{stringliteral}{"{}purelib"{}}],}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ headers=scheme[\textcolor{stringliteral}{"{}headers"{}}],}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ scripts=scheme[\textcolor{stringliteral}{"{}scripts"{}}],}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ data=scheme[\textcolor{stringliteral}{"{}data"{}}],}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00148}00148\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00151}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a3a258f4512c269052345d9545c7b3bda}{00151}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a3a258f4512c269052345d9545c7b3bda}{get\_bin\_prefix}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00152}00152\ \ \ \ \ \textcolor{comment}{\#\ XXX:\ In\ old\ virtualenv\ versions,\ sys.prefix\ can\ contain\ '..'\ components,}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00153}00153\ \ \ \ \ \textcolor{comment}{\#\ so\ we\ need\ to\ call\ normpath\ to\ eliminate\ them.}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00154}00154\ \ \ \ \ prefix\ =\ os.path.normpath(sys.prefix)}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00155}00155\ \ \ \ \ \textcolor{keywordflow}{if}\ WINDOWS:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ bin\_py\ =\ os.path.join(prefix,\ \textcolor{stringliteral}{"{}Scripts"{}})}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ buildout\ uses\ 'bin'\ on\ Windows\ too?}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.exists(bin\_py):}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ bin\_py\ =\ os.path.join(prefix,\ \textcolor{stringliteral}{"{}bin"{}})}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ bin\_py}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00161}00161\ \ \ \ \ \textcolor{comment}{\#\ Forcing\ to\ use\ /usr/local/bin\ for\ standard\ macOS\ framework\ installs}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00162}00162\ \ \ \ \ \textcolor{comment}{\#\ Also\ log\ to\ \string~/Library/Logs/\ for\ use\ with\ the\ Console.app\ log\ viewer}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform[:6]\ ==\ \textcolor{stringliteral}{"{}darwin"{}}\ \textcolor{keywordflow}{and}\ prefix[:16]\ ==\ \textcolor{stringliteral}{"{}/System/Library/"{}}:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}/usr/local/bin"{}}}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(prefix,\ \textcolor{stringliteral}{"{}bin"{}})}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00168}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a4a460826cbf7ddfefd080d305785a8e3}{00168}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a4a460826cbf7ddfefd080d305785a8e3}{get\_purelib}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_python\_lib(plat\_specific=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00172}\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a142f17e67c6be6c1d6dc7a4fd9dc6842}{00172}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1locations_1_1__distutils_a142f17e67c6be6c1d6dc7a4fd9dc6842}{get\_platlib}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__distutils_8py_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_python\_lib(plat\_specific=\textcolor{keyword}{True})}
+
+\end{DoxyCode}

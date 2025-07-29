@@ -1,0 +1,111 @@
+\doxysection{\+\_\+virtualenv Namespace Reference}
+\hypertarget{namespace__virtualenv}{}\label{namespace__virtualenv}\index{\_virtualenv@{\_virtualenv}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class__virtualenv_1_1___finder}{\+\_\+\+Finder}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace__virtualenv_adbe9884992234e7be521a47677b94952}{patch\+\_\+dist}} (dist)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace__virtualenv_acb00a592d240ea92a8d9f1fe8235d8dc}{VIRTUALENV\+\_\+\+PATCH\+\_\+\+FILE}} = os.\+path.\+join(\+\_\+\+\_\+file\+\_\+\+\_\+)
+\item 
+str \mbox{\hyperlink{namespace__virtualenv_aab37909b7086c1091b243c2c1e95aaf6}{\+\_\+\+DISTUTILS\+\_\+\+PATCH}} = "{}distutils.\+dist"{}, "{}setuptools.\+dist"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Patches that are applied at runtime to the virtual environment.\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespace__virtualenv_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace__virtualenv_adbe9884992234e7be521a47677b94952}\index{\_virtualenv@{\_virtualenv}!patch\_dist@{patch\_dist}}
+\index{patch\_dist@{patch\_dist}!\_virtualenv@{\_virtualenv}}
+\doxysubsubsection{\texorpdfstring{patch\_dist()}{patch\_dist()}}
+{\footnotesize\ttfamily \label{namespace__virtualenv_adbe9884992234e7be521a47677b94952} 
+patch\+\_\+dist (\begin{DoxyParamCaption}\item[{}]{dist}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Distutils allows user to configure some arguments via a configuration file:
+https://docs.python.org/3/install/index.html#distutils-configuration-files.
+
+Some of this arguments though don't make sense in context of the virtual environment files, let's fix them up.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__virtualenv_8py_source_l00012}{12}} of file \mbox{\hyperlink{__virtualenv_8py_source}{\+\_\+virtualenv.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00012\ \textcolor{keyword}{def\ }patch\_dist(dist):}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00014\ \textcolor{stringliteral}{\ \ \ \ Distutils\ allows\ user\ to\ configure\ some\ arguments\ via\ a\ configuration\ file:}}
+\DoxyCodeLine{00015\ \textcolor{stringliteral}{\ \ \ \ https://docs.python.org/3/install/index.html\#distutils-\/configuration-\/files.}}
+\DoxyCodeLine{00016\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00017\ \textcolor{stringliteral}{\ \ \ \ Some\ of\ this\ arguments\ though\ don't\ make\ sense\ in\ context\ of\ the\ virtual\ environment\ files,\ let's\ fix\ them\ up.}}
+\DoxyCodeLine{00018\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}\ \ \textcolor{comment}{\#\ noqa:\ D205}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{\#\ we\ cannot\ allow\ some\ install\ config\ as\ that\ would\ get\ packages\ installed\ outside\ of\ the\ virtual\ environment}}
+\DoxyCodeLine{00020\ \ \ \ \ old\_parse\_config\_files\ =\ dist.Distribution.parse\_config\_files}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{def\ }parse\_config\_files(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ result\ =\ old\_parse\_config\_files(self,\ *args,\ **kwargs)}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ install\ =\ self.get\_option\_dict(\textcolor{stringliteral}{"{}install"{}})}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}prefix"{}}\ \textcolor{keywordflow}{in}\ install:\ \ \textcolor{comment}{\#\ the\ prefix\ governs\ where\ to\ install\ the\ libraries}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ install[\textcolor{stringliteral}{"{}prefix"{}}]\ =\ VIRTUALENV\_PATCH\_FILE,\ os.path.abspath(sys.prefix)}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ base\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}purelib"{}},\ \textcolor{stringliteral}{"{}platlib"{}},\ \textcolor{stringliteral}{"{}headers"{}},\ \textcolor{stringliteral}{"{}scripts"{}},\ \textcolor{stringliteral}{"{}data"{}}):}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ key\ =\ f\textcolor{stringliteral}{"{}install\_\{base\}"{}}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{in}\ install:\ \ \textcolor{comment}{\#\ do\ not\ allow\ global\ configs\ to\ hijack\ venv\ paths}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ install.pop(key,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ dist.Distribution.parse\_config\_files\ =\ parse\_config\_files}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{\#\ Import\ hook\ that\ patches\ some\ modules\ to\ ignore\ configuration\ values\ that\ break\ package\ installation\ in\ case}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\#\ of\ virtual\ environments.}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{__virtualenv_8py_source_l00089}{\+\_\+\+Finder.\+exec\+\_\+module()}}, and \mbox{\hyperlink{__virtualenv_8py_source_l00095}{\+\_\+\+Finder.\+load\+\_\+module()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d4/df6/namespace__virtualenv_adbe9884992234e7be521a47677b94952_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespace__virtualenv_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespace__virtualenv_aab37909b7086c1091b243c2c1e95aaf6}\index{\_virtualenv@{\_virtualenv}!\_DISTUTILS\_PATCH@{\_DISTUTILS\_PATCH}}
+\index{\_DISTUTILS\_PATCH@{\_DISTUTILS\_PATCH}!\_virtualenv@{\_virtualenv}}
+\doxysubsubsection{\texorpdfstring{\_DISTUTILS\_PATCH}{\_DISTUTILS\_PATCH}}
+{\footnotesize\ttfamily \label{namespace__virtualenv_aab37909b7086c1091b243c2c1e95aaf6} 
+str \+\_\+\+DISTUTILS\+\_\+\+PATCH = "{}distutils.\+dist"{}, "{}setuptools.\+dist"{}\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{__virtualenv_8py_source_l00039}{39}} of file \mbox{\hyperlink{__virtualenv_8py_source}{\+\_\+virtualenv.\+py}}.
+
+\Hypertarget{namespace__virtualenv_acb00a592d240ea92a8d9f1fe8235d8dc}\index{\_virtualenv@{\_virtualenv}!VIRTUALENV\_PATCH\_FILE@{VIRTUALENV\_PATCH\_FILE}}
+\index{VIRTUALENV\_PATCH\_FILE@{VIRTUALENV\_PATCH\_FILE}!\_virtualenv@{\_virtualenv}}
+\doxysubsubsection{\texorpdfstring{VIRTUALENV\_PATCH\_FILE}{VIRTUALENV\_PATCH\_FILE}}
+{\footnotesize\ttfamily \label{namespace__virtualenv_acb00a592d240ea92a8d9f1fe8235d8dc} 
+VIRTUALENV\+\_\+\+PATCH\+\_\+\+FILE = os.\+path.\+join(\+\_\+\+\_\+file\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{__virtualenv_8py_source_l00009}{9}} of file \mbox{\hyperlink{__virtualenv_8py_source}{\+\_\+virtualenv.\+py}}.
+

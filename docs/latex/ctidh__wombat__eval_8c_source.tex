@@ -1,0 +1,426 @@
+\doxysection{ctidh\+\_\+wombat\+\_\+eval.\+c}
+\hypertarget{ctidh__wombat__eval_8c_source}{}\label{ctidh__wombat__eval_8c_source}\index{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/CTIDH/ctidh\_wombat\_eval.c@{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/dCTIDH/src/CTIDH/ctidh\_wombat\_eval.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00001}00001\ \textcolor{comment}{//*******************************//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00002}00002\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00003}00003\ \textcolor{comment}{//\ \ \ here\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00004}00004\ \textcolor{comment}{//\ \ \ \ \ \ \ \ lives\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00005}00005\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ WOMBats\ \ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00006}00006\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00007}00007\ \textcolor{comment}{//\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}ctidh.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../common/primes.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}../common/int64mask.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}../common/elligator.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}../common/random.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00018}00018\ \textcolor{comment}{//\ \#include\ "{}crypto\_declassify.h"{}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00020}00020\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00021}00021\ \textcolor{preprocessor}{\#include\ <valgrind/memcheck.h>}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00022}00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00024}00024\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structpublic__key}{public\_key}}\ base\ =\ \{.A\ =\ \{0\},\ .seed\ =\ ELLIGATOR\_SEED\};\ \textcolor{comment}{/*\ A\ =\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00026}00026\ \textcolor{comment}{//\ static\ void\ fp\_print(fp\ A)}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00027}00027\ \textcolor{comment}{//\ \{}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00028}00028\ \textcolor{comment}{//\ \ uint8\_t\ i;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00029}00029\ \textcolor{comment}{//\ \ \ printf("{}\{"{});}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00030}00030\ \textcolor{comment}{//\ \ for(i\ =\ 0;\ i\ <\ NUMBER\_OF\_WORDS;\ i++)}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00031}00031\ \textcolor{comment}{//\ \ \ \ \ \ printf("{}0x\%016lX,"{},\ A[i]);}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00032}00032\ \textcolor{comment}{//\ \ printf("{}\}\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00033}00033\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00035}00035\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ cmov(int64\_t\ *r,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ *a,\ int64\_t\ b)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00037}00037\ \ \ \ \ uint64\_t\ t;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00039}00039\ \ \ \ \ t\ =\ (*r\ \string^\ *a)\ \&\ b;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00040}00040\ \ \ \ \ *r\ \string^=\ t;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00041}00041\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00043}00043\ \textcolor{comment}{/*\ get\ priv[pos]\ in\ constant\ time\ \ */}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00044}00044\ \textcolor{keyword}{static}\ int64\_t\ lookup(int64\_t\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ *priv)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00045}00045\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00046}00046\ \ \ \ \ int64\_t\ b;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00047}00047\ \ \ \ \ int64\_t\ r;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i\ =\ 0;\ i\ <\ primes\_num;\ i++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ b\ =\ int64mask\_equal(i,\ pos);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ cmov(\&r,\ \&priv[i],\ b);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00052}00052\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{return}\ r;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00056}00056\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ clearpublicprimes(\mbox{\hyperlink{structproj}{proj}}\ *P,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structproj}{proj}}\ *A24)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00057}00057\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00058}00058\ \ \ \ \ \textcolor{comment}{//\ clear\ powers\ of\ 2}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ two\_cofactor;\ i++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00060}00060\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ xDBL(P,\ P,\ A24,\ 0);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00062}00062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00065}00065\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ multiples(\mbox{\hyperlink{structproj}{proj}}\ Q[],\ \mbox{\hyperlink{structproj}{proj}}\ \textcolor{keyword}{const}\ P,\ \mbox{\hyperlink{structproj}{proj}}\ \textcolor{keyword}{const}\ A)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00067}00067\ \ \ \ \ \textcolor{keywordtype}{int}\ j;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00069}00069\ \ \ \ \ proj\_copy(\&Q[0],\ \&P);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 0;\ j\ <\ (int)primes\_num;\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00071}00071\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (primes[j]\ ==\ 3\ ||\ primes[j]\ ==\ 5\ ||\ primes[j]\ ==\ 7)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ xMUL\_dac(\&Q[0],\ \&A,\ 1,\ \&Q[0],\ primes\_dac[j],\ primes\_daclen[j],\ primes\_daclen[j]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00076}00076\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00078}00078\ \ \ \ \ \textcolor{comment}{//\ \ -\/-\/-\/\ multiplying\ by\ 3}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00079}00079\ \ \ \ \ xMUL\_dac(\&Q[1],\ \&A,\ 1,\ \&Q[0],\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00080}00080\ \ \ \ \ xMUL\_dac(\&Q[1],\ \&A,\ 1,\ \&Q[1],\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00081}00081\ \ \ \ \ \textcolor{comment}{//\ \ -\/-\/-\/\ multiplying\ by\ 5}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00082}00082\ \ \ \ \ xMUL\_dac(\&Q[0],\ \&A,\ 1,\ \&Q[0],\ 0,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00083}00083\ \ \ \ \ xMUL\_dac(\&Q[0],\ \&A,\ 1,\ \&Q[0],\ 0,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00084}00084\ \ \ \ \ xMUL\_dac(\&Q[2],\ \&A,\ 1,\ \&Q[1],\ 0,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00085}00085\ \ \ \ \ xMUL\_dac(\&Q[2],\ \&A,\ 1,\ \&Q[2],\ 0,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00086}00086\ \ \ \ \ \textcolor{comment}{//\ \ -\/-\/-\/\ multiplying\ by\ 7}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00087}00087\ \ \ \ \ xMUL\_dac(\&Q[0],\ \&A,\ 1,\ \&Q[0],\ 2,\ 2,\ 2);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00088}00088\ \ \ \ \ xMUL\_dac(\&Q[0],\ \&A,\ 1,\ \&Q[0],\ 2,\ 2,\ 2);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00089}00089\ \ \ \ \ xMUL\_dac(\&Q[1],\ \&A,\ 1,\ \&Q[1],\ 2,\ 2,\ 2);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00090}00090\ \ \ \ \ xMUL\_dac(\&Q[1],\ \&A,\ 1,\ \&Q[1],\ 2,\ 2,\ 2);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00091}00091\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00093}00093\ \textcolor{comment}{//\ Obtaining\ points\ of\ full\ order}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00094}00094\ \textcolor{keywordtype}{void}\ fulltorsion\_points(fp\ u,\ fp\ \textcolor{keyword}{const}\ a)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00095}00095\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00096}00096\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Tp,\ Tm,\ Pp[primes\_num],\ Aux\_Tp[3],\ Pm[primes\_num],\ Aux\_Tm[3],\ A;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00097}00097\ \ \ \ \ \textcolor{keywordtype}{int}\ j;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00099}00099\ \ \ \ \ \textcolor{comment}{//\ Convert\ curve\ to\ projective\ Montgomery\ form\ (A'\ +\ 2C\ :\ 4C)}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00100}00100\ \ \ \ \ fp\_copy(A.x,\ a);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00101}00101\ \ \ \ \ fp\_set1(A.z);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00102}00102\ \ \ \ \ fp\_add(A.z,\ A.z,\ A.z);\ \textcolor{comment}{//\ 2C}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00103}00103\ \ \ \ \ fp\_add(A.x,\ A.x,\ A.z);\ \textcolor{comment}{//\ A'\ +\ 2C}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00104}00104\ \ \ \ \ fp\_add(A.z,\ A.z,\ A.z);\ \textcolor{comment}{//\ 4C}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00106}00106\ \ \ \ \ fp\_set0(u);\ \textcolor{comment}{//\ u\ <-\/\ 0}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00107}00107\ \ \ \ \ uint8\_t\ boolp\ =\ 0,\ boolm\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00110}00110\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00112}00112\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Aux\_Tp,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Aux\_Tm,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&A,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}}));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00116}00116\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&boolp,\ \textcolor{keyword}{sizeof}(uint8\_t));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00117}00117\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&boolm,\ \textcolor{keyword}{sizeof}(uint8\_t));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&Tp,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}}));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Pp,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ primes\_num);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(Pm,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ primes\_num);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00121}00121\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00123}00123\ \ \ \ \ \ \ \ \ fp\_add(u,\ u,\ fp\_1);\ \textcolor{comment}{//\ u\ <-\/\ u\ +\ 1\ ...\ Recall,\ 1\ must\ be\ in\ Montgomery\ domain}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00124}00124\ \ \ \ \ \ \ \ \ elligator\_seeded(\&Tp,\ \&Tm,\ \&A,\ (\textcolor{keyword}{const}\ fp\ *)u);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00126}00126\ \ \ \ \ \ \ \ \ clearpublicprimes(\&Tp,\ \&A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00127}00127\ \ \ \ \ \ \ \ \ clearpublicprimes(\&Tm,\ \&A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00129}00129\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00130}00130\ \ \ \ \ \ \ \ \ memset(Aux\_Tp,\ 0,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00131}00131\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ multiples(Aux\_Tp,\ Tp,\ A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fp\_iszero(Aux\_Tp[0].z)\ |\ fp\_iszero(Aux\_Tp[1].z)\ |\ fp\_iszero(Aux\_Tp[2].z))}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00136}00136\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00137}00137\ \ \ \ \ \ \ \ \ memset(Aux\_Tm,\ 0,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structproj}{proj}})\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00138}00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00139}00139\ \ \ \ \ \ \ \ \ multiples(Aux\_Tm,\ Tm,\ A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fp\_iszero(Aux\_Tm[0].z)\ |\ fp\_iszero(Aux\_Tm[1].z)\ |\ fp\_iszero(Aux\_Tm[2].z))}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Checking\ if\ Tp\ is\ an\ order\ (p+1)/(2\string^e)}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ proj\_copy(\&Pp[0],\ \&Tp);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ cofactor\_multiples(Pp,\ A,\ 0,\ primes\_num);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ boolp\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00147}00147\ \ \ \ \ \ \ \ \ boolp\ \&=\ (1\ -\/\ fp\_iszero(Pp[0].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tp[0].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00148}00148\ \ \ \ \ \ \ \ \ boolp\ \&=\ (1\ -\/\ fp\_iszero(Pp[1].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tp[1].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ boolp\ \&=\ (1\ -\/\ fp\_iszero(Pp[2].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tp[2].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 3;\ j\ <\ (int)primes\_num;\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ boolp\ \&=\ (1\ -\/\ fp\_iszero(Pp[j].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (1\ -\/\ boolp)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/>\ This\ can\ be\ removed\ for\ wd1\ style}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Checking\ if\ Tm\ is\ an\ order\ (p+1)/(2\string^e)}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00158}00158\ \ \ \ \ \ \ \ \ proj\_copy(\&Pm[0],\ \&Tm);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00159}00159\ \ \ \ \ \ \ \ \ cofactor\_multiples(Pm,\ A,\ 0,\ primes\_num);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00161}00161\ \ \ \ \ \ \ \ \ boolm\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00162}00162\ \ \ \ \ \ \ \ \ boolm\ \&=\ (1\ -\/\ fp\_iszero(Pm[0].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tm[0].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00163}00163\ \ \ \ \ \ \ \ \ boolm\ \&=\ (1\ -\/\ fp\_iszero(Pm[1].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tm[1].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00164}00164\ \ \ \ \ \ \ \ \ boolm\ \&=\ (1\ -\/\ fp\_iszero(Pm[2].z))\ |\ (1\ -\/\ fp\_iszero(Aux\_Tm[2].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 3;\ j\ <\ (int)primes\_num;\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ boolm\ \&=\ (1\ -\/\ fp\_iszero(Pm[j].z));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (1\ -\/\ boolm)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ <-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00171}00171\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ ((1\ -\/\ boolp)\ |\ (1\ -\/\ boolm));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00173}00173\ \ \ \ \ fp\_dec(u,\ (uint64\_t\ *\textcolor{keyword}{const})u);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00174}00174\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00176}00176\ \textcolor{comment}{/*\ goal:\ constant\ time\ */}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00177}00177\ \textcolor{keywordtype}{void}\ action(\mbox{\hyperlink{structpublic__key}{public\_key}}\ *out,\ \mbox{\hyperlink{structpublic__key}{public\_key}}\ \textcolor{keyword}{const}\ *in,\ \mbox{\hyperlink{structprivate__key}{private\_key}}\ \textcolor{keyword}{const}\ *priv)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00178}00178\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00180}00180\ \ \ \ \ init\_counters();}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00182}00182\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ A;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00183}00183\ \ \ \ \ fp\_copy(A.x,\ in-\/>A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00184}00184\ \ \ \ \ fp\_copy(A.z,\ fp\_1);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00186}00186\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ A24;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00187}00187\ \ \ \ \ xA24(\&A24,\ \&A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00189}00189\ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Points[4];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00190}00190\ \ \ \ \ fp\ seed;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00191}00191\ \ \ \ \ fp\_set(seed,\ in-\/>seed);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00192}00192\ \ \ \ \ fp\_enc(seed,\ seed);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00193}00193\ \ \ \ \ elligator\_seeded(\&Points[0],\ \&Points[1],\ \&A24,\ (\textcolor{keyword}{const}\ fp\ *)seed);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00195}00195\ \ \ \ \ clearpublicprimes(\&Points[0],\ \&A24);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00196}00196\ \ \ \ \ clearpublicprimes(\&Points[1],\ \&A24);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00198}00198\ \ \ \ \ \textcolor{comment}{//\ clear\ ells\ not\ used\ in\ the\ keyspace}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00199}00199\ \ \ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ j\ =\ batch\_stop[primes\_batches\ -\/\ 1]\ +\ 1;\ j\ <\ primes\_num;\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00200}00200\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ primes\_dac[j],\ primes\_daclen[j],\ primes\_daclen[j]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ primes\_dac[j],\ primes\_daclen[j],\ primes\_daclen[j]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00203}00203\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00205}00205\ \ \ \ \ \textcolor{comment}{//\ collect\ primes\ not\ used\ in\ the\ key\ ...}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00206}00206\ \ \ \ \ int16\_t\ unused[batch\_stop[primes\_batches\ -\/\ 1]\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00207}00207\ \ \ \ \ \textcolor{comment}{//\ int16\_t\ unused[255]\ =\ \{0\};}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00209}00209\ \ \ \ \ int16\_t\ u\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00210}00210\ \ \ \ \ int16\_t\ e\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00211}00211\ \ \ \ \ int16\_t\ w\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{for}\ (e\ =\ 0;\ e\ <=\ batch\_stop[primes\_batches\ -\/\ 1];\ e++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00213}00213\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00214}00214\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_CT\_TESTING}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&u,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&e,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ VALGRIND\_MAKE\_MEM\_DEFINED(\&w,\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00218}00218\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ unused[u]\ =\ e;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00222}00222\ \ \ \ \ \ \ \ \ int64\_t\ mov\ =\ -\/int64mask\_equal((int64\_t)e,\ (int64\_t)priv-\/>ells[w]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ fp\ t1,\ t2;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00225}00225\ \ \ \ \ \ \ \ \ t1[0]\ =\ u;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ t2[0]\ =\ u\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ fp\_cmov(\&t1,\ (\textcolor{keyword}{const}\ fp\ *)\&t2,\ 1\ -\/\ mov);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ u\ =\ t1[0];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ t1[0]\ =\ w;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00231}00231\ \ \ \ \ \ \ \ \ t2[0]\ =\ w\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00232}00232\ \ \ \ \ \ \ \ \ fp\_cmov(\&t1,\ (\textcolor{keyword}{const}\ fp\ *)\&t2,\ mov);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00233}00233\ \ \ \ \ \ \ \ \ w\ =\ t1[0];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00234}00234\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00236}00236\ \ \ \ \ \textcolor{comment}{//\ ...\ and\ remove\ them\ from\ our\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00237}00237\ \ \ \ \ int16\_t\ tmp\_b\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{for}\ (u\ =\ 0;\ u\ <=\ batch\_stop[primes\_batches\ -\/\ 1]\ -\/\ WOMBATKEYS;\ u++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00239}00239\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ int16\_t\ t\ =\ unused[u];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ batch\_stop[tmp\_b])}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_b++;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00243}00243\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ dac\ =\ lookup(t,\ primes\_dac);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ daclen\ =\ lookup(t,\ primes\_daclen);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00247}00247\ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ dac,\ daclen,\ batch\_maxdac[tmp\_b]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00248}00248\ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ dac,\ daclen,\ batch\_maxdac[tmp\_b]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00251}00251\ \ \ \ \ \textcolor{comment}{//\ ACTION!}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00252}00252\ \ \ \ \ \textcolor{comment}{//\ copy\ "{}outer"{}\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00253}00253\ \ \ \ \ proj\_copy(\&Points[2],\ \&Points[0]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00254}00254\ \ \ \ \ proj\_copy(\&Points[3],\ \&Points[1]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00256}00256\ \ \ \ \ int16\_t\ current\_key\ =\ WOMBATKEYS\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ current\_batch\ =\ primes\_batches\ -\/\ 1;\ current\_batch\ >=\ 0;\ current\_batch-\/-\/)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00258}00258\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ uint8\_t\ inner\_counter\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ outer\ points\ are\ now\ the\ inner\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ proj\_copy(\&Points[0],\ \&Points[2]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00263}00263\ \ \ \ \ \ \ \ \ proj\_copy(\&Points[1],\ \&Points[3]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ degrees\ not\ in\ the\ batch}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00266}00266\ \ \ \ \ \ \ \ \ tmp\_b\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ j\ =\ 0;\ j\ <\ batch\_keybounds\_start[current\_batch];\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00268}00268\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ >\ batch\_keybounds\_stop[tmp\_b])}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_b++;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ dac\ =\ lookup(priv-\/>ells[j],\ primes\_dac);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ daclen\ =\ lookup(priv-\/>ells[j],\ primes\_daclen);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ dac,\ daclen,\ batch\_maxdac[tmp\_b]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ dac,\ daclen,\ batch\_maxdac[tmp\_b]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00277}00277\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ current\_key\ >=\ batch\_keybounds\_start[current\_batch];\ current\_key-\/-\/)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00281}00281\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ uint16\_t\ current\_ell\_index\ =\ priv-\/>ells[current\_key];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ current\_ell\ =\ lookup(current\_ell\_index,\ primes);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\ -\/>\ dummy,\ 1\ -\/>\ +\ direction,\ 2\ -\/>\ -\/\ direction}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ direction\ =\ priv-\/>directions[current\_key];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ lowerend\_ell\ =\ primes[batch\_start[current\_batch]\ +\ batch\_numkeys[current\_batch]\ -\/\ inner\_counter\ -\/\ 1];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ upperend\_ell\ =\ primes[batch\_stop[current\_batch]\ -\/\ inner\_counter];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ printf("{}\%3d:\ \%2d\ -\/\ \%4ld-\/isogeny\ to\ \%ld\ for\ cost\ of\ (\%4ld,\%4ld)\(\backslash\)n"{},}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ current\_key,\ current\_batch,\ current\_ell,\ direction,\ lowerend\_ell,\ upperend\_ell);}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ multiply\ out\ other\ factors}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ K;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&K,\ \&Points[0],\ -\/int64mask\_equal(direction,\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&K,\ \&Points[1],\ 1\ +\ int64mask\_equal(direction,\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ skip\ the\ "{}last/already\ processed"{}\ and\ remove\ only\ the\ "{}other"{}\ degrees}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int16\_t\ j\ =\ batch\_keybounds\_start[current\_batch];\ j\ <\ batch\_keybounds\_stop[current\_batch]\ -\/\ inner\_counter;\ j++)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&K,\ \&A24,\ 0,\ \&K,\ lookup(priv-\/>ells[j],\ primes\_dac),\ lookup(priv-\/>ells[j],\ primes\_daclen),\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ make\ a\ copy\ to\ trow\ away\ in\ the\ dummy\ case}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ A\_;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structproj}{proj}}\ Points\_[4];}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_copy(\&Points\_[0],\ \&Points[0]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_copy(\&Points\_[1],\ \&Points[1]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_copy(\&Points\_[2],\ \&Points[2]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_copy(\&Points\_[3],\ \&Points[3]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_copy(\&A\_,\ \&A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ can\ now\ compute\ the\ isogeny}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_key\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ the\ last\ isogeny\ we\ need\ to\ compute!\ so\ we\ don't\ need\ to\ push\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xISOG\_matryoshka(\&A\_,\ Points\_,\ 0,\ \&K,\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\_key\ ==\ batch\_keybounds\_start[current\_batch])}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ last\ isogeny\ of\ the\ batch,\ we\ only\ need\ to\ push\ the\ 2\ "{}outer"{}\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xISOG\_matryoshka(\&A\_,\ \&Points\_[2],\ 2,\ \&K,\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\_batch\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ last\ batch,\ we\ only\ need\ the\ inner\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xISOG\_matryoshka(\&A\_,\ Points\_,\ 2,\ \&K,\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\_key\ ==\ batch\_keybounds\_start[current\_batch]\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ second\ to\ last\ isogeny\ of\ a\ batch,\ we\ only\ need\ to\ push\ 3\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ one\ needed\ for\ the\ last\ isogeny\ of\ the\ batch\ +\ the\ two\ outer\ points}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cswap(\&Points\_[0],\ \&Points\_[1],\ -\/int64mask\_equal(priv-\/>directions[current\_key\ -\/\ 1],\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xISOG\_matryoshka(\&A\_,\ \&Points\_[1],\ 3,\ \&K,\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cswap(\&Points\_[0],\ \&Points\_[1],\ -\/int64mask\_equal(priv-\/>directions[current\_key\ -\/\ 1],\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xISOG\_matryoshka(\&A\_,\ Points\_,\ 4,\ \&K,\ current\_ell,\ lowerend\_ell,\ upperend\_ell);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ isogeny\ in\ case\ of\ dummy\ isog}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&A,\ \&A\_,\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&Points[0],\ \&Points\_[0],\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&Points[1],\ \&Points\_[1],\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&Points[2],\ \&Points\_[2],\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cmov(\&Points[3],\ \&Points\_[3],\ -\/int64mask\_nonzero(direction));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ xA24(\&A24,\ \&A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ dac\ =\ lookup(current\_ell\_index,\ primes\_dac);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ daclen\ =\ lookup(current\_ell\_index,\ primes\_daclen);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ needed\ to\ remove\ the\ order\ incase\ a\ dummy\ isogeny\ was\ used}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_key\ >\ batch\_keybounds\_start[current\_batch])}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ not\ needed\ for\ the\ inner\ points\ in\ the\ last\ round}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_key\ ==\ batch\_keybounds\_start[current\_batch]\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cswap(\&Points[0],\ \&Points[1],\ -\/int64mask\_equal(priv-\/>directions[current\_key\ -\/\ 1],\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ dac,\ daclen,\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proj\_cswap(\&Points[0],\ \&Points[1],\ -\/int64mask\_equal(priv-\/>directions[current\_key\ -\/\ 1],\ (int64\_t)2));}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[0],\ \&A24,\ 0,\ \&Points[0],\ dac,\ daclen,\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[1],\ \&A24,\ 0,\ \&Points[1],\ dac,\ daclen,\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_batch\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[2],\ \&A24,\ 0,\ \&Points[2],\ dac,\ daclen,\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xMUL\_dac(\&Points[3],\ \&A24,\ 0,\ \&Points[3],\ dac,\ daclen,\ batch\_maxdac[current\_batch]);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ inner\_counter++;}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00378}00378\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00380}00380\ \ \ \ \ fp\_inv(A.z);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00381}00381\ \ \ \ \ fp\_mul2(\&A.x,\ (\textcolor{keyword}{const}\ fp\ *)\&A.z);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00382}00382\ \ \ \ \ fp\_copy(out-\/>A,\ A.x);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00383}00383\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00385}00385\ \textcolor{comment}{/*\ includes\ public-\/key\ validation.\ */}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00386}00386\ \textcolor{keywordtype}{bool}\ csidh(\mbox{\hyperlink{structpublic__key}{public\_key}}\ *out,\ \mbox{\hyperlink{structpublic__key}{public\_key}}\ \textcolor{keyword}{const}\ *in,\ \mbox{\hyperlink{structprivate__key}{private\_key}}\ \textcolor{keyword}{const}\ *priv)}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00387}00387\ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{if}\ (!validate(in))}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00389}00389\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ fp\_random(out-\/>A);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00392}00392\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00393}00393\ \ \ \ \ action(out,\ in,\ priv);}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00395}00395\ \}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00397}00397\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00398}00398\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00399}00399\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00400}00400\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ,.-\/-\/"{}"{}"{}"{}-\/-\/..\_}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00401}00401\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ ."{}\ \ \ \ \ .'\ \ \ \ \ \ \`{}-\/.}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00402}00402\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ ;\ \ \ \ \ \ ;\ \ \ \ \ \ \ \ \ \ \ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00403}00403\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ '\ \ \ \ \ \ ;\ \ \ \ \ \ \ \ \ \ \ \ \ )}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00404}00404\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ /\ \ \ \ \ '\ \ \ \ \ \ \ \ \ \ \ \ \ .\ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00405}00405\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ /\ \ \ \ \ ;\ \ \ \ \ \`{}.\ \ \ \ \ \ \ \ \`{};}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00406}00406\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ,.'\ \ \ \ \ :\ \ \ \ \ \ \ \ \ .\ \ \ \ \ :\ )}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00407}00407\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ;|\(\backslash\)'\ \ \ \ :\ \ \ \ \ \ \`{}./|)\ \(\backslash\)\ \ ;/}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00408}00408\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ;|\ \(\backslash\)"{}\ \ -\/,-\/\ \ \ "{}-\/./\ |;\ \ ).;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00409}00409\ \textcolor{comment}{//\ \ \ \ \ \ \ \ /\(\backslash\)/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)/\ \ \ );}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00410}00410\ \textcolor{comment}{//\ \ \ \ \ \ \ :\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)\ \ \ \ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00411}00411\ \textcolor{comment}{//\ \ \ \ \ \ \ :\ \ \ \ \ \_\ \ \ \ \ \ \_\ \ \ \ \ ;\ \ \ )}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00412}00412\ \textcolor{comment}{//\ \ \ \ \ \ \ \`{}.\ \ \ \(\backslash\);\(\backslash\)\ \ \ \ /;/\ \ \ \ ;\ \ /}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00413}00413\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ !\ \ \ \ :\ \ \ :\ \ \ \ \ ,/\ \ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00414}00414\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ (`.\ :\ \_\ :\ ,/"{}"{}\ \ \ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00415}00415\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)\(\backslash\)\(\backslash\)`"{}\string^"{}\ \`{}\ :\ \ \ \ ;}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00416}00416\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ \ \ \ )}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00417}00417\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ////}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00418}00418\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00419}00419\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{ctidh__wombat__eval_8c_source_l00420}00420\ \textcolor{comment}{//\ by\ https://ascii.co.uk/art/wombat}}
+
+\end{DoxyCode}

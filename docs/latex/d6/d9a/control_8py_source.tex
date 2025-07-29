@@ -1,0 +1,231 @@
+\doxysection{control.\+py}
+\hypertarget{control_8py_source}{}\label{control_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/control.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/control.py}}
+\mbox{\hyperlink{control_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control}{00001}}\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00002}00002\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING,\ Callable,\ Dict,\ Iterable,\ List,\ Union}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00005}00005\ \textcolor{keywordflow}{if}\ sys.version\_info\ >=\ (3,\ 8):}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00006}00006\ \ \ \ \ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Final}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00007}00007\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00008}00008\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1typing__extensions}{pip.\_vendor.typing\_extensions}}\ \textcolor{keyword}{import}\ Final\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00010}00010\ \textcolor{keyword}{from}\ .segment\ \textcolor{keyword}{import}\ ControlCode,\ ControlType,\ Segment}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00012}00012\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{from}\ .console\ \textcolor{keyword}{import}\ Console,\ ConsoleOptions,\ RenderResult}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00015}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a727dc6fc41fbba6968b80d7285a7e3be}{00015}}\ STRIP\_CONTROL\_CODES:\ Final\ =\ [}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00016}00016\ \ \ \ \ 7,\ \ \textcolor{comment}{\#\ Bell}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00017}00017\ \ \ \ \ 8,\ \ \textcolor{comment}{\#\ Backspace}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00018}00018\ \ \ \ \ 11,\ \ \textcolor{comment}{\#\ Vertical\ tab}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00019}00019\ \ \ \ \ 12,\ \ \textcolor{comment}{\#\ Form\ feed}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00020}00020\ \ \ \ \ 13,\ \ \textcolor{comment}{\#\ Carriage\ return}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00021}00021\ ]}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a7f8f202e7a5132182278f5cb702e99cb}{00022}}\ \_CONTROL\_STRIP\_TRANSLATE:\ Final\ =\ \{}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00023}00023\ \ \ \ \ \_codepoint:\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{for}\ \_codepoint\ \textcolor{keywordflow}{in}\ STRIP\_CONTROL\_CODES}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00024}00024\ \}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00026}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_ae63510005eba282339b93874fd9529d8}{00026}}\ CONTROL\_ESCAPE:\ Final\ =\ \{}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00027}00027\ \ \ \ \ 7:\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)a"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00028}00028\ \ \ \ \ 8:\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)b"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00029}00029\ \ \ \ \ 11:\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)v"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00030}00030\ \ \ \ \ 12:\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)f"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00031}00031\ \ \ \ \ 13:\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)r"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00034}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a6f60a0a6e448b7abb3ffe8fc4ecccdbe}{00034}}\ CONTROL\_CODES\_FORMAT:\ Dict[int,\ Callable[...,\ str]]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00035}00035\ \ \ \ \ ControlType.BELL:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x07"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00036}00036\ \ \ \ \ ControlType.CARRIAGE\_RETURN:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)r"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00037}00037\ \ \ \ \ ControlType.HOME:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[H"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00038}00038\ \ \ \ \ ControlType.CLEAR:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[2J"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00039}00039\ \ \ \ \ ControlType.ENABLE\_ALT\_SCREEN:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[?1049h"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00040}00040\ \ \ \ \ ControlType.DISABLE\_ALT\_SCREEN:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[?1049l"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00041}00041\ \ \ \ \ ControlType.SHOW\_CURSOR:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[?25h"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00042}00042\ \ \ \ \ ControlType.HIDE\_CURSOR:\ \textcolor{keyword}{lambda}:\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[?25l"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00043}00043\ \ \ \ \ ControlType.CURSOR\_UP:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param\}A"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00044}00044\ \ \ \ \ ControlType.CURSOR\_DOWN:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param\}B"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00045}00045\ \ \ \ \ ControlType.CURSOR\_FORWARD:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param\}C"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00046}00046\ \ \ \ \ ControlType.CURSOR\_BACKWARD:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param\}D"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00047}00047\ \ \ \ \ ControlType.CURSOR\_MOVE\_TO\_COLUMN:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param+1\}G"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00048}00048\ \ \ \ \ ControlType.ERASE\_IN\_LINE:\ \textcolor{keyword}{lambda}\ param:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{param\}K"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00049}00049\ \ \ \ \ ControlType.CURSOR\_MOVE\_TO:\ \textcolor{keyword}{lambda}\ x,\ y:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b[\{y+1\};\{x+1\}H"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00050}00050\ \ \ \ \ ControlType.SET\_WINDOW\_TITLE:\ \textcolor{keyword}{lambda}\ title:\ f\textcolor{stringliteral}{"{}\(\backslash\)x1b]0;\{title\}\(\backslash\)x07"{}},}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00051}00051\ \}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00054}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control}{00054}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control}{Control}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00055}00055\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ renderable\ that\ inserts\ a\ control\ code\ (non\ printable\ but\ may\ move\ cursor).}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00056}00056\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ *codes\ (str):\ Positional\ arguments\ are\ either\ a\ :class:\`{}\string~rich.segment.ControlType\`{}\ enum\ or\ a}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ tuple\ of\ ControlType\ and\ an\ integer\ parameter}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00062}00062\ \ \ \ \ \_\_slots\_\_\ =\ [\textcolor{stringliteral}{"{}segment"{}}]}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a6a786883d2e1491fec1d789113f34d62}{00064}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a6a786883d2e1491fec1d789113f34d62}{\_\_init\_\_}}(self,\ *codes:\ Union[ControlType,\ ControlCode])\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ control\_codes:\ List[ControlCode]\ =\ [}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ (code,)\ \textcolor{keywordflow}{if}\ isinstance(code,\ ControlType)\ \textcolor{keywordflow}{else}\ code\ \textcolor{keywordflow}{for}\ code\ \textcolor{keywordflow}{in}\ codes}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \_format\_map\ =\ CONTROL\_CODES\_FORMAT}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ rendered\_codes\ =\ \textcolor{stringliteral}{"{}"{}}.join(}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \_format\_map[code](*parameters)\ \textcolor{keywordflow}{for}\ code,\ *parameters\ \textcolor{keywordflow}{in}\ control\_codes}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_abd36269b836121415a7bc694fbe9fde7}{00072}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_abd36269b836121415a7bc694fbe9fde7}{segment}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment}{Segment}}(rendered\_codes,\ \textcolor{keywordtype}{None},\ control\_codes)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00074}00074\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00075}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a5d37a5c4f05ecadc0924314aa43c7452}{00075}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a5d37a5c4f05ecadc0924314aa43c7452}{bell}}(cls)\ -\/>\ "{}Control"{}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Ring\ the\ 'bell'."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.BELL)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00079}00079\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00080}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a36fce06c277f35d076c39c128a949f1b}{00080}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a36fce06c277f35d076c39c128a949f1b}{home}}(cls)\ -\/>\ "{}Control"{}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Move\ cursor\ to\ 'home'\ position."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.HOME)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00084}00084\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00085}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a5ba088870054c696ebd5534f76108a97}{00085}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a5ba088870054c696ebd5534f76108a97}{move}}(cls,\ x:\ int\ =\ 0,\ y:\ int\ =\ 0)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Move\ cursor\ relative\ to\ current\ position.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00087}00087\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ x\ (int):\ X\ offset.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ y\ (int):\ Y\ offset.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00091}00091\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00093}00093\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \string~Control:\ Control\ object.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00094}00094\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }get\_codes()\ -\/>\ Iterable[ControlCode]:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ control\ =\ ControlType}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ x:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ (}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ control.CURSOR\_FORWARD\ \textcolor{keywordflow}{if}\ x\ >\ 0\ \textcolor{keywordflow}{else}\ control.CURSOR\_BACKWARD,}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abs(x),}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ y:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ (}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ control.CURSOR\_DOWN\ \textcolor{keywordflow}{if}\ y\ >\ 0\ \textcolor{keywordflow}{else}\ control.CURSOR\_UP,}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abs(y),}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ control\ =\ cls(*get\_codes())}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ control}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00113}00113\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00114}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a17fa10975d715a9d5d1ddc431599a111}{00114}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a17fa10975d715a9d5d1ddc431599a111}{move\_to\_column}}(cls,\ x:\ int,\ y:\ int\ =\ 0)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Move\ to\ the\ given\ column,\ optionally\ add\ offset\ to\ row.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00116}00116\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00117}00117\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ x\ (int):\ absolute\ x\ (column)}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ y\ (int):\ optional\ y\ offset\ (row)}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00120}00120\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00122}00122\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \string~Control:\ Control\ object.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00123}00123\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ cls(}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ControlType.CURSOR\_MOVE\_TO\_COLUMN,\ x),}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ControlType.CURSOR\_DOWN\ \textcolor{keywordflow}{if}\ y\ >\ 0\ \textcolor{keywordflow}{else}\ ControlType.CURSOR\_UP,}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abs(y),}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ y}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ cls((ControlType.CURSOR\_MOVE\_TO\_COLUMN,\ x))}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00137}00137\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00138}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a4ee55b31643a00cd586b0c140cf93ece}{00138}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a4ee55b31643a00cd586b0c140cf93ece}{move\_to}}(cls,\ x:\ int,\ y:\ int)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Move\ cursor\ to\ absolute\ position.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00140}00140\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ x\ (int):\ x\ offset\ (column)}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ y\ (int):\ y\ offset\ (row)}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00144}00144\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \string~Control:\ Control\ object.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00147}00147\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls((ControlType.CURSOR\_MOVE\_TO,\ x,\ y))}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00150}00150\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00151}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_aa3f304d5a4a181bcce5a6fc343bf4151}{00151}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{prime__search_8m_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}(cls)\ -\/>\ "{}Control"{}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Clear\ the\ screen."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.CLEAR)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00155}00155\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00156}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a2fcbf8cc35e25b70fac1e9a5f5927b75}{00156}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a2fcbf8cc35e25b70fac1e9a5f5927b75}{show\_cursor}}(cls,\ show:\ bool)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Show\ or\ hide\ the\ cursor."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.SHOW\_CURSOR\ \textcolor{keywordflow}{if}\ show\ \textcolor{keywordflow}{else}\ ControlType.HIDE\_CURSOR)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00160}00160\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00161}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_aa3943facae8050af81b73c90fa721fd6}{00161}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_aa3943facae8050af81b73c90fa721fd6}{alt\_screen}}(cls,\ enable:\ bool)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Enable\ or\ disable\ alt\ screen."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ enable:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.ENABLE\_ALT\_SCREEN,\ ControlType.HOME)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(ControlType.DISABLE\_ALT\_SCREEN)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00168}00168\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00169}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_ae53024315e2463214fd9440e2906b114}{00169}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_ae53024315e2463214fd9440e2906b114}{title}}(cls,\ title:\ str)\ -\/>\ \textcolor{stringliteral}{"{}Control"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Set\ the\ terminal\ window\ title}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00171}00171\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ title\ (str):\ The\ new\ terminal\ window\ title}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00174}00174\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls((ControlType.SET\_WINDOW\_TITLE,\ title))}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00177}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_ae07f7930f92d3591c93e2381cd5be285}{00177}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_abd36269b836121415a7bc694fbe9fde7}{segment}}.text}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00180}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a9666b4f3ea984736fd5f3e349b7c4820}{00180}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_a9666b4f3ea984736fd5f3e349b7c4820}{\_\_rich\_console\_\_}}(}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ self,\ console:\ \textcolor{stringliteral}{"{}Console"{}},\ options:\ \textcolor{stringliteral}{"{}ConsoleOptions"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00182}00182\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}RenderResult"{}}:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_abd36269b836121415a7bc694fbe9fde7}{segment}}.text:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1control_1_1_control_abd36269b836121415a7bc694fbe9fde7}{segment}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00187}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a439404d7380abd1bc2c965cd487c8cb9}{00187}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a439404d7380abd1bc2c965cd487c8cb9}{strip\_control\_codes}}(}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00188}00188\ \ \ \ \ text:\ str,\ \_translate\_table:\ Dict[int,\ \textcolor{keywordtype}{None}]\ =\ \_CONTROL\_STRIP\_TRANSLATE}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00189}00189\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00190}00190\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Remove\ control\ codes\ from\ text.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00191}00191\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00192}00192\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00193}00193\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ text\ (str):\ A\ string\ possibly\ contain\ control\ codes.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00194}00194\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ str:\ String\ with\ control\ codes\ removed.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{return}\ text.translate(\_translate\_table)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00201}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a45cd48c6d2e965e1c6579445dc29fd1d}{00201}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a45cd48c6d2e965e1c6579445dc29fd1d}{escape\_control\_codes}}(}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00202}00202\ \ \ \ \ text:\ str,}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00203}00203\ \ \ \ \ \_translate\_table:\ Dict[int,\ str]\ =\ CONTROL\_ESCAPE,}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00204}00204\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00205}00205\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Replace\ control\ codes\ with\ their\ "{}escaped"{}\ equivalent\ in\ the\ given\ text.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ (e.g.\ "{}\(\backslash\)b"{}\ becomes\ "{}\(\backslash\)\(\backslash\)b"{})}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00207}00207\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ text\ (str):\ A\ string\ possibly\ containing\ control\ codes.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00210}00210\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00211}00211\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ str:\ String\ with\ control\ codes\ replaced\ with\ their\ escaped\ version.}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{return}\ text.translate(\_translate\_table)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00217}00217\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00218}00218\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1console}{pip.\_vendor.rich.console}}\ \textcolor{keyword}{import}\ Console}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00220}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1control_a59b27486da7ae78f25305f338b4b2fce}{00220}}\ \ \ \ \ console\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1console_1_1_console}{Console}}()}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00221}00221\ \ \ \ \ console.print(\textcolor{stringliteral}{"{}Look\ at\ the\ title\ of\ your\ terminal\ window\ \string^"{}})}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00222}00222\ \ \ \ \ \textcolor{comment}{\#\ console.print(Control((ControlType.SET\_WINDOW\_TITLE,\ "{}Hello,\ world!"{})))}}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(10):}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ console.set\_window\_title(\textcolor{stringliteral}{"{}🚀\ Loading"{}}\ +\ \textcolor{stringliteral}{"{}."{}}\ *\ i)}
+\DoxyCodeLine{\Hypertarget{control_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ time.sleep(0.5)}
+
+\end{DoxyCode}

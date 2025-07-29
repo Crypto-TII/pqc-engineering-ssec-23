@@ -1,0 +1,85 @@
+\doxysection{pip.\+\_\+internal.\+cli.\+main Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1cli_1_1main}{}\label{namespacepip_1_1__internal_1_1cli_1_1main}\index{pip.\_internal.cli.main@{pip.\_internal.cli.main}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1main_a81d1edfdc82b665e5b014f74f14f2f01}{main}} (Optional\mbox{[}List\mbox{[}str\mbox{]}\mbox{]} args=None)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1main_a0b14e488ae28d98d262453f3e9cd6e4d}{logger}} = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Primary application entrypoint.
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1main_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1main_a81d1edfdc82b665e5b014f74f14f2f01}\index{pip.\_internal.cli.main@{pip.\_internal.cli.main}!main@{main}}
+\index{main@{main}!pip.\_internal.cli.main@{pip.\_internal.cli.main}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1cli_1_1main_a81d1edfdc82b665e5b014f74f14f2f01} 
+ int main (\begin{DoxyParamCaption}\item[{Optional\mbox{[}List\mbox{[}str\mbox{]}\mbox{]} }]{args}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{cli_2main_8py_source_l00046}{46}} of file \mbox{\hyperlink{cli_2main_8py_source}{main.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00046\ \textcolor{keyword}{def\ }\mbox{\hyperlink{benchmarks__main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}}(args:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None})\ -\/>\ int:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{if}\ args\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ args\ =\ sys.argv[1:]}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{\#\ Suppress\ the\ pkg\_resources\ deprecation\ warning}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{\#\ Note\ -\/\ we\ use\ a\ module\ of\ .*pkg\_resources\ to\ cover}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{\#\ the\ normal\ case\ (pip.\_vendor.pkg\_resources)\ and\ the}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{\#\ devendored\ case\ (a\ bare\ pkg\_resources)}}
+\DoxyCodeLine{00054\ \ \ \ \ warnings.filterwarnings(}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}ignore"{}},\ category=DeprecationWarning,\ module=\textcolor{stringliteral}{"{}.*pkg\_resources"{}}}
+\DoxyCodeLine{00056\ \ \ \ \ )}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{\#\ Configure\ our\ deprecation\ warnings\ to\ be\ sent\ through\ loggers}}
+\DoxyCodeLine{00059\ \ \ \ \ deprecation.install\_warning\_logger()}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ autocomplete()}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ cmd\_name,\ cmd\_args\ =\ parse\_command(args)}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{except}\ PipError\ \textcolor{keyword}{as}\ exc:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ sys.stderr.write(f\textcolor{stringliteral}{"{}ERROR:\ \{exc\}"{}})}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ sys.stderr.write(os.linesep)}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{\#\ Needed\ for\ locale.getpreferredencoding(False)\ to\ work}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{\#\ in\ pip.\_internal.utils.encoding.auto\_decode}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ locale.setlocale(locale.LC\_ALL,\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{except}\ locale.Error\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ setlocale\ can\ apparently\ crash\ if\ locale\ are\ uninitialized}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ logger.debug(\textcolor{stringliteral}{"{}Ignoring\ error\ \%s\ when\ setting\ locale"{}},\ e)}
+\DoxyCodeLine{00077\ \ \ \ \ command\ =\ create\_command(cmd\_name,\ isolated=(\textcolor{stringliteral}{"{}-\/-\/isolated"{}}\ \textcolor{keywordflow}{in}\ cmd\_args))}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{return}\ command.main(cmd\_args)}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1main_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1cli_1_1main_a0b14e488ae28d98d262453f3e9cd6e4d}\index{pip.\_internal.cli.main@{pip.\_internal.cli.main}!logger@{logger}}
+\index{logger@{logger}!pip.\_internal.cli.main@{pip.\_internal.cli.main}}
+\doxysubsubsection{\texorpdfstring{logger}{logger}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1cli_1_1main_a0b14e488ae28d98d262453f3e9cd6e4d} 
+logger = logging.\+get\+Logger(\+\_\+\+\_\+name\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{cli_2main_8py_source_l00016}{16}} of file \mbox{\hyperlink{cli_2main_8py_source}{main.\+py}}.
+

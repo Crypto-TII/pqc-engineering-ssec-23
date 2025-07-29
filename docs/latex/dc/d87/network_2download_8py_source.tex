@@ -1,0 +1,192 @@
+\doxysection{download.\+py}
+\hypertarget{network_2download_8py_source}{}\label{network_2download_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/download.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/network/download.py}}
+\mbox{\hyperlink{network_2download_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Download\ files\ with\ progress\ indicators.}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00002}00002\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00003}00003\ \textcolor{keyword}{import}\ email.message}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00004}00004\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00005}00005\ \textcolor{keyword}{import}\ mimetypes}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00006}00006\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00007}00007\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Iterable,\ Optional,\ Tuple}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1models}{pip.\_vendor.requests.models}}\ \textcolor{keyword}{import}\ CONTENT\_CHUNK\_SIZE,\ Response}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1progress__bars}{pip.\_internal.cli.progress\_bars}}\ \textcolor{keyword}{import}\ get\_download\_progress\_renderer}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ NetworkConnectionError}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1index}{pip.\_internal.models.index}}\ \textcolor{keyword}{import}\ PyPI}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00014}00014\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1models_1_1link}{pip.\_internal.models.link}}\ \textcolor{keyword}{import}\ Link}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1cache}{pip.\_internal.network.cache}}\ \textcolor{keyword}{import}\ is\_from\_cache}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00016}00016\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1session}{pip.\_internal.network.session}}\ \textcolor{keyword}{import}\ PipSession}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1utils}{pip.\_internal.network.utils}}\ \textcolor{keyword}{import}\ HEADERS,\ raise\_for\_status,\ response\_chunks}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ format\_size,\ redact\_auth\_from\_url,\ splitext}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00020}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a0b14e488ae28d98d262453f3e9cd6e4d}{00020}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00023}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a0c05c1be75525de49ed4e12b1e0e2681}{00023}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a0c05c1be75525de49ed4e12b1e0e2681}{\_get\_http\_response\_size}}(resp:\ Response)\ -\/>\ Optional[int]:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ int(resp.headers[\textcolor{stringliteral}{"{}content-\/length"{}}])}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{except}\ (ValueError,\ KeyError,\ TypeError):}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00030}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a7f2e867209b162e3715eb1a0c2405e10}{00030}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a7f2e867209b162e3715eb1a0c2405e10}{\_prepare\_download}}(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00031}00031\ \ \ \ \ resp:\ Response,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00032}00032\ \ \ \ \ link:\ Link,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00033}00033\ \ \ \ \ progress\_bar:\ str,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00034}00034\ )\ -\/>\ Iterable[bytes]:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00035}00035\ \ \ \ \ total\_length\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a0c05c1be75525de49ed4e12b1e0e2681}{\_get\_http\_response\_size}}(resp)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}\ link.netloc\ ==\ PyPI.file\_storage\_domain:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ url\ =\ link.show\_url}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ url\ =\ link.url\_without\_fragment}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00042}00042\ \ \ \ \ logged\_url\ =\ redact\_auth\_from\_url(url)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ total\_length:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ logged\_url\ =\ \textcolor{stringliteral}{"{}\{\}\ (\{\})"{}}.format(logged\_url,\ format\_size(total\_length))}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_from\_cache(resp):}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ logger.info(\textcolor{stringliteral}{"{}Using\ cached\ \%s"{}},\ logged\_url)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ logger.info(\textcolor{stringliteral}{"{}Downloading\ \%s"{}},\ logged\_url)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{if}\ logger.getEffectiveLevel()\ >\ logging.INFO:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ show\_progress\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{elif}\ is\_from\_cache(resp):}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ show\_progress\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ total\_length:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ show\_progress\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{elif}\ total\_length\ >\ (40\ *\ 1000):}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ show\_progress\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ show\_progress\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00063}00063\ \ \ \ \ chunks\ =\ response\_chunks(resp,\ CONTENT\_CHUNK\_SIZE)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ show\_progress:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chunks}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00068}00068\ \ \ \ \ renderer\ =\ get\_download\_progress\_renderer(bar\_type=progress\_bar,\ size=total\_length)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00069}00069\ \ \ \ \ \textcolor{keywordflow}{return}\ renderer(chunks)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00072}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a3ad12e07333275aba8cbd817d152afe1}{00072}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a3ad12e07333275aba8cbd817d152afe1}{sanitize\_content\_filename}}(filename:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00073}00073\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ Sanitize\ the\ "{}filename"{}\ value\ from\ a\ Content-\/Disposition\ header.}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00075}00075\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.basename(filename)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00079}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a6289b27c6afff04550bb5808b484b4ef}{00079}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a6289b27c6afff04550bb5808b484b4ef}{parse\_content\_disposition}}(content\_disposition:\ str,\ default\_filename:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00080}00080\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ Parse\ the\ "{}filename"{}\ value\ from\ a\ Content-\/Disposition\ header,\ and}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ \ \ return\ the\ default\ filename\ if\ the\ result\ is\ empty.}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00083}00083\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00084}00084\ \ \ \ \ m\ =\ email.message.Message()}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00085}00085\ \ \ \ \ m[\textcolor{stringliteral}{"{}content-\/type"{}}]\ =\ content\_disposition}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00086}00086\ \ \ \ \ filename\ =\ m.get\_param(\textcolor{stringliteral}{"{}filename"{}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{if}\ filename:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ need\ to\ sanitize\ the\ filename\ to\ prevent\ directory\ traversal}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ case\ the\ filename\ contains\ "{}.."{}\ path\ parts.}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ filename\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a3ad12e07333275aba8cbd817d152afe1}{sanitize\_content\_filename}}(str(filename))}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{return}\ filename\ \textcolor{keywordflow}{or}\ default\_filename}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00094}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a41baacf305c8dfebd740372430df40cc}{00094}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a41baacf305c8dfebd740372430df40cc}{\_get\_http\_response\_filename}}(resp:\ Response,\ link:\ Link)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00095}00095\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ an\ ideal\ filename\ from\ the\ given\ HTTP\ response,\ falling\ back\ to}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ the\ link\ filename\ if\ not\ provided.}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00097}00097\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00098}00098\ \ \ \ \ filename\ =\ link.filename\ \ \textcolor{comment}{\#\ fallback}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00099}00099\ \ \ \ \ \textcolor{comment}{\#\ Have\ a\ look\ at\ the\ Content-\/Disposition\ header\ for\ a\ better\ guess}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00100}00100\ \ \ \ \ content\_disposition\ =\ resp.headers.get(\textcolor{stringliteral}{"{}content-\/disposition"{}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}\ content\_disposition:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ filename\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a6289b27c6afff04550bb5808b484b4ef}{parse\_content\_disposition}}(content\_disposition,\ filename)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00103}00103\ \ \ \ \ ext:\ Optional[str]\ =\ splitext(filename)[1]}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ext:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ ext\ =\ mimetypes.guess\_extension(resp.headers.get(\textcolor{stringliteral}{"{}content-\/type"{}},\ \textcolor{stringliteral}{"{}"{}}))}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ext:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ filename\ +=\ ext}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ext\ \textcolor{keywordflow}{and}\ link.url\ !=\ resp.url:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ ext\ =\ os.path.splitext(resp.url)[1]}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ext:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ filename\ +=\ ext}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{return}\ filename}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00115}\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a9d3cbfed7d037fec8367df482ea1f765}{00115}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a9d3cbfed7d037fec8367df482ea1f765}{\_http\_get\_download}}(session:\ PipSession,\ link:\ Link)\ -\/>\ Response:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00116}00116\ \ \ \ \ target\_url\ =\ link.url.split(\textcolor{stringliteral}{"{}\#"{}},\ 1)[0]}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00117}00117\ \ \ \ \ resp\ =\ session.get(target\_url,\ headers=HEADERS,\ stream=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00118}00118\ \ \ \ \ raise\_for\_status(resp)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{return}\ resp}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00122}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader}{00122}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader}{Downloader}}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00123}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_aeb2da19a30a4ba0f787b30487b41974f}{00123}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_aeb2da19a30a4ba0f787b30487b41974f}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ session:\ PipSession,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ progress\_bar:\ str,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00127}00127\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00128}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_aad9ce45e9912181e7d85e4093362417d}{00128}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_aad9ce45e9912181e7d85e4093362417d}{\_session}}\ =\ session}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00129}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_a22253c2c2b12770101d89cd994c4d1ea}{00129}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_a22253c2c2b12770101d89cd994c4d1ea}{\_progress\_bar}}\ =\ progress\_bar}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00131}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_a0b8a979de51f57b039e1e09d8b02e7e0}{00131}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_a0b8a979de51f57b039e1e09d8b02e7e0}{\_\_call\_\_}}(self,\ link:\ Link,\ location:\ str)\ -\/>\ Tuple[str,\ str]:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Download\ the\ file\ given\ by\ link\ into\ location."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ resp\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a9d3cbfed7d037fec8367df482ea1f765}{\_http\_get\_download}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_aad9ce45e9912181e7d85e4093362417d}{\_session}},\ link)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ NetworkConnectionError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ e.response\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ logger.critical(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}HTTP\ error\ \%s\ while\ getting\ \%s"{}},\ e.response.status\_code,\ link}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ filename\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a41baacf305c8dfebd740372430df40cc}{\_get\_http\_response\_filename}}(resp,\ link)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ filepath\ =\ os.path.join(location,\ filename)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ chunks\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a7f2e867209b162e3715eb1a0c2405e10}{\_prepare\_download}}(resp,\ link,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_downloader_a22253c2c2b12770101d89cd994c4d1ea}{\_progress\_bar}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(filepath,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ content\_file:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ chunks:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ content\_file.write(chunk)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ content\_type\ =\ resp.headers.get(\textcolor{stringliteral}{"{}Content-\/Type"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ filepath,\ content\_type}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00153}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader}{00153}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader}{BatchDownloader}}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_aeb2da19a30a4ba0f787b30487b41974f}{00154}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_aeb2da19a30a4ba0f787b30487b41974f}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ session:\ PipSession,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ progress\_bar:\ str,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00158}00158\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00159}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_aad9ce45e9912181e7d85e4093362417d}{00159}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_aad9ce45e9912181e7d85e4093362417d}{\_session}}\ =\ session}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00160}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_a22253c2c2b12770101d89cd994c4d1ea}{00160}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_a22253c2c2b12770101d89cd994c4d1ea}{\_progress\_bar}}\ =\ progress\_bar}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00162}\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_a91e30a76c574fa039965d18621d7c359}{00162}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_a91e30a76c574fa039965d18621d7c359}{\_\_call\_\_}}(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ self,\ links:\ Iterable[Link],\ location:\ str}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00164}00164\ \ \ \ \ )\ -\/>\ Iterable[Tuple[Link,\ Tuple[str,\ str]]]:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Download\ the\ files\ given\ by\ links\ into\ location."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ link\ \textcolor{keywordflow}{in}\ links:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a9d3cbfed7d037fec8367df482ea1f765}{\_http\_get\_download}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_aad9ce45e9912181e7d85e4093362417d}{\_session}},\ link)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ NetworkConnectionError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ e.response\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.critical(}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}HTTP\ error\ \%s\ while\ getting\ \%s"{}},}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e.response.status\_code,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ link,}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ filename\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a41baacf305c8dfebd740372430df40cc}{\_get\_http\_response\_filename}}(resp,\ link)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ filepath\ =\ os.path.join(location,\ filename)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ chunks\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1network_1_1download_a7f2e867209b162e3715eb1a0c2405e10}{\_prepare\_download}}(resp,\ link,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader_a22253c2c2b12770101d89cd994c4d1ea}{\_progress\_bar}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(filepath,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ content\_file:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ chunk\ \textcolor{keywordflow}{in}\ chunks:}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ content\_file.write(chunk)}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ content\_type\ =\ resp.headers.get(\textcolor{stringliteral}{"{}Content-\/Type"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{network_2download_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ link,\ (filepath,\ content\_type)}
+
+\end{DoxyCode}

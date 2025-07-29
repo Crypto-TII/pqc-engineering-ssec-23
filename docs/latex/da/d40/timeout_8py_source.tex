@@ -1,0 +1,277 @@
+\doxysection{timeout.\+py}
+\hypertarget{timeout_8py_source}{}\label{timeout_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/timeout.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/timeout.py}}
+\mbox{\hyperlink{timeout_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1timeout}{00001}}\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00003}00003\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00005}00005\ \textcolor{comment}{\#\ The\ default\ socket\ timeout,\ used\ by\ httplib\ to\ indicate\ that\ no\ timeout\ was;\ specified\ by\ the\ user}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00006}00006\ \textcolor{keyword}{from}\ socket\ \textcolor{keyword}{import}\ \_GLOBAL\_DEFAULT\_TIMEOUT,\ getdefaulttimeout}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00008}00008\ \textcolor{keyword}{from}\ ..exceptions\ \textcolor{keyword}{import}\ TimeoutStateError}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00010}00010\ \textcolor{comment}{\#\ A\ sentinel\ value\ to\ indicate\ that\ no\ timeout\ was\ specified\ by\ the\ user\ in}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00011}00011\ \textcolor{comment}{\#\ urllib3}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_a66473d824208815aa3f2b1096fe402cd}{00012}}\ \_Default\ =\ object()}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00015}00015\ \textcolor{comment}{\#\ Use\ time.monotonic\ if\ available.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_a5135668386ab64a05b794e9bb383f359}{00016}}\ current\_time\ =\ getattr(time,\ \textcolor{stringliteral}{"{}monotonic"{}},\ time.time)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00019}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout}{00019}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout}{Timeout}}(object):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00020}00020\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Timeout\ configuration.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00021}00021\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ Timeouts\ can\ be\ defined\ as\ a\ default\ for\ a\ pool:}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00023}00023\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ ..\ code-\/block::\ python}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ \ \ \ timeout\ =\ Timeout(connect=2.0,\ read=7.0)}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ \ \ \ http\ =\ PoolManager(timeout=timeout)}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/')}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00029}00029\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ Or\ per-\/request\ (which\ overrides\ the\ default\ for\ the\ pool):}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00031}00031\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ ..\ code-\/block::\ python}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00033}00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/',\ timeout=Timeout(10))}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00035}00035\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ Timeouts\ can\ be\ disabled\ by\ setting\ all\ the\ parameters\ to\ \`{}\`{}None\`{}\`{}:}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00037}00037\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ ..\ code-\/block::\ python}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ \ \ \ no\_timeout\ =\ Timeout(connect=None,\ read=None)}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ \ \ \ response\ =\ http.request('GET',\ 'http://example.com/,\ timeout=no\_timeout)}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00042}00042\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00043}00043\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ :param\ total:}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ combines\ the\ connect\ and\ read\ timeouts\ into\ one;\ the\ read\ timeout}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ be\ set\ to\ the\ time\ leftover\ from\ the\ connect\ attempt.\ In\ the}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ event\ that\ both\ a\ connect\ timeout\ and\ a\ total\ are\ specified,\ or\ a\ read}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ timeout\ and\ a\ total\ are\ specified,\ the\ shorter\ timeout\ will\ be\ applied.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00049}00049\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00051}00051\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ :type\ total:\ int,\ float,\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00053}00053\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ :param\ connect:}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ maximum\ amount\ of\ time\ (in\ seconds)\ to\ wait\ for\ a\ connection}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ attempt\ to\ a\ server\ to\ succeed.\ Omitting\ the\ parameter\ will\ default\ the}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ connect\ timeout\ to\ the\ system\ default,\ probably\ \`{}the\ global\ default}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ timeout\ in\ socket.py}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ <http://hg.python.org/cpython/file/603b4d593758/Lib/socket.py\#l535>\`{}\_.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ None\ will\ set\ an\ infinite\ timeout\ for\ connection\ attempts.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00061}00061\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ :type\ connect:\ int,\ float,\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00063}00063\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ :param\ read:}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ maximum\ amount\ of\ time\ (in\ seconds)\ to\ wait\ between\ consecutive}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ read\ operations\ for\ a\ response\ from\ the\ server.\ Omitting\ the\ parameter}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ will\ default\ the\ read\ timeout\ to\ the\ system\ default,\ probably\ \`{}the}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ global\ default\ timeout\ in\ socket.py}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ <http://hg.python.org/cpython/file/603b4d593758/Lib/socket.py\#l535>\`{}\_.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ None\ will\ set\ an\ infinite\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00071}00071\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00072}00072\ \textcolor{stringliteral}{\ \ \ \ :type\ read:\ int,\ float,\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00073}00073\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ ..\ note::}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00075}00075\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00076}00076\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Many\ factors\ can\ affect\ the\ total\ amount\ of\ time\ for\ urllib3\ to\ return}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00077}00077\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ an\ HTTP\ response.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00078}00078\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00079}00079\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ For\ example,\ Python's\ DNS\ resolver\ does\ not\ obey\ the\ timeout\ specified}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00080}00080\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ on\ the\ socket.\ Other\ factors\ that\ can\ affect\ total\ request\ time\ include}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ high\ CPU\ load,\ high\ swap,\ the\ program\ running\ at\ a\ low\ priority\ level,}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ or\ other\ behaviors.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00083}00083\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00084}00084\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ In\ addition,\ the\ read\ and\ total\ timeouts\ only\ measure\ the\ time\ between}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ read\ operations\ on\ the\ socket\ connecting\ the\ client\ and\ the\ server,}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00086}00086\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ not\ the\ total\ amount\ of\ time\ for\ the\ request\ to\ return\ a\ complete}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00087}00087\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ response.\ For\ most\ requests,\ the\ timeout\ is\ raised\ because\ the\ server}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ has\ not\ sent\ the\ first\ byte\ in\ the\ specified\ time.\ This\ is\ not\ always}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ case;\ if\ a\ server\ streams\ one\ byte\ every\ fifteen\ seconds,\ a\ timeout}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ of\ 20\ seconds\ will\ not\ trigger,\ even\ though\ the\ request\ will\ take}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ several\ minutes\ to\ complete.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00092}00092\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00093}00093\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ your\ goal\ is\ to\ cut\ off\ any\ request\ after\ a\ set\ amount\ of\ wall\ clock}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ time,\ consider\ having\ a\ second\ "{}watcher"{}\ thread\ to\ cut\ off\ a\ slow}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00098}00098\ \ \ \ \ \textcolor{comment}{\#:\ A\ sentinel\ object\ representing\ the\ default\ timeout\ value}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00099}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{00099}}\ \ \ \ \ DEFAULT\_TIMEOUT\ =\ \_GLOBAL\_DEFAULT\_TIMEOUT}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00101}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ac8276f921e657a5e1136df7a5a50a27d}{00101}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ac8276f921e657a5e1136df7a5a50a27d}{\_\_init\_\_}}(self,\ total=None,\ connect=\_Default,\ read=\_Default):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00102}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{00102}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_afec6e08fc33d4a0c0a9faed95f1712bb}{\_validate\_timeout}}(connect,\ \textcolor{stringliteral}{"{}connect"{}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{00103}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_afec6e08fc33d4a0c0a9faed95f1712bb}{\_validate\_timeout}}(read,\ \textcolor{stringliteral}{"{}read"{}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00104}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{00104}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_afec6e08fc33d4a0c0a9faed95f1712bb}{\_validate\_timeout}}(total,\ \textcolor{stringliteral}{"{}total"{}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00105}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{00105}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a61a1f3a6a4df93d491cd753f617782a2}{00107}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a61a1f3a6a4df93d491cd753f617782a2}{\_\_repr\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\%s(connect=\%r,\ read=\%r,\ total=\%r)"{}}\ \%\ (}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ type(self).\_\_name\_\_,}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}},}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}},}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}},}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00115}00115\ \ \ \ \ \textcolor{comment}{\#\ \_\_str\_\_\ provided\ for\ backwards\ compatibility}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00116}00116\ \ \ \ \ \_\_str\_\_\ =\ \_\_repr\_\_}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00118}00118\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00119}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a97b36883d345756af742e111f51a425c}{00119}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a97b36883d345756af742e111f51a425c}{resolve\_default\_timeout}}(cls,\ timeout):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getdefaulttimeout()\ \textcolor{keywordflow}{if}\ timeout\ \textcolor{keywordflow}{is}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}\ \textcolor{keywordflow}{else}\ timeout}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00122}00122\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00123}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_afec6e08fc33d4a0c0a9faed95f1712bb}{00123}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_afec6e08fc33d4a0c0a9faed95f1712bb}{\_validate\_timeout}}(cls,\ value,\ name):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ that\ a\ timeout\ attribute\ is\ valid.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00125}00125\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ value:\ The\ timeout\ value\ to\ validate}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ name:\ The\ name\ of\ the\ timeout\ attribute\ to\ validate.\ This\ is}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ used\ to\ specify\ in\ error\ messages.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ The\ validated\ and\ casted\ version\ of\ the\ given\ value.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ ValueError:\ If\ it\ is\ a\ numeric\ value\ less\ than\ or\ equal\ to}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ zero,\ or\ the\ type\ is\ not\ an\ integer,\ float,\ or\ None.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{is}\ \_Default:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ value\ \textcolor{keywordflow}{is}\ cls.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(value,\ bool):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Timeout\ cannot\ be\ a\ boolean\ value.\ It\ must\ "{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}be\ an\ int,\ float\ or\ None."{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ float(value)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (TypeError,\ ValueError):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Timeout\ value\ \%s\ was\ \%s,\ but\ it\ must\ be\ an\ "{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}int,\ float\ or\ None."{}}\ \%\ (name,\ value)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ <=\ 0:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Attempted\ to\ set\ \%s\ timeout\ to\ \%s,\ but\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}timeout\ cannot\ be\ set\ to\ a\ value\ less\ "{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}than\ or\ equal\ to\ 0."{}}\ \%\ (name,\ value)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ TypeError:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Python\ 3}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Timeout\ value\ \%s\ was\ \%s,\ but\ it\ must\ be\ an\ "{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}int,\ float\ or\ None."{}}\ \%\ (name,\ value)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00168}00168\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00169}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_adf36612e98cfd46f15b72869a7514f50}{00169}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_adf36612e98cfd46f15b72869a7514f50}{from\_float}}(cls,\ timeout):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Create\ a\ new\ Timeout\ from\ a\ legacy\ timeout\ value.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00171}00171\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ timeout\ value\ used\ by\ httplib.py\ sets\ the\ same\ timeout\ on\ the}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ connect(),\ and\ recv()\ socket\ requests.\ This\ creates\ a\ :class:\`{}Timeout\`{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00174}00174\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ object\ that\ sets\ the\ individual\ timeouts\ to\ the\ \`{}\`{}timeout\`{}\`{}\ value}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ passed\ to\ this\ function.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00176}00176\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ timeout:\ The\ legacy\ timeout\ value.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00178}00178\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :type\ timeout:\ integer,\ float,\ sentinel\ default\ object,\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ Timeout\ object}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ :class:\`{}Timeout\`{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout}{Timeout}}(read=timeout,\ connect=timeout)}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00184}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a5f8bb78e65e298aa1b29f66b685d98c4}{00184}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a5f8bb78e65e298aa1b29f66b685d98c4}{clone}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Create\ a\ copy\ of\ the\ timeout\ object}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00186}00186\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Timeout\ properties\ are\ stored\ per-\/pool\ but\ each\ request\ needs\ a\ fresh}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Timeout\ object\ to\ ensure\ each\ one\ has\ its\ own\ start/stop\ configured.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00189}00189\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00190}00190\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ a\ copy\ of\ the\ timeout\ object}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00191}00191\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ :class:\`{}Timeout\`{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00192}00192\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ can't\ use\ copy.deepcopy\ because\ that\ will\ also\ create\ a\ new\ object}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ for\ \_GLOBAL\_DEFAULT\_TIMEOUT,\ which\ socket.py\ uses\ as\ a\ sentinel\ to}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ detect\ the\ user\ default.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout}{Timeout}}(connect=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}},\ read=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}},\ total=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00198}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a8b1d4271405c99990e42df93e4f1537f}{00198}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a8b1d4271405c99990e42df93e4f1537f}{start\_connect}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Start\ the\ timeout\ clock,\ used\ during\ a\ connect()\ attempt}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00200}00200\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00201}00201\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ urllib3.exceptions.TimeoutStateError:\ if\ you\ attempt}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00202}00202\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ to\ start\ a\ timer\ that\ has\ been\ started\ already.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00203}00203\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_timeout_state_error}{TimeoutStateError}}(\textcolor{stringliteral}{"{}Timeout\ timer\ has\ already\ been\ started."{}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_a5135668386ab64a05b794e9bb383f359}{current\_time}}()}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00209}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a735d5e2ca54b26f54037a922f681a210}{00209}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a735d5e2ca54b26f54037a922f681a210}{get\_connect\_duration}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Gets\ the\ time\ elapsed\ since\ the\ call\ to\ :meth:\`{}start\_connect\`{}.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00211}00211\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ Elapsed\ time\ in\ seconds.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ float}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00214}00214\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ urllib3.exceptions.TimeoutStateError:\ if\ you\ attempt}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ to\ get\ duration\ for\ a\ timer\ that\ hasn't\ been\ started.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00216}00216\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1exceptions_1_1_timeout_state_error}{TimeoutStateError}}(}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can't\ get\ connect\ duration\ for\ timer\ that\ has\ not\ started."{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_a5135668386ab64a05b794e9bb383f359}{current\_time}}()\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00223}00223\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00224}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a4f20634559c75ba1416e51def3a5e808}{00224}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a4f20634559c75ba1416e51def3a5e808}{connect\_timeout}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ value\ to\ use\ when\ setting\ a\ connection\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00226}00226\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00227}00227\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ will\ be\ a\ positive\ float\ or\ integer,\ the\ value\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00228}00228\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ (never\ timeout),\ or\ the\ default\ system\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00229}00229\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00230}00230\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ Connect\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00231}00231\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ int,\ float,\ :attr:\`{}Timeout.DEFAULT\_TIMEOUT\`{}\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00232}00232\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}}\ \textcolor{keywordflow}{is}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ min(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a1379649ae594f715b5751f4a5a5f0176}{\_connect}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}})}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00241}00241\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00242}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a98a57997be1028ba929dfa90a677b6c4}{00242}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a98a57997be1028ba929dfa90a677b6c4}{read\_timeout}}(self):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ value\ for\ the\ read\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00244}00244\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ assumes\ some\ time\ has\ elapsed\ in\ the\ connection\ timeout\ and}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ computes\ the\ read\ timeout\ appropriately.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00247}00247\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00248}00248\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ self.total\ is\ set,\ the\ read\ timeout\ is\ dependent\ on\ the\ amount\ of}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00249}00249\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ time\ taken\ by\ the\ connect\ timeout.\ If\ the\ connection\ time\ has\ not\ been}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00250}00250\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ established,\ a\ :exc:\`{}\string~urllib3.exceptions.TimeoutStateError\`{}\ will\ be}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00251}00251\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ raised.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00252}00252\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :return:\ Value\ to\ use\ for\ the\ read\ timeout.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00254}00254\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ int,\ float,\ :attr:\`{}Timeout.DEFAULT\_TIMEOUT\`{}\ or\ None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :raises\ urllib3.exceptions.TimeoutStateError:\ If\ :meth:\`{}start\_connect\`{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ has\ not\ yet\ been\ called\ on\ this\ object.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00257}00257\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ case\ the\ connect\ timeout\ has\ not\ yet\ been\ established.}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_ae408527adce49120a02e7b33064ca46c}{\_start\_connect}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ max(0,\ min(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a735d5e2ca54b26f54037a922f681a210}{get\_connect\_duration}}(),\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}))}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_affeb3fc985553237e792dcca3525b13d}{DEFAULT\_TIMEOUT}}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ max(0,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a2c1a52cd37ed38e861bba51c47c1802a}{total}}\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a735d5e2ca54b26f54037a922f681a210}{get\_connect\_duration}}())}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{timeout_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1timeout_1_1_timeout_a77ef6560413ac747997d5df3bd5bd722}{\_read}}}
+
+\end{DoxyCode}

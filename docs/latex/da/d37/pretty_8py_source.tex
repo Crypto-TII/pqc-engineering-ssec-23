@@ -1,0 +1,1000 @@
+\doxysection{pretty.\+py}
+\hypertarget{pretty_8py_source}{}\label{pretty_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/pretty.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/pretty.py}}
+\mbox{\hyperlink{pretty_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty}{00001}}\ \textcolor{keyword}{import}\ builtins}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00002}00002\ \textcolor{keyword}{import}\ collections}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00003}00003\ \textcolor{keyword}{import}\ dataclasses}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00004}00004\ \textcolor{keyword}{import}\ inspect}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00005}00005\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00006}00006\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00007}00007\ \textcolor{keyword}{from}\ array\ \textcolor{keyword}{import}\ array}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00008}00008\ \textcolor{keyword}{from}\ collections\ \textcolor{keyword}{import}\ Counter,\ UserDict,\ UserList,\ defaultdict,\ deque}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00009}00009\ \textcolor{keyword}{from}\ dataclasses\ \textcolor{keyword}{import}\ dataclass,\ fields,\ is\_dataclass}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00010}00010\ \textcolor{keyword}{from}\ inspect\ \textcolor{keyword}{import}\ isclass}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00011}00011\ \textcolor{keyword}{from}\ itertools\ \textcolor{keyword}{import}\ islice}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00012}00012\ \textcolor{keyword}{from}\ types\ \textcolor{keyword}{import}\ MappingProxyType}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00013}00013\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00014}00014\ \ \ \ \ TYPE\_CHECKING,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00015}00015\ \ \ \ \ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00016}00016\ \ \ \ \ Callable,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00017}00017\ \ \ \ \ DefaultDict,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00018}00018\ \ \ \ \ Dict,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00019}00019\ \ \ \ \ Iterable,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00020}00020\ \ \ \ \ List,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00021}00021\ \ \ \ \ Optional,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00022}00022\ \ \ \ \ Sequence,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00023}00023\ \ \ \ \ Set,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00024}00024\ \ \ \ \ Tuple,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00025}00025\ \ \ \ \ Union,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00026}00026\ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00028}00028\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1repr}{pip.\_vendor.rich.repr}}\ \textcolor{keyword}{import}\ RichReprResult}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00030}00030\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00031}00031\ \ \ \ \ \textcolor{keyword}{import}\ attr\ \textcolor{keyword}{as}\ \_attr\_module}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00033}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a6edba38697c6d356b8c2bd1e0544064a}{00033}}\ \ \ \ \ \_has\_attrs\ =\ hasattr(\_attr\_module,\ \textcolor{stringliteral}{"{}ib"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00034}00034\ \textcolor{keywordflow}{except}\ ImportError:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00035}00035\ \ \ \ \ \_has\_attrs\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00037}00037\ \textcolor{keyword}{from}\ .\ \textcolor{keyword}{import}\ get\_console}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00038}00038\ \textcolor{keyword}{from}\ .\_loop\ \textcolor{keyword}{import}\ loop\_last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00039}00039\ \textcolor{keyword}{from}\ .\_pick\ \textcolor{keyword}{import}\ pick\_bool}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00040}00040\ \textcolor{keyword}{from}\ .abc\ \textcolor{keyword}{import}\ RichRenderable}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00041}00041\ \textcolor{keyword}{from}\ .cells\ \textcolor{keyword}{import}\ cell\_len}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00042}00042\ \textcolor{keyword}{from}\ .highlighter\ \textcolor{keyword}{import}\ ReprHighlighter}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00043}00043\ \textcolor{keyword}{from}\ .jupyter\ \textcolor{keyword}{import}\ JupyterMixin,\ JupyterRenderable}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00044}00044\ \textcolor{keyword}{from}\ .measure\ \textcolor{keyword}{import}\ Measurement}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00045}00045\ \textcolor{keyword}{from}\ .text\ \textcolor{keyword}{import}\ Text}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00047}00047\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{from}\ .console\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ Console,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ ConsoleOptions,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ HighlighterType,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ JustifyMethod,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ OverflowMethod,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ RenderResult,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00055}00055\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00058}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aa6ef8a8fc0d8eb5bf5c04d8cde05da89}{00058}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aa6ef8a8fc0d8eb5bf5c04d8cde05da89}{\_is\_attr\_object}}(obj:\ Any)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00059}00059\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ an\ object\ was\ created\ with\ attrs\ module."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{return}\ \_has\_attrs\ \textcolor{keywordflow}{and}\ \_attr\_module.has(type(obj))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00063}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a05aff3886a560650bf2f8c5a1465af41}{00063}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a05aff3886a560650bf2f8c5a1465af41}{\_get\_attr\_fields}}(obj:\ Any)\ -\/>\ Sequence[\textcolor{stringliteral}{"{}\_attr\_module.Attribute[Any]"{}}]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00064}00064\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ fields\ for\ an\ attrs\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{return}\ \_attr\_module.fields(type(obj))\ \textcolor{keywordflow}{if}\ \_has\_attrs\ \textcolor{keywordflow}{else}\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00068}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a0fa2800de7ca598663631b38a1a2d9cc}{00068}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a0fa2800de7ca598663631b38a1a2d9cc}{\_is\_dataclass\_repr}}(obj:\ object)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00069}00069\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ an\ instance\ of\ a\ dataclass\ contains\ the\ default\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00070}00070\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00071}00071\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00072}00072\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ obj\ (object):\ A\ dataclass\ instance.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00073}00073\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00075}00075\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ bool:\ True\ if\ the\ default\ repr\ is\ used,\ False\ if\ there\ is\ a\ custom\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00076}00076\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00077}00077\ \ \ \ \ \textcolor{comment}{\#\ Digging\ in\ to\ a\ lot\ of\ internals\ here}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00078}00078\ \ \ \ \ \textcolor{comment}{\#\ Catching\ all\ exceptions\ in\ case\ something\ is\ missing\ on\ a\ non\ CPython\ implementation}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.\_\_repr\_\_.\_\_code\_\_.co\_filename\ ==\ dataclasses.\_\_file\_\_}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:\ \ \textcolor{comment}{\#\ pragma:\ no\ coverage}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00085}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a3e08dcc21bcdf79004245ef65b1ccd68}{00085}}\ \_dummy\_namedtuple\ =\ collections.namedtuple(\textcolor{stringliteral}{"{}\_dummy\_namedtuple"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00088}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a9b01d3d7b894877b2039246e5e22a31d}{00088}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a9b01d3d7b894877b2039246e5e22a31d}{\_has\_default\_namedtuple\_repr}}(obj:\ object)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00089}00089\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ an\ instance\ of\ namedtuple\ contains\ the\ default\ repr}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00090}00090\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ obj\ (object):\ A\ namedtuple}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00093}00093\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ bool:\ True\ if\ the\ default\ repr\ is\ used,\ False\ if\ there's\ a\ custom\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00097}00097\ \ \ \ \ obj\_file\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ obj\_file\ =\ inspect.getfile(obj.\_\_repr\_\_)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{except}\ (OSError,\ TypeError):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ OSError\ handles\ case\ where\ object\ is\ defined\ in\ \_\_main\_\_\ scope,\ e.g.\ REPL\ -\/\ no\ filename\ available.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TypeError\ trapped\ defensively,\ in\ case\ of\ object\ without\ filename\ slips\ through.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00104}00104\ \ \ \ \ default\_repr\_file\ =\ inspect.getfile(\_dummy\_namedtuple.\_\_repr\_\_)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{return}\ obj\_file\ ==\ default\_repr\_file}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00108}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a73f56963ecd18e7b2409cfe3a85c4bc0}{00108}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a73f56963ecd18e7b2409cfe3a85c4bc0}{\_ipy\_display\_hook}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00109}00109\ \ \ \ \ value:\ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00110}00110\ \ \ \ \ console:\ Optional[\textcolor{stringliteral}{"{}Console"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00111}00111\ \ \ \ \ overflow:\ \textcolor{stringliteral}{"{}OverflowMethod"{}}\ =\ \textcolor{stringliteral}{"{}ignore"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00112}00112\ \ \ \ \ crop:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00113}00113\ \ \ \ \ indent\_guides:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00114}00114\ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00115}00115\ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00116}00116\ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00117}00117\ \ \ \ \ expand\_all:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00118}00118\ )\ -\/>\ Union[str,\ \textcolor{keywordtype}{None}]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00119}00119\ \ \ \ \ \textcolor{comment}{\#\ needed\ here\ to\ prevent\ circular\ import:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00120}00120\ \ \ \ \ \textcolor{keyword}{from}\ .console\ \textcolor{keyword}{import}\ ConsoleRenderable}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00122}00122\ \ \ \ \ \textcolor{comment}{\#\ always\ skip\ rich\ generated\ jupyter\ renderables\ or\ None\ values}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00123}00123\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(value,\ JupyterRenderable)\ \textcolor{keywordflow}{or}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00126}00126\ \ \ \ \ console\ =\ console\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_abe3da41509e860a6feb9f3ea8eb12be4}{get\_console}}()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00128}00128\ \ \ \ \ \textcolor{keyword}{with}\ console.capture()\ \textcolor{keyword}{as}\ capture:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ certain\ renderables\ should\ start\ on\ a\ new\ line}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(value,\ ConsoleRenderable):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ console.line()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ console.print(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ value}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(value,\ RichRenderable)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{Pretty}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ overflow=overflow,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent\_guides=indent\_guides,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=max\_length,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=max\_string,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=max\_depth,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=expand\_all,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ margin=12,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ crop=crop,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ new\_line\_start=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ end=\textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00149}00149\ \ \ \ \ \textcolor{comment}{\#\ strip\ trailing\ newline,\ not\ usually\ part\ of\ a\ text\ repr}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00150}00150\ \ \ \ \ \textcolor{comment}{\#\ I'm\ not\ sure\ if\ this\ should\ be\ prevented\ at\ a\ lower\ level}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{return}\ capture.get().rstrip(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00154}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{00154}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00155}00155\ \ \ \ \ obj:\ object,\ class\_or\_tuple:\ Union[type,\ Tuple[type,\ ...]]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00156}00156\ )\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00157}00157\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}isinstance\ can\ fail\ in\ rare\ cases,\ for\ example\ types\ with\ no\ \_\_class\_\_"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ isinstance(obj,\ class\_or\_tuple)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00164}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a6d4aa764aeef077ea5d78d03f917e244}{00164}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a6d4aa764aeef077ea5d78d03f917e244}{install}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00165}00165\ \ \ \ \ console:\ Optional[\textcolor{stringliteral}{"{}Console"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00166}00166\ \ \ \ \ overflow:\ \textcolor{stringliteral}{"{}OverflowMethod"{}}\ =\ \textcolor{stringliteral}{"{}ignore"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00167}00167\ \ \ \ \ crop:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00168}00168\ \ \ \ \ indent\_guides:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00169}00169\ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00170}00170\ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00171}00171\ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00172}00172\ \ \ \ \ expand\_all:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00173}00173\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00174}00174\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Install\ automatic\ pretty\ printing\ in\ the\ Python\ REPL.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00175}00175\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00176}00176\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ console\ (Console,\ optional):\ Console\ instance\ or\ \`{}\`{}None\`{}\`{}\ to\ use\ global\ console.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00178}00178\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ overflow\ (Optional[OverflowMethod],\ optional):\ Overflow\ method.\ Defaults\ to\ "{}ignore"{}.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ crop\ (Optional[bool],\ optional):\ Enable\ cropping\ of\ long\ lines.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indent\_guides\ (bool,\ optional):\ Enable\ indentation\ guides.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_length\ (int,\ optional):\ Maximum\ length\ of\ containers\ before\ abbreviating,\ or\ None\ for\ no\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00182}00182\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00183}00183\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_string\ (int,\ optional):\ Maximum\ length\ of\ string\ before\ truncating,\ or\ None\ to\ disable.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_depth\ (int,\ optional):\ Maximum\ depth\ of\ nested\ data\ structures,\ or\ None\ for\ no\ maximum.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00185}00185\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ expand\_all\ (bool,\ optional):\ Expand\ all\ containers.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00186}00186\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_frames\ (int):\ Maximum\ number\ of\ frames\ to\ show\ in\ a\ traceback,\ 0\ for\ no\ maximum.\ Defaults\ to\ 100.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00188}00188\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich}{pip.\_vendor.rich}}\ \textcolor{keyword}{import}\ get\_console}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00190}00190\ \ \ \ \ console\ =\ console\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_abe3da41509e860a6feb9f3ea8eb12be4}{get\_console}}()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00191}00191\ \ \ \ \ \textcolor{keyword}{assert}\ console\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00193}00193\ \ \ \ \ \textcolor{keyword}{def\ }display\_hook(value:\ Any)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Replacement\ sys.displayhook\ which\ prettifies\ objects\ with\ Rich."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ console\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ builtins.\_\ =\ \textcolor{keywordtype}{None}\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ console.print(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(value,\ RichRenderable)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{Pretty}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ overflow=overflow,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent\_guides=indent\_guides,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=max\_length,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=max\_string,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=max\_depth,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=expand\_all,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ crop=crop,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ builtins.\_\ =\ value\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}get\_ipython"{}}\ \textcolor{keywordflow}{in}\ globals():}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ ip\ =\ get\_ipython()\ \ \textcolor{comment}{\#\ type:\ ignore[name-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ IPython.core.formatters\ \textcolor{keyword}{import}\ BaseFormatter}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }RichFormatter(BaseFormatter):\ \ \textcolor{comment}{\#\ type:\ ignore[misc]}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ pprint:\ bool\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\_\_call\_\_(self,\ value:\ Any)\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00222}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ae42009b24c28a05443f4aa73bac697eb}{00222}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.pprint:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a73f56963ecd18e7b2409cfe3a85c4bc0}{\_ipy\_display\_hook}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_abe3da41509e860a6feb9f3ea8eb12be4}{get\_console}}(),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ overflow=overflow,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indent\_guides=indent\_guides,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=max\_length,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=max\_string,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=max\_depth,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=expand\_all,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repr(value)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ replace\ plain\ text\ formatter\ with\ rich\ formatter}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ rich\_formatter\ =\ RichFormatter()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ ip.display\_formatter.formatters[\textcolor{stringliteral}{"{}text/plain"{}}]\ =\ rich\_formatter}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ sys.displayhook\ =\ display\_hook}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00243}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{00243}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{Pretty}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1jupyter_1_1_jupyter_mixin}{JupyterMixin}}):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00244}00244\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ rich\ renderable\ that\ pretty\ prints\ an\ object.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00245}00245\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00247}00247\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \_object\ (Any):\ An\ object\ to\ pretty\ print.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00248}00248\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ highlighter\ (HighlighterType,\ optional):\ Highlighter\ object\ to\ apply\ to\ result,\ or\ None\ for\ ReprHighlighter.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00249}00249\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indent\_size\ (int,\ optional):\ Number\ of\ spaces\ in\ indent.\ Defaults\ to\ 4.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00250}00250\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ justify\ (JustifyMethod,\ optional):\ Justify\ method,\ or\ None\ for\ default.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00251}00251\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ overflow\ (OverflowMethod,\ optional):\ Overflow\ method,\ or\ None\ for\ default.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00252}00252\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ no\_wrap\ (Optional[bool],\ optional):\ Disable\ word\ wrapping.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indent\_guides\ (bool,\ optional):\ Enable\ indentation\ guides.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00254}00254\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_length\ (int,\ optional):\ Maximum\ length\ of\ containers\ before\ abbreviating,\ or\ None\ for\ no\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_string\ (int,\ optional):\ Maximum\ length\ of\ string\ before\ truncating,\ or\ None\ to\ disable.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00257}00257\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_depth\ (int,\ optional):\ Maximum\ depth\ of\ nested\ data\ structures,\ or\ None\ for\ no\ maximum.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00258}00258\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ expand\_all\ (bool,\ optional):\ Expand\ all\ containers.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00259}00259\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ margin\ (int,\ optional):\ Subtrace\ a\ margin\ from\ width\ to\ force\ containers\ to\ expand\ earlier.\ Defaults\ to\ 0.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00260}00260\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ insert\_line\ (bool,\ optional):\ Insert\ a\ new\ line\ if\ the\ output\ has\ multiple\ new\ lines.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00261}00261\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00263}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afdc473182eed1cec841ee42a82cab19b}{00263}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afdc473182eed1cec841ee42a82cab19b}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \_object:\ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ highlighter:\ Optional[\textcolor{stringliteral}{"{}HighlighterType"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ indent\_size:\ int\ =\ 4,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ justify:\ Optional[\textcolor{stringliteral}{"{}JustifyMethod"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ overflow:\ Optional[\textcolor{stringliteral}{"{}OverflowMethod"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ no\_wrap:\ Optional[bool]\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ indent\_guides:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ expand\_all:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ margin:\ int\ =\ 0,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ insert\_line:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00279}00279\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00280}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a2fccaa017d8fb1042e84371e8c69744b}{00280}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a2fccaa017d8fb1042e84371e8c69744b}{\_object}}\ =\ \_object}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00281}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aefe53ca09f84529d49c4c60ef8c0e244}{00281}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aefe53ca09f84529d49c4c60ef8c0e244}{highlighter}}\ =\ highlighter\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_repr_highlighter}{ReprHighlighter}}()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00282}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aea2fbbb563e18bbe42736d7b0cd7ab10}{00282}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aea2fbbb563e18bbe42736d7b0cd7ab10}{indent\_size}}\ =\ indent\_size}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00283}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a7cbeed42d1c9bd495fc81e757b737c57}{00283}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a7cbeed42d1c9bd495fc81e757b737c57}{justify}}:\ Optional[\textcolor{stringliteral}{"{}JustifyMethod"{}}]\ =\ justify}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00284}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ab2b112f82708197bce1da52282cd6dbc}{00284}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ab2b112f82708197bce1da52282cd6dbc}{overflow}}:\ Optional[\textcolor{stringliteral}{"{}OverflowMethod"{}}]\ =\ overflow}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00285}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aeae4675b2d82690c12358043c26fddec}{00285}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aeae4675b2d82690c12358043c26fddec}{no\_wrap}}\ =\ no\_wrap}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a835a97749b78b90aa756bc9ccefafc2b}{00286}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a835a97749b78b90aa756bc9ccefafc2b}{indent\_guides}}\ =\ indent\_guides}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00287}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aa4187dd24a8c7f851f76cbca5288bb0f}{00287}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aa4187dd24a8c7f851f76cbca5288bb0f}{max\_length}}\ =\ max\_length}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00288}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afa4c66204fa132c576bd9e6ad78da0ca}{00288}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afa4c66204fa132c576bd9e6ad78da0ca}{max\_string}}\ =\ max\_string}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00289}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_abe0b4340c0a3ede312856c001b86d7ed}{00289}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_abe0b4340c0a3ede312856c001b86d7ed}{max\_depth}}\ =\ max\_depth}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00290}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a63b2879ebd013cba67a22e7f54d9b459}{00290}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a63b2879ebd013cba67a22e7f54d9b459}{expand\_all}}\ =\ expand\_all}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00291}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a403c80d5c45907d89e0160efe0ecbea8}{00291}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a403c80d5c45907d89e0160efe0ecbea8}{margin}}\ =\ margin}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00292}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ae93339a0d273603a5984a915de287872}{00292}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ae93339a0d273603a5984a915de287872}{insert\_line}}\ =\ insert\_line}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00294}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a9666b4f3ea984736fd5f3e349b7c4820}{00294}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a9666b4f3ea984736fd5f3e349b7c4820}{\_\_rich\_console\_\_}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ self,\ console:\ \textcolor{stringliteral}{"{}Console"{}},\ options:\ \textcolor{stringliteral}{"{}ConsoleOptions"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00296}00296\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}RenderResult"{}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ pretty\_str\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ac95882a99cba8497708e3789c3b64732}{pretty\_repr}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a2fccaa017d8fb1042e84371e8c69744b}{\_object}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ max\_width=options.max\_width\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a403c80d5c45907d89e0160efe0ecbea8}{margin}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ indent\_size=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aea2fbbb563e18bbe42736d7b0cd7ab10}{indent\_size}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aa4187dd24a8c7f851f76cbca5288bb0f}{max\_length}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afa4c66204fa132c576bd9e6ad78da0ca}{max\_string}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_abe0b4340c0a3ede312856c001b86d7ed}{max\_depth}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a63b2879ebd013cba67a22e7f54d9b459}{expand\_all}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ pretty\_text\ =\ Text.from\_ansi(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ pretty\_str,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ justify=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a7cbeed42d1c9bd495fc81e757b737c57}{justify}}\ \textcolor{keywordflow}{or}\ options.justify,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ overflow=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ab2b112f82708197bce1da52282cd6dbc}{overflow}}\ \textcolor{keywordflow}{or}\ options.overflow,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ no\_wrap=pick\_bool(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aeae4675b2d82690c12358043c26fddec}{no\_wrap}},\ options.no\_wrap),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ style=\textcolor{stringliteral}{"{}pretty"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ pretty\_text\ =\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aefe53ca09f84529d49c4c60ef8c0e244}{highlighter}}(pretty\_text)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pretty\_text}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{type(self.\_object)\}.\_\_repr\_\_\ returned\ empty\ string"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ style=\textcolor{stringliteral}{"{}dim\ italic"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a835a97749b78b90aa756bc9ccefafc2b}{indent\_guides}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ options.ascii\_only:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ pretty\_text\ =\ pretty\_text.with\_indent\_guides(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aea2fbbb563e18bbe42736d7b0cd7ab10}{indent\_size}},\ style=\textcolor{stringliteral}{"{}repr.indent"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_ae93339a0d273603a5984a915de287872}{insert\_line}}\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ \textcolor{keywordflow}{in}\ pretty\_text:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ pretty\_text}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00329}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a3375065e0023d26993de0e31a41bee65}{00329}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a3375065e0023d26993de0e31a41bee65}{\_\_rich\_measure\_\_}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ self,\ console:\ \textcolor{stringliteral}{"{}Console"{}},\ options:\ \textcolor{stringliteral}{"{}ConsoleOptions"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00331}00331\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ pretty\_str\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ac95882a99cba8497708e3789c3b64732}{pretty\_repr}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a2fccaa017d8fb1042e84371e8c69744b}{\_object}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ max\_width=options.max\_width,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ indent\_size=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aea2fbbb563e18bbe42736d7b0cd7ab10}{indent\_size}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_aa4187dd24a8c7f851f76cbca5288bb0f}{max\_length}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_afa4c66204fa132c576bd9e6ad78da0ca}{max\_string}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_abe0b4340c0a3ede312856c001b86d7ed}{max\_depth}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty_a63b2879ebd013cba67a22e7f54d9b459}{expand\_all}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00340}00340\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ text\_width\ =\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ max(cell\_len(line)\ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ pretty\_str.splitlines())\ \textcolor{keywordflow}{if}\ pretty\_str\ \textcolor{keywordflow}{else}\ 0}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(text\_width,\ text\_width)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00347}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ae14cecb3d45948db4d09561bccaae433}{00347}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ae14cecb3d45948db4d09561bccaae433}{\_get\_braces\_for\_defaultdict}}(\_object:\ DefaultDict[Any,\ Any])\ -\/>\ Tuple[str,\ str,\ str]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00348}00348\ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}defaultdict(\{\_object.default\_factory!r\},\ \{\{"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}defaultdict(\{\_object.default\_factory!r\},\ \{\{\}\})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00352}00352\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00355}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a3d60a514775ed27afd90122ea9fa567b}{00355}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a3d60a514775ed27afd90122ea9fa567b}{\_get\_braces\_for\_array}}(\_object:\ \textcolor{stringliteral}{"{}array[Any]"{}})\ -\/>\ Tuple[str,\ str,\ str]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00356}00356\ \ \ \ \ \textcolor{keywordflow}{return}\ (f\textcolor{stringliteral}{"{}array(\{\_object.typecode!r\},\ ["{}},\ \textcolor{stringliteral}{"{}])"{}},\ f\textcolor{stringliteral}{"{}array(\{\_object.typecode!r\})"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00359}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a6f14d2866769831c480cd88810fad272}{00359}}\ \_BRACES:\ Dict[type,\ Callable[[Any],\ Tuple[str,\ str,\ str]]]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00360}00360\ \ \ \ \ os.\_Environ:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}environ(\{"{}},\ \textcolor{stringliteral}{"{}\})"{}},\ \textcolor{stringliteral}{"{}environ(\{\})"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00361}00361\ \ \ \ \ array:\ \_get\_braces\_for\_array,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00362}00362\ \ \ \ \ defaultdict:\ \_get\_braces\_for\_defaultdict,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00363}00363\ \ \ \ \ Counter:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}Counter(\{"{}},\ \textcolor{stringliteral}{"{}\})"{}},\ \textcolor{stringliteral}{"{}Counter()"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00364}00364\ \ \ \ \ deque:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}deque(["{}},\ \textcolor{stringliteral}{"{}])"{}},\ \textcolor{stringliteral}{"{}deque()"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00365}00365\ \ \ \ \ dict:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}\{"{}},\ \textcolor{stringliteral}{"{}\}"{}},\ \textcolor{stringliteral}{"{}\{\}"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00366}00366\ \ \ \ \ UserDict:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}\{"{}},\ \textcolor{stringliteral}{"{}\}"{}},\ \textcolor{stringliteral}{"{}\{\}"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00367}00367\ \ \ \ \ frozenset:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}frozenset(\{"{}},\ \textcolor{stringliteral}{"{}\})"{}},\ \textcolor{stringliteral}{"{}frozenset()"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00368}00368\ \ \ \ \ list:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}["{}},\ \textcolor{stringliteral}{"{}]"{}},\ \textcolor{stringliteral}{"{}[]"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00369}00369\ \ \ \ \ UserList:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}["{}},\ \textcolor{stringliteral}{"{}]"{}},\ \textcolor{stringliteral}{"{}[]"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00370}00370\ \ \ \ \ set:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}\{"{}},\ \textcolor{stringliteral}{"{}\}"{}},\ \textcolor{stringliteral}{"{}set()"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00371}00371\ \ \ \ \ tuple:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}("{}},\ \textcolor{stringliteral}{"{})"{}},\ \textcolor{stringliteral}{"{}()"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00372}00372\ \ \ \ \ MappingProxyType:\ \textcolor{keyword}{lambda}\ \_object:\ (\textcolor{stringliteral}{"{}mappingproxy(\{"{}},\ \textcolor{stringliteral}{"{}\})"{}},\ \textcolor{stringliteral}{"{}mappingproxy(\{\})"{}}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00373}00373\ \}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00374}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_abdedd208eebb619f3a84088418e4f685}{00374}}\ \_CONTAINERS\ =\ tuple(\_BRACES.keys())}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00375}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a9499c4fe89b92b6684c924564cb614c5}{00375}}\ \_MAPPING\_CONTAINERS\ =\ (dict,\ os.\_Environ,\ MappingProxyType,\ UserDict)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00378}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af431c9fbb50f31ef6f08e3f77d22a36c}{00378}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af431c9fbb50f31ef6f08e3f77d22a36c}{is\_expandable}}(obj:\ Any)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00379}00379\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ an\ object\ may\ be\ expanded\ by\ pretty\ print."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ \_CONTAINERS)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ (is\_dataclass(obj))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ (hasattr(obj,\ \textcolor{stringliteral}{"{}\_\_rich\_repr\_\_"{}}))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aa6ef8a8fc0d8eb5bf5c04d8cde05da89}{\_is\_attr\_object}}(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00385}00385\ \ \ \ \ )\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ isclass(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00388}00388\ \textcolor{preprocessor}{@dataclass}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00389}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{00389}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00390}00390\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ node\ in\ a\ repr\ tree.\ May\ be\ atomic\ or\ a\ container."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00392}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad628dc042fa6ca216c654c81c29703}{00392}}\ \ \ \ \ key\_repr:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00393}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a24f57ae1c7e86305ab584efa9f308e97}{00393}}\ \ \ \ \ value\_repr:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00394}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ab86ee866581e805e88c35cb40784ab71}{00394}}\ \ \ \ \ open\_brace:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00395}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_acb5fb95285a5fdcdd1c6bb16c7ae9a1c}{00395}}\ \ \ \ \ close\_brace:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00396}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a3c7bd72b4b54acb9bb95189123416012}{00396}}\ \ \ \ \ empty:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00397}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a3c7140136f55f2137a6ccd337e859bea}{00397}}\ \ \ \ \ last:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00398}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a846be7f1c7a8d42a3084ebc78c37dd0a}{00398}}\ \ \ \ \ is\_tuple:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00399}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ac0b4f02c36bc705096d123f843184985}{00399}}\ \ \ \ \ is\_namedtuple:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00400}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{00400}}\ \ \ \ \ children:\ Optional[List[\textcolor{stringliteral}{"{}Node"{}}]]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00401}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_afee2092081c85d8ae009e7efb087a3f8}{00401}}\ \ \ \ \ key\_separator:\ str\ =\ \textcolor{stringliteral}{"{}:\ "{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00402}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a001b0d5dc26fb9ef898d7367a1f58ca9}{00402}}\ \ \ \ \ separator:\ str\ =\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00404}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_aa620e882244218cf326ebb12e499cf9d}{00404}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_aa620e882244218cf326ebb12e499cf9d}{iter\_tokens}}(self)\ -\/>\ Iterable[str]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generate\ tokens\ for\ this\ node."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad628dc042fa6ca216c654c81c29703}{key\_repr}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad628dc042fa6ca216c654c81c29703}{key\_repr}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_afee2092081c85d8ae009e7efb087a3f8}{key\_separator}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a24f57ae1c7e86305ab584efa9f308e97}{value\_repr}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a24f57ae1c7e86305ab584efa9f308e97}{value\_repr}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{children}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{children}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ab86ee866581e805e88c35cb40784ab71}{open\_brace}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a846be7f1c7a8d42a3084ebc78c37dd0a}{is\_tuple}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ac0b4f02c36bc705096d123f843184985}{is\_namedtuple}}\ \textcolor{keywordflow}{and}\ len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{children}})\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{children}}[0].\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_aa620e882244218cf326ebb12e499cf9d}{iter\_tokens}}()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{stringliteral}{"{},"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ child\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a0ad3c9f0298ae46424fb2461b3e2d506}{children}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \textcolor{keyword}{from}\ child.iter\_tokens()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ child.last:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a001b0d5dc26fb9ef898d7367a1f58ca9}{separator}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_acb5fb95285a5fdcdd1c6bb16c7ae9a1c}{close\_brace}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a3c7bd72b4b54acb9bb95189123416012}{empty}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00426}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a83f166250ebff18031b17446a039a5d3}{00426}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a83f166250ebff18031b17446a039a5d3}{check\_length}}(self,\ start\_length:\ int,\ max\_length:\ int)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ the\ length\ fits\ within\ a\ limit.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00428}00428\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00429}00429\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00430}00430\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ start\_length\ (int):\ Starting\ length\ of\ the\ line\ (indent,\ prefix,\ suffix).}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00431}00431\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ max\_length\ (int):\ Maximum\ length.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00432}00432\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00433}00433\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00434}00434\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ bool:\ True\ if\ the\ node\ can\ be\ rendered\ within\ max\ length,\ otherwise\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00435}00435\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ total\_length\ =\ start\_length}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ token\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_aa620e882244218cf326ebb12e499cf9d}{iter\_tokens}}():}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ total\_length\ +=\ cell\_len(token)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ total\_length\ >\ max\_length:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00443}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ae07f7930f92d3591c93e2381cd5be285}{00443}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ repr\_text\ =\ \textcolor{stringliteral}{"{}"{}}.join(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_aa620e882244218cf326ebb12e499cf9d}{iter\_tokens}}())}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repr\_text}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00447}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a8ed549e12d03c534fed59146232b1d23}{00447}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node_a8ed549e12d03c534fed59146232b1d23}{render}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00448}00448\ \ \ \ \ \ \ \ \ self,\ max\_width:\ int\ =\ 80,\ indent\_size:\ int\ =\ 4,\ expand\_all:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00449}00449\ \ \ \ \ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Render\ the\ node\ to\ a\ pretty\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00451}00451\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00452}00452\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00453}00453\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ max\_width\ (int,\ optional):\ Maximum\ width\ of\ the\ repr.\ Defaults\ to\ 80.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00454}00454\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ indent\_size\ (int,\ optional):\ Size\ of\ indents.\ Defaults\ to\ 4.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00455}00455\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ expand\_all\ (bool,\ optional):\ Expand\ all\ levels.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00456}00456\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00457}00457\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00458}00458\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ str:\ A\ repr\ string\ of\ the\ original\ object.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00459}00459\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ lines\ =\ [\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}(node=self,\ is\_root=\textcolor{keyword}{True})]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ line\_no\ =\ 0}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ line\_no\ <\ len(lines):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ lines[line\_no]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line.expandable\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ line.expanded:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ expand\_all\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ line.check\_length(max\_width):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines[line\_no\ :\ line\_no\ +\ 1]\ =\ line.expand(indent\_size)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ line\_no\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ repr\_str\ =\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}.join(str(line)\ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ lines)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repr\_str}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00473}00473\ \textcolor{preprocessor}{@dataclass}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00474}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{00474}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00475}00475\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ line\ in\ repr\ output."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00477}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a243a8969f057b2ab5d8391f59c5bea87}{00477}}\ \ \ \ \ parent:\ Optional[\textcolor{stringliteral}{"{}\_Line"{}}]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00478}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a860e4167ebf87a0635c678a614b96a99}{00478}}\ \ \ \ \ is\_root:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00479}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{00479}}\ \ \ \ \ node:\ Optional[Node]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00480}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_aa69d8a850601e73031ceff7a95c4607d}{00480}}\ \ \ \ \ text:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00481}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a0e412e07a45aeb70cd2a9c963b4df968}{00481}}\ \ \ \ \ suffix:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00482}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a73a07a5c88188d460948ec45cb3ab59d}{00482}}\ \ \ \ \ whitespace:\ str\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00483}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a509de781a41934b9e43ee410f0eb8a03}{00483}}\ \ \ \ \ expanded:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00484}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a3c7140136f55f2137a6ccd337e859bea}{00484}}\ \ \ \ \ last:\ bool\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00486}00486\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00487}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_aca8f7e9dc413b33de3cc56a84a004353}{00487}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_aca8f7e9dc413b33de3cc56a84a004353}{expandable}}(self)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ if\ the\ line\ may\ be\ expanded."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ bool(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{node}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{node}}.children)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00491}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_ab62c70aca65cccc949d151c3febb6df1}{00491}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_ab62c70aca65cccc949d151c3febb6df1}{check\_length}}(self,\ max\_length:\ int)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ this\ line\ fits\ within\ a\ given\ number\ of\ cells."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ start\_length\ =\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a73a07a5c88188d460948ec45cb3ab59d}{whitespace}})\ +\ cell\_len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_aa69d8a850601e73031ceff7a95c4607d}{text}})\ +\ cell\_len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a0e412e07a45aeb70cd2a9c963b4df968}{suffix}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{node}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{node}}.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_ab62c70aca65cccc949d151c3febb6df1}{check\_length}}(start\_length,\ max\_length)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00499}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_abf5e2d69a03f5f501a85dc1ae27fb729}{00499}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_abf5e2d69a03f5f501a85dc1ae27fb729}{expand}}(self,\ indent\_size:\ int)\ -\/>\ Iterable[\textcolor{stringliteral}{"{}\_Line"{}}]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Expand\ this\ line\ by\ adding\ children\ on\ their\ own\ line."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ node\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a126d71c844ef15d8e4fb2b97b49d1f09}{node}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ node\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ whitespace\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a73a07a5c88188d460948ec45cb3ab59d}{whitespace}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ node.children}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ node.key\_repr:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ new\_line\ =\ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text=f\textcolor{stringliteral}{"{}\{node.key\_repr\}\{node.key\_separator\}\{node.open\_brace\}"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whitespace=whitespace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ new\_line\ =\ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}(text=node.open\_brace,\ whitespace=whitespace)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ child\_whitespace\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a73a07a5c88188d460948ec45cb3ab59d}{whitespace}}\ +\ \textcolor{stringliteral}{"{}\ "{}}\ *\ indent\_size}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ tuple\_of\_one\ =\ node.is\_tuple\ \textcolor{keywordflow}{and}\ len(node.children)\ ==\ 1}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ last,\ child\ \textcolor{keywordflow}{in}\ loop\_last(node.children):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ separator\ =\ \textcolor{stringliteral}{"{},"{}}\ \textcolor{keywordflow}{if}\ tuple\_of\_one\ \textcolor{keywordflow}{else}\ node.separator}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ line\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent=new\_line,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node=child,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whitespace=child\_whitespace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix=separator,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=last\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ tuple\_of\_one,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ line}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00524}00524\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line}{\_Line}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ text=node.close\_brace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ whitespace=whitespace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ suffix=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a0e412e07a45aeb70cd2a9c963b4df968}{suffix}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ last=self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a3c7140136f55f2137a6ccd337e859bea}{last}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00530}00530\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00532}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_ae07f7930f92d3591c93e2381cd5be285}{00532}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line_a3c7140136f55f2137a6ccd337e859bea}{last}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{self.whitespace\}\{self.text\}\{self.node\ or\ ''\}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{self.whitespace\}\{self.text\}\{self.node\ or\ ''\}\{self.suffix.rstrip()\}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00541}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a019a6f63d5bdc754993b5bdce398a76b}{00541}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a019a6f63d5bdc754993b5bdce398a76b}{\_is\_namedtuple}}(obj:\ Any)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00542}00542\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Checks\ if\ an\ object\ is\ most\ likely\ a\ namedtuple.\ It\ is\ possible}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00543}00543\ \textcolor{stringliteral}{\ \ \ \ to\ craft\ an\ object\ that\ passes\ this\ check\ and\ isn't\ a\ namedtuple,\ but}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00544}00544\ \textcolor{stringliteral}{\ \ \ \ there\ is\ only\ a\ minuscule\ chance\ of\ this\ happening\ unintentionally.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00545}00545\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00546}00546\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00547}00547\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ obj\ (Any):\ The\ object\ to\ test}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00548}00548\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00549}00549\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00550}00550\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ bool:\ True\ if\ the\ object\ is\ a\ namedtuple.\ False\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00551}00551\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00552}00552\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ fields\ =\ getattr(obj,\ \textcolor{stringliteral}{"{}\_fields"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00554}00554\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Being\ very\ defensive\ -\/\ if\ we\ cannot\ get\ the\ attr\ then\ its\ not\ a\ namedtuple}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{return}\ isinstance(obj,\ tuple)\ \textcolor{keywordflow}{and}\ isinstance(fields,\ tuple)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00560}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aeb9afb4a973eabd5e75a2d37ef69eafd}{00560}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aeb9afb4a973eabd5e75a2d37ef69eafd}{traverse}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00561}00561\ \ \ \ \ \_object:\ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00562}00562\ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00563}00563\ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00564}00564\ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00565}00565\ )\ -\/>\ Node:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00566}00566\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Traverse\ object\ and\ generate\ a\ tree.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00567}00567\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00568}00568\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00569}00569\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \_object\ (Any):\ Object\ to\ be\ traversed.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00570}00570\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_length\ (int,\ optional):\ Maximum\ length\ of\ containers\ before\ abbreviating,\ or\ None\ for\ no\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00571}00571\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00572}00572\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_string\ (int,\ optional):\ Maximum\ length\ of\ string\ before\ truncating,\ or\ None\ to\ disable\ truncating.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00573}00573\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00574}00574\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_depth\ (int,\ optional):\ Maximum\ depth\ of\ data\ structures,\ or\ None\ for\ no\ maximum.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00575}00575\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00576}00576\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00577}00577\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00578}00578\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Node:\ The\ root\ of\ a\ tree\ structure\ which\ can\ be\ used\ to\ render\ a\ pretty\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00579}00579\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00581}00581\ \ \ \ \ \textcolor{keyword}{def\ }to\_repr(obj:\ Any)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00582}00582\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ repr\ string\ for\ an\ object,\ but\ catch\ errors."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ max\_string\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ (bytes,\ str))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ len(obj)\ >\ max\_string}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00587}00587\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ truncated\ =\ len(obj)\ -\/\ max\_string}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ obj\_repr\ =\ f\textcolor{stringliteral}{"{}\{obj[:max\_string]!r\}+\{truncated\}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obj\_repr\ =\ repr(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ error:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obj\_repr\ =\ f\textcolor{stringliteral}{"{}<repr-\/error\ \{str(error)!r\}>"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00595}00595\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj\_repr}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00597}00597\ \ \ \ \ visited\_ids:\ Set[int]\ =\ set()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00598}00598\ \ \ \ \ push\_visited\ =\ visited\_ids.add}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00599}00599\ \ \ \ \ pop\_visited\ =\ visited\_ids.remove}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00601}00601\ \ \ \ \ \textcolor{keyword}{def\ }\_traverse(obj:\ Any,\ root:\ bool\ =\ \textcolor{keyword}{False},\ depth:\ int\ =\ 0)\ -\/>\ Node:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00602}00602\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Walk\ the\ object\ depth\ first."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00604}00604\ \ \ \ \ \ \ \ \ obj\_id\ =\ id(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ obj\_id\ \textcolor{keywordflow}{in}\ visited\_ids:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Recursion\ detected}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=\textcolor{stringliteral}{"{}..."{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00608}00608\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ obj\_type\ =\ type(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00610}00610\ \ \ \ \ \ \ \ \ children:\ List[Node]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ reached\_max\_depth\ =\ max\_depth\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ depth\ >=\ max\_depth}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }iter\_rich\_args(rich\_args:\ Any)\ -\/>\ Iterable[Union[Any,\ Tuple[str,\ Any]]]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ arg\ \textcolor{keywordflow}{in}\ rich\_args:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(arg,\ tuple):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(arg)\ ==\ 3:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00617}00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key,\ child,\ default\ =\ arg}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00618}00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ default\ ==\ child:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ key,\ child}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ len(arg)\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key,\ child\ =\ arg}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ key,\ child}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ len(arg)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ arg[0]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ arg}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00629}00629\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ fake\_attributes\ =\ hasattr(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00631}00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obj,\ \textcolor{stringliteral}{"{}awehoi234\_wdfjwljet234\_234wdfoijsdfmmnxpi492"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00633}00633\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00634}00634\ \ \ \ \ \ \ \ \ \ \ \ \ fake\_attributes\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00636}00636\ \ \ \ \ \ \ \ \ rich\_repr\_result:\ Optional[RichReprResult]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00637}00637\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ fake\_attributes:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00638}00638\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00639}00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(obj,\ \textcolor{stringliteral}{"{}\_\_rich\_repr\_\_"{}})\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ isclass(obj):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00640}00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rich\_repr\_result\ =\ obj.\_\_rich\_repr\_\_()}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00641}00641\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00642}00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00643}00643\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00644}00644\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rich\_repr\_result\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00645}00645\ \ \ \ \ \ \ \ \ \ \ \ \ push\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00646}00646\ \ \ \ \ \ \ \ \ \ \ \ \ angular\ =\ getattr(obj.\_\_rich\_repr\_\_,\ \textcolor{stringliteral}{"{}angular"{}},\ \textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00647}00647\ \ \ \ \ \ \ \ \ \ \ \ \ args\ =\ list(iter\_rich\_args(rich\_repr\_result))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00648}00648\ \ \ \ \ \ \ \ \ \ \ \ \ class\_name\ =\ obj.\_\_class\_\_.\_\_name\_\_}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00649}00649\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00650}00650\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ args:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children\ =\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ children.append}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00654}00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reached\_max\_depth:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00655}00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ angular:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00656}00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}<\{class\_name\}...>"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00657}00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}\{class\_name\}(...)"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ angular:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00662}00662\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=f\textcolor{stringliteral}{"{}<\{class\_name\}\ "{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00663}00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=\textcolor{stringliteral}{"{}>"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00665}00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator=\textcolor{stringliteral}{"{}\ "{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00668}00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00669}00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=f\textcolor{stringliteral}{"{}\{class\_name\}("{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=\textcolor{stringliteral}{"{})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00673}00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ last,\ arg\ \textcolor{keywordflow}{in}\ loop\_last(args):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(arg,\ tuple):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key,\ child\ =\ arg}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(child,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_repr\ =\ key}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_separator\ =\ \textcolor{stringliteral}{"{}="{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(arg,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_repr=f\textcolor{stringliteral}{"{}<\{class\_name\}>"{}}\ \textcolor{keywordflow}{if}\ angular\ \textcolor{keywordflow}{else}\ f\textcolor{stringliteral}{"{}\{class\_name\}()"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=[],}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ pop\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00694}00694\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aa6ef8a8fc0d8eb5bf5c04d8cde05da89}{\_is\_attr\_object}}(obj)\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ fake\_attributes:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ push\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ children\ =\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ children.append}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ attr\_fields\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a05aff3886a560650bf2f8c5a1465af41}{\_get\_attr\_fields}}(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00700}00700\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ attr\_fields:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00701}00701\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reached\_max\_depth:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00702}00702\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}(...)"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00704}00704\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00705}00705\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}("{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00706}00706\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=\textcolor{stringliteral}{"{})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }iter\_attrs()\ -\/>\ Iterable[}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Tuple[str,\ Any,\ Optional[Callable[[Any],\ str]]]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ]:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00714}00714\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterate\ over\ attr\ fields\ and\ values."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00715}00715\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ attr\_fields:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ attr.repr:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ getattr(obj,\ attr.name)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00719}00719\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ error:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00720}00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Can\ happen,\ albeit\ rarely}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ (attr.name,\ error,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ attr.name,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ attr.repr\ \textcolor{keywordflow}{if}\ callable(attr.repr)\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ last,\ (name,\ value,\ repr\_callable)\ \textcolor{keywordflow}{in}\ loop\_last(iter\_attrs()):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ repr\_callable:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=str(repr\_callable(value)))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00733}00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(value,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00734}00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_repr\ =\ name}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_separator\ =\ \textcolor{stringliteral}{"{}="{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00738}00738\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_repr=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}()"{}},\ children=[],\ last=root}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00742}00742\ \ \ \ \ \ \ \ \ \ \ \ \ pop\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00743}00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ (}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00744}00744\ \ \ \ \ \ \ \ \ \ \ \ \ is\_dataclass(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00745}00745\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ type)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00746}00746\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ fake\_attributes}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a0fa2800de7ca598663631b38a1a2d9cc}{\_is\_dataclass\_repr}}(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00748}00748\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00749}00749\ \ \ \ \ \ \ \ \ \ \ \ \ push\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00750}00750\ \ \ \ \ \ \ \ \ \ \ \ \ children\ =\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ children.append}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reached\_max\_depth:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}(...)"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00754}00754\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00755}00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00756}00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}("{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00757}00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=\textcolor{stringliteral}{"{})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ empty=f\textcolor{stringliteral}{"{}\{obj.\_\_class\_\_.\_\_name\_\_\}()"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00762}00762\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00763}00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ last,\ field\ \textcolor{keywordflow}{in}\ loop\_last(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00764}00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ field\ \textcolor{keywordflow}{for}\ field\ \textcolor{keywordflow}{in}\ fields(obj)\ \textcolor{keywordflow}{if}\ field.repr}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00766}00766\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(getattr(obj,\ field.name),\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_repr\ =\ field.name}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_separator\ =\ \textcolor{stringliteral}{"{}="{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00771}00771\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ pop\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00773}00773\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a019a6f63d5bdc754993b5bdce398a76b}{\_is\_namedtuple}}(obj)\ \textcolor{keywordflow}{and}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a9b01d3d7b894877b2039246e5e22a31d}{\_has\_default\_namedtuple\_repr}}(obj):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00774}00774\ \ \ \ \ \ \ \ \ \ \ \ \ push\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ \ \ \ \ class\_name\ =\ obj.\_\_class\_\_.\_\_name\_\_}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00776}00776\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reached\_max\_depth:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we've\ reached\ the\ max\ depth,\ we\ still\ show\ the\ class\ name,\ but\ not\ its\ contents}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00778}00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00779}00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_repr=f\textcolor{stringliteral}{"{}\{class\_name\}(...)"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00781}00781\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children\ =\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00783}00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ children.append}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00785}00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=f\textcolor{stringliteral}{"{}\{class\_name\}("{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00786}00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=\textcolor{stringliteral}{"{})"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00787}00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00788}00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ empty=f\textcolor{stringliteral}{"{}\{class\_name\}()"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00789}00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00790}00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ last,\ (key,\ value)\ \textcolor{keywordflow}{in}\ loop\_last(obj.\_asdict().items()):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00791}00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(value,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00792}00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_repr\ =\ key}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00793}00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ last}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00794}00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_separator\ =\ \textcolor{stringliteral}{"{}="{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00795}00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00796}00796\ \ \ \ \ \ \ \ \ \ \ \ \ pop\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00797}00797\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ \_CONTAINERS):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00798}00798\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ container\_type\ \textcolor{keywordflow}{in}\ \_CONTAINERS:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ container\_type):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00800}00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obj\_type\ =\ container\_type}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00802}00802\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00803}00803\ \ \ \ \ \ \ \ \ \ \ \ \ push\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00805}00805\ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace,\ close\_brace,\ empty\ =\ \_BRACES[obj\_type](obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00806}00806\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00807}00807\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ reached\_max\_depth:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00808}00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}\{open\_brace\}...\{close\_brace\}"{}})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00809}00809\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ obj\_type.\_\_repr\_\_\ !=\ type(obj).\_\_repr\_\_:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=to\_repr(obj),\ last=root)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ obj:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children\ =\ []}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ open\_brace=open\_brace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00815}00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close\_brace=close\_brace,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00816}00816\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ children=children,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00817}00817\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last=root,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00819}00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append\ =\ children.append}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00820}00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_items\ =\ len(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00821}00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last\_item\_index\ =\ num\_items\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00822}00822\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ \_MAPPING\_CONTAINERS):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00824}00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iter\_items\ =\ iter(obj.items())}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ max\_length\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00826}00826\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iter\_items\ =\ islice(iter\_items,\ max\_length)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00827}00827\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ index,\ (key,\ child)\ \textcolor{keywordflow}{in}\ enumerate(iter\_items):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(child,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.key\_repr\ =\ to\_repr(key)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ index\ ==\ last\_item\_index}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iter\_values\ =\ iter(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ max\_length\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iter\_values\ =\ islice(iter\_values,\ max\_length)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ index,\ child\ \textcolor{keywordflow}{in}\ enumerate(iter\_values):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00837}00837\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node\ =\ \_traverse(child,\ depth=depth\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_node.last\ =\ index\ ==\ last\_item\_index}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(child\_node)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ max\_length\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ num\_items\ >\ max\_length:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ append(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=f\textcolor{stringliteral}{"{}...\ +\{num\_items\ -\/\ max\_length\}"{}},\ last=\textcolor{keyword}{True}))}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(empty=empty,\ children=[],\ last=root)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00844}00844\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00845}00845\ \ \ \ \ \ \ \ \ \ \ \ \ pop\_visited(obj\_id)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00846}00846\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node}{Node}}(value\_repr=to\_repr(obj),\ last=root)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00848}00848\ \ \ \ \ \ \ \ \ node.is\_tuple\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(obj,\ tuple)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00849}00849\ \ \ \ \ \ \ \ \ node.is\_namedtuple\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a019a6f63d5bdc754993b5bdce398a76b}{\_is\_namedtuple}}(obj)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00850}00850\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ node}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00851}00851\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00852}00852\ \ \ \ \ node\ =\ \_traverse(\_object,\ root=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00853}00853\ \ \ \ \ \textcolor{keywordflow}{return}\ node}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00854}00854\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00856}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ac95882a99cba8497708e3789c3b64732}{00856}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ac95882a99cba8497708e3789c3b64732}{pretty\_repr}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00857}00857\ \ \ \ \ \_object:\ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00858}00858\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00859}00859\ \ \ \ \ max\_width:\ int\ =\ 80,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00860}00860\ \ \ \ \ indent\_size:\ int\ =\ 4,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00861}00861\ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00862}00862\ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00863}00863\ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00864}00864\ \ \ \ \ expand\_all:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00865}00865\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00866}00866\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prettify\ repr\ string\ by\ expanding\ on\ to\ new\ lines\ to\ fit\ within\ a\ given\ width.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00867}00867\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00868}00868\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00869}00869\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \_object\ (Any):\ Object\ to\ repr.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00870}00870\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_width\ (int,\ optional):\ Desired\ maximum\ width\ of\ repr\ string.\ Defaults\ to\ 80.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00871}00871\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indent\_size\ (int,\ optional):\ Number\ of\ spaces\ to\ indent.\ Defaults\ to\ 4.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00872}00872\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_length\ (int,\ optional):\ Maximum\ length\ of\ containers\ before\ abbreviating,\ or\ None\ for\ no\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00873}00873\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00874}00874\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_string\ (int,\ optional):\ Maximum\ length\ of\ string\ before\ truncating,\ or\ None\ to\ disable\ truncating.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00875}00875\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00876}00876\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_depth\ (int,\ optional):\ Maximum\ depth\ of\ nested\ data\ structure,\ or\ None\ for\ no\ depth.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00877}00877\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00878}00878\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ expand\_all\ (bool,\ optional):\ Expand\ all\ containers\ regardless\ of\ available\ width.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00879}00879\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00880}00880\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00881}00881\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ str:\ A\ possibly\ multi-\/line\ representation\ of\ the\ object.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00882}00882\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00883}00883\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00884}00884\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_af335ebc79a328518d40475e437b52321}{\_safe\_isinstance}}(\_object,\ Node):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00885}00885\ \ \ \ \ \ \ \ \ node\ =\ \_object}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00886}00886\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00887}00887\ \ \ \ \ \ \ \ \ node\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_aeb9afb4a973eabd5e75a2d37ef69eafd}{traverse}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \_object,\ max\_length=max\_length,\ max\_string=max\_string,\ max\_depth=max\_depth}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00889}00889\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00890}00890\ \ \ \ \ repr\_str:\ str\ =\ node.render(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00891}00891\ \ \ \ \ \ \ \ \ max\_width=max\_width,\ indent\_size=indent\_size,\ expand\_all=expand\_all}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00892}00892\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00893}00893\ \ \ \ \ \textcolor{keywordflow}{return}\ repr\_str}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00894}00894\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00895}00895\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00896}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_add5a92f75c2fb3213a119bdff9938240}{00896}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_ae42009b24c28a05443f4aa73bac697eb}{pprint}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00897}00897\ \ \ \ \ \_object:\ Any,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00898}00898\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00899}00899\ \ \ \ \ console:\ Optional[\textcolor{stringliteral}{"{}Console"{}}]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00900}00900\ \ \ \ \ indent\_guides:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00901}00901\ \ \ \ \ max\_length:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00902}00902\ \ \ \ \ max\_string:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00903}00903\ \ \ \ \ max\_depth:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00904}00904\ \ \ \ \ expand\_all:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00905}00905\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00906}00906\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ convenience\ function\ for\ pretty\ printing.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00907}00907\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00908}00908\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00909}00909\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \_object\ (Any):\ Object\ to\ pretty\ print.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00910}00910\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ console\ (Console,\ optional):\ Console\ instance,\ or\ None\ to\ use\ default.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00911}00911\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_length\ (int,\ optional):\ Maximum\ length\ of\ containers\ before\ abbreviating,\ or\ None\ for\ no\ abbreviation.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00912}00912\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00913}00913\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_string\ (int,\ optional):\ Maximum\ length\ of\ strings\ before\ truncating,\ or\ None\ to\ disable.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00914}00914\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ max\_depth\ (int,\ optional):\ Maximum\ depth\ for\ nested\ data\ structures,\ or\ None\ for\ unlimited\ depth.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00915}00915\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ indent\_guides\ (bool,\ optional):\ Enable\ indentation\ guides.\ Defaults\ to\ True.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00916}00916\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ expand\_all\ (bool,\ optional):\ Expand\ all\ containers.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00917}00917\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00918}00918\ \ \ \ \ \_console\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_abe3da41509e860a6feb9f3ea8eb12be4}{get\_console}}()\ \textcolor{keywordflow}{if}\ console\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{else}\ console}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00919}00919\ \ \ \ \ \_console.print(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00920}00920\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{Pretty}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00921}00921\ \ \ \ \ \ \ \ \ \ \ \ \ \_object,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00922}00922\ \ \ \ \ \ \ \ \ \ \ \ \ max\_length=max\_length,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ max\_string=max\_string,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth=max\_depth,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ indent\_guides=indent\_guides,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ expand\_all=expand\_all,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ overflow=\textcolor{stringliteral}{"{}ignore"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00928}00928\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00929}00929\ \ \ \ \ \ \ \ \ soft\_wrap=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00930}00930\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00931}00931\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00932}00932\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00933}00933\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00934}00934\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00935}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr}{00935}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr}{BrokenRepr}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00936}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr_aea815b0c6c23fc48a11ee0404b782c7a}{00936}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00937}00937\ \ \ \ \ \ \ \ \ \ \ \ \ 1\ /\ 0}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00938}00938\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}this\ will\ fail"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00939}00939\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00940}00940\ \ \ \ \ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ NamedTuple}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00941}00941\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00942}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_stock_keeping_unit}{00942}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_stock_keeping_unit}{StockKeepingUnit}}(NamedTuple):}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00943}00943\ \ \ \ \ \ \ \ \ name:\ str}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00944}00944\ \ \ \ \ \ \ \ \ description:\ str}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00945}00945\ \ \ \ \ \ \ \ \ price:\ float}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00946}00946\ \ \ \ \ \ \ \ \ category:\ str}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00947}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_stock_keeping_unit_a789c10dec0e0a9a81459ecdbf519d9b3}{00947}}\ \ \ \ \ \ \ \ \ reviews:\ List[str]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00948}00948\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00949}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_a1aabac6d068eef6a7bad3fdf50a05cc8}{00949}}\ \ \ \ \ d\ =\ defaultdict(int)}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00950}00950\ \ \ \ \ d[\textcolor{stringliteral}{"{}foo"{}}]\ =\ 5}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00951}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1pretty_adf374424c2cdd923b5646cc29b68562d}{00951}}\ \ \ \ \ data\ =\ \{}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00952}00952\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}foo"{}}:\ [}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00953}00953\ \ \ \ \ \ \ \ \ \ \ \ \ 1,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00954}00954\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Hello\ World!"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00955}00955\ \ \ \ \ \ \ \ \ \ \ \ \ 100.123,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00956}00956\ \ \ \ \ \ \ \ \ \ \ \ \ 323.232,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00957}00957\ \ \ \ \ \ \ \ \ \ \ \ \ 432324.0,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00958}00958\ \ \ \ \ \ \ \ \ \ \ \ \ \{5,\ 6,\ 7,\ (1,\ 2,\ 3,\ 4),\ 8\},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00959}00959\ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00960}00960\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bar"{}}:\ frozenset(\{1,\ 2,\ 3\}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00961}00961\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}defaultdict"{}}:\ defaultdict(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00962}00962\ \ \ \ \ \ \ \ \ \ \ \ \ list,\ \{\textcolor{stringliteral}{"{}crumble"{}}:\ [\textcolor{stringliteral}{"{}apple"{}},\ \textcolor{stringliteral}{"{}rhubarb"{}},\ \textcolor{stringliteral}{"{}butter"{}},\ \textcolor{stringliteral}{"{}sugar"{}},\ \textcolor{stringliteral}{"{}flour"{}}]\}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00963}00963\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00964}00964\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}counter"{}}:\ Counter(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00965}00965\ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00966}00966\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}apple"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00967}00967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}orange"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00968}00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pear"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00969}00969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}kumquat"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00970}00970\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}kumquat"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00971}00971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}durian"{}}\ *\ 100,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00972}00972\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00973}00973\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00974}00974\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}atomic"{}}:\ (\textcolor{keyword}{False},\ \textcolor{keyword}{True},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00975}00975\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}namedtuple"{}}:\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_stock_keeping_unit}{StockKeepingUnit}}(}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00976}00976\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Sparkling\ British\ Spring\ Water"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00977}00977\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Carbonated\ spring\ water"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00978}00978\ \ \ \ \ \ \ \ \ \ \ \ \ 0.9,}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00979}00979\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}water"{}},}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00980}00980\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}its\ amazing!"{}},\ \textcolor{stringliteral}{"{}its\ terrible!"{}}],}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00981}00981\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00982}00982\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Broken"{}}:\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr}{BrokenRepr}}(),}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00983}00983\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00984}00984\ \ \ \ \ data[\textcolor{stringliteral}{"{}foo"{}}].append(data)\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00985}00985\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00986}00986\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich}{pip.\_vendor.rich}}\ \textcolor{keyword}{import}\ \textcolor{keywordflow}{print}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00987}00987\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00988}00988\ \ \ \ \ \textcolor{comment}{\#\ print(Pretty(data,\ indent\_guides=True,\ max\_string=20))}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00989}00989\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00990}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing}{00990}}\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing}{Thing}}:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00991}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing_aea815b0c6c23fc48a11ee0404b782c7a}{00991}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00992}00992\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Hello\(\backslash\)x1b[38;5;239m\ World!"{}}}
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00993}00993\ }
+\DoxyCodeLine{\Hypertarget{pretty_8py_source_l00994}00994\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty}{Pretty}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing}{Thing}}()))}
+
+\end{DoxyCode}

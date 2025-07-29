@@ -1,0 +1,290 @@
+\doxysection{util.\+py}
+\hypertarget{pyparsing_2util_8py_source}{}\label{pyparsing_2util_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pyparsing/util.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/pyparsing/util.py}}
+\mbox{\hyperlink{pyparsing_2util_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util}{00001}}\ \textcolor{comment}{\#\ util.py}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00002}00002\ \textcolor{keyword}{import}\ inspect}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00003}00003\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00004}00004\ \textcolor{keyword}{import}\ types}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00005}00005\ \textcolor{keyword}{import}\ collections}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00006}00006\ \textcolor{keyword}{import}\ itertools}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00007}00007\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ lru\_cache,\ wraps}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00008}00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Callable,\ List,\ Union,\ Iterable,\ TypeVar,\ cast}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00010}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a2d9ed2dcae869f5769432ce088a9664e}{00010}}\ \_bslash\ =\ chr(92)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00011}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_aaa53ca0b650dfd85c4f59fa156f7a2cc}{00011}}\ C\ =\ TypeVar(\textcolor{stringliteral}{"{}C"{}},\ bound=Callable)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00014}00014\ \textcolor{keyword}{class\ }\_\_config\_flags:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00015}00015\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Internal\ class\ for\ defining\ compatibility\ and\ debugging\ flags"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00017}00017\ \ \ \ \ \_all\_names:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00018}00018\ \ \ \ \ \_fixed\_names:\ List[str]\ =\ []}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00019}00019\ \ \ \ \ \_type\_desc\ =\ \textcolor{stringliteral}{"{}configuration"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00021}00021\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{def\ }\_set(cls,\ dname,\ value):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dname\ \textcolor{keywordflow}{in}\ cls.\_fixed\_names:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{cls.\_\_name\_\_\}.\{dname\}\ \{cls.\_type\_desc\}\ is\ \{str(getattr(cls,\ dname)).upper()\}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\ and\ cannot\ be\ overridden"{}},}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stacklevel=3,}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dname\ \textcolor{keywordflow}{in}\ cls.\_all\_names:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ setattr(cls,\ dname,\ value)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(f\textcolor{stringliteral}{"{}no\ such\ \{cls.\_type\_desc\}\ \{dname!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00035}00035\ \ \ \ \ enable\ =\ classmethod(\textcolor{keyword}{lambda}\ cls,\ name:\ cls.\_set(name,\ \textcolor{keyword}{True}))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00036}00036\ \ \ \ \ disable\ =\ classmethod(\textcolor{keyword}{lambda}\ cls,\ name:\ cls.\_set(name,\ \textcolor{keyword}{False}))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00039}00039\ \textcolor{preprocessor}{@lru\_cache(maxsize=128)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00040}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_aeba8e79de9dfc9d307cbc81d8e40a65a}{00040}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_aeba8e79de9dfc9d307cbc81d8e40a65a}{col}}(loc:\ int,\ strg:\ str)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00041}00041\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ Returns\ current\ column\ within\ a\ string,\ counting\ newlines\ as\ line\ separators.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ The\ first\ column\ is\ number\ 1.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00044}00044\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ Note:\ the\ default\ parsing\ behavior\ is\ to\ expand\ tabs\ in\ the\ input\ string}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ before\ starting\ the\ parsing\ process.\ \ See}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ \ \ :class:\`{}ParserElement.parse\_string\`{}\ for\ more}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ information\ on\ parsing\ strings\ containing\ \`{}\`{}<TAB>\`{}\`{}\ s,\ and\ suggested}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ methods\ to\ maintain\ a\ consistent\ view\ of\ the\ parsed\ string,\ the\ parse}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ location,\ and\ line\ and\ column\ positions\ within\ the\ parsed\ string.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00052}00052\ \ \ \ \ s\ =\ strg}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{return}\ 1\ \textcolor{keywordflow}{if}\ 0\ <\ loc\ <\ len(s)\ \textcolor{keywordflow}{and}\ s[loc\ -\/\ 1]\ ==\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ \textcolor{keywordflow}{else}\ loc\ -\/\ s.rfind(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ 0,\ loc)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00056}00056\ \textcolor{preprocessor}{@lru\_cache(maxsize=128)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00057}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a83932b0739e2358755528bdcb2fec004}{00057}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a83932b0739e2358755528bdcb2fec004}{lineno}}(loc:\ int,\ strg:\ str)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00058}00058\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ current\ line\ number\ within\ a\ string,\ counting\ newlines\ as\ line\ separators.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ The\ first\ line\ is\ number\ 1.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00060}00060\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ Note\ -\/\ the\ default\ parsing\ behavior\ is\ to\ expand\ tabs\ in\ the\ input\ string}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ before\ starting\ the\ parsing\ process.\ \ See\ :class:\`{}ParserElement.parse\_string\`{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ for\ more\ information\ on\ parsing\ strings\ containing\ \`{}\`{}<TAB>\`{}\`{}\ s,\ and}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ suggested\ methods\ to\ maintain\ a\ consistent\ view\ of\ the\ parsed\ string,\ the}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ parse\ location,\ and\ line\ and\ column\ positions\ within\ the\ parsed\ string.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{return}\ strg.count(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ 0,\ loc)\ +\ 1}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00070}00070\ \textcolor{preprocessor}{@lru\_cache(maxsize=128)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00071}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_acff0bca4c7d728326ce0fa6456eb2a47}{00071}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_acff0bca4c7d728326ce0fa6456eb2a47}{line}}(loc:\ int,\ strg:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00072}00072\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00073}00073\ \textcolor{stringliteral}{\ \ \ \ Returns\ the\ line\ of\ text\ containing\ loc\ within\ a\ string,\ counting\ newlines\ as\ line\ separators.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00075}00075\ \ \ \ \ last\_cr\ =\ strg.rfind(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ 0,\ loc)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00076}00076\ \ \ \ \ next\_cr\ =\ strg.find(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ loc)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{return}\ strg[last\_cr\ +\ 1\ :\ next\_cr]\ \textcolor{keywordflow}{if}\ next\_cr\ >=\ 0\ \textcolor{keywordflow}{else}\ strg[last\_cr\ +\ 1\ :]}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00080}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache}{00080}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache}{\_UnboundedCache}}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00081}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_abdd362d5f799ad16b5d6700efe590290}{00081}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_abdd362d5f799ad16b5d6700efe590290}{\_\_init\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ cache\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ cache\_get\ =\ cache.get}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00084}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a3f4e8bea0fa3560a71f01537492f4e6f}{00084}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a3f4e8bea0fa3560a71f01537492f4e6f}{not\_in\_cache}}\ =\ not\_in\_cache\ =\ object()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a9c57eef25270a48365249a68581a1247}{get}}(\_,\ key):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cache\_get(key,\ not\_in\_cache)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }set\_(\_,\ key,\ value):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ cache[key]\ =\ value}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}(\_):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ cache.clear()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00095}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_aa3d6656320f1a7278c0c2c7fdf07617c}{00095}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_aa3d6656320f1a7278c0c2c7fdf07617c}{size}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00096}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a9c57eef25270a48365249a68581a1247}{00096}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a9c57eef25270a48365249a68581a1247}{get}}\ =\ types.MethodType(get,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00097}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a112a711f766db446c2f517b794a1c04a}{00097}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_a112a711f766db446c2f517b794a1c04a}{set}}\ =\ types.MethodType(set\_,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00098}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{00098}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___unbounded_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}\ =\ types.MethodType(clear,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00101}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache}{00101}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache}{\_FifoCache}}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00102}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a1df708ec3256a39dd0c5e8bdf2745803}{00102}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a1df708ec3256a39dd0c5e8bdf2745803}{\_\_init\_\_}}(self,\ size):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a3f4e8bea0fa3560a71f01537492f4e6f}{00103}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a3f4e8bea0fa3560a71f01537492f4e6f}{not\_in\_cache}}\ =\ not\_in\_cache\ =\ object()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ cache\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ keyring\ =\ [object()]\ *\ size}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ cache\_get\ =\ cache.get}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ cache\_pop\ =\ cache.pop}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ keyiter\ =\ itertools.cycle(range(size))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a9c57eef25270a48365249a68581a1247}{get}}(\_,\ key):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cache\_get(key,\ not\_in\_cache)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }set\_(\_,\ key,\ value):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ cache[key]\ =\ value}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ next(keyiter)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ cache\_pop(keyring[i],\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ keyring[i]\ =\ key}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}(\_):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ cache.clear()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ keyring[:]\ =\ [object()]\ *\ size}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00123}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_aa3d6656320f1a7278c0c2c7fdf07617c}{00123}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_aa3d6656320f1a7278c0c2c7fdf07617c}{size}}\ =\ size}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00124}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a9c57eef25270a48365249a68581a1247}{00124}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a9c57eef25270a48365249a68581a1247}{get}}\ =\ types.MethodType(get,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00125}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a112a711f766db446c2f517b794a1c04a}{00125}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_a112a711f766db446c2f517b794a1c04a}{set}}\ =\ types.MethodType(set\_,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{00126}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1___fifo_cache_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}\ =\ types.MethodType(clear,\ self)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00129}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo}{00129}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo}{LRUMemo}}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00130}00130\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ A\ memoizing\ mapping\ that\ retains\ \`{}capacity\`{}\ deleted\ items}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00132}00132\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ The\ memo\ tracks\ retained\ items\ by\ their\ access\ order;\ once\ \`{}capacity\`{}\ items}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ \ \ are\ retained,\ the\ least\ recently\ used\ item\ is\ discarded.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00137}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a43551e166da8f9e6ee1140b1a6c162d2}{00137}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a43551e166da8f9e6ee1140b1a6c162d2}{\_\_init\_\_}}(self,\ capacity):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00138}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a4461c5456bc2a70d987e6ab58b001a80}{00138}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a4461c5456bc2a70d987e6ab58b001a80}{\_capacity}}\ =\ capacity}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00139}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{00139}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{\_active}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00140}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{00140}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}\ =\ collections.OrderedDict()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00142}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_abc1583d3a14b20c6ccc356e053563bfe}{00142}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_abc1583d3a14b20c6ccc356e053563bfe}{\_\_getitem\_\_}}(self,\ key):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{\_active}}[key]}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}.move\_to\_end(key)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}[key]}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00149}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a1c34aca910daae273d0be6ebc41f886c}{00149}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a1c34aca910daae273d0be6ebc41f886c}{\_\_setitem\_\_}}(self,\ key,\ value):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}.pop(key,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{\_active}}[key]\ =\ value}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00153}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a7418c2ac3469be079c1e99ecc4b18a0e}{00153}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a7418c2ac3469be079c1e99ecc4b18a0e}{\_\_delitem\_\_}}(self,\ key):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{\_active}}.pop(key)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ len(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}})\ >=\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a4461c5456bc2a70d987e6ab58b001a80}{\_capacity}}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}.popitem(last=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}[key]\ =\ value}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00163}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8354e616a668be156c0d212186e64c43}{00163}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{prime__search_8m_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}(self):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a91c8e7132373c6cdcf4e800c6e5ab72c}{\_active}}.\mbox{\hyperlink{prime__search_8m_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_l_r_u_memo_a8d4205ea2dc43a361cb36223de560695}{\_memory}}.\mbox{\hyperlink{prime__search_8m_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00168}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_unbounded_memo}{00168}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_unbounded_memo}{UnboundedMemo}}(dict):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00169}00169\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ A\ memoizing\ mapping\ that\ retains\ all\ deleted\ items}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00173}\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_unbounded_memo_a7418c2ac3469be079c1e99ecc4b18a0e}{00173}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1pyparsing_1_1util_1_1_unbounded_memo_a7418c2ac3469be079c1e99ecc4b18a0e}{\_\_delitem\_\_}}(self,\ key):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00177}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a05354b975fe447cb8f734443b3278e70}{00177}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a05354b975fe447cb8f734443b3278e70}{\_escape\_regex\_range\_chars}}(s:\ str)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00178}00178\ \ \ \ \ \textcolor{comment}{\#\ escape\ these\ chars:\ \string^-\/[]}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00179}00179\ \ \ \ \ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ \textcolor{stringliteral}{r"{}\(\backslash\)\string^-\/[]"{}}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ s\ =\ s.replace(c,\ \_bslash\ +\ c)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00181}00181\ \ \ \ \ s\ =\ s.replace(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ \textcolor{stringliteral}{r"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00182}00182\ \ \ \ \ s\ =\ s.replace(\textcolor{stringliteral}{"{}\(\backslash\)t"{}},\ \textcolor{stringliteral}{r"{}\(\backslash\)t"{}})}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{return}\ str(s)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00186}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_ac98974e72066ef269fab296f2d5859f6}{00186}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_ac98974e72066ef269fab296f2d5859f6}{\_collapse\_string\_to\_ranges}}(}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00187}00187\ \ \ \ \ s:\ Union[str,\ Iterable[str]],\ re\_escape:\ bool\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00188}00188\ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00189}00189\ \ \ \ \ \textcolor{keyword}{def\ }is\_consecutive(c):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ c\_int\ =\ ord(c)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ is\_consecutive.prev,\ prev\ =\ c\_int,\ is\_consecutive.prev}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ c\_int\ -\/\ prev\ >\ 1:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ is\_consecutive.value\ =\ next(is\_consecutive.counter)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ is\_consecutive.value}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00196}00196\ \ \ \ \ is\_consecutive.prev\ =\ 0\ \ \textcolor{comment}{\#\ type:\ ignore\ [attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00197}00197\ \ \ \ \ is\_consecutive.counter\ =\ itertools.count()\ \ \textcolor{comment}{\#\ type:\ ignore\ [attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00198}00198\ \ \ \ \ is\_consecutive.value\ =\ -\/1\ \ \textcolor{comment}{\#\ type:\ ignore\ [attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00200}00200\ \ \ \ \ \textcolor{keyword}{def\ }escape\_re\_range\_char(c):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}}\ +\ c\ \textcolor{keywordflow}{if}\ c\ \textcolor{keywordflow}{in}\ \textcolor{stringliteral}{r"{}\(\backslash\)\string^-\/]["{}}\ \textcolor{keywordflow}{else}\ c}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00203}00203\ \ \ \ \ \textcolor{keyword}{def\ }no\_escape\_re\_range\_char(c):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ re\_escape:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ escape\_re\_range\_char\ =\ no\_escape\_re\_range\_char}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00209}00209\ \ \ \ \ ret\ =\ []}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00210}00210\ \ \ \ \ s\ =\ \textcolor{stringliteral}{"{}"{}}.join(sorted(set(s)))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{if}\ len(s)\ >\ 3:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ \_,\ chars\ \textcolor{keywordflow}{in}\ itertools.groupby(s,\ key=is\_consecutive):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ first\ =\ last\ =\ next(chars)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ last\ =\ collections.deque(}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itertools.chain(iter([last]),\ chars),\ maxlen=1}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ ).pop()}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ first\ ==\ last:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret.append(escape\_re\_range\_char(first))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sep\ =\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{if}\ ord(last)\ ==\ ord(first)\ +\ 1\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}-\/"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret.append(}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}\{escape\_re\_range\_char(first)\}\{sep\}\{escape\_re\_range\_char(last)\}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00224}00224\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ ret\ =\ [escape\_re\_range\_char(c)\ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ s]}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(ret)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00230}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a19ad708809999acb93388f41f3f12b44}{00230}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a19ad708809999acb93388f41f3f12b44}{\_flatten}}(ll:\ list)\ -\/>\ list:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00231}00231\ \ \ \ \ ret\ =\ []}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ ll:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(i,\ list):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ ret.extend(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_a19ad708809999acb93388f41f3f12b44}{\_flatten}}(i))}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ ret.append(i)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00237}00237\ \ \ \ \ \textcolor{keywordflow}{return}\ ret}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00240}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_ad441e268ea16e0fc7002bba642ea0972}{00240}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_ad441e268ea16e0fc7002bba642ea0972}{\_make\_synonym\_function}}(compat\_name:\ str,\ fn:\ C)\ -\/>\ C:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00241}00241\ \ \ \ \ \textcolor{comment}{\#\ In\ a\ future\ version,\ uncomment\ the\ code\ in\ the\ internal\ \_inner()\ functions}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00242}00242\ \ \ \ \ \textcolor{comment}{\#\ to\ begin\ emitting\ DeprecationWarnings.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00244}00244\ \ \ \ \ \textcolor{comment}{\#\ Unwrap\ staticmethod/classmethod}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00245}00245\ \ \ \ \ fn\ =\ getattr(fn,\ \textcolor{stringliteral}{"{}\_\_func\_\_"{}},\ fn)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00247}00247\ \ \ \ \ \textcolor{comment}{\#\ (Presence\ of\ 'self'\ arg\ in\ signature\ is\ used\ by\ explain\_exception()\ methods,\ so\ we\ take}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00248}00248\ \ \ \ \ \textcolor{comment}{\#\ some\ extra\ steps\ to\ add\ it\ if\ present\ in\ decorated\ function.)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00249}00249\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}self"{}}\ ==\ list(inspect.signature(fn).parameters)[0]:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \textcolor{preprocessor}{@wraps(fn)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\_inner(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ warnings.warn(}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ f"{}Deprecated\ -\/\ use\ \{fn.\_\_name\_\_\}"{},\ DeprecationWarning,\ stacklevel=3}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ )}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fn(self,\ *args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{preprocessor}{@wraps(fn)}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\_inner(*args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ warnings.warn(}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ f"{}Deprecated\ -\/\ use\ \{fn.\_\_name\_\_\}"{},\ DeprecationWarning,\ stacklevel=3}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ )}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fn(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00267}00267\ \ \ \ \ \_inner.\_\_doc\_\_\ =\ f\textcolor{stringliteral}{"{}"{}"{}Deprecated\ -\/\ use\ :class:\`{}\{fn.\_\_name\_\_\}\`{}"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00268}00268\ \ \ \ \ \_inner.\_\_name\_\_\ =\ compat\_name}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00269}00269\ \ \ \ \ \_inner.\_\_annotations\_\_\ =\ fn.\_\_annotations\_\_}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00270}00270\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(fn,\ types.FunctionType):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \_inner.\_\_kwdefaults\_\_\ =\ fn.\_\_kwdefaults\_\_}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00272}00272\ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(fn,\ type)\ \textcolor{keywordflow}{and}\ hasattr(fn,\ \textcolor{stringliteral}{"{}\_\_init\_\_"{}}):}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \_inner.\_\_kwdefaults\_\_\ =\ fn.\_\_init\_\_.\_\_kwdefaults\_\_}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00274}00274\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \_inner.\_\_kwdefaults\_\_\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00276}00276\ \ \ \ \ \_inner.\_\_qualname\_\_\ =\ fn.\_\_qualname\_\_}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00277}00277\ \ \ \ \ \textcolor{keywordflow}{return}\ cast(C,\ \_inner)}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00280}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_aa9eb8186ee08185fe3e6e9ea2b8bb7a5}{00280}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_aa9eb8186ee08185fe3e6e9ea2b8bb7a5}{replaced\_by\_pep8}}(fn:\ C)\ -\/>\ Callable[[Callable],\ C]:}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00281}00281\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00282}00282\ \textcolor{stringliteral}{\ \ \ \ Decorator\ for\ pre-\/PEP8\ compatibility\ synonyms,\ to\ link\ them\ to\ the\ new\ function.}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00283}00283\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{pyparsing_2util_8py_source_l00284}00284\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{lambda}\ other:\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1pyparsing_1_1util_ad441e268ea16e0fc7002bba642ea0972}{\_make\_synonym\_function}}(other.\_\_name\_\_,\ fn)}
+
+\end{DoxyCode}

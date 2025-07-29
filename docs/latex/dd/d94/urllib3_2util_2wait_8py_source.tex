@@ -1,0 +1,158 @@
+\doxysection{wait.\+py}
+\hypertarget{urllib3_2util_2wait_8py_source}{}\label{urllib3_2util_2wait_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/wait.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/util/wait.py}}
+\mbox{\hyperlink{urllib3_2util_2wait_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait}{00001}}\ \textcolor{keyword}{import}\ errno}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00002}00002\ \textcolor{keyword}{import}\ select}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00003}00003\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00004}00004\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ partial}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00006}00006\ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00007}00007\ \ \ \ \ \textcolor{keyword}{from}\ time\ \textcolor{keyword}{import}\ monotonic}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00008}00008\ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00009}00009\ \ \ \ \ \textcolor{keyword}{from}\ time\ \textcolor{keyword}{import}\ time\ \textcolor{keyword}{as}\ monotonic}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00011}00011\ \_\_all\_\_\ =\ [\textcolor{stringliteral}{"{}NoWayToWaitForSocketError"{}},\ \textcolor{stringliteral}{"{}wait\_for\_read"{}},\ \textcolor{stringliteral}{"{}wait\_for\_write"{}}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00014}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1wait_1_1_no_way_to_wait_for_socket_error}{00014}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1wait_1_1_no_way_to_wait_for_socket_error}{NoWayToWaitForSocketError}}(Exception):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00015}00015\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00018}00018\ \textcolor{comment}{\#\ How\ should\ we\ wait\ on\ sockets?}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00019}00019\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00020}00020\ \textcolor{comment}{\#\ There\ are\ two\ types\ of\ APIs\ you\ can\ use\ for\ waiting\ on\ sockets:\ the\ fancy}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00021}00021\ \textcolor{comment}{\#\ modern\ stateful\ APIs\ like\ epoll/kqueue,\ and\ the\ older\ stateless\ APIs\ like}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00022}00022\ \textcolor{comment}{\#\ select/poll.\ The\ stateful\ APIs\ are\ more\ efficient\ when\ you\ have\ a\ lots\ of}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00023}00023\ \textcolor{comment}{\#\ sockets\ to\ keep\ track\ of,\ because\ you\ can\ set\ them\ up\ once\ and\ then\ use\ them}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00024}00024\ \textcolor{comment}{\#\ lots\ of\ times.\ But\ we\ only\ ever\ want\ to\ wait\ on\ a\ single\ socket\ at\ a\ time}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00025}00025\ \textcolor{comment}{\#\ and\ don't\ want\ to\ keep\ track\ of\ state,\ so\ the\ stateless\ APIs\ are\ actually}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00026}00026\ \textcolor{comment}{\#\ more\ efficient.\ So\ we\ want\ to\ use\ select()\ or\ poll().}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00027}00027\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00028}00028\ \textcolor{comment}{\#\ Now,\ how\ do\ we\ choose\ between\ select()\ and\ poll()?\ On\ traditional\ Unixes,}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00029}00029\ \textcolor{comment}{\#\ select()\ has\ a\ strange\ calling\ convention\ that\ makes\ it\ slow,\ or\ fail}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00030}00030\ \textcolor{comment}{\#\ altogether,\ for\ high-\/numbered\ file\ descriptors.\ The\ point\ of\ poll()\ is\ to\ fix}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00031}00031\ \textcolor{comment}{\#\ that,\ so\ on\ Unixes,\ we\ prefer\ poll().}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00032}00032\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00033}00033\ \textcolor{comment}{\#\ On\ Windows,\ there\ is\ no\ poll()\ (or\ at\ least\ Python\ doesn't\ provide\ a\ wrapper}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00034}00034\ \textcolor{comment}{\#\ for\ it),\ but\ that's\ OK,\ because\ on\ Windows,\ select()\ doesn't\ have\ this}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00035}00035\ \textcolor{comment}{\#\ strange\ calling\ convention;\ plain\ select()\ works\ fine.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00036}00036\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00037}00037\ \textcolor{comment}{\#\ So:\ on\ Windows\ we\ use\ select(),\ and\ everywhere\ else\ we\ use\ poll().\ We\ also}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00038}00038\ \textcolor{comment}{\#\ fall\ back\ to\ select()\ in\ case\ poll()\ is\ somehow\ broken\ or\ missing.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00040}00040\ \textcolor{keywordflow}{if}\ sys.version\_info\ >=\ (3,\ 5):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00041}00041\ \ \ \ \ \textcolor{comment}{\#\ Modern\ Python,\ that\ retries\ syscalls\ by\ default}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00042}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{00042}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{\_retry\_on\_intr}}(fn,\ timeout):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fn(timeout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00045}00045\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00046}00046\ \ \ \ \ \textcolor{comment}{\#\ Old\ and\ broken\ Pythons.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00047}00047\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{\_retry\_on\_intr}}(fn,\ timeout):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ timeout\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ deadline\ =\ float(\textcolor{stringliteral}{"{}inf"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ deadline\ =\ monotonic()\ +\ timeout}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fn(timeout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ OSError\ for\ 3\ <=\ pyver\ <\ 3.5,\ select.error\ for\ pyver\ <=\ 2.7}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (OSError,\ select.error)\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 'e.args[0]'\ incantation\ works\ for\ both\ OSError\ and\ select.error}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ e.args[0]\ !=\ errno.EINTR:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timeout\ =\ deadline\ -\/\ monotonic()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ timeout\ <\ 0:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timeout\ =\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ timeout\ ==\ float(\textcolor{stringliteral}{"{}inf"{}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timeout\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00070}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_afb29f3c400f636e3483c6fbbe711fecb}{00070}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_afb29f3c400f636e3483c6fbbe711fecb}{select\_wait\_for\_socket}}(sock,\ read=False,\ write=False,\ timeout=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ read\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ write:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{"{}must\ specify\ at\ least\ one\ of\ read=True,\ write=True"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00073}00073\ \ \ \ \ rcheck\ =\ []}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00074}00074\ \ \ \ \ wcheck\ =\ []}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ read:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ rcheck.append(sock)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}\ write:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ wcheck.append(sock)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00079}00079\ \ \ \ \ \textcolor{comment}{\#\ When\ doing\ a\ non-\/blocking\ connect,\ most\ systems\ signal\ success\ by}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00080}00080\ \ \ \ \ \textcolor{comment}{\#\ marking\ the\ socket\ writable.\ Windows,\ though,\ signals\ success\ by\ marked}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00081}00081\ \ \ \ \ \textcolor{comment}{\#\ it\ as\ "{}exceptional"{}.\ We\ paper\ over\ the\ difference\ by\ checking\ the\ write}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00082}00082\ \ \ \ \ \textcolor{comment}{\#\ sockets\ for\ both\ conditions.\ (The\ stdlib\ selectors\ module\ does\ the\ same}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ thing.)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00084}00084\ \ \ \ \ fn\ =\ partial(select.select,\ rcheck,\ wcheck,\ wcheck)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00085}00085\ \ \ \ \ rready,\ wready,\ xready\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{\_retry\_on\_intr}}(fn,\ timeout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{return}\ bool(rready\ \textcolor{keywordflow}{or}\ wready\ \textcolor{keywordflow}{or}\ xready)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00089}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a98e943359358669b02f16644a80fbb21}{00089}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a98e943359358669b02f16644a80fbb21}{poll\_wait\_for\_socket}}(sock,\ read=False,\ write=False,\ timeout=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ read\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ write:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ RuntimeError(\textcolor{stringliteral}{"{}must\ specify\ at\ least\ one\ of\ read=True,\ write=True"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00092}00092\ \ \ \ \ mask\ =\ 0}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{if}\ read:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ mask\ |=\ select.POLLIN}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{if}\ write:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ mask\ |=\ select.POLLOUT}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00097}00097\ \ \ \ \ poll\_obj\ =\ select.poll()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00098}00098\ \ \ \ \ poll\_obj.register(sock,\ mask)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00100}00100\ \ \ \ \ \textcolor{comment}{\#\ For\ some\ reason,\ poll()\ takes\ timeout\ in\ milliseconds}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00101}00101\ \ \ \ \ \textcolor{keyword}{def\ }do\_poll(t):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ t\ *=\ 1000}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ poll\_obj.poll(t)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{return}\ bool(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{\_retry\_on\_intr}}(do\_poll,\ timeout))}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00109}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_addce67b4097e5d99edced12733d97d67}{00109}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_addce67b4097e5d99edced12733d97d67}{null\_wait\_for\_socket}}(*args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00110}00110\ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1util_1_1wait_1_1_no_way_to_wait_for_socket_error}{NoWayToWaitForSocketError}}(\textcolor{stringliteral}{"{}no\ select-\/equivalent\ available"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00113}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a9f5b91e23df25469bccc1cdc17ee099a}{00113}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a9f5b91e23df25469bccc1cdc17ee099a}{\_have\_working\_poll}}():}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00114}00114\ \ \ \ \ \textcolor{comment}{\#\ Apparently\ some\ systems\ have\ a\ select.poll\ that\ fails\ as\ soon\ as\ you\ try}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00115}00115\ \ \ \ \ \textcolor{comment}{\#\ to\ use\ it,\ either\ due\ to\ strange\ configuration\ or\ broken\ monkeypatching}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00116}00116\ \ \ \ \ \textcolor{comment}{\#\ from\ libraries\ like\ eventlet/greenlet.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ poll\_obj\ =\ select.poll()}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a271c6508b78d0bce7cf8643097ba64a2}{\_retry\_on\_intr}}(poll\_obj.poll,\ 0)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{except}\ (AttributeError,\ OSError):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00126}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_ac27a05160dfcc363dd86814e0e330892}{00126}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_ac27a05160dfcc363dd86814e0e330892}{wait\_for\_socket}}(*args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00127}00127\ \ \ \ \ \textcolor{comment}{\#\ We\ delay\ choosing\ which\ implementation\ to\ use\ until\ the\ first\ time\ we're}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00128}00128\ \ \ \ \ \textcolor{comment}{\#\ called.\ We\ could\ do\ it\ at\ import\ time,\ but\ then\ we\ might\ make\ the\ wrong}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00129}00129\ \ \ \ \ \textcolor{comment}{\#\ decision\ if\ someone\ goes\ wild\ with\ monkeypatching\ select.poll\ after}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00130}00130\ \ \ \ \ \textcolor{comment}{\#\ we're\ imported.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00131}00131\ \ \ \ \ \textcolor{keyword}{global}\ wait\_for\_socket}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a9f5b91e23df25469bccc1cdc17ee099a}{\_have\_working\_poll}}():}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ wait\_for\_socket\ =\ poll\_wait\_for\_socket}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{elif}\ hasattr(select,\ \textcolor{stringliteral}{"{}select"{}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ wait\_for\_socket\ =\ select\_wait\_for\_socket}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00136}00136\ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Appengine.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ wait\_for\_socket\ =\ null\_wait\_for\_socket}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00138}00138\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_ac27a05160dfcc363dd86814e0e330892}{wait\_for\_socket}}(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00141}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a52c4719affc83b5dc1e5c2cf1876164e}{00141}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a52c4719affc83b5dc1e5c2cf1876164e}{wait\_for\_read}}(sock,\ timeout=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00142}00142\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Waits\ for\ reading\ to\ be\ available\ on\ a\ given\ socket.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ Returns\ True\ if\ the\ socket\ is\ readable,\ or\ False\ if\ the\ timeout\ expired.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00145}00145\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_ac27a05160dfcc363dd86814e0e330892}{wait\_for\_socket}}(sock,\ read=\textcolor{keyword}{True},\ timeout=timeout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00148}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a9582b35caeb8eb86232b710bae353843}{00148}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_a9582b35caeb8eb86232b710bae353843}{wait\_for\_write}}(sock,\ timeout=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00149}00149\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Waits\ for\ writing\ to\ be\ available\ on\ a\ given\ socket.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ Returns\ True\ if\ the\ socket\ is\ readable,\ or\ False\ if\ the\ timeout\ expired.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2util_2wait_8py_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait_ac27a05160dfcc363dd86814e0e330892}{wait\_for\_socket}}(sock,\ write=\textcolor{keyword}{True},\ timeout=timeout)}
+
+\end{DoxyCode}

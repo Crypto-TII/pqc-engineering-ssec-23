@@ -1,0 +1,161 @@
+\doxysection{found\+\_\+candidates.\+py}
+\hypertarget{found__candidates_8py_source}{}\label{found__candidates_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/resolution/resolvelib/found\_candidates.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/resolution/resolvelib/found\_candidates.py}}
+\mbox{\hyperlink{found__candidates_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}Utilities\ to\ lazily\ create\ and\ visit\ candidates\ found.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00002}00002\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00003}00003\ \textcolor{stringliteral}{Creating\ and\ visiting\ a\ candidate\ is\ a\ *very*\ costly\ operation.\ It\ involves}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00004}00004\ \textcolor{stringliteral}{fetching,\ extracting,\ potentially\ building\ modules\ from\ source,\ and\ verifying}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00005}00005\ \textcolor{stringliteral}{distribution\ metadata.\ It\ is\ therefore\ crucial\ for\ performance\ to\ keep}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00006}00006\ \textcolor{stringliteral}{everything\ here\ lazy\ all\ the\ way\ down,\ so\ we\ only\ touch\ candidates\ that\ we}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00007}00007\ \textcolor{stringliteral}{absolutely\ need,\ and\ not\ "{}download\ the\ world"{}\ when\ we\ only\ need\ one\ version\ of}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00008}00008\ \textcolor{stringliteral}{something.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00009}00009\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00011}00011\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00012}00012\ \textcolor{keyword}{from}\ collections.abc\ \textcolor{keyword}{import}\ Sequence}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00013}00013\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING,\ Any,\ Callable,\ Iterator,\ Optional,\ Set,\ Tuple}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00015}00015\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1version}{pip.\_vendor.packaging.version}}\ \textcolor{keyword}{import}\ \_BaseVersion}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00017}00017\ \textcolor{keyword}{from}\ .base\ \textcolor{keyword}{import}\ Candidate}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a3216116e3671f4dfe6e939f2c8de47b5}{00019}}\ IndexCandidateInfo\ =\ Tuple[\_BaseVersion,\ Callable[[],\ Optional[Candidate]]]}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00021}00021\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_aae678bffb16c106a58d1b3080ede2139}{00022}}\ \ \ \ \ SequenceCandidate\ =\ Sequence[Candidate]}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00023}00023\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00024}00024\ \ \ \ \ \textcolor{comment}{\#\ For\ compatibility:\ Python\ before\ 3.9\ does\ not\ support\ using\ []\ on\ the}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00025}00025\ \ \ \ \ \textcolor{comment}{\#\ Sequence\ class.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00026}00026\ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00027}00027\ \ \ \ \ \textcolor{comment}{\#\ >>>\ from\ collections.abc\ import\ Sequence}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00028}00028\ \ \ \ \ \textcolor{comment}{\#\ >>>\ Sequence[str]}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00029}00029\ \ \ \ \ \textcolor{comment}{\#\ Traceback\ (most\ recent\ call\ last):}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00030}00030\ \ \ \ \ \textcolor{comment}{\#\ \ \ File\ "{}<stdin>"{},\ line\ 1,\ in\ <module>}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00031}00031\ \ \ \ \ \textcolor{comment}{\#\ TypeError:\ 'ABCMeta'\ object\ is\ not\ subscriptable}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00032}00032\ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00033}00033\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Remove\ this\ block\ after\ dropping\ Python\ 3.8\ support.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00034}00034\ \ \ \ \ SequenceCandidate\ =\ Sequence}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a2a31a60e1a2a139f4e3395c731f076cc}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a2a31a60e1a2a139f4e3395c731f076cc}{\_iter\_built}}(infos:\ Iterator[IndexCandidateInfo])\ -\/>\ Iterator[Candidate]:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00038}00038\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterator\ for\ \`{}\`{}FoundCandidates\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ This\ iterator\ is\ used\ when\ the\ package\ is\ not\ already\ installed.\ Candidates}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ from\ index\ come\ later\ in\ their\ normal\ ordering.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00043}00043\ \ \ \ \ versions\_found:\ Set[\_BaseVersion]\ =\ set()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{for}\ version,\ func\ \textcolor{keywordflow}{in}\ infos:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ version\ \textcolor{keywordflow}{in}\ versions\_found:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ candidate\ =\ func()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ candidate}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ versions\_found.add(version)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00054}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a172c4290096d4d5edac850fd5152db6b}{00054}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a172c4290096d4d5edac850fd5152db6b}{\_iter\_built\_with\_prepended}}(}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00055}00055\ \ \ \ \ installed:\ Candidate,\ infos:\ Iterator[IndexCandidateInfo]}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00056}00056\ )\ -\/>\ Iterator[Candidate]:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00057}00057\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterator\ for\ \`{}\`{}FoundCandidates\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00058}00058\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ This\ iterator\ is\ used\ when\ the\ resolver\ prefers\ the\ already-\/installed}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ candidate\ and\ NOT\ to\ upgrade.\ The\ installed\ candidate\ is\ therefore}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ always\ yielded\ first,\ and\ candidates\ from\ index\ come\ later\ in\ their}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ normal\ ordering,\ except\ skipped\ when\ the\ version\ is\ already\ installed.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00064}00064\ \ \ \ \ \textcolor{keywordflow}{yield}\ installed}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00065}00065\ \ \ \ \ versions\_found:\ Set[\_BaseVersion]\ =\ \{installed.version\}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{for}\ version,\ func\ \textcolor{keywordflow}{in}\ infos:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ version\ \textcolor{keywordflow}{in}\ versions\_found:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ candidate\ =\ func()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ candidate}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ versions\_found.add(version)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00076}\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_aba14f1763c6d51f3910fec4bccdaa911}{00076}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_aba14f1763c6d51f3910fec4bccdaa911}{\_iter\_built\_with\_inserted}}(}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00077}00077\ \ \ \ \ installed:\ Candidate,\ infos:\ Iterator[IndexCandidateInfo]}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00078}00078\ )\ -\/>\ Iterator[Candidate]:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00079}00079\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Iterator\ for\ \`{}\`{}FoundCandidates\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00080}00080\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ This\ iterator\ is\ used\ when\ the\ resolver\ prefers\ to\ upgrade\ an}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ \ \ already-\/installed\ package.\ Candidates\ from\ index\ are\ returned\ in\ their}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00083}00083\ \textcolor{stringliteral}{\ \ \ \ normal\ ordering,\ except\ replaced\ when\ the\ version\ is\ already\ installed.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00084}00084\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ \ \ The\ implementation\ iterates\ through\ and\ yields\ other\ candidates,\ inserting}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00086}00086\ \textcolor{stringliteral}{\ \ \ \ the\ installed\ candidate\ exactly\ once\ before\ we\ start\ yielding\ older\ or}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00087}00087\ \textcolor{stringliteral}{\ \ \ \ equivalent\ candidates,\ or\ after\ all\ other\ candidates\ if\ they\ are\ all\ newer.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00089}00089\ \ \ \ \ versions\_found:\ Set[\_BaseVersion]\ =\ set()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{for}\ version,\ func\ \textcolor{keywordflow}{in}\ infos:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ version\ \textcolor{keywordflow}{in}\ versions\_found:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ the\ installed\ candidate\ is\ better,\ yield\ it\ first.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ installed.version\ >=\ version:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ installed}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ versions\_found.add(installed.version)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ candidate\ =\ func()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ candidate\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ candidate}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ versions\_found.add(version)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00103}00103\ \ \ \ \ \textcolor{comment}{\#\ If\ the\ installed\ candidate\ is\ older\ than\ all\ other\ candidates.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ installed.version\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ versions\_found:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ installed}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00108}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates}{00108}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates}{FoundCandidates}}(SequenceCandidate):}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00109}00109\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ lazy\ sequence\ to\ provide\ candidates\ to\ the\ resolver.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00110}00110\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00111}00111\ \textcolor{stringliteral}{\ \ \ \ The\ intended\ usage\ is\ to\ return\ this\ from\ \`{}find\_matches()\`{}\ so\ the\ resolver}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00112}00112\ \textcolor{stringliteral}{\ \ \ \ can\ iterate\ through\ the\ sequence\ multiple\ times,\ but\ only\ access\ the\ index}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ page\ when\ remote\ packages\ are\ actually\ needed.\ This\ improve\ performances}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ \ \ when\ suitable\ candidates\ are\ already\ installed\ on\ disk.}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00117}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a643905b603d1b534bea9dc91577b2abc}{00117}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a643905b603d1b534bea9dc91577b2abc}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ get\_infos:\ Callable[[],\ Iterator[IndexCandidateInfo]],}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ installed:\ Optional[Candidate],}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ prefers\_installed:\ bool,}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ incompatible\_ids:\ Set[int],}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00123}00123\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00124}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a027a9b95063908af66dac5c4d1b8797a}{00124}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a027a9b95063908af66dac5c4d1b8797a}{\_get\_infos}}\ =\ get\_infos}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00125}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{00125}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{\_installed}}\ =\ installed}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_add6a8fabcc784f4ad805afa5d8e201e2}{00126}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_add6a8fabcc784f4ad805afa5d8e201e2}{\_prefers\_installed}}\ =\ prefers\_installed}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00127}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_aa54fe7115e7379004d41fdd841c6662f}{00127}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_aa54fe7115e7379004d41fdd841c6662f}{\_incompatible\_ids}}\ =\ incompatible\_ids}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00129}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a96ebe499e3b942af92cc5f353be7b93c}{00129}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a96ebe499e3b942af92cc5f353be7b93c}{\_\_getitem\_\_}}(self,\ index:\ Any)\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Implemented\ to\ satisfy\ the\ ABC\ check.\ This\ is\ not\ needed\ by\ the}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ resolver,\ and\ should\ not\ be\ used\ by\ the\ provider\ either\ (for}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ performance\ reasons).}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(\textcolor{stringliteral}{"{}don't\ do\ this"{}})}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00135}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a8d78506ce6f858b639ee1b03bff09d51}{00135}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a8d78506ce6f858b639ee1b03bff09d51}{\_\_iter\_\_}}(self)\ -\/>\ Iterator[Candidate]:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ infos\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_a027a9b95063908af66dac5c4d1b8797a}{\_get\_infos}}()}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{\_installed}}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ iterator\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a2a31a60e1a2a139f4e3395c731f076cc}{\_iter\_built}}(infos)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_add6a8fabcc784f4ad805afa5d8e201e2}{\_prefers\_installed}}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ iterator\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_a172c4290096d4d5edac850fd5152db6b}{\_iter\_built\_with\_prepended}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{\_installed}},\ infos)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ iterator\ =\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_aba14f1763c6d51f3910fec4bccdaa911}{\_iter\_built\_with\_inserted}}(self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{\_installed}},\ infos)}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (c\ \textcolor{keywordflow}{for}\ c\ \textcolor{keywordflow}{in}\ iterator\ \textcolor{keywordflow}{if}\ id(c)\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_aa54fe7115e7379004d41fdd841c6662f}{\_incompatible\_ids}})}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00145}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_afd64a095585f64cbe93bdc3b13eba041}{00145}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_afd64a095585f64cbe93bdc3b13eba041}{\_\_len\_\_}}(self)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Implemented\ to\ satisfy\ the\ ABC\ check.\ This\ is\ not\ needed\ by\ the}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ resolver,\ and\ should\ not\ be\ used\ by\ the\ provider\ either\ (for}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ performance\ reasons).}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(\textcolor{stringliteral}{"{}don't\ do\ this"{}})}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00151}00151\ \ \ \ \ \textcolor{preprocessor}{@functools.lru\_cache(maxsize=1)}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00152}\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af466df7f15887a199aa900cbe8542937}{00152}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af466df7f15887a199aa900cbe8542937}{\_\_bool\_\_}}(self)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_add6a8fabcc784f4ad805afa5d8e201e2}{\_prefers\_installed}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1found__candidates_1_1_found_candidates_af64761706789dab2c582003fd2f9bc9c}{\_installed}}:}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{found__candidates_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ any(self)}
+
+\end{DoxyCode}

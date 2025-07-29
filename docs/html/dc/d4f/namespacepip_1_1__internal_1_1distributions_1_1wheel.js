@@ -1,0 +1,4 @@
+var namespacepip_1_1__internal_1_1distributions_1_1wheel =
+[
+    [ "WheelDistribution", "d2/dd3/classpip_1_1__internal_1_1distributions_1_1wheel_1_1_wheel_distribution.html", "d2/dd3/classpip_1_1__internal_1_1distributions_1_1wheel_1_1_wheel_distribution" ]
+];

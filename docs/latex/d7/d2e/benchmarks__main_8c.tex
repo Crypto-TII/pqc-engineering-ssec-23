@@ -1,0 +1,369 @@
+\doxysection{E\+:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/benchmarks\+\_\+main.c File Reference}
+\hypertarget{benchmarks__main_8c}{}\label{benchmarks__main_8c}\index{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/benchmarks\_main.c@{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/benchmarks\_main.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$cgl\+\_\+hash.\+h$>$}\newline
+{\ttfamily \#include "{}benchmarks\+\_\+utils.\+h"{}}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$utilities.\+h$>$}\newline
+Include dependency graph for benchmarks\+\_\+main.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{da/df0/benchmarks__main_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}} (ticks \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}, ticks \texorpdfstring{$\ast$}{*}b)
+\item 
+int \mbox{\hyperlink{benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100}{partition}} (ticks arr\mbox{[}$\,$\mbox{]}, int low, int high)
+\item 
+void \mbox{\hyperlink{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}{quicksort}} (ticks arr\mbox{[}$\,$\mbox{]}, int low, int high)
+\item 
+int \mbox{\hyperlink{benchmarks__main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{benchmarks__main_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{benchmarks__main_8c_a3c04138a5bfe5d72780bb7e82a18e627}\index{benchmarks\_main.c@{benchmarks\_main.c}!main@{main}}
+\index{main@{main}!benchmarks\_main.c@{benchmarks\_main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{benchmarks__main_8c_a3c04138a5bfe5d72780bb7e82a18e627} 
+int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{benchmarks__main_8c_source_l00055}{55}} of file \mbox{\hyperlink{benchmarks__main_8c_source}{benchmarks\+\_\+main.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ hal\_init\_perfcounters(1,\ 1);}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ \ \ \ const\ char\ *\ name\_of\_executable\ =\ strrchr(argv[0],\ '/');}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ \ \ \ printf("{}Test\ for\ \%s!\(\backslash\)n"{},name\_of\_executable);}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ For\ measuring\ clock\ cycles}}
+\DoxyCodeLine{00063\ \ \ \ \ ticks\ mark\_min\ =\ 0xFFFFFFFFFFFFFFFF;}
+\DoxyCodeLine{00064\ \ \ \ \ ticks\ mark\_max\ =\ 0;}
+\DoxyCodeLine{00065\ \ \ \ \ ticks\ mark\_mean\ =\ 0;}
+\DoxyCodeLine{00066\ \ \ \ \ ticks\ mark\_two\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}]\ =\ \{0\};}
+\DoxyCodeLine{00067\ \ \ \ \ ticks\ mark\_three\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}]\ =\ \{0\};}
+\DoxyCodeLine{00068\ \ \ \ \ ticks\ mark\_0\ =\ 0;}
+\DoxyCodeLine{00069\ \ \ \ \ ticks\ mark\_1\ =\ 0;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#if\ defined(NDEBUG)}}
+\DoxyCodeLine{00072\ \ \ \ \ ticks\ mark\_current\ =\ 0;}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ 2-\/isogeny\ walks}}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{structcgl__hash__2__ctx}{cgl\_hash\_2\_ctx}}\ ctx2;}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{structfp2__t}{fp2\_t}}\ \mbox{\hyperlink{namespacetests_a3b98e2dffc6cb06a89dcb0d5c60a0206}{A}},\ t;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{c-code_2src_2fp2_8c_a3fda3c0f7f2177859fe5545dd623ff19}{fp2\_set\_to\_zero}}(\&A);}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{c-code_2src_2fp2_8c_afb018b1962b2b45cdc7d96d14fd528a7}{fp2\_set\_to\_one}}(\&t);}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ t,\ t);}
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ A,\ t);}
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ A,\ A);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{cgl__hash_8c_af42bbc08844a8de31e90bea3101091d8}{cgl\_hash\_init\_2}}(\&ctx2,\ A);}
+\DoxyCodeLine{00087\ \ \ \ \ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ Main\ loop}}
+\DoxyCodeLine{00090\ \ \ \ \ }
+\DoxyCodeLine{00091\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nNumbers\ correspond\ for\ \(\backslash\)033[1;33mCGLHash2\(\backslash\)033[0m.\(\backslash\)n"{}});}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ <\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}};\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}++)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}//\ Running\ experiments:\(\backslash\)t"{}});}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%2d\%\%"{}},\ 100\ *\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ /\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}});}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)x1b[K"{}});}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ uint8\_t\ path[\mbox{\hyperlink{p254_8h_ab45029372443a6a15899f3e621bfb167}{BIT\_LENGTH\_PATH}}\ /\ 8]\ =\ \{0\};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{c-code_2src_2isogeny__walks_8h_a57f6edd92d890a67b72d780ef8ae6084}{isogeny\_walks\_sample\_bit\_string}}(path);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ mark\_0\ =\ get\_timestamp();}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cgl__hash_8c_a1a2fe4909b1584ba859f9dc3025178d7}{cgl\_hash\_digest\_2}}(\&A,\ \&ctx2,\ path);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ mark\_1\ =\ get\_timestamp();}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ storing\ the\ measured\ clock\ cycles}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}]\ =\ 0;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}]\ =\ mark\_1\ -\/\ mark\_0;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Minimum\ value}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mark\_min\ >\ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}])}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ mark\_min\ =\ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Maximum\ value}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mark\_max\ <\ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}])}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ mark\_max\ =\ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Average\ value}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ mark\_mean\ +=\ mark\_two\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ \ \ \ \ mark\_mean\ =\ mark\_mean\ /\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Average:\ \(\backslash\)033[1;32m\%llu\(\backslash\)033[0m\(\backslash\)n\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_mean\ );}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#if\ defined(NDEBUG)}}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}{quicksort}}(mark\_two\_isogeny,\ 0,\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ -\/\ 1);}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00126\ \ \ \ \ mark\_current\ =\ mark\_two\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 4];}
+\DoxyCodeLine{00127\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Q1:\ \ \ \ \ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00129\ \ \ \ \ mark\_current\ =\ (mark\_two\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 2]\ +\ mark\_two\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 2\ -\/\ 1])\ /\ 2;}
+\DoxyCodeLine{00130\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Median:\ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00132\ \ \ \ \ mark\_current\ =\ mark\_two\_isogeny[(3\ *\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}})\ /\ 4];}
+\DoxyCodeLine{00133\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Q3:\ \ \ \ \ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00134\ \ \ \ \ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00136\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00137\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Min:\ \ \ \ \ \(\backslash\)033[1;34m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_min\ );}
+\DoxyCodeLine{00138\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Max:\ \ \ \ \ \(\backslash\)033[1;31m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_max\ );}
+\DoxyCodeLine{00139\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{//\ 3-\/isogeny\ walk}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ mark\_min\ =\ 0xFFFFFFFFFFFFFFFF;}
+\DoxyCodeLine{00147\ \ \ \ \ mark\_max\ =\ 0;}
+\DoxyCodeLine{00148\ \ \ \ \ mark\_mean\ =\ 0;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#if\ defined(NDEBUG)}}
+\DoxyCodeLine{00151\ \ \ \ \ mark\_current\ =\ 0;}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \mbox{\hyperlink{structcgl__hash__3__ctx}{cgl\_hash\_3\_ctx}}\ ctx3;}
+\DoxyCodeLine{00155\ \ \ \ \ \mbox{\hyperlink{c-code_2src_2fp2_8c_a3fda3c0f7f2177859fe5545dd623ff19}{fp2\_set\_to\_zero}}(\&A);}
+\DoxyCodeLine{00156\ \ \ \ \ \mbox{\hyperlink{c-code_2src_2fp2_8c_afb018b1962b2b45cdc7d96d14fd528a7}{fp2\_set\_to\_one}}(\&t);}
+\DoxyCodeLine{00157\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ t,\ t);}
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ A,\ t);}
+\DoxyCodeLine{00159\ \ \ \ \ \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_a1fc76a235fb96a2c9d2f72f067dcd56a}{fp2\_add}}(\&A,\ A,\ A);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{//\ For\ simplicity\ we\ take\ the\ first\ x-\/coordinate\ point}}
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{cgl__hash_8c_af9080e63206d035db0f44be6e1f603ac}{cgl\_hash\_init\_3}}(\&ctx3,\ A,\ 0);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{//\ Main\ loop}}
+\DoxyCodeLine{00166\ \ \ \ \ }
+\DoxyCodeLine{00167\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Numbers\ correspond\ for\ \(\backslash\)033[1;33mCGLHash3\(\backslash\)033[0m.\(\backslash\)n"{}});}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ =\ 0;\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ <\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}};\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}++)\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}//\ Running\ experiments:\(\backslash\)t"{}});}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%2d\%\%"{}},\ 100\ *\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ /\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}});}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)x1b[K"{}});}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ uint8\_t\ path[\mbox{\hyperlink{p254_8h_a19616387f661e87e6968130cfc47b4a8}{TRITLENGTH\_PATH}}\ /\ 5]\ =\ \{0\};}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{c-code_2src_2isogeny__walks_8h_a935586effcfd01266e06df95ee07d33f}{isogeny\_walks\_sample\_trit\_string}}(path);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ mark\_0\ =\ get\_timestamp();}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cgl__hash_8c_a08b723b9111313daa05c9e38fb083e8e}{cgl\_hash\_digest\_3}}(\&A,\ \&ctx3,\ path);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ mark\_1\ =\ get\_timestamp();}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ storing\ the\ measured\ clock\ cycles}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}]\ =\ 0;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}]\ =\ mark\_1\ -\/\ mark\_0;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Minimum\ value}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mark\_min\ >\ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}])}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ mark\_min\ =\ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Maximum\ value}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mark\_max\ <\ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}])}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ mark\_max\ =\ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Average\ value}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ mark\_mean\ +=\ mark\_three\_isogeny[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}];}
+\DoxyCodeLine{00193\ \ \ \ \ \}}
+\DoxyCodeLine{00194\ \ \ \ \ mark\_mean\ =\ mark\_mean\ /\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Average:\ \(\backslash\)033[1;32m\%llu\(\backslash\)033[0m\(\backslash\)n\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_mean\ );}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#if\ defined(NDEBUG)}}
+\DoxyCodeLine{00199\ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}{quicksort}}(mark\_three\_isogeny,\ 0,\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ -\/\ 1);}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00201\ \ \ \ \ mark\_current\ =\ mark\_three\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 4];}
+\DoxyCodeLine{00202\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Q1:\ \ \ \ \ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00204\ \ \ \ \ mark\_current\ =\ (mark\_three\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 2]\ +\ mark\_three\_isogeny[\mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}}\ /\ 2\ -\/\ 1])\ /\ 2;}
+\DoxyCodeLine{00205\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Median:\ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00207\ \ \ \ \ mark\_current\ =\ mark\_three\_isogeny[(3\ *\ \mbox{\hyperlink{utilities_8h_a0f7d6f5d76f6d4b7f0bc5f22d30eee8d}{NUMBER\_OF\_BENCHMARK\_EXPERIMENTS}})\ /\ 4];}
+\DoxyCodeLine{00208\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Q3:\ \ \ \ \ \ \(\backslash\)033[1;33m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_current\ );}
+\DoxyCodeLine{00209\ \ \ \ \ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00211\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00212\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Min:\ \ \ \ \ \(\backslash\)033[1;34m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_min\ );}
+\DoxyCodeLine{00213\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Max:\ \ \ \ \ \(\backslash\)033[1;31m\%llu\(\backslash\)033[0m\(\backslash\)n"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})mark\_max\ );}
+\DoxyCodeLine{00214\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordtype}{char}\ benchmarks\_statistics\_file\_name[256];}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ strcpy(benchmarks\_statistics\_file\_name,\ \textcolor{stringliteral}{"{}BENCH-\/STATS-\/"{}});}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#if\ defined(CYCLES)}}
+\DoxyCodeLine{00222\ \ \ \ \ strcat(benchmarks\_statistics\_file\_name,\ \textcolor{stringliteral}{"{}CLOCK-\/CYCLES-\/"{}});}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#elif\ defined(TIME)}}
+\DoxyCodeLine{00224\ \ \ \ \ strcat(benchmarks\_statistics\_file\_name,\ \textcolor{stringliteral}{"{}NANOSECONDS-\/"{}});}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ strcat(benchmarks\_statistics\_file\_name,\ \mbox{\hyperlink{p254_8h_a5848c5162ccacf6bdef92b6bd9ade0cf}{FIELD\_NAME}});}
+\DoxyCodeLine{00228\ \ \ \ \ strcat(benchmarks\_statistics\_file\_name,\ \textcolor{stringliteral}{"{}.csv"{}});}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \mbox{\hyperlink{benchmarks__utils_8h_a6486617a210340ac684d0f4ad95198c4}{printStatisticsFile}}(benchmarks\_statistics\_file\_name,\ mark\_two\_isogeny,\ mark\_three\_isogeny);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00233\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{p254_8h_source_l00014}{BIT\+\_\+\+LENGTH\+\_\+\+PATH}}, \mbox{\hyperlink{cgl__hash_8c_source_l00009}{cgl\+\_\+hash\+\_\+digest\+\_\+2()}}, \mbox{\hyperlink{cgl__hash_8c_source_l00023}{cgl\+\_\+hash\+\_\+digest\+\_\+3()}}, \mbox{\hyperlink{cgl__hash_8c_source_l00016}{cgl\+\_\+hash\+\_\+init\+\_\+2()}}, \mbox{\hyperlink{cgl__hash_8c_source_l00032}{cgl\+\_\+hash\+\_\+init\+\_\+3()}}, \mbox{\hyperlink{p254_8h_source_l00006}{FIELD\+\_\+\+NAME}}, \mbox{\hyperlink{d_c_t_i_d_h_2src_2common_2fp_2fp2_8h_source_l00024}{fp2\+\_\+add}}, \mbox{\hyperlink{c-code_2src_2fp2_8c_source_l00049}{fp2\+\_\+set\+\_\+to\+\_\+one()}}, \mbox{\hyperlink{c-code_2src_2fp2_8c_source_l00054}{fp2\+\_\+set\+\_\+to\+\_\+zero()}}, \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}, \mbox{\hyperlink{isogeny__walks__2_8c_source_l00329}{isogeny\+\_\+walks\+\_\+sample\+\_\+bit\+\_\+string()}}, \mbox{\hyperlink{isogeny__walks__3_8c_source_l00212}{isogeny\+\_\+walks\+\_\+sample\+\_\+trit\+\_\+string()}}, \mbox{\hyperlink{utilities_8h_source_l00015}{NUMBER\+\_\+\+OF\+\_\+\+BENCHMARK\+\_\+\+EXPERIMENTS}}, \mbox{\hyperlink{benchmarks__utils_8h_source_l00037}{print\+Statistics\+File()}}, \mbox{\hyperlink{benchmarks__main_8c_source_l00042}{quicksort()}}, and \mbox{\hyperlink{p254_8h_source_l00015}{TRITLENGTH\+\_\+\+PATH}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d2e/benchmarks__main_8c_a3c04138a5bfe5d72780bb7e82a18e627_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100}\index{benchmarks\_main.c@{benchmarks\_main.c}!partition@{partition}}
+\index{partition@{partition}!benchmarks\_main.c@{benchmarks\_main.c}}
+\doxysubsubsection{\texorpdfstring{partition()}{partition()}}
+{\footnotesize\ttfamily \label{benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100} 
+int partition (\begin{DoxyParamCaption}\item[{ticks}]{arr}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{low}{, }\item[{int}]{high}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{benchmarks__main_8c_source_l00020}{20}} of file \mbox{\hyperlink{benchmarks__main_8c_source}{benchmarks\+\_\+main.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ ticks\ pivot\ =\ arr[high];\ \ \ \ \textcolor{comment}{//\ pivot}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ =\ (low\ -\/\ 1);\ \ \textcolor{comment}{//\ Index\ of\ smaller\ element}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}};}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{for}(\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ =\ low;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}\ <=\ high-\/\ 1;\ \mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}++)}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ current\ element\ is\ smaller\ than\ the\ pivot}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(arr[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]\ <\ pivot)}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}++;\ \ \ \ \textcolor{comment}{//\ increment\ index\ of\ smaller\ element}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}}(\&arr[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}],\ \&arr[\mbox{\hyperlink{prime__search_8m_ac86694252f8dfdb19aaeadc4b7c342c6}{j}}]);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}{swap}}(\&arr[\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ +\ 1],\ \&arr[high]);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{i}}\ +\ 1);}
+\DoxyCodeLine{00036\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}, \mbox{\hyperlink{prime__search_8m_source_l00012}{j}}, and \mbox{\hyperlink{benchmarks__main_8c_source_l00009}{swap()}}.
+
+
+
+Referenced by \mbox{\hyperlink{benchmarks__main_8c_source_l00042}{quicksort()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{d7/d2e/benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{d7/d2e/benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}\index{benchmarks\_main.c@{benchmarks\_main.c}!quicksort@{quicksort}}
+\index{quicksort@{quicksort}!benchmarks\_main.c@{benchmarks\_main.c}}
+\doxysubsubsection{\texorpdfstring{quicksort()}{quicksort()}}
+{\footnotesize\ttfamily \label{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58} 
+void quicksort (\begin{DoxyParamCaption}\item[{ticks}]{arr}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{low}{, }\item[{int}]{high}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{benchmarks__main_8c_source_l00042}{42}} of file \mbox{\hyperlink{benchmarks__main_8c_source}{benchmarks\+\_\+main.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (low\ <\ high)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pi\ is\ partitioning\ index,\ arr[p]\ is\ now\ at\ right\ place\ */}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pi\ =\ \mbox{\hyperlink{benchmarks__main_8c_a9a0f7cd0d7b5480b4195a6c7eb384100}{partition}}(arr,\ low,\ high);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Separately\ sort\ elements\ before}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ partition\ and\ after\ partition}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}{quicksort}}(arr,\ low,\ pi\ -\/\ 1);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58}{quicksort}}(arr,\ pi\ +\ 1,\ high);}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{benchmarks__main_8c_source_l00020}{partition()}}, and \mbox{\hyperlink{benchmarks__main_8c_source_l00042}{quicksort()}}.
+
+
+
+Referenced by \mbox{\hyperlink{benchmarks__main_8c_source_l00055}{main()}}, and \mbox{\hyperlink{benchmarks__main_8c_source_l00042}{quicksort()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{d7/d2e/benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{d7/d2e/benchmarks__main_8c_a25b9b49b09ce625f6376628ea621aa58_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6}\index{benchmarks\_main.c@{benchmarks\_main.c}!swap@{swap}}
+\index{swap@{swap}!benchmarks\_main.c@{benchmarks\_main.c}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily \label{benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6} 
+void swap (\begin{DoxyParamCaption}\item[{ticks \texorpdfstring{$\ast$}{*}}]{a}{, }\item[{ticks \texorpdfstring{$\ast$}{*}}]{b}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{benchmarks__main_8c_source_l00009}{9}} of file \mbox{\hyperlink{benchmarks__main_8c_source}{benchmarks\+\_\+main.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00010\ \ \ \ \ ticks\ t\ =\ *\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}};}
+\DoxyCodeLine{00011\ \ \ \ \ *\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}\ =\ *b;}
+\DoxyCodeLine{00012\ \ \ \ \ *b\ =\ t;}
+\DoxyCodeLine{00013\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{to__model_8m_source_l00012}{a}}.
+
+
+
+Referenced by \mbox{\hyperlink{src_2_c_t_i_d_h_2ctidh_8c_source_l00176}{action()}}, and \mbox{\hyperlink{benchmarks__main_8c_source_l00020}{partition()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d2e/benchmarks__main_8c_a37ff1021c7b3c98b667b003ea90614a6_icgraph}
+\end{center}
+\end{figure}

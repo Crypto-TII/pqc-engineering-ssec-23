@@ -1,0 +1,321 @@
+\doxysection{auth.\+py}
+\hypertarget{__vendor_2requests_2auth_8py_source}{}\label{__vendor_2requests_2auth_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/auth.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/requests/auth.py}}
+\mbox{\hyperlink{__vendor_2requests_2auth_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00002}00002\ \textcolor{stringliteral}{requests.auth}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00003}00003\ \textcolor{stringliteral}{\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~\string~}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00005}00005\ \textcolor{stringliteral}{This\ module\ contains\ the\ authentication\ handlers\ for\ Requests.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00008}00008\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00009}00009\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00010}00010\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00011}00011\ \textcolor{keyword}{import}\ threading}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00012}00012\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00013}00013\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00014}00014\ \textcolor{keyword}{from}\ base64\ \textcolor{keyword}{import}\ b64encode}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00016}00016\ \textcolor{keyword}{from}\ .\_internal\_utils\ \textcolor{keyword}{import}\ to\_native\_string}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00017}00017\ \textcolor{keyword}{from}\ .compat\ \textcolor{keyword}{import}\ basestring,\ str,\ urlparse}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00018}00018\ \textcolor{keyword}{from}\ .cookies\ \textcolor{keyword}{import}\ extract\_cookies\_to\_jar}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00019}00019\ \textcolor{keyword}{from}\ .utils\ \textcolor{keyword}{import}\ parse\_dict\_header}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00021}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_a7efc018aca2e397c4a73cfb25f919659}{00021}}\ CONTENT\_TYPE\_FORM\_URLENCODED\ =\ \textcolor{stringliteral}{"{}application/x-\/www-\/form-\/urlencoded"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_ad312817de6783c17d8b2d1fe2554412c}{00022}}\ CONTENT\_TYPE\_MULTI\_PART\ =\ \textcolor{stringliteral}{"{}multipart/form-\/data"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00025}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_af91fd5ed4c5622d5b56076051cd158a4}{00025}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_af91fd5ed4c5622d5b56076051cd158a4}{\_basic\_auth\_str}}(username,\ password):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00026}00026\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ a\ Basic\ Auth\ string."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00028}00028\ \ \ \ \ \textcolor{comment}{\#\ "{}I\ want\ us\ to\ put\ a\ big-\/ol'\ comment\ on\ top\ of\ it\ that}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00029}00029\ \ \ \ \ \textcolor{comment}{\#\ says\ that\ this\ behaviour\ is\ dumb\ but\ we\ need\ to\ preserve}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00030}00030\ \ \ \ \ \textcolor{comment}{\#\ it\ because\ people\ are\ relying\ on\ it."{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00031}00031\ \ \ \ \ \textcolor{comment}{\#\ \ \ \ -\/\ Lukasa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00032}00032\ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00033}00033\ \ \ \ \ \textcolor{comment}{\#\ These\ are\ here\ solely\ to\ maintain\ backwards\ compatibility}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00034}00034\ \ \ \ \ \textcolor{comment}{\#\ for\ things\ like\ ints.\ This\ will\ be\ removed\ in\ 3.0.0.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(username,\ basestring):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Non-\/string\ usernames\ will\ no\ longer\ be\ supported\ in\ Requests\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}3.0.0.\ Please\ convert\ the\ object\ you've\ passed\ in\ (\{!r\})\ to\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ string\ or\ bytes\ object\ in\ the\ near\ future\ to\ avoid\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}problems."{}}.format(username),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ category=DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ username\ =\ str(username)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(password,\ basestring):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Non-\/string\ passwords\ will\ no\ longer\ be\ supported\ in\ Requests\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}3.0.0.\ Please\ convert\ the\ object\ you've\ passed\ in\ (\{!r\})\ to\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ string\ or\ bytes\ object\ in\ the\ near\ future\ to\ avoid\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}problems."{}}.format(type(password)),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ category=DeprecationWarning,}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ password\ =\ str(password)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00054}00054\ \ \ \ \ \textcolor{comment}{\#\ -\/-\/\ End\ Removal\ -\/-\/}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(username,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ username\ =\ username.encode(\textcolor{stringliteral}{"{}latin1"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(password,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ password\ =\ password.encode(\textcolor{stringliteral}{"{}latin1"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00062}00062\ \ \ \ \ authstr\ =\ \textcolor{stringliteral}{"{}Basic\ "{}}\ +\ to\_native\_string(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ b64encode(b\textcolor{stringliteral}{"{}:"{}}.join((username,\ password))).strip()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00064}00064\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{return}\ authstr}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00069}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base}{00069}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base}{AuthBase}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00070}00070\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Base\ class\ that\ all\ auth\ implementations\ derive\ from"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base_a947c0d03d884ddb6565af60f2b9b976e}{00072}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base_a947c0d03d884ddb6565af60f2b9b976e}{\_\_call\_\_}}(self,\ r):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(\textcolor{stringliteral}{"{}Auth\ hooks\ must\ be\ callable."{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00076}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth}{00076}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth}{HTTPBasicAuth}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base}{AuthBase}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00077}00077\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Attaches\ HTTP\ Basic\ Authentication\ to\ the\ given\ Request\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00079}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9438ed32ac1327faf545bb7f3184640c}{00079}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9438ed32ac1327faf545bb7f3184640c}{\_\_init\_\_}}(self,\ username,\ password):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00080}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{00080}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}}\ =\ username}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00081}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9dbb300e28bc21c8dab41b01883918eb}{00081}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}}\ =\ password}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00083}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a909a2bc6a3c96fc53d3ae93305e81486}{00083}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a909a2bc6a3c96fc53d3ae93305e81486}{\_\_eq\_\_}}(self,\ other):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ all(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}}\ ==\ getattr(other,\ \textcolor{stringliteral}{"{}username"{}},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}}\ ==\ getattr(other,\ \textcolor{stringliteral}{"{}password"{}},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00091}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a939522e66c0597dfb811b626acacb484}{00091}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a939522e66c0597dfb811b626acacb484}{\_\_ne\_\_}}(self,\ other):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordflow}{not}\ self\ ==\ other}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00094}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a947c0d03d884ddb6565af60f2b9b976e}{00094}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a947c0d03d884ddb6565af60f2b9b976e}{\_\_call\_\_}}(self,\ r):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ r.headers[\textcolor{stringliteral}{"{}Authorization"{}}]\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_af91fd5ed4c5622d5b56076051cd158a4}{\_basic\_auth\_str}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00099}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_proxy_auth}{00099}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_proxy_auth}{HTTPProxyAuth}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth}{HTTPBasicAuth}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00100}00100\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Attaches\ HTTP\ Proxy\ Authentication\ to\ a\ given\ Request\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00102}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_proxy_auth_a947c0d03d884ddb6565af60f2b9b976e}{00102}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_proxy_auth_a947c0d03d884ddb6565af60f2b9b976e}{\_\_call\_\_}}(self,\ r):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ r.headers[\textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}]\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1requests_1_1auth_af91fd5ed4c5622d5b56076051cd158a4}{\_basic\_auth\_str}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_basic_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth}{00107}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth}{HTTPDigestAuth}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_auth_base}{AuthBase}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00108}00108\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Attaches\ HTTP\ Digest\ Authentication\ to\ the\ given\ Request\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00110}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a9438ed32ac1327faf545bb7f3184640c}{00110}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a9438ed32ac1327faf545bb7f3184640c}{\_\_init\_\_}}(self,\ username,\ password):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00111}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{00111}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}}\ =\ username}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00112}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a9dbb300e28bc21c8dab41b01883918eb}{00112}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}}\ =\ password}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Keep\ state\ in\ per-\/thread\ local\ storage}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00114}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{00114}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}\ =\ threading.local()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00116}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_aa0f57b70dab08b66d3a9f30492bfc660}{00116}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_aa0f57b70dab08b66d3a9f30492bfc660}{init\_per\_thread\_state}}(self):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ensure\ state\ is\ initialized\ just\ once\ per-\/thread}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ hasattr(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}},\ \textcolor{stringliteral}{"{}init"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.init\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.last\_nonce\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.nonce\_count\ =\ 0}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.pos\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00126}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a4ea2f5d4442086da2913a816cd34989f}{00126}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a4ea2f5d4442086da2913a816cd34989f}{build\_digest\_header}}(self,\ method,\ url):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ str}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ realm\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal[\textcolor{stringliteral}{"{}realm"{}}]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ nonce\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal[\textcolor{stringliteral}{"{}nonce"{}}]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ qop\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal.get(\textcolor{stringliteral}{"{}qop"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ algorithm\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal.get(\textcolor{stringliteral}{"{}algorithm"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ opaque\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal.get(\textcolor{stringliteral}{"{}opaque"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ hash\_utf8\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ algorithm\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \_algorithm\ =\ \textcolor{stringliteral}{"{}MD5"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \_algorithm\ =\ algorithm.upper()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ lambdas\ assume\ digest\ modules\ are\ imported\ at\ the\ top\ level}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}MD5"{}}\ \textcolor{keywordflow}{or}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}MD5-\/SESS"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }md5\_utf8(x):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(x,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ x.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hashlib.md5(x).hexdigest()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_utf8\ =\ md5\_utf8}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}SHA"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }sha\_utf8(x):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(x,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ x.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hashlib.sha1(x).hexdigest()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_utf8\ =\ sha\_utf8}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}SHA-\/256"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }sha256\_utf8(x):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(x,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ x.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hashlib.sha256(x).hexdigest()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_utf8\ =\ sha256\_utf8}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}SHA-\/512"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }sha512\_utf8(x):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(x,\ str):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ x.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hashlib.sha512(x).hexdigest()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_utf8\ =\ sha512\_utf8}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ KD\ =\ \textcolor{keyword}{lambda}\ s,\ d:\ hash\_utf8(f\textcolor{stringliteral}{"{}\{s\}:\{d\}"{}})\ \ \textcolor{comment}{\#\ noqa:E731}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hash\_utf8\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ XXX\ not\ implemented\ yet}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ entdig\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ p\_parsed\ =\ urlparse(url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ path\ is\ request-\/uri\ defined\ in\ RFC\ 2616\ which\ should\ not\ be\ empty}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ path\ =\ p\_parsed.path\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}/"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ p\_parsed.query:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ path\ +=\ f\textcolor{stringliteral}{"{}?\{p\_parsed.query\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ A1\ =\ f\textcolor{stringliteral}{"{}\{self.username\}:\{realm\}:\{self.password\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ A2\ =\ f\textcolor{stringliteral}{"{}\{method\}:\{path\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ HA1\ =\ hash\_utf8(A1)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ HA2\ =\ hash\_utf8(A2)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ nonce\ ==\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.last\_nonce:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.nonce\_count\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.nonce\_count\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ ncvalue\ =\ f\textcolor{stringliteral}{"{}\{self.\_thread\_local.nonce\_count:08x\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ s\ =\ str(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.nonce\_count).encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ s\ +=\ nonce.encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ s\ +=\ time.ctime().encode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ s\ +=\ os.urandom(8)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ cnonce\ =\ hashlib.sha1(s).hexdigest()[:16]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_algorithm\ ==\ \textcolor{stringliteral}{"{}MD5-\/SESS"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ HA1\ =\ hash\_utf8(f\textcolor{stringliteral}{"{}\{HA1\}:\{nonce\}:\{cnonce\}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ qop:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ respdig\ =\ KD(HA1,\ f\textcolor{stringliteral}{"{}\{nonce\}:\{HA2\}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ qop\ ==\ \textcolor{stringliteral}{"{}auth"{}}\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}auth"{}}\ \textcolor{keywordflow}{in}\ qop.split(\textcolor{stringliteral}{"{},"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ noncebit\ =\ f\textcolor{stringliteral}{"{}\{nonce\}:\{ncvalue\}:\{cnonce\}:auth:\{HA2\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ respdig\ =\ KD(HA1,\ noncebit)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ XXX\ handle\ auth-\/int.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.last\_nonce\ =\ nonce}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ XXX\ should\ the\ partial\ digests\ be\ encoded\ too?}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ base\ =\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{'username="{}\{self.username\}"{},\ realm="{}\{realm\}"{},\ nonce="{}\{nonce\}"{},\ '}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{'uri="{}\{path\}"{},\ response="{}\{respdig\}"{}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ opaque:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ base\ +=\ f\textcolor{stringliteral}{',\ opaque="{}\{opaque\}"{}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ algorithm:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ base\ +=\ f\textcolor{stringliteral}{',\ algorithm="{}\{algorithm\}"{}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ entdig:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ base\ +=\ f\textcolor{stringliteral}{',\ digest="{}\{entdig\}"{}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ qop:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ base\ +=\ f\textcolor{stringliteral}{',\ qop="{}auth"{},\ nc=\{ncvalue\},\ cnonce="{}\{cnonce\}"{}'}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}Digest\ \{base\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00236}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a5c3faab3c80352f9276cbaeb64761fab}{00236}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_abe0c60b9f9bc947882b88f682a471f36}{handle\_redirect}}(self,\ r,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Reset\ num\_401\_calls\ counter\ on\ redirects."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ r.is\_redirect:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00241}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a476ef4bef2490f3506b33871bf8f1074}{00241}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ac2b1c4e1efadbfec951704df43bb8668}{handle\_401}}(self,\ r,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Takes\ the\ given\ response\ and\ tries\ digest-\/auth,\ if\ needed.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00244}00244\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ requests.Response}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ response\ is\ not\ 4xx,\ do\ not\ auth}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ See\ https://github.com/psf/requests/issues/3772}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ 400\ <=\ r.status\_code\ <\ 500:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.pos\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Rewind\ the\ file\ position\ indicator\ of\ the\ body\ to\ where}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ was\ to\ resend\ the\ request.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ r.request.body.seek(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.pos)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ s\_auth\ =\ r.headers.get(\textcolor{stringliteral}{"{}www-\/authenticate"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}digest"{}}\ \textcolor{keywordflow}{in}\ s\_auth.lower()\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ <\ 2:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ pat\ =\ re.compile(\textcolor{stringliteral}{r"{}digest\ "{}},\ flags=re.IGNORECASE)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.chal\ =\ parse\_dict\_header(pat.sub(\textcolor{stringliteral}{"{}"{}},\ s\_auth,\ count=1))}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Consume\ content\ and\ release\ the\ original\ connection}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ allow\ our\ new\ request\ to\ reuse\ the\ same\ one.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ r.content}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ r.close()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ prep\ =\ r.request.copy()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(prep.\_cookies,\ r.request,\ r.raw)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ prep.prepare\_cookies(prep.\_cookies)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ prep.headers[\textcolor{stringliteral}{"{}Authorization"{}}]\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a4ea2f5d4442086da2913a816cd34989f}{build\_digest\_header}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prep.method,\ prep.url}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \_r\ =\ r.connection.send(prep,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \_r.history.append(r)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \_r.request\ =\ prep}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a947c0d03d884ddb6565af60f2b9b976e}{00286}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a947c0d03d884ddb6565af60f2b9b976e}{\_\_call\_\_}}(self,\ r):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Initialize\ per-\/thread\ state,\ if\ needed}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_aa0f57b70dab08b66d3a9f30492bfc660}{init\_per\_thread\_state}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we\ have\ a\ saved\ nonce,\ skip\ the\ 401}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.last\_nonce:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ r.headers[\textcolor{stringliteral}{"{}Authorization"{}}]\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a4ea2f5d4442086da2913a816cd34989f}{build\_digest\_header}}(r.method,\ r.url)}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.pos\ =\ r.body.tell()}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ In\ the\ case\ of\ HTTPDigestAuth\ being\ reused\ and\ the\ body\ of}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ previous\ request\ was\ a\ file-\/like\ object,\ pos\ has\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file\ position\ of\ the\ previous\ body.\ Ensure\ it's\ set\ to}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ None.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.pos\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00300}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ac2b1c4e1efadbfec951704df43bb8668}{00300}}\ \ \ \ \ \ \ \ \ r.register\_hook(\textcolor{stringliteral}{"{}response"{}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ac2b1c4e1efadbfec951704df43bb8668}{handle\_401}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00301}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_abe0c60b9f9bc947882b88f682a471f36}{00301}}\ \ \ \ \ \ \ \ \ r.register\_hook(\textcolor{stringliteral}{"{}response"{}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_abe0c60b9f9bc947882b88f682a471f36}{handle\_redirect}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_ae9f8c3a773d85b0575903f9ff448ae4c}{\_thread\_local}}.num\_401\_calls\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00306}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a909a2bc6a3c96fc53d3ae93305e81486}{00306}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a909a2bc6a3c96fc53d3ae93305e81486}{\_\_eq\_\_}}(self,\ other):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ all(}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a0adcbe0e0e6f64a29b1d205ede9632c1}{username}}\ ==\ getattr(other,\ \textcolor{stringliteral}{"{}username"{}},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a9dbb300e28bc21c8dab41b01883918eb}{password}}\ ==\ getattr(other,\ \textcolor{stringliteral}{"{}password"{}},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00314}\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a939522e66c0597dfb811b626acacb484}{00314}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1auth_1_1_h_t_t_p_digest_auth_a939522e66c0597dfb811b626acacb484}{\_\_ne\_\_}}(self,\ other):}
+\DoxyCodeLine{\Hypertarget{__vendor_2requests_2auth_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordflow}{not}\ self\ ==\ other}
+
+\end{DoxyCode}

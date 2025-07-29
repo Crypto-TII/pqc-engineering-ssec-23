@@ -1,0 +1,84 @@
+\doxysection{pip.\+\_\+internal.\+metadata.\+importlib.\+\_\+compat Namespace Reference}
+\hypertarget{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat}{}\label{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat}\index{pip.\_internal.metadata.importlib.\_compat@{pip.\_internal.metadata.importlib.\_compat}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_1_1_bad_metadata}{Bad\+Metadata}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_1_1_base_path}{Base\+Path}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Optional\mbox{[}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_1_1_base_path}{Base\+Path}}\mbox{]} \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_aba62313417b1dce68f28e99e5f6a2011}{get\+\_\+info\+\_\+location}} (importlib.\+metadata.\+Distribution d)
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_a5d85832f29860d0f6b14a6fb24644c1a}{get\+\_\+dist\+\_\+name}} (importlib.\+metadata.\+Distribution dist)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_a5d85832f29860d0f6b14a6fb24644c1a}\index{pip.\_internal.metadata.importlib.\_compat@{pip.\_internal.metadata.importlib.\_compat}!get\_dist\_name@{get\_dist\_name}}
+\index{get\_dist\_name@{get\_dist\_name}!pip.\_internal.metadata.importlib.\_compat@{pip.\_internal.metadata.importlib.\_compat}}
+\doxysubsubsection{\texorpdfstring{get\_dist\_name()}{get\_dist\_name()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_a5d85832f29860d0f6b14a6fb24644c1a} 
+ str get\+\_\+dist\+\_\+name (\begin{DoxyParamCaption}\item[{importlib.\+metadata.\+Distribution}]{dist}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the distribution's project name.
+
+The ``name`` attribute is only available in Python 3.10 or later. We are
+targeting exactly that, but Mypy does not know this.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2metadata_2importlib_2__compat_8py_source_l00046}{46}} of file \mbox{\hyperlink{__internal_2metadata_2importlib_2__compat_8py_source}{\+\_\+compat.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00046\ \textcolor{keyword}{def\ }get\_dist\_name(dist:\ importlib.metadata.Distribution)\ -\/>\ str:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ distribution's\ project\ name.}}
+\DoxyCodeLine{00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00049\ \textcolor{stringliteral}{\ \ \ \ The\ \`{}\`{}name\`{}\`{}\ attribute\ is\ only\ available\ in\ Python\ 3.10\ or\ later.\ We\ are}}
+\DoxyCodeLine{00050\ \textcolor{stringliteral}{\ \ \ \ targeting\ exactly\ that,\ but\ Mypy\ does\ not\ know\ this.}}
+\DoxyCodeLine{00051\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00052\ \ \ \ \ name\ =\ cast(Any,\ dist).name}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(name,\ str):}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ BadMetadata(dist,\ reason=\textcolor{stringliteral}{"{}invalid\ metadata\ entry\ 'name'"{}})}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{return}\ name}
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_aba62313417b1dce68f28e99e5f6a2011}\index{pip.\_internal.metadata.importlib.\_compat@{pip.\_internal.metadata.importlib.\_compat}!get\_info\_location@{get\_info\_location}}
+\index{get\_info\_location@{get\_info\_location}!pip.\_internal.metadata.importlib.\_compat@{pip.\_internal.metadata.importlib.\_compat}}
+\doxysubsubsection{\texorpdfstring{get\_info\_location()}{get\_info\_location()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_aba62313417b1dce68f28e99e5f6a2011} 
+ Optional\mbox{[}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__compat_1_1_base_path}{Base\+Path}}\mbox{]} get\+\_\+info\+\_\+location (\begin{DoxyParamCaption}\item[{importlib.\+metadata.\+Distribution}]{d}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Find the path to the distribution's metadata directory.
+
+HACK: This relies on importlib.metadata's private ``_path`` attribute. Not
+all distributions exist on disk, so importlib.metadata is correct to not
+expose the attribute as public. But pip's code base is old and not as clean,
+so we do this to avoid having to rewrite too many things. Hopefully we can
+eliminate this some day.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{__internal_2metadata_2importlib_2__compat_8py_source_l00034}{34}} of file \mbox{\hyperlink{__internal_2metadata_2importlib_2__compat_8py_source}{\+\_\+compat.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00034\ \textcolor{keyword}{def\ }get\_info\_location(d:\ importlib.metadata.Distribution)\ -\/>\ Optional[BasePath]:}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Find\ the\ path\ to\ the\ distribution's\ metadata\ directory.}}
+\DoxyCodeLine{00036\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00037\ \textcolor{stringliteral}{\ \ \ \ HACK:\ This\ relies\ on\ importlib.metadata's\ private\ \`{}\`{}\_path\`{}\`{}\ attribute.\ Not}}
+\DoxyCodeLine{00038\ \textcolor{stringliteral}{\ \ \ \ all\ distributions\ exist\ on\ disk,\ so\ importlib.metadata\ is\ correct\ to\ not}}
+\DoxyCodeLine{00039\ \textcolor{stringliteral}{\ \ \ \ expose\ the\ attribute\ as\ public.\ But\ pip's\ code\ base\ is\ old\ and\ not\ as\ clean,}}
+\DoxyCodeLine{00040\ \textcolor{stringliteral}{\ \ \ \ so\ we\ do\ this\ to\ avoid\ having\ to\ rewrite\ too\ many\ things.\ Hopefully\ we\ can}}
+\DoxyCodeLine{00041\ \textcolor{stringliteral}{\ \ \ \ eliminate\ this\ some\ day.}}
+\DoxyCodeLine{00042\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(d,\ \textcolor{stringliteral}{"{}\_path"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ }
+
+\end{DoxyCode}

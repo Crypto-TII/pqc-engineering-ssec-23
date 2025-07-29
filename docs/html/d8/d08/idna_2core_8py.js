@@ -1,0 +1,28 @@
+var idna_2core_8py =
+[
+    [ "IDNAError", "d7/d4a/classpip_1_1__vendor_1_1idna_1_1core_1_1_i_d_n_a_error.html", null ],
+    [ "IDNABidiError", "d6/d64/classpip_1_1__vendor_1_1idna_1_1core_1_1_i_d_n_a_bidi_error.html", null ],
+    [ "InvalidCodepoint", "d6/dc4/classpip_1_1__vendor_1_1idna_1_1core_1_1_invalid_codepoint.html", null ],
+    [ "InvalidCodepointContext", "df/d24/classpip_1_1__vendor_1_1idna_1_1core_1_1_invalid_codepoint_context.html", null ],
+    [ "pip._vendor.idna.core._combining_class", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#af2c62e4cba987622c4985702cbb901f2", null ],
+    [ "pip._vendor.idna.core._is_script", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ac50867907d1002e94725ab2fb4713478", null ],
+    [ "pip._vendor.idna.core._punycode", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a1756e2dc74e8f28a611e97614fadc111", null ],
+    [ "pip._vendor.idna.core._unot", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#aa67da070d27c359ffafc6a595e6f88d9", null ],
+    [ "pip._vendor.idna.core.alabel", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a07eb3ccf4036550bdf0f0569b1e920b7", null ],
+    [ "pip._vendor.idna.core.check_bidi", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a760ca706d66bcbad1e600927d1fa5e8c", null ],
+    [ "pip._vendor.idna.core.check_hyphen_ok", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a233100a07347ce57253f86f588b9e882", null ],
+    [ "pip._vendor.idna.core.check_initial_combiner", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a7a645999061dced1775a0d3d61a63db4", null ],
+    [ "pip._vendor.idna.core.check_label", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#af8abb65bd042a9f19308207789430dd0", null ],
+    [ "pip._vendor.idna.core.check_nfc", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a5abac39ae0a322b9503ea3c3a5ad972d", null ],
+    [ "pip._vendor.idna.core.decode", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a99b2b65376b5bd6321f2ca7f6e65a988", null ],
+    [ "pip._vendor.idna.core.encode", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a148469d67212419ae0324db89f029a20", null ],
+    [ "pip._vendor.idna.core.ulabel", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ac9300c9fbdefb7b78f118fce86079e5a", null ],
+    [ "pip._vendor.idna.core.uts46_remap", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a7f814e537c2894fe5a8720c105b94bf6", null ],
+    [ "pip._vendor.idna.core.valid_contextj", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ae9c747ad564e41fab06c01dbe96eb2be", null ],
+    [ "pip._vendor.idna.core.valid_contexto", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ab57a4edabc1c53aaa61298f8d6b5c779", null ],
+    [ "pip._vendor.idna.core.valid_label_length", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a68fca8d591564f88d0b3c0cdfd5eddd3", null ],
+    [ "pip._vendor.idna.core.valid_string_length", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ad28c0a27a1316f1fd8f3d57d8a55feb0", null ],
+    [ "pip._vendor.idna.core._alabel_prefix", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#af18e999c8304e3416a38856b9d8d6cc5", null ],
+    [ "pip._vendor.idna.core._unicode_dots_re", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a103895b0a184698d53e5058932bf3efa", null ],
+    [ "pip._vendor.idna.core._virama_combining_class", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ae6eacd58f7c2343723b1d8d3231df82b", null ]
+];

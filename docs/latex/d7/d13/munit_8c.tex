@@ -1,0 +1,1650 @@
+\doxysection{E\+:/pqc-\/engineering-\/ssec-\/23/c-\/code/tests/munit.c File Reference}
+\hypertarget{munit_8c}{}\label{munit_8c}\index{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/tests/munit.c@{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/tests/munit.c}}
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$setjmp.\+h$>$}\newline
+{\ttfamily \#include $<$locale.\+h$>$}\newline
+{\ttfamily \#include $<$langinfo.\+h$>$}\newline
+{\ttfamily \#include $<$strings.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include "{}munit.\+h"{}}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+Include dependency graph for munit.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d6/de9/munit_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}}
+\item 
+struct \mbox{\hyperlink{struct_munit_report}{Munit\+Report}}
+\item 
+struct \mbox{\hyperlink{struct_munit_test_runner}{Munit\+Test\+Runner}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a47e0de09483f24fba56fa610b9e6af81}{MUNIT\+\_\+\+OUTPUT\+\_\+\+FILE}}~stdout
+\item 
+\#define \mbox{\hyperlink{munit_8c_a479f8053dc00fcf8db2bd625004e8120}{MUNIT\+\_\+\+TEST\+\_\+\+TIME\+\_\+\+FORMAT}}~"{}0.\+8f"{}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a00bc786bed32a6cdfa54a53c3575cdf4}{MUNIT\+\_\+\+TEST\+\_\+\+NAME\+\_\+\+LEN}}~60
+\item 
+\#define \mbox{\hyperlink{munit_8c_aa572c8927c467232412e0ac8c90afbf2}{MUNIT\+\_\+\+ENABLE\+\_\+\+TIMING}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a3024ccd4a9af5109d24e6c57565d74a1}{\+\_\+\+POSIX\+\_\+\+C\+\_\+\+SOURCE}}~200809L
+\item 
+\#define \mbox{\hyperlink{munit_8c_a5d38a43438aa7cd18767799d8f96af13}{MUNIT\+\_\+\+NL\+\_\+\+LANGINFO}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_ac6a52a09b64fc1d06a243a9f1f38a7f1}{MUNIT\+\_\+\+STRINGIFY}}(x)
+\item 
+\#define \mbox{\hyperlink{munit_8c_a8a03c5eee6ecf64d116b2f5c50df77bd}{MUNIT\+\_\+\+XSTRINGIFY}}(x)
+\item 
+\#define \mbox{\hyperlink{munit_8c_abb2860370e1a5d6ef3fbc082e4ac5920}{MUNIT\+\_\+\+STRERROR\+\_\+\+LEN}}~80
+\item 
+\#define \mbox{\hyperlink{munit_8c_a2d8a192bec9dabd8adc588392f04ee53}{psnip\+\_\+uint64\+\_\+t}}~\mbox{\hyperlink{munit_8h_a5f89d1c62a0dce2d4102ba0ea2cdb851}{munit\+\_\+uint64\+\_\+t}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}}~\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a3710ab17c5cccaf9521be5400f2f943e}{PSNIP\+\_\+\+CLOCK\+\_\+H}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a6151ae33ad3fdf6db5ad72fbc3618fd0}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+COMPILER\+\_\+\+ATTRIBUTES}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}}~\mbox{\hyperlink{munit_8c_a6151ae33ad3fdf6db5ad72fbc3618fd0}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+COMPILER\+\_\+\+ATTRIBUTES}} static
+\item 
+\#define \mbox{\hyperlink{munit_8c_a97cc14f2fb985cb61c359f4ddafa125d}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK\+\_\+\+GETTIME}}~1
+\item 
+\#define \mbox{\hyperlink{munit_8c_a8afbc7e34a7908ca50d741e556792bfe}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+TIME}}~2
+\item 
+\#define \mbox{\hyperlink{munit_8c_aefdd03985c9801a0f775cd6b580ef442}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETTIMEOFDAY}}~3
+\item 
+\#define \mbox{\hyperlink{munit_8c_a84a2bf29f6c6fe1809e1cdfdef11f6b2}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+QUERYPERFORMANCECOUNTER}}~4
+\item 
+\#define \mbox{\hyperlink{munit_8c_a4d44008a1afe89affdd17e9f6ab9fa5c}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+MACH\+\_\+\+ABSOLUTE\+\_\+\+TIME}}~5
+\item 
+\#define \mbox{\hyperlink{munit_8c_a73d592085eec246b9b794428d4e2ffe9}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK}}~6
+\item 
+\#define \mbox{\hyperlink{munit_8c_aecaca0eea84692b2b7943ae8de34c07c}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETPROCESSTIMES}}~7
+\item 
+\#define \mbox{\hyperlink{munit_8c_a0c79b12eb4239203aebc4bd7789c8693}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETRUSAGE}}~8
+\item 
+\#define \mbox{\hyperlink{munit_8c_a3b3b0e71b0bd773b2ee56c87b9337ad4}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETSYSTEMTIMEPRECISEASFILETIME}}~9
+\item 
+\#define \mbox{\hyperlink{munit_8c_ac7e9ba691304e8590c571ef407f8c9bd}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETTICKCOUNT64}}~10
+\item 
+\#define \mbox{\hyperlink{munit_8c_ab5044d54f7e8a7d837fade0d93287192}{PSNIP\+\_\+\+CLOCK\+\_\+\+UNREACHABLE}}()
+\item 
+\#define \mbox{\hyperlink{munit_8c_a5dc469c9a02a748b2202f5a920a2663e}{PSNIP\+\_\+\+CLOCK\+\_\+\+WALL\+\_\+\+METHOD}}~\mbox{\hyperlink{munit_8c_a8afbc7e34a7908ca50d741e556792bfe}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+TIME}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a6e37538e9122fdfa55b7d39c80107a91}{PSNIP\+\_\+\+CLOCK\+\_\+\+CPU\+\_\+\+METHOD}}~\mbox{\hyperlink{munit_8c_a73d592085eec246b9b794428d4e2ffe9}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK}}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC}}~((\mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}}) (1000000000\+ULL))
+\item 
+\#define \mbox{\hyperlink{munit_8c_a7a749780c76ea55a9f7f8f3e9fea0c63}{ATOMIC\+\_\+\+UINT32\+\_\+T}}~volatile uint32\+\_\+t
+\item 
+\#define \mbox{\hyperlink{munit_8c_a6ede33c120d70e15074cd1fb99ee55c3}{ATOMIC\+\_\+\+UINT32\+\_\+\+INIT}}(x)
+\item 
+\#define \mbox{\hyperlink{munit_8c_aea8502ca64138e80900ae1cbb2f988c0}{munit\+\_\+atomic\+\_\+store}}(dest,  value)
+\item 
+\#define \mbox{\hyperlink{munit_8c_af8890c4f21fb492ddaab9c1beb012be9}{munit\+\_\+atomic\+\_\+load}}(src)
+\item 
+\#define \mbox{\hyperlink{munit_8c_a3bdf385d1aaf2c91cc3544270237346f}{MUNIT\+\_\+\+PRNG\+\_\+\+MULTIPLIER}}~(747796405U)
+\item 
+\#define \mbox{\hyperlink{munit_8c_a567e9fa367142306a25b3f9cb7a58214}{MUNIT\+\_\+\+PRNG\+\_\+\+INCREMENT}}~(1729U)
+\item 
+\#define \mbox{\hyperlink{munit_8c_aebbcca3bb96d1c92a6b1d97f6b935c3c}{MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+OK}}~"{}OK   "{}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a5639c8117cf265cc1ebc237a823d48b3}{MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+SKIP}}~"{}SKIP "{}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a983521491948f7cc1b1069387cbce5ea}{MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+FAIL}}~"{}FAIL "{}
+\item 
+\#define \mbox{\hyperlink{munit_8c_af92a112845f1dfcf85c8bcee452267ae}{MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+ERROR}}~"{}ERROR"{}
+\item 
+\#define \mbox{\hyperlink{munit_8c_a2c6bea10571b533a9a88bfb9b3a117bd}{MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+TODO}}~"{}TODO "{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}} \{ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+WALL}} = 1
+, \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+CPU}} = 2
+, \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+MONOTONIC}} = 3
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{munit_8c_a91d1a1ca1100148ba6a71d46301ac5ee}{munit\+\_\+logf\+\_\+ex}} (\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1}{Munit\+Log\+Level}} level, const char \texorpdfstring{$\ast$}{*}filename, int line, const char \texorpdfstring{$\ast$}{*}format,...)
+\item 
+void \mbox{\hyperlink{munit_8c_a8c3a127617d13a0a407b906e9e6c81fb}{munit\+\_\+errorf\+\_\+ex}} (const char \texorpdfstring{$\ast$}{*}filename, int line, const char \texorpdfstring{$\ast$}{*}format,...)
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{munit_8c_ad14a33234eee38e3faa943e14b9fa874}{munit\+\_\+malloc\+\_\+ex}} (const char \texorpdfstring{$\ast$}{*}filename, int line, size\+\_\+t size)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} \mbox{\hyperlink{munit_8c_a3d6f693b07f7c5f1e1d5a4270132daae}{psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+precision}} (void)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int \mbox{\hyperlink{munit_8c_a12a2ac48afaed6bcc7896d92c1420e3d}{psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+time}} (struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}res)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} \mbox{\hyperlink{munit_8c_a5ab643fbf15da6629efe0367a17ef9c9}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+precision}} (void)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int \mbox{\hyperlink{munit_8c_a9f8f21fa831b45847855bf4025db0935}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+time}} (struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}res)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} \mbox{\hyperlink{munit_8c_a6efe0c9463d2f1f09029c6058a5c2a81}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+precision}} (void)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int \mbox{\hyperlink{munit_8c_aaf6da39f7c6c03486a2b520106f33afb}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+time}} (struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}res)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} \mbox{\hyperlink{munit_8c_a10505b39a259cff310005a488505bfe4}{psnip\+\_\+clock\+\_\+get\+\_\+precision}} (enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}} clock\+\_\+type)
+\item 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int \mbox{\hyperlink{munit_8c_ac95b680812516e1af53ef95ac27444ec}{psnip\+\_\+clock\+\_\+get\+\_\+time}} (enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}} clock\+\_\+type, struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}res)
+\item 
+void \mbox{\hyperlink{munit_8c_a4f6a7ec63953ca00afb69bc6758bce5d}{munit\+\_\+rand\+\_\+seed}} (\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}} seed)
+\item 
+\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}} \mbox{\hyperlink{munit_8c_aa316d4cda6aec6e15e5d3a04db8d81cf}{munit\+\_\+rand\+\_\+uint32}} (void)
+\item 
+void \mbox{\hyperlink{munit_8c_a7b0d5bdbeb2226e9a33f50ec3824e1d7}{munit\+\_\+rand\+\_\+memory}} (size\+\_\+t size, \mbox{\hyperlink{munit_8h_a1ed130e6fd548c480852606b6342b7c0}{munit\+\_\+uint8\+\_\+t}} data\mbox{[}\mbox{\hyperlink{munit_8h_a1b1a67220a7d6748d11801a7157105a3}{MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM}}(size)\mbox{]})
+\item 
+int \mbox{\hyperlink{munit_8c_a112d88011f16b33f38ad7dc20915ccde}{munit\+\_\+rand\+\_\+int\+\_\+range}} (int min, int max)
+\item 
+double \mbox{\hyperlink{munit_8c_abe7488ba4be0436fb14f9de219aea265}{munit\+\_\+rand\+\_\+double}} (void)
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{munit_8c_afe853c0182f7f4b3de7a9801d7b9d0fd}{munit\+\_\+parameters\+\_\+get}} (const \mbox{\hyperlink{struct_munit_parameter}{Munit\+Parameter}} params\mbox{[}$\,$\mbox{]}, const char \texorpdfstring{$\ast$}{*}key)
+\item 
+int \mbox{\hyperlink{munit_8c_a4a757c6595f5f2a2a74ec6c300383c62}{munit\+\_\+suite\+\_\+main\+\_\+custom}} (const \mbox{\hyperlink{munit_8h_a11be8729ef6c4c75fe5d163873c6e17c}{Munit\+Suite}} \texorpdfstring{$\ast$}{*}suite, void \texorpdfstring{$\ast$}{*}user\+\_\+data, int argc, char \texorpdfstring{$\ast$}{*}const argv\mbox{[}\mbox{\hyperlink{munit_8h_a1b1a67220a7d6748d11801a7157105a3}{MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM}}(argc+1)\mbox{]}, const \mbox{\hyperlink{munit_8h_aa051cb59f39cb065bd172ba4e3c6ee82}{Munit\+Argument}} arguments\mbox{[}$\,$\mbox{]})
+\item 
+int \mbox{\hyperlink{munit_8c_a9734fe52a7ef0fe014bd223b3529e708}{munit\+\_\+suite\+\_\+main}} (const \mbox{\hyperlink{munit_8h_a11be8729ef6c4c75fe5d163873c6e17c}{Munit\+Suite}} \texorpdfstring{$\ast$}{*}suite, void \texorpdfstring{$\ast$}{*}user\+\_\+data, int argc, char \texorpdfstring{$\ast$}{*}const argv\mbox{[}\mbox{\hyperlink{munit_8h_a1b1a67220a7d6748d11801a7157105a3}{MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM}}(argc+1)\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{munit_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{munit_8c_a3024ccd4a9af5109d24e6c57565d74a1}\index{munit.c@{munit.c}!\_POSIX\_C\_SOURCE@{\_POSIX\_C\_SOURCE}}
+\index{\_POSIX\_C\_SOURCE@{\_POSIX\_C\_SOURCE}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{\_POSIX\_C\_SOURCE}{\_POSIX\_C\_SOURCE}}
+{\footnotesize\ttfamily \label{munit_8c_a3024ccd4a9af5109d24e6c57565d74a1} 
+\#define \+\_\+\+POSIX\+\_\+\+C\+\_\+\+SOURCE~200809L}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00061}{61}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a6ede33c120d70e15074cd1fb99ee55c3}\index{munit.c@{munit.c}!ATOMIC\_UINT32\_INIT@{ATOMIC\_UINT32\_INIT}}
+\index{ATOMIC\_UINT32\_INIT@{ATOMIC\_UINT32\_INIT}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{ATOMIC\_UINT32\_INIT}{ATOMIC\_UINT32\_INIT}}
+{\footnotesize\ttfamily \label{munit_8c_a6ede33c120d70e15074cd1fb99ee55c3} 
+\#define ATOMIC\+\_\+\+UINT32\+\_\+\+INIT(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(x)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00826}{826}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a7a749780c76ea55a9f7f8f3e9fea0c63}\index{munit.c@{munit.c}!ATOMIC\_UINT32\_T@{ATOMIC\_UINT32\_T}}
+\index{ATOMIC\_UINT32\_T@{ATOMIC\_UINT32\_T}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{ATOMIC\_UINT32\_T}{ATOMIC\_UINT32\_T}}
+{\footnotesize\ttfamily \label{munit_8c_a7a749780c76ea55a9f7f8f3e9fea0c63} 
+\#define ATOMIC\+\_\+\+UINT32\+\_\+T~volatile uint32\+\_\+t}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00825}{825}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_af8890c4f21fb492ddaab9c1beb012be9}\index{munit.c@{munit.c}!munit\_atomic\_load@{munit\_atomic\_load}}
+\index{munit\_atomic\_load@{munit\_atomic\_load}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_atomic\_load}{munit\_atomic\_load}}
+{\footnotesize\ttfamily \label{munit_8c_af8890c4f21fb492ddaab9c1beb012be9} 
+\#define munit\+\_\+atomic\+\_\+load(\begin{DoxyParamCaption}\item[{}]{src}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(*(src))}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00885}{885}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l01028}{munit\+\_\+rand\+\_\+double()}}, \mbox{\hyperlink{munit_8c_source_l00971}{munit\+\_\+rand\+\_\+memory()}}, and \mbox{\hyperlink{munit_8c_source_l00942}{munit\+\_\+rand\+\_\+uint32()}}.
+
+\Hypertarget{munit_8c_aea8502ca64138e80900ae1cbb2f988c0}\index{munit.c@{munit.c}!munit\_atomic\_store@{munit\_atomic\_store}}
+\index{munit\_atomic\_store@{munit\_atomic\_store}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_atomic\_store}{munit\_atomic\_store}}
+{\footnotesize\ttfamily \label{munit_8c_aea8502ca64138e80900ae1cbb2f988c0} 
+\#define munit\+\_\+atomic\+\_\+store(\begin{DoxyParamCaption}\item[{}]{dest}{, }\item[{}]{value}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{do}\ \{\ *(dest)\ =\ (value);\ \}\ \textcolor{keywordflow}{while}\ (0)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00884}{884}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00913}{munit\+\_\+rand\+\_\+seed()}}.
+
+\Hypertarget{munit_8c_aa572c8927c467232412e0ac8c90afbf2}\index{munit.c@{munit.c}!MUNIT\_ENABLE\_TIMING@{MUNIT\_ENABLE\_TIMING}}
+\index{MUNIT\_ENABLE\_TIMING@{MUNIT\_ENABLE\_TIMING}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_ENABLE\_TIMING}{MUNIT\_ENABLE\_TIMING}}
+{\footnotesize\ttfamily \label{munit_8c_aa572c8927c467232412e0ac8c90afbf2} 
+\#define MUNIT\+\_\+\+ENABLE\+\_\+\+TIMING}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00052}{52}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a5d38a43438aa7cd18767799d8f96af13}\index{munit.c@{munit.c}!MUNIT\_NL\_LANGINFO@{MUNIT\_NL\_LANGINFO}}
+\index{MUNIT\_NL\_LANGINFO@{MUNIT\_NL\_LANGINFO}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_NL\_LANGINFO}{MUNIT\_NL\_LANGINFO}}
+{\footnotesize\ttfamily \label{munit_8c_a5d38a43438aa7cd18767799d8f96af13} 
+\#define MUNIT\+\_\+\+NL\+\_\+\+LANGINFO}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00102}{102}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a47e0de09483f24fba56fa610b9e6af81}\index{munit.c@{munit.c}!MUNIT\_OUTPUT\_FILE@{MUNIT\_OUTPUT\_FILE}}
+\index{MUNIT\_OUTPUT\_FILE@{MUNIT\_OUTPUT\_FILE}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_OUTPUT\_FILE}{MUNIT\_OUTPUT\_FILE}}
+{\footnotesize\ttfamily \label{munit_8c_a47e0de09483f24fba56fa610b9e6af81} 
+\#define MUNIT\+\_\+\+OUTPUT\+\_\+\+FILE~stdout}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00032}{32}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l01867}{munit\+\_\+suite\+\_\+main\+\_\+custom()}}.
+
+\Hypertarget{munit_8c_a567e9fa367142306a25b3f9cb7a58214}\index{munit.c@{munit.c}!MUNIT\_PRNG\_INCREMENT@{MUNIT\_PRNG\_INCREMENT}}
+\index{MUNIT\_PRNG\_INCREMENT@{MUNIT\_PRNG\_INCREMENT}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_PRNG\_INCREMENT}{MUNIT\_PRNG\_INCREMENT}}
+{\footnotesize\ttfamily \label{munit_8c_a567e9fa367142306a25b3f9cb7a58214} 
+\#define MUNIT\+\_\+\+PRNG\+\_\+\+INCREMENT~(1729U)}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00898}{898}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00913}{munit\+\_\+rand\+\_\+seed()}}.
+
+\Hypertarget{munit_8c_a3bdf385d1aaf2c91cc3544270237346f}\index{munit.c@{munit.c}!MUNIT\_PRNG\_MULTIPLIER@{MUNIT\_PRNG\_MULTIPLIER}}
+\index{MUNIT\_PRNG\_MULTIPLIER@{MUNIT\_PRNG\_MULTIPLIER}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_PRNG\_MULTIPLIER}{MUNIT\_PRNG\_MULTIPLIER}}
+{\footnotesize\ttfamily \label{munit_8c_a3bdf385d1aaf2c91cc3544270237346f} 
+\#define MUNIT\+\_\+\+PRNG\+\_\+\+MULTIPLIER~(747796405U)}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00897}{897}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_af92a112845f1dfcf85c8bcee452267ae}\index{munit.c@{munit.c}!MUNIT\_RESULT\_STRING\_ERROR@{MUNIT\_RESULT\_STRING\_ERROR}}
+\index{MUNIT\_RESULT\_STRING\_ERROR@{MUNIT\_RESULT\_STRING\_ERROR}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_RESULT\_STRING\_ERROR}{MUNIT\_RESULT\_STRING\_ERROR}}
+{\footnotesize\ttfamily \label{munit_8c_af92a112845f1dfcf85c8bcee452267ae} 
+\#define MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+ERROR~"{}ERROR"{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01261}{1261}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a983521491948f7cc1b1069387cbce5ea}\index{munit.c@{munit.c}!MUNIT\_RESULT\_STRING\_FAIL@{MUNIT\_RESULT\_STRING\_FAIL}}
+\index{MUNIT\_RESULT\_STRING\_FAIL@{MUNIT\_RESULT\_STRING\_FAIL}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_RESULT\_STRING\_FAIL}{MUNIT\_RESULT\_STRING\_FAIL}}
+{\footnotesize\ttfamily \label{munit_8c_a983521491948f7cc1b1069387cbce5ea} 
+\#define MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+FAIL~"{}FAIL "{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01260}{1260}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_aebbcca3bb96d1c92a6b1d97f6b935c3c}\index{munit.c@{munit.c}!MUNIT\_RESULT\_STRING\_OK@{MUNIT\_RESULT\_STRING\_OK}}
+\index{MUNIT\_RESULT\_STRING\_OK@{MUNIT\_RESULT\_STRING\_OK}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_RESULT\_STRING\_OK}{MUNIT\_RESULT\_STRING\_OK}}
+{\footnotesize\ttfamily \label{munit_8c_aebbcca3bb96d1c92a6b1d97f6b935c3c} 
+\#define MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+OK~"{}OK   "{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01258}{1258}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a5639c8117cf265cc1ebc237a823d48b3}\index{munit.c@{munit.c}!MUNIT\_RESULT\_STRING\_SKIP@{MUNIT\_RESULT\_STRING\_SKIP}}
+\index{MUNIT\_RESULT\_STRING\_SKIP@{MUNIT\_RESULT\_STRING\_SKIP}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_RESULT\_STRING\_SKIP}{MUNIT\_RESULT\_STRING\_SKIP}}
+{\footnotesize\ttfamily \label{munit_8c_a5639c8117cf265cc1ebc237a823d48b3} 
+\#define MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+SKIP~"{}SKIP "{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01259}{1259}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a2c6bea10571b533a9a88bfb9b3a117bd}\index{munit.c@{munit.c}!MUNIT\_RESULT\_STRING\_TODO@{MUNIT\_RESULT\_STRING\_TODO}}
+\index{MUNIT\_RESULT\_STRING\_TODO@{MUNIT\_RESULT\_STRING\_TODO}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_RESULT\_STRING\_TODO}{MUNIT\_RESULT\_STRING\_TODO}}
+{\footnotesize\ttfamily \label{munit_8c_a2c6bea10571b533a9a88bfb9b3a117bd} 
+\#define MUNIT\+\_\+\+RESULT\+\_\+\+STRING\+\_\+\+TODO~"{}TODO "{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01262}{1262}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_abb2860370e1a5d6ef3fbc082e4ac5920}\index{munit.c@{munit.c}!MUNIT\_STRERROR\_LEN@{MUNIT\_STRERROR\_LEN}}
+\index{MUNIT\_STRERROR\_LEN@{MUNIT\_STRERROR\_LEN}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_STRERROR\_LEN}{MUNIT\_STRERROR\_LEN}}
+{\footnotesize\ttfamily \label{munit_8c_abb2860370e1a5d6ef3fbc082e4ac5920} 
+\#define MUNIT\+\_\+\+STRERROR\+\_\+\+LEN~80}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00257}{257}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_ac6a52a09b64fc1d06a243a9f1f38a7f1}\index{munit.c@{munit.c}!MUNIT\_STRINGIFY@{MUNIT\_STRINGIFY}}
+\index{MUNIT\_STRINGIFY@{MUNIT\_STRINGIFY}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_STRINGIFY}{MUNIT\_STRINGIFY}}
+{\footnotesize\ttfamily \label{munit_8c_ac6a52a09b64fc1d06a243a9f1f38a7f1} 
+\#define MUNIT\+\_\+\+STRINGIFY(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#x}}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00127}{127}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a00bc786bed32a6cdfa54a53c3575cdf4}\index{munit.c@{munit.c}!MUNIT\_TEST\_NAME\_LEN@{MUNIT\_TEST\_NAME\_LEN}}
+\index{MUNIT\_TEST\_NAME\_LEN@{MUNIT\_TEST\_NAME\_LEN}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_TEST\_NAME\_LEN}{MUNIT\_TEST\_NAME\_LEN}}
+{\footnotesize\ttfamily \label{munit_8c_a00bc786bed32a6cdfa54a53c3575cdf4} 
+\#define MUNIT\+\_\+\+TEST\+\_\+\+NAME\+\_\+\+LEN~60}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00046}{46}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a479f8053dc00fcf8db2bd625004e8120}\index{munit.c@{munit.c}!MUNIT\_TEST\_TIME\_FORMAT@{MUNIT\_TEST\_TIME\_FORMAT}}
+\index{MUNIT\_TEST\_TIME\_FORMAT@{MUNIT\_TEST\_TIME\_FORMAT}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_TEST\_TIME\_FORMAT}{MUNIT\_TEST\_TIME\_FORMAT}}
+{\footnotesize\ttfamily \label{munit_8c_a479f8053dc00fcf8db2bd625004e8120} 
+\#define MUNIT\+\_\+\+TEST\+\_\+\+TIME\+\_\+\+FORMAT~"{}0.\+8f"{}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00040}{40}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a8a03c5eee6ecf64d116b2f5c50df77bd}\index{munit.c@{munit.c}!MUNIT\_XSTRINGIFY@{MUNIT\_XSTRINGIFY}}
+\index{MUNIT\_XSTRINGIFY@{MUNIT\_XSTRINGIFY}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{MUNIT\_XSTRINGIFY}{MUNIT\_XSTRINGIFY}}
+{\footnotesize\ttfamily \label{munit_8c_a8a03c5eee6ecf64d116b2f5c50df77bd} 
+\#define MUNIT\+\_\+\+XSTRINGIFY(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{munit_8c_ac6a52a09b64fc1d06a243a9f1f38a7f1}{MUNIT\_STRINGIFY}}(x)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00128}{128}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a6151ae33ad3fdf6db5ad72fbc3618fd0}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES@{PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES}}
+\index{PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES@{PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES}{PSNIP\_CLOCK\_\_COMPILER\_ATTRIBUTES}}
+{\footnotesize\ttfamily \label{munit_8c_a6151ae33ad3fdf6db5ad72fbc3618fd0} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+COMPILER\+\_\+\+ATTRIBUTES}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00328}{328}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_\_FUNCTION@{PSNIP\_CLOCK\_\_FUNCTION}}
+\index{PSNIP\_CLOCK\_\_FUNCTION@{PSNIP\_CLOCK\_\_FUNCTION}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_\_FUNCTION}{PSNIP\_CLOCK\_\_FUNCTION}}
+{\footnotesize\ttfamily \label{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION~\mbox{\hyperlink{munit_8c_a6151ae33ad3fdf6db5ad72fbc3618fd0}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+COMPILER\+\_\+\+ATTRIBUTES}} static}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00331}{331}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a6e37538e9122fdfa55b7d39c80107a91}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_CPU\_METHOD@{PSNIP\_CLOCK\_CPU\_METHOD}}
+\index{PSNIP\_CLOCK\_CPU\_METHOD@{PSNIP\_CLOCK\_CPU\_METHOD}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_CPU\_METHOD}{PSNIP\_CLOCK\_CPU\_METHOD}}
+{\footnotesize\ttfamily \label{munit_8c_a6e37538e9122fdfa55b7d39c80107a91} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+CPU\+\_\+\+METHOD~\mbox{\hyperlink{munit_8c_a73d592085eec246b9b794428d4e2ffe9}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK}}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00466}{466}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a3710ab17c5cccaf9521be5400f2f943e}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_H@{PSNIP\_CLOCK\_H}}
+\index{PSNIP\_CLOCK\_H@{PSNIP\_CLOCK\_H}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_H}{PSNIP\_CLOCK\_H}}
+{\footnotesize\ttfamily \label{munit_8c_a3710ab17c5cccaf9521be5400f2f943e} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+H}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00318}{318}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a73d592085eec246b9b794428d4e2ffe9}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_CLOCK@{PSNIP\_CLOCK\_METHOD\_CLOCK}}
+\index{PSNIP\_CLOCK\_METHOD\_CLOCK@{PSNIP\_CLOCK\_METHOD\_CLOCK}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_CLOCK}{PSNIP\_CLOCK\_METHOD\_CLOCK}}
+{\footnotesize\ttfamily \label{munit_8c_a73d592085eec246b9b794428d4e2ffe9} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK~6}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00362}{362}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a97cc14f2fb985cb61c359f4ddafa125d}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME@{PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\index{PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME@{PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}{PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+{\footnotesize\ttfamily \label{munit_8c_a97cc14f2fb985cb61c359f4ddafa125d} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+CLOCK\+\_\+\+GETTIME~1}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00357}{357}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_aecaca0eea84692b2b7943ae8de34c07c}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES@{PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}}
+\index{PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES@{PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}{PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}}
+{\footnotesize\ttfamily \label{munit_8c_aecaca0eea84692b2b7943ae8de34c07c} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETPROCESSTIMES~7}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00363}{363}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a0c79b12eb4239203aebc4bd7789c8693}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_GETRUSAGE@{PSNIP\_CLOCK\_METHOD\_GETRUSAGE}}
+\index{PSNIP\_CLOCK\_METHOD\_GETRUSAGE@{PSNIP\_CLOCK\_METHOD\_GETRUSAGE}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_GETRUSAGE}{PSNIP\_CLOCK\_METHOD\_GETRUSAGE}}
+{\footnotesize\ttfamily \label{munit_8c_a0c79b12eb4239203aebc4bd7789c8693} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETRUSAGE~8}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00364}{364}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a3b3b0e71b0bd773b2ee56c87b9337ad4}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME@{PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME}}
+\index{PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME@{PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME}{PSNIP\_CLOCK\_METHOD\_GETSYSTEMTIMEPRECISEASFILETIME}}
+{\footnotesize\ttfamily \label{munit_8c_a3b3b0e71b0bd773b2ee56c87b9337ad4} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETSYSTEMTIMEPRECISEASFILETIME~9}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00365}{365}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_ac7e9ba691304e8590c571ef407f8c9bd}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64@{PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}}
+\index{PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64@{PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}{PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}}
+{\footnotesize\ttfamily \label{munit_8c_ac7e9ba691304e8590c571ef407f8c9bd} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETTICKCOUNT64~10}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00366}{366}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_aefdd03985c9801a0f775cd6b580ef442}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY@{PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}}
+\index{PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY@{PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}{PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}}
+{\footnotesize\ttfamily \label{munit_8c_aefdd03985c9801a0f775cd6b580ef442} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+GETTIMEOFDAY~3}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00359}{359}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a4d44008a1afe89affdd17e9f6ab9fa5c}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME@{PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}}
+\index{PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME@{PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}{PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}}
+{\footnotesize\ttfamily \label{munit_8c_a4d44008a1afe89affdd17e9f6ab9fa5c} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+MACH\+\_\+\+ABSOLUTE\+\_\+\+TIME~5}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00361}{361}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a84a2bf29f6c6fe1809e1cdfdef11f6b2}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER@{PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}}
+\index{PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER@{PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}{PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}}
+{\footnotesize\ttfamily \label{munit_8c_a84a2bf29f6c6fe1809e1cdfdef11f6b2} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+QUERYPERFORMANCECOUNTER~4}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00360}{360}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a8afbc7e34a7908ca50d741e556792bfe}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_METHOD\_TIME@{PSNIP\_CLOCK\_METHOD\_TIME}}
+\index{PSNIP\_CLOCK\_METHOD\_TIME@{PSNIP\_CLOCK\_METHOD\_TIME}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_METHOD\_TIME}{PSNIP\_CLOCK\_METHOD\_TIME}}
+{\footnotesize\ttfamily \label{munit_8c_a8afbc7e34a7908ca50d741e556792bfe} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+TIME~2}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00358}{358}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a7ee339646af39db208ccdb415e7ea226}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_NSEC\_PER\_SEC@{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}
+\index{PSNIP\_CLOCK\_NSEC\_PER\_SEC@{PSNIP\_CLOCK\_NSEC\_PER\_SEC}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_NSEC\_PER\_SEC}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}
+{\footnotesize\ttfamily \label{munit_8c_a7ee339646af39db208ccdb415e7ea226} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC~((\mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}}) (1000000000\+ULL))}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00527}{527}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00603}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+precision()}}, \mbox{\hyperlink{munit_8c_source_l00618}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+time()}}, \mbox{\hyperlink{munit_8c_source_l00661}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+precision()}}, and \mbox{\hyperlink{munit_8c_source_l00683}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+time()}}.
+
+\Hypertarget{munit_8c_ab5044d54f7e8a7d837fade0d93287192}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_UNREACHABLE@{PSNIP\_CLOCK\_UNREACHABLE}}
+\index{PSNIP\_CLOCK\_UNREACHABLE@{PSNIP\_CLOCK\_UNREACHABLE}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_UNREACHABLE}{PSNIP\_CLOCK\_UNREACHABLE}}
+{\footnotesize\ttfamily \label{munit_8c_ab5044d54f7e8a7d837fade0d93287192} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+UNREACHABLE(\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(0)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00373}{373}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00733}{psnip\+\_\+clock\+\_\+get\+\_\+precision()}}.
+
+\Hypertarget{munit_8c_a5dc469c9a02a748b2202f5a920a2663e}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_WALL\_METHOD@{PSNIP\_CLOCK\_WALL\_METHOD}}
+\index{PSNIP\_CLOCK\_WALL\_METHOD@{PSNIP\_CLOCK\_WALL\_METHOD}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PSNIP\_CLOCK\_WALL\_METHOD}{PSNIP\_CLOCK\_WALL\_METHOD}}
+{\footnotesize\ttfamily \label{munit_8c_a5dc469c9a02a748b2202f5a920a2663e} 
+\#define PSNIP\+\_\+\+CLOCK\+\_\+\+WALL\+\_\+\+METHOD~\mbox{\hyperlink{munit_8c_a8afbc7e34a7908ca50d741e556792bfe}{PSNIP\+\_\+\+CLOCK\+\_\+\+METHOD\+\_\+\+TIME}}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00462}{462}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+\Hypertarget{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}\index{munit.c@{munit.c}!psnip\_uint32\_t@{psnip\_uint32\_t}}
+\index{psnip\_uint32\_t@{psnip\_uint32\_t}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_uint32\_t}{psnip\_uint32\_t}}
+{\footnotesize\ttfamily \label{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba} 
+\#define psnip\+\_\+uint32\+\_\+t~\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00300}{300}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00661}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+precision()}}.
+
+\Hypertarget{munit_8c_a2d8a192bec9dabd8adc588392f04ee53}\index{munit.c@{munit.c}!psnip\_uint64\_t@{psnip\_uint64\_t}}
+\index{psnip\_uint64\_t@{psnip\_uint64\_t}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_uint64\_t}{psnip\_uint64\_t}}
+{\footnotesize\ttfamily \label{munit_8c_a2d8a192bec9dabd8adc588392f04ee53} 
+\#define psnip\+\_\+uint64\+\_\+t~\mbox{\hyperlink{munit_8h_a5f89d1c62a0dce2d4102ba0ea2cdb851}{munit\+\_\+uint64\+\_\+t}}}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00299}{299}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00683}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+time()}}.
+
+
+
+\label{doc-enum-members}
+\Hypertarget{munit_8c_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{munit_8c_afee753045f3b209603b31e159a7c59cb}\index{munit.c@{munit.c}!PsnipClockType@{PsnipClockType}}
+\index{PsnipClockType@{PsnipClockType}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{PsnipClockType}{PsnipClockType}}
+{\footnotesize\ttfamily \label{munit_8c_afee753045f3b209603b31e159a7c59cb} 
+enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PSNIP\_CLOCK\_TYPE\_WALL@{PSNIP\_CLOCK\_TYPE\_WALL}!munit.c@{munit.c}}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_TYPE\_WALL@{PSNIP\_CLOCK\_TYPE\_WALL}}}\Hypertarget{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931}\label{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931} 
+PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+WALL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PSNIP\_CLOCK\_TYPE\_CPU@{PSNIP\_CLOCK\_TYPE\_CPU}!munit.c@{munit.c}}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_TYPE\_CPU@{PSNIP\_CLOCK\_TYPE\_CPU}}}\Hypertarget{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4}\label{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4} 
+PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+CPU&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PSNIP\_CLOCK\_TYPE\_MONOTONIC@{PSNIP\_CLOCK\_TYPE\_MONOTONIC}!munit.c@{munit.c}}\index{munit.c@{munit.c}!PSNIP\_CLOCK\_TYPE\_MONOTONIC@{PSNIP\_CLOCK\_TYPE\_MONOTONIC}}}\Hypertarget{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e}\label{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e} 
+PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+MONOTONIC&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00334}{334}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{comment}{/*\ This\ clock\ provides\ the\ current\ time,\ in\ units\ since\ 1970-\/01-\/01}}
+\DoxyCodeLine{00336\ \textcolor{comment}{\ \ \ \ \ *\ 00:00:00\ UTC\ not\ including\ leap\ seconds.\ \ In\ other\ words,\ UNIX}}
+\DoxyCodeLine{00337\ \textcolor{comment}{\ \ \ \ \ *\ time.\ \ Keep\ in\ mind\ that\ this\ clock\ doesn't\ account\ for\ leap}}
+\DoxyCodeLine{00338\ \textcolor{comment}{\ \ \ \ \ *\ seconds,\ and\ can\ go\ backwards\ (think\ NTP\ adjustments).\ */}}
+\DoxyCodeLine{00339\ \ \ \ \ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931}{PSNIP\_CLOCK\_TYPE\_WALL}}\ =\ 1,}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{/*\ The\ CPU\ time\ is\ a\ clock\ which\ increases\ only\ when\ the\ current}}
+\DoxyCodeLine{00341\ \textcolor{comment}{\ \ \ \ \ *\ process\ is\ active\ (i.e.,\ it\ doesn't\ increment\ while\ blocking\ on}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ \ \ \ \ *\ I/O).\ */}}
+\DoxyCodeLine{00343\ \ \ \ \ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4}{PSNIP\_CLOCK\_TYPE\_CPU}}\ =\ 2,}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{comment}{/*\ Monotonic\ time\ is\ always\ running\ (unlike\ CPU\ time),\ but\ it\ only}}
+\DoxyCodeLine{00345\ \textcolor{comment}{\ \ \ \ \ \ \ ever\ moves\ forward\ unless\ you\ reboot\ the\ system.\ \ Things\ like\ NTP}}
+\DoxyCodeLine{00346\ \textcolor{comment}{\ \ \ \ \ \ \ adjustments\ have\ no\ effect\ on\ this\ clock.\ */}}
+\DoxyCodeLine{00347\ \ \ \ \ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e}{PSNIP\_CLOCK\_TYPE\_MONOTONIC}}\ =\ 3}
+\DoxyCodeLine{00348\ \};}
+
+\end{DoxyCode}
+
+
+\label{doc-func-members}
+\Hypertarget{munit_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{munit_8c_a8c3a127617d13a0a407b906e9e6c81fb}\index{munit.c@{munit.c}!munit\_errorf\_ex@{munit\_errorf\_ex}}
+\index{munit\_errorf\_ex@{munit\_errorf\_ex}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_errorf\_ex()}{munit\_errorf\_ex()}}
+{\footnotesize\ttfamily \label{munit_8c_a8c3a127617d13a0a407b906e9e6c81fb} 
+void munit\+\_\+errorf\+\_\+ex (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{, }\item[{int}]{line}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{format}{, }\item[{}]{...}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00238}{238}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ va\_list\ ap;}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ va\_start(ap,\ format);}
+\DoxyCodeLine{00242\ \ \ \ \ munit\_logf\_exv(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ filename,\ line,\ format,\ ap);}
+\DoxyCodeLine{00243\ \ \ \ \ va\_end(ap);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#if\ defined(MUNIT\_THREAD\_LOCAL)}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordflow}{if}\ (munit\_error\_jmp\_buf\_valid)}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ longjmp(munit\_error\_jmp\_buf,\ 1);}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00249\ \ \ \ \ abort();}
+\DoxyCodeLine{00250\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8h_source_l00181}{MUNIT\+\_\+\+LOG\+\_\+\+ERROR}}.
+
+\Hypertarget{munit_8c_a91d1a1ca1100148ba6a71d46301ac5ee}\index{munit.c@{munit.c}!munit\_logf\_ex@{munit\_logf\_ex}}
+\index{munit\_logf\_ex@{munit\_logf\_ex}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_logf\_ex()}{munit\_logf\_ex()}}
+{\footnotesize\ttfamily \label{munit_8c_a91d1a1ca1100148ba6a71d46301ac5ee} 
+void munit\+\_\+logf\+\_\+ex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1}{Munit\+Log\+Level}}}]{level}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{, }\item[{int}]{line}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{format}{, }\item[{}]{...}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00221}{221}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00222\ \ \ \ \ va\_list\ ap;}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ va\_start(ap,\ format);}
+\DoxyCodeLine{00225\ \ \ \ \ munit\_logf\_exv(level,\ stderr,\ filename,\ line,\ format,\ ap);}
+\DoxyCodeLine{00226\ \ \ \ \ va\_end(ap);}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordflow}{if}\ (level\ >=\ munit\_log\_level\_fatal)\ \{}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#if\ defined(MUNIT\_THREAD\_LOCAL)}}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (munit\_error\_jmp\_buf\_valid)}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ longjmp(munit\_error\_jmp\_buf,\ 1);}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ abort();}
+\DoxyCodeLine{00234\ \ \ \ \ \}}
+\DoxyCodeLine{00235\ \}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00281}{munit\+\_\+malloc\+\_\+ex()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{d7/d13/munit_8c_a91d1a1ca1100148ba6a71d46301ac5ee_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_ad14a33234eee38e3faa943e14b9fa874}\index{munit.c@{munit.c}!munit\_malloc\_ex@{munit\_malloc\_ex}}
+\index{munit\_malloc\_ex@{munit\_malloc\_ex}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_malloc\_ex()}{munit\_malloc\_ex()}}
+{\footnotesize\ttfamily \label{munit_8c_ad14a33234eee38e3faa943e14b9fa874} 
+void \texorpdfstring{$\ast$}{*} munit\+\_\+malloc\+\_\+ex (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{, }\item[{int}]{line}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00281}{281}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordtype}{void}\ *ptr;}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordflow}{if}\ (size\ ==\ 0)}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ ptr\ =\ calloc(1,\ size);}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{munit_8h_aa328611009573d48ecd1334eeaa855ab}{MUNIT\_UNLIKELY}}(ptr\ ==\ NULL))\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{munit_8c_a91d1a1ca1100148ba6a71d46301ac5ee}{munit\_logf\_ex}}(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ filename,\ line,\ \textcolor{stringliteral}{"{}Failed\ to\ allocate\ \%"{}}\ \mbox{\hyperlink{munit_8h_af20646190a234513d09d1353a2f453d5}{MUNIT\_SIZE\_MODIFIER}}\ \textcolor{stringliteral}{"{}u\ bytes."{}},\ size);}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00293\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8h_source_l00181}{MUNIT\+\_\+\+LOG\+\_\+\+ERROR}}, \mbox{\hyperlink{munit_8c_source_l00221}{munit\+\_\+logf\+\_\+ex()}}, \mbox{\hyperlink{munit_8h_source_l00146}{MUNIT\+\_\+\+SIZE\+\_\+\+MODIFIER}}, and \mbox{\hyperlink{munit_8h_source_l00135}{MUNIT\+\_\+\+UNLIKELY}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{d7/d13/munit_8c_ad14a33234eee38e3faa943e14b9fa874_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_afe853c0182f7f4b3de7a9801d7b9d0fd}\index{munit.c@{munit.c}!munit\_parameters\_get@{munit\_parameters\_get}}
+\index{munit\_parameters\_get@{munit\_parameters\_get}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_parameters\_get()}{munit\_parameters\_get()}}
+{\footnotesize\ttfamily \label{munit_8c_afe853c0182f7f4b3de7a9801d7b9d0fd} 
+const char \texorpdfstring{$\ast$}{*} munit\+\_\+parameters\+\_\+get (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_munit_parameter}{Munit\+Parameter}}}]{params}{\mbox{[}$\,$\mbox{]}, }\item[{const char \texorpdfstring{$\ast$}{*}}]{key}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01075}{1075}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{01075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01076\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ *param;}
+\DoxyCodeLine{01077\ }
+\DoxyCodeLine{01078\ \ \ \ \ \textcolor{keywordflow}{for}\ (param\ =\ params;\ param\ !=\ NULL\ \&\&\ param-\/>\mbox{\hyperlink{struct_munit_parameter_a5ac083a645d964373f022d03df4849c8}{name}}\ !=\ NULL;\ param++)}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(param-\/>\mbox{\hyperlink{struct_munit_parameter_a5ac083a645d964373f022d03df4849c8}{name}},\ key)\ ==\ 0)}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ param-\/>\mbox{\hyperlink{struct_munit_parameter_a4e9aec275e566b978a3ccb4e043d8c61}{value}};}
+\DoxyCodeLine{01081\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{01082\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8h_source_l00434}{Munit\+Parameter\+::name}}, and \mbox{\hyperlink{munit_8h_source_l00435}{Munit\+Parameter\+::value}}.
+
+\Hypertarget{munit_8c_abe7488ba4be0436fb14f9de219aea265}\index{munit.c@{munit.c}!munit\_rand\_double@{munit\_rand\_double}}
+\index{munit\_rand\_double@{munit\_rand\_double}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_rand\_double()}{munit\_rand\_double()}}
+{\footnotesize\ttfamily \label{munit_8c_abe7488ba4be0436fb14f9de219aea265} 
+double munit\+\_\+rand\+\_\+double (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01028}{1028}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01029\ \ \ \ \ \mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}}\ old,\ state;}
+\DoxyCodeLine{01030\ \ \ \ \ \textcolor{keywordtype}{double}\ retval\ =\ 0.0;}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ state\ =\ old\ =\ \mbox{\hyperlink{munit_8c_af8890c4f21fb492ddaab9c1beb012be9}{munit\_atomic\_load}}(\&munit\_rand\_state);}
+\DoxyCodeLine{01034\ }
+\DoxyCodeLine{01035\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ See\ http://mumble.net/\string~campbell/tmp/random\_real.c\ for\ how\ to\ do}}
+\DoxyCodeLine{01036\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ this\ right.\ \ Patches\ welcome\ if\ you\ feel\ that\ this\ is\ too}}
+\DoxyCodeLine{01037\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ biased.\ */}}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ retval\ =\ munit\_rand\_state\_uint32(\&state)\ /\ ((\string~((\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ 0U))\ +\ 1.0);}
+\DoxyCodeLine{01039\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!munit\_atomic\_cas(\&munit\_rand\_state,\ \&old,\ state));}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{01042\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00885}{munit\+\_\+atomic\+\_\+load}}, and \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}.
+
+\Hypertarget{munit_8c_a112d88011f16b33f38ad7dc20915ccde}\index{munit.c@{munit.c}!munit\_rand\_int\_range@{munit\_rand\_int\_range}}
+\index{munit\_rand\_int\_range@{munit\_rand\_int\_range}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_rand\_int\_range()}{munit\_rand\_int\_range()}}
+{\footnotesize\ttfamily \label{munit_8c_a112d88011f16b33f38ad7dc20915ccde} 
+int munit\+\_\+rand\+\_\+int\+\_\+range (\begin{DoxyParamCaption}\item[{int}]{min}{, }\item[{int}]{max}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01015}{1015}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01016\ \ \ \ \ \mbox{\hyperlink{munit_8h_a5f89d1c62a0dce2d4102ba0ea2cdb851}{munit\_uint64\_t}}\ range\ =\ (\mbox{\hyperlink{munit_8h_a5f89d1c62a0dce2d4102ba0ea2cdb851}{munit\_uint64\_t}})\ max\ -\/\ (\mbox{\hyperlink{munit_8h_a5f89d1c62a0dce2d4102ba0ea2cdb851}{munit\_uint64\_t}})\ min;}
+\DoxyCodeLine{01017\ }
+\DoxyCodeLine{01018\ \ \ \ \ \textcolor{keywordflow}{if}\ (min\ >\ max)}
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a112d88011f16b33f38ad7dc20915ccde}{munit\_rand\_int\_range}}(max,\ min);}
+\DoxyCodeLine{01020\ }
+\DoxyCodeLine{01021\ \ \ \ \ \textcolor{keywordflow}{if}\ (range\ >\ (\string~((\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ 0U)))}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ range\ =\ (\string~((\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ 0U));}
+\DoxyCodeLine{01023\ }
+\DoxyCodeLine{01024\ \ \ \ \ \textcolor{keywordflow}{return}\ min\ +\ munit\_rand\_at\_most(0,\ (\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ range);}
+\DoxyCodeLine{01025\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l01015}{munit\+\_\+rand\+\_\+int\+\_\+range()}}, \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}, and \mbox{\hyperlink{munit_8h_source_l00057}{munit\+\_\+uint64\+\_\+t}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l01015}{munit\+\_\+rand\+\_\+int\+\_\+range()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{d7/d13/munit_8c_a112d88011f16b33f38ad7dc20915ccde_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{d7/d13/munit_8c_a112d88011f16b33f38ad7dc20915ccde_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a7b0d5bdbeb2226e9a33f50ec3824e1d7}\index{munit.c@{munit.c}!munit\_rand\_memory@{munit\_rand\_memory}}
+\index{munit\_rand\_memory@{munit\_rand\_memory}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_rand\_memory()}{munit\_rand\_memory()}}
+{\footnotesize\ttfamily \label{munit_8c_a7b0d5bdbeb2226e9a33f50ec3824e1d7} 
+void munit\+\_\+rand\+\_\+memory (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{\mbox{\hyperlink{munit_8h_a1ed130e6fd548c480852606b6342b7c0}{munit\+\_\+uint8\+\_\+t}}}]{data}{\mbox{[}\+MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM(size)\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00971}{971}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00972\ \ \ \ \ \mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}}\ old,\ state;}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ state\ =\ old\ =\ \mbox{\hyperlink{munit_8c_af8890c4f21fb492ddaab9c1beb012be9}{munit\_atomic\_load}}(\&munit\_rand\_state);}
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ munit\_rand\_state\_memory(\&state,\ size,\ data);}
+\DoxyCodeLine{00977\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!munit\_atomic\_cas(\&munit\_rand\_state,\ \&old,\ state));}
+\DoxyCodeLine{00978\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00885}{munit\+\_\+atomic\+\_\+load}}, \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}, and \mbox{\hyperlink{munit_8h_source_l00051}{munit\+\_\+uint8\+\_\+t}}.
+
+\Hypertarget{munit_8c_a4f6a7ec63953ca00afb69bc6758bce5d}\index{munit.c@{munit.c}!munit\_rand\_seed@{munit\_rand\_seed}}
+\index{munit\_rand\_seed@{munit\_rand\_seed}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_rand\_seed()}{munit\_rand\_seed()}}
+{\footnotesize\ttfamily \label{munit_8c_a4f6a7ec63953ca00afb69bc6758bce5d} 
+void munit\+\_\+rand\+\_\+seed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}}}]{seed}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00913}{913}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00914\ \ \ \ \ \mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}}\ state\ =\ munit\_rand\_next\_state(seed\ +\ \mbox{\hyperlink{munit_8c_a567e9fa367142306a25b3f9cb7a58214}{MUNIT\_PRNG\_INCREMENT}});}
+\DoxyCodeLine{00915\ \ \ \ \ \mbox{\hyperlink{munit_8c_aea8502ca64138e80900ae1cbb2f988c0}{munit\_atomic\_store}}(\&munit\_rand\_state,\ state);}
+\DoxyCodeLine{00916\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00884}{munit\+\_\+atomic\+\_\+store}}, \mbox{\hyperlink{munit_8c_source_l00898}{MUNIT\+\_\+\+PRNG\+\_\+\+INCREMENT}}, and \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}.
+
+\Hypertarget{munit_8c_aa316d4cda6aec6e15e5d3a04db8d81cf}\index{munit.c@{munit.c}!munit\_rand\_uint32@{munit\_rand\_uint32}}
+\index{munit\_rand\_uint32@{munit\_rand\_uint32}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_rand\_uint32()}{munit\_rand\_uint32()}}
+{\footnotesize\ttfamily \label{munit_8c_aa316d4cda6aec6e15e5d3a04db8d81cf} 
+\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\+\_\+uint32\+\_\+t}} munit\+\_\+rand\+\_\+uint32 (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00942}{942}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00943\ \ \ \ \ \mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}}\ old,\ state;}
+\DoxyCodeLine{00944\ }
+\DoxyCodeLine{00945\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ old\ =\ \mbox{\hyperlink{munit_8c_af8890c4f21fb492ddaab9c1beb012be9}{munit\_atomic\_load}}(\&munit\_rand\_state);}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ state\ =\ munit\_rand\_next\_state(old);}
+\DoxyCodeLine{00948\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!munit\_atomic\_cas(\&munit\_rand\_state,\ \&old,\ state));}
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00950\ \ \ \ \ \textcolor{keywordflow}{return}\ munit\_rand\_from\_state(old);}
+\DoxyCodeLine{00951\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00885}{munit\+\_\+atomic\+\_\+load}}, and \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}.
+
+\Hypertarget{munit_8c_a9734fe52a7ef0fe014bd223b3529e708}\index{munit.c@{munit.c}!munit\_suite\_main@{munit\_suite\_main}}
+\index{munit\_suite\_main@{munit\_suite\_main}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_suite\_main()}{munit\_suite\_main()}}
+{\footnotesize\ttfamily \label{munit_8c_a9734fe52a7ef0fe014bd223b3529e708} 
+int munit\+\_\+suite\+\_\+main (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{munit_8h_a11be8729ef6c4c75fe5d163873c6e17c}{Munit\+Suite}} \texorpdfstring{$\ast$}{*}}]{suite}{, }\item[{void \texorpdfstring{$\ast$}{*}}]{user\+\_\+data}{, }\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}\+MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM(argc+1)\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l02094}{2094}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{02095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{02096\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a4a757c6595f5f2a2a74ec6c300383c62}{munit\_suite\_main\_custom}}(suite,\ user\_data,\ argc,\ argv,\ NULL);}
+\DoxyCodeLine{02097\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l01867}{munit\+\_\+suite\+\_\+main\+\_\+custom()}}.
+
+
+
+Referenced by \mbox{\hyperlink{test__main_8c_source_l00025}{main()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{d7/d13/munit_8c_a9734fe52a7ef0fe014bd223b3529e708_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{d7/d13/munit_8c_a9734fe52a7ef0fe014bd223b3529e708_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a4a757c6595f5f2a2a74ec6c300383c62}\index{munit.c@{munit.c}!munit\_suite\_main\_custom@{munit\_suite\_main\_custom}}
+\index{munit\_suite\_main\_custom@{munit\_suite\_main\_custom}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{munit\_suite\_main\_custom()}{munit\_suite\_main\_custom()}}
+{\footnotesize\ttfamily \label{munit_8c_a4a757c6595f5f2a2a74ec6c300383c62} 
+int munit\+\_\+suite\+\_\+main\+\_\+custom (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{munit_8h_a11be8729ef6c4c75fe5d163873c6e17c}{Munit\+Suite}} \texorpdfstring{$\ast$}{*}}]{suite}{, }\item[{void \texorpdfstring{$\ast$}{*}}]{user\+\_\+data}{, }\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}\+MUNIT\+\_\+\+ARRAY\+\_\+\+PARAM(argc+1)\mbox{]}, }\item[{const \mbox{\hyperlink{munit_8h_aa051cb59f39cb065bd172ba4e3c6ee82}{Munit\+Argument}}}]{arguments}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l01867}{1867}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{01869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01870\ \ \ \ \ \textcolor{keywordtype}{int}\ result\ =\ EXIT\_FAILURE;}
+\DoxyCodeLine{01871\ \ \ \ \ \mbox{\hyperlink{struct_munit_test_runner}{MunitTestRunner}}\ runner;}
+\DoxyCodeLine{01872\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ parameters\_size\ =\ 0;}
+\DoxyCodeLine{01873\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ tests\_size\ =\ 0;}
+\DoxyCodeLine{01874\ \ \ \ \ \textcolor{keywordtype}{int}\ arg;}
+\DoxyCodeLine{01875\ }
+\DoxyCodeLine{01876\ \ \ \ \ \textcolor{keywordtype}{char}\ *envptr;}
+\DoxyCodeLine{01877\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ ts;}
+\DoxyCodeLine{01878\ \ \ \ \ \textcolor{keywordtype}{char}\ *endptr;}
+\DoxyCodeLine{01879\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ iterations;}
+\DoxyCodeLine{01880\ \ \ \ \ \mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1}{MunitLogLevel}}\ level;}
+\DoxyCodeLine{01881\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{munit_8h_aa051cb59f39cb065bd172ba4e3c6ee82}{MunitArgument}}\ *argument;}
+\DoxyCodeLine{01882\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **runner\_tests;}
+\DoxyCodeLine{01883\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ tests\_run;}
+\DoxyCodeLine{01884\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ tests\_total;}
+\DoxyCodeLine{01885\ }
+\DoxyCodeLine{01886\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a5b41c5ae4505891e6c53e26df197e02b}{prefix}}\ =\ NULL;}
+\DoxyCodeLine{01887\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a5284c009b720594db850c00ccc268a0f}{suite}}\ =\ NULL;}
+\DoxyCodeLine{01888\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a21eb1b05c59dcdd6a632505d61bc4bd2}{current\_suite}}\ =\ NULL;}
+\DoxyCodeLine{01889\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}}\ =\ NULL;}
+\DoxyCodeLine{01890\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a9f628e62e2f9a981b5e26030b95ef4dc}{seed}}\ =\ 0;}
+\DoxyCodeLine{01891\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a49884a390fe5592f17ab6795b728d63c}{iterations}}\ =\ 0;}
+\DoxyCodeLine{01892\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}\ =\ NULL;}
+\DoxyCodeLine{01893\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ab94c7f0c93f12a143495bc8e6b9d3161}{single\_parameter\_mode}}\ =\ 0;}
+\DoxyCodeLine{01894\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0f53d287ac7c064d1a49d4bd93ca1cb9}{user\_data}}\ =\ NULL;}
+\DoxyCodeLine{01895\ }
+\DoxyCodeLine{01896\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_aedf99a69110340d0f44aaf371af6423d}{successful}}\ =\ 0;}
+\DoxyCodeLine{01897\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab4ea3ecae8530a3099e24893b5643cf0}{skipped}}\ =\ 0;}
+\DoxyCodeLine{01898\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ac22f1c4471429c9a1f0c09efd5fcca3a}{failed}}\ =\ 0;}
+\DoxyCodeLine{01899\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab82c286bde0259d1b7f30d06f603433c}{errored}}\ =\ 0;}
+\DoxyCodeLine{01900\ \textcolor{preprocessor}{\#if\ defined(MUNIT\_ENABLE\_TIMING)}}
+\DoxyCodeLine{01901\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ae9ef13b9305efb8a96072956837bf63c}{cpu\_clock}}\ =\ 0;}
+\DoxyCodeLine{01902\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_aab8f938f7cf59dd1e30a0a40cd36545a}{wall\_clock}}\ =\ 0;}
+\DoxyCodeLine{01903\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01904\ }
+\DoxyCodeLine{01905\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_abdffb37452d8953ffa548f0b2228bb36}{colorize}}\ =\ 0;}
+\DoxyCodeLine{01906\ \textcolor{preprocessor}{\#if\ !defined(\_WIN32)}}
+\DoxyCodeLine{01907\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a510b1e562f563f66365b828b320af20d}{fork}}\ =\ 1;}
+\DoxyCodeLine{01908\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01909\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a510b1e562f563f66365b828b320af20d}{fork}}\ =\ 0;}
+\DoxyCodeLine{01910\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01911\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a011ca507433e2c2c29ce6075dcabafae}{show\_stderr}}\ =\ 0;}
+\DoxyCodeLine{01912\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_aba27833126a8913597e90e610abf63a6}{fatal\_failures}}\ =\ 0;}
+\DoxyCodeLine{01913\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a5284c009b720594db850c00ccc268a0f}{suite}}\ =\ suite;}
+\DoxyCodeLine{01914\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0f53d287ac7c064d1a49d4bd93ca1cb9}{user\_data}}\ =\ user\_data;}
+\DoxyCodeLine{01915\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a9f628e62e2f9a981b5e26030b95ef4dc}{seed}}\ =\ munit\_rand\_generate\_seed();}
+\DoxyCodeLine{01916\ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_abdffb37452d8953ffa548f0b2228bb36}{colorize}}\ =\ munit\_stream\_supports\_ansi(\mbox{\hyperlink{munit_8c_a47e0de09483f24fba56fa610b9e6af81}{MUNIT\_OUTPUT\_FILE}});}
+\DoxyCodeLine{01917\ }
+\DoxyCodeLine{01918\ \ \ \ \ \textcolor{keywordflow}{for}\ (arg\ =\ 1;\ arg\ <\ argc;\ arg++)\ \{}
+\DoxyCodeLine{01919\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strncmp(\textcolor{stringliteral}{"{}-\/-\/"{}},\ argv[arg],\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01920\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}seed"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01921\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg\ +\ 1\ >=\ argc)\ \{}
+\DoxyCodeLine{01922\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}\%s\ requires\ an\ argument"{}},\ argv[arg]);}
+\DoxyCodeLine{01923\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01924\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01925\ }
+\DoxyCodeLine{01926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ envptr\ =\ argv[arg\ +\ 1];}
+\DoxyCodeLine{01927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts\ =\ strtoul(argv[arg\ +\ 1],\ \&envptr,\ 0);}
+\DoxyCodeLine{01928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*envptr\ !=\ \textcolor{charliteral}{'\(\backslash\)0'}\ ||\ ts\ >\ (\string~((\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ 0U)))\ \{}
+\DoxyCodeLine{01929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}invalid\ value\ ('\%s')\ passed\ to\ \%s"{}},\ argv[arg\ +\ 1],}
+\DoxyCodeLine{01930\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argv[arg]);}
+\DoxyCodeLine{01931\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a9f628e62e2f9a981b5e26030b95ef4dc}{seed}}\ =\ (\mbox{\hyperlink{munit_8h_a9b44a7ebaf0e1e66926baa747b862d57}{munit\_uint32\_t}})\ ts;}
+\DoxyCodeLine{01934\ }
+\DoxyCodeLine{01935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg++;}
+\DoxyCodeLine{01936\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}iterations"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg\ +\ 1\ >=\ argc)\ \{}
+\DoxyCodeLine{01938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}\%s\ requires\ an\ argument"{}},\ argv[arg]);}
+\DoxyCodeLine{01939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01941\ }
+\DoxyCodeLine{01942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ endptr\ =\ argv[arg\ +\ 1];}
+\DoxyCodeLine{01943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iterations\ =\ strtoul(argv[arg\ +\ 1],\ \&endptr,\ 0);}
+\DoxyCodeLine{01944\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*endptr\ !=\ \textcolor{charliteral}{'\(\backslash\)0'}\ ||\ iterations\ >\ UINT\_MAX)\ \{}
+\DoxyCodeLine{01945\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}invalid\ value\ ('\%s')\ passed\ to\ \%s"{}},\ argv[arg\ +\ 1],}
+\DoxyCodeLine{01946\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argv[arg]);}
+\DoxyCodeLine{01947\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01948\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01949\ }
+\DoxyCodeLine{01950\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a49884a390fe5592f17ab6795b728d63c}{iterations}}\ =\ (\textcolor{keywordtype}{unsigned}\ int)\ iterations;}
+\DoxyCodeLine{01951\ }
+\DoxyCodeLine{01952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg++;}
+\DoxyCodeLine{01953\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}param"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg\ +\ 2\ >=\ argc)\ \{}
+\DoxyCodeLine{01955\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}\%s\ requires\ two\ arguments"{}},\ argv[arg]);}
+\DoxyCodeLine{01956\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01957\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01958\ }
+\DoxyCodeLine{01959\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}\ =\ realloc(runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}},\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{struct_munit_parameter}{MunitParameter}})\ *\ (parameters\_size\ +\ 2));}
+\DoxyCodeLine{01960\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}\ ==\ NULL)\ \{}
+\DoxyCodeLine{01961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_log\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}failed\ to\ allocate\ memory"{}});}
+\DoxyCodeLine{01962\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01964\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}[parameters\_size].\mbox{\hyperlink{struct_munit_parameter_a5ac083a645d964373f022d03df4849c8}{name}}\ =\ (\textcolor{keywordtype}{char}\ *)\ argv[arg\ +\ 1];}
+\DoxyCodeLine{01965\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}[parameters\_size].\mbox{\hyperlink{struct_munit_parameter_a4e9aec275e566b978a3ccb4e043d8c61}{value}}\ =\ (\textcolor{keywordtype}{char}\ *)\ argv[arg\ +\ 2];}
+\DoxyCodeLine{01966\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parameters\_size++;}
+\DoxyCodeLine{01967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}[parameters\_size].\mbox{\hyperlink{struct_munit_parameter_a5ac083a645d964373f022d03df4849c8}{name}}\ =\ NULL;}
+\DoxyCodeLine{01968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}}[parameters\_size].\mbox{\hyperlink{struct_munit_parameter_a4e9aec275e566b978a3ccb4e043d8c61}{value}}\ =\ NULL;}
+\DoxyCodeLine{01969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg\ +=\ 2;}
+\DoxyCodeLine{01970\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}color"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg\ +\ 1\ >=\ argc)\ \{}
+\DoxyCodeLine{01972\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}\%s\ requires\ an\ argument"{}},\ argv[arg]);}
+\DoxyCodeLine{01973\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01974\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01975\ }
+\DoxyCodeLine{01976\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}always"{}})\ ==\ 0)}
+\DoxyCodeLine{01977\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_abdffb37452d8953ffa548f0b2228bb36}{colorize}}\ =\ 1;}
+\DoxyCodeLine{01978\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}never"{}})\ ==\ 0)}
+\DoxyCodeLine{01979\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_abdffb37452d8953ffa548f0b2228bb36}{colorize}}\ =\ 0;}
+\DoxyCodeLine{01980\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}auto"{}})\ ==\ 0)}
+\DoxyCodeLine{01981\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_abdffb37452d8953ffa548f0b2228bb36}{colorize}}\ =\ munit\_stream\_supports\_ansi(\mbox{\hyperlink{munit_8c_a47e0de09483f24fba56fa610b9e6af81}{MUNIT\_OUTPUT\_FILE}});}
+\DoxyCodeLine{01982\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01983\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}invalid\ value\ ('\%s')\ passed\ to\ \%s"{}},\ argv[arg\ +\ 1],}
+\DoxyCodeLine{01984\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argv[arg]);}
+\DoxyCodeLine{01985\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01986\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01987\ }
+\DoxyCodeLine{01988\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg++;}
+\DoxyCodeLine{01989\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}help"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01990\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_print\_help(argc,\ argv,\ user\_data,\ arguments);}
+\DoxyCodeLine{01991\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ EXIT\_SUCCESS;}
+\DoxyCodeLine{01992\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{01993\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}single"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01994\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ab94c7f0c93f12a143495bc8e6b9d3161}{single\_parameter\_mode}}\ =\ 1;}
+\DoxyCodeLine{01995\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}show-\/stderr"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01996\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a011ca507433e2c2c29ce6075dcabafae}{show\_stderr}}\ =\ 1;}
+\DoxyCodeLine{01997\ \textcolor{preprocessor}{\#if\ !defined(\_WIN32)}}
+\DoxyCodeLine{01998\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}no-\/fork"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a510b1e562f563f66365b828b320af20d}{fork}}\ =\ 0;}
+\DoxyCodeLine{02000\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02001\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}fatal-\/failures"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{02002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_aba27833126a8913597e90e610abf63a6}{fatal\_failures}}\ =\ 1;}
+\DoxyCodeLine{02003\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}log-\/visible"{}},\ argv[arg]\ +\ 2)\ ==\ 0\ ||}
+\DoxyCodeLine{02004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ strcmp(\textcolor{stringliteral}{"{}log-\/fatal"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{02005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg\ +\ 1\ >=\ argc)\ \{}
+\DoxyCodeLine{02006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}\%s\ requires\ an\ argument"{}},\ argv[arg]);}
+\DoxyCodeLine{02007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02009\ }
+\DoxyCodeLine{02010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}debug"{}})\ ==\ 0)}
+\DoxyCodeLine{02011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\ =\ \mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a60e219fcb953096257701d582ec31a17}{MUNIT\_LOG\_DEBUG}};}
+\DoxyCodeLine{02012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}info"{}})\ ==\ 0)}
+\DoxyCodeLine{02013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\ =\ \mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1aa0c4506a4cc0a43077eb83978b2bcf8b}{MUNIT\_LOG\_INFO}};}
+\DoxyCodeLine{02014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}warning"{}})\ ==\ 0)}
+\DoxyCodeLine{02015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\ =\ \mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a343b3609e2e8c7f29ac13d6a7350a4ec}{MUNIT\_LOG\_WARNING}};}
+\DoxyCodeLine{02016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(argv[arg\ +\ 1],\ \textcolor{stringliteral}{"{}error"{}})\ ==\ 0)}
+\DoxyCodeLine{02017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\ =\ \mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}};}
+\DoxyCodeLine{02018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{02019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}invalid\ value\ ('\%s')\ passed\ to\ \%s"{}},\ argv[arg\ +\ 1],}
+\DoxyCodeLine{02020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argv[arg]);}
+\DoxyCodeLine{02021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02023\ }
+\DoxyCodeLine{02024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}log-\/visible"{}},\ argv[arg]\ +\ 2)\ ==\ 0)}
+\DoxyCodeLine{02025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_log\_level\_visible\ =\ level;}
+\DoxyCodeLine{02026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{02027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_log\_level\_fatal\ =\ level;}
+\DoxyCodeLine{02028\ }
+\DoxyCodeLine{02029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg++;}
+\DoxyCodeLine{02030\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}list"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{02031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_suite\_list\_tests(suite,\ 0,\ NULL);}
+\DoxyCodeLine{02032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ EXIT\_SUCCESS;}
+\DoxyCodeLine{02033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02034\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(\textcolor{stringliteral}{"{}list-\/params"{}},\ argv[arg]\ +\ 2)\ ==\ 0)\ \{}
+\DoxyCodeLine{02035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_suite\_list\_tests(suite,\ 1,\ NULL);}
+\DoxyCodeLine{02036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ EXIT\_SUCCESS;}
+\DoxyCodeLine{02037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02038\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{02039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argument\ =\ munit\_arguments\_find(arguments,\ argv[arg]\ +\ 2);}
+\DoxyCodeLine{02040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (argument\ ==\ NULL)\ \{}
+\DoxyCodeLine{02041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_logf\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}unknown\ argument\ ('\%s')"{}},\ argv[arg]);}
+\DoxyCodeLine{02042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02044\ }
+\DoxyCodeLine{02045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!argument-\/>\mbox{\hyperlink{struct_munit_argument___a01daa24547f61ef1ffd96d60a65bb2b4}{parse\_argument}}(suite,\ user\_data,\ \&arg,\ argc,\ argv))}
+\DoxyCodeLine{02046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02047\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02048\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{02049\ \ \ \ \ \ \ \ \ \ \ \ \ runner\_tests\ =\ realloc((\textcolor{keywordtype}{void}\ *)\ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}},\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}\ *)\ *\ (tests\_size\ +\ 2));}
+\DoxyCodeLine{02050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runner\_tests\ ==\ NULL)\ \{}
+\DoxyCodeLine{02051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ munit\_log\_internal(\mbox{\hyperlink{munit_8h_ae700e561a09aa2f3a0efa627ebcb5da1a1aef210f7e123d811c768d1b428b6937}{MUNIT\_LOG\_ERROR}},\ stderr,\ \textcolor{stringliteral}{"{}failed\ to\ allocate\ memory"{}});}
+\DoxyCodeLine{02052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ cleanup;}
+\DoxyCodeLine{02053\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02054\ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}}\ =\ runner\_tests;}
+\DoxyCodeLine{02055\ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}}[tests\_size++]\ =\ argv[arg];}
+\DoxyCodeLine{02056\ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}}[tests\_size]\ =\ NULL;}
+\DoxyCodeLine{02057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{02058\ \ \ \ \ \}}
+\DoxyCodeLine{02059\ }
+\DoxyCodeLine{02060\ \ \ \ \ fflush(stderr);}
+\DoxyCodeLine{02061\ \ \ \ \ fprintf(\mbox{\hyperlink{munit_8c_a47e0de09483f24fba56fa610b9e6af81}{MUNIT\_OUTPUT\_FILE}},\ \textcolor{stringliteral}{"{}Running\ test\ suite\ with\ seed\ 0x\%08"{}}\ PRIx32\ \textcolor{stringliteral}{"{}...\(\backslash\)n"{}},\ runner.\mbox{\hyperlink{struct_munit_test_runner_a9f628e62e2f9a981b5e26030b95ef4dc}{seed}});}
+\DoxyCodeLine{02062\ }
+\DoxyCodeLine{02063\ \ \ \ \ munit\_test\_runner\_run(\&runner);}
+\DoxyCodeLine{02064\ }
+\DoxyCodeLine{02065\ \ \ \ \ tests\_run\ =\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_aedf99a69110340d0f44aaf371af6423d}{successful}}\ +\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ac22f1c4471429c9a1f0c09efd5fcca3a}{failed}}\ +\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab82c286bde0259d1b7f30d06f603433c}{errored}};}
+\DoxyCodeLine{02066\ \ \ \ \ tests\_total\ =\ tests\_run\ +\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab4ea3ecae8530a3099e24893b5643cf0}{skipped}};}
+\DoxyCodeLine{02067\ \ \ \ \ \textcolor{keywordflow}{if}\ (tests\_run\ ==\ 0)\ \{}
+\DoxyCodeLine{02068\ \ \ \ \ \ \ \ \ fprintf(stderr,\ \textcolor{stringliteral}{"{}No\ tests\ run,\ \%d\ (100\%\%)\ skipped.\(\backslash\)n"{}},\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab4ea3ecae8530a3099e24893b5643cf0}{skipped}});}
+\DoxyCodeLine{02069\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{02070\ \ \ \ \ \ \ \ \ fprintf(\mbox{\hyperlink{munit_8c_a47e0de09483f24fba56fa610b9e6af81}{MUNIT\_OUTPUT\_FILE}},\ \textcolor{stringliteral}{"{}\%d\ of\ \%d\ (\%0.0f\%\%)\ tests\ successful,\ \%d\ (\%0.0f\%\%)\ test\ skipped.\(\backslash\)n"{}},}
+\DoxyCodeLine{02071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_aedf99a69110340d0f44aaf371af6423d}{successful}},\ tests\_run,}
+\DoxyCodeLine{02072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((\textcolor{keywordtype}{double})\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_aedf99a69110340d0f44aaf371af6423d}{successful}})\ /\ ((\textcolor{keywordtype}{double})\ tests\_run))\ *\ 100.0,}
+\DoxyCodeLine{02073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab4ea3ecae8530a3099e24893b5643cf0}{skipped}},}
+\DoxyCodeLine{02074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((\textcolor{keywordtype}{double})\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab4ea3ecae8530a3099e24893b5643cf0}{skipped}})\ /\ ((\textcolor{keywordtype}{double})\ tests\_total))\ *\ 100.0);}
+\DoxyCodeLine{02075\ \ \ \ \ \}}
+\DoxyCodeLine{02076\ }
+\DoxyCodeLine{02077\ }
+\DoxyCodeLine{02078\ \textcolor{preprocessor}{\#if\ defined(MUNIT\_FAIL\_NO\_TEST\_RUN)}}
+\DoxyCodeLine{02079\ \ \ \ \ \textcolor{keywordflow}{if}\ (runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ac22f1c4471429c9a1f0c09efd5fcca3a}{failed}}\ ==\ 0\ \&\&\ runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ab82c286bde0259d1b7f30d06f603433c}{errored}}\ ==\ 0\ \&\&\ tests\_run\ >\ 0)\ \{}
+\DoxyCodeLine{02080\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{02081\ \ \ \ \ \textcolor{keywordflow}{if}\ (runner.\mbox{\hyperlink{struct_munit_test_runner_ac844b016f254796d69dbf37caec72a94}{report}}.\mbox{\hyperlink{struct_munit_report_ac22f1c4471429c9a1f0c09efd5fcca3a}{failed}}\ ==\ 0\ \&\&\ runner.report\_simple.errored\ ==\ 0)\ \{}
+\DoxyCodeLine{02082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02083\ \ \ \ \ \ \ \ \ result\ =\ EXIT\_SUCCESS;}
+\DoxyCodeLine{02084\ \ \ \ \ \}}
+\DoxyCodeLine{02085\ }
+\DoxyCodeLine{02086\ \ \ \ \ cleanup:}
+\DoxyCodeLine{02087\ \ \ \ \ free(runner.\mbox{\hyperlink{struct_munit_test_runner_a6ffccac58b804c140fc17be862f40a5c}{parameters}});}
+\DoxyCodeLine{02088\ \ \ \ \ free((\textcolor{keywordtype}{void}\ *)\ runner.\mbox{\hyperlink{struct_munit_test_runner_a0abd97632a373b252a144f34b24665b0}{tests}});}
+\DoxyCodeLine{02089\ }
+\DoxyCodeLine{02090\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{02091\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l01068}{Munit\+Test\+Runner\+::colorize}}, \mbox{\hyperlink{munit_8c_source_l01052}{Munit\+Report\+::cpu\+\_\+clock}}, \mbox{\hyperlink{munit_8c_source_l01060}{Munit\+Test\+Runner\+::current\+\_\+suite}}, \mbox{\hyperlink{munit_8c_source_l01050}{Munit\+Report\+::errored}}, \mbox{\hyperlink{munit_8c_source_l01049}{Munit\+Report\+::failed}}, \mbox{\hyperlink{munit_8c_source_l01071}{Munit\+Test\+Runner\+::fatal\+\_\+failures}}, \mbox{\hyperlink{munit_8c_source_l01069}{Munit\+Test\+Runner\+::fork}}, \mbox{\hyperlink{munit_8c_source_l01063}{Munit\+Test\+Runner\+::iterations}}, \mbox{\hyperlink{munit_8h_source_l00178}{MUNIT\+\_\+\+LOG\+\_\+\+DEBUG}}, \mbox{\hyperlink{munit_8h_source_l00181}{MUNIT\+\_\+\+LOG\+\_\+\+ERROR}}, \mbox{\hyperlink{munit_8h_source_l00179}{MUNIT\+\_\+\+LOG\+\_\+\+INFO}}, \mbox{\hyperlink{munit_8h_source_l00180}{MUNIT\+\_\+\+LOG\+\_\+\+WARNING}}, \mbox{\hyperlink{munit_8c_source_l00032}{MUNIT\+\_\+\+OUTPUT\+\_\+\+FILE}}, \mbox{\hyperlink{munit_8h_source_l00055}{munit\+\_\+uint32\+\_\+t}}, \mbox{\hyperlink{munit_8h_source_l00434}{Munit\+Parameter\+::name}}, \mbox{\hyperlink{munit_8c_source_l01064}{Munit\+Test\+Runner\+::parameters}}, \mbox{\hyperlink{munit_8h_source_l00485}{Munit\+Argument\+\_\+\+::parse\+\_\+argument}}, \mbox{\hyperlink{munit_8c_source_l01058}{Munit\+Test\+Runner\+::prefix}}, \mbox{\hyperlink{munit_8c_source_l01067}{Munit\+Test\+Runner\+::report}}, \mbox{\hyperlink{munit_8c_source_l01062}{Munit\+Test\+Runner\+::seed}}, \mbox{\hyperlink{munit_8c_source_l01070}{Munit\+Test\+Runner\+::show\+\_\+stderr}}, \mbox{\hyperlink{munit_8c_source_l01065}{Munit\+Test\+Runner\+::single\+\_\+parameter\+\_\+mode}}, \mbox{\hyperlink{munit_8c_source_l01048}{Munit\+Report\+::skipped}}, \mbox{\hyperlink{munit_8c_source_l01047}{Munit\+Report\+::successful}}, \mbox{\hyperlink{munit_8c_source_l01059}{Munit\+Test\+Runner\+::suite}}, \mbox{\hyperlink{munit_8c_source_l01061}{Munit\+Test\+Runner\+::tests}}, \mbox{\hyperlink{munit_8c_source_l01066}{Munit\+Test\+Runner\+::user\+\_\+data}}, \mbox{\hyperlink{munit_8h_source_l00435}{Munit\+Parameter\+::value}}, and \mbox{\hyperlink{munit_8c_source_l01053}{Munit\+Report\+::wall\+\_\+clock}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l02094}{munit\+\_\+suite\+\_\+main()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a4a757c6595f5f2a2a74ec6c300383c62_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a5ab643fbf15da6629efe0367a17ef9c9}\index{munit.c@{munit.c}!psnip\_clock\_cpu\_get\_precision@{psnip\_clock\_cpu\_get\_precision}}
+\index{psnip\_clock\_cpu\_get\_precision@{psnip\_clock\_cpu\_get\_precision}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_cpu\_get\_precision()}{psnip\_clock\_cpu\_get\_precision()}}
+{\footnotesize\ttfamily \label{munit_8c_a5ab643fbf15da6629efe0367a17ef9c9} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+precision (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00603}{603}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_CPU\_METHOD)}}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_getres(PSNIP\_CLOCK\_CLOCK\_GETTIME\_CPU);}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK}}
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keywordflow}{return}\ CLOCKS\_PER\_SEC;}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}}
+\DoxyCodeLine{00611\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}\ /\ 100;}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00613\ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00615\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00527}{PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00733}{psnip\+\_\+clock\+\_\+get\+\_\+precision()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a5ab643fbf15da6629efe0367a17ef9c9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a9f8f21fa831b45847855bf4025db0935}\index{munit.c@{munit.c}!psnip\_clock\_cpu\_get\_time@{psnip\_clock\_cpu\_get\_time}}
+\index{psnip\_clock\_cpu\_get\_time@{psnip\_clock\_cpu\_get\_time}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_cpu\_get\_time()}{psnip\_clock\_cpu\_get\_time()}}
+{\footnotesize\ttfamily \label{munit_8c_a9f8f21fa831b45847855bf4025db0935} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+time (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}}]{res}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00618}{618}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_CPU\_METHOD)}}
+\DoxyCodeLine{00620\ \ \ \ \ (void)\ res;}
+\DoxyCodeLine{00621\ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_gettime(PSNIP\_CLOCK\_CLOCK\_GETTIME\_CPU,\ res);}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK}}
+\DoxyCodeLine{00625\ \ \ \ \ clock\_t\ t\ =\ clock();}
+\DoxyCodeLine{00626\ \ \ \textcolor{keywordflow}{if}\ (t\ ==\ ((clock\_t)\ -\/1))}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/5;}
+\DoxyCodeLine{00628\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ t\ /\ CLOCKS\_PER\_SEC;}
+\DoxyCodeLine{00629\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ (t\ \%\ CLOCKS\_PER\_SEC)\ *\ (\mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}\ /\ CLOCKS\_PER\_SEC);}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_CPU\_METHOD)\ \&\&\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETPROCESSTIMES}}
+\DoxyCodeLine{00631\ \ \ FILETIME\ CreationTime,\ ExitTime,\ KernelTime,\ UserTime;}
+\DoxyCodeLine{00632\ \ \ LARGE\_INTEGER\ date,\ adjust;}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \ \ \textcolor{keywordflow}{if}\ (!GetProcessTimes(GetCurrentProcess(),\ \&CreationTime,\ \&ExitTime,\ \&KernelTime,\ \&UserTime))}
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/7;}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \textcolor{comment}{/*\ http://www.frenk.com/2009/12/convert-\/filetime-\/to-\/unix-\/timestamp/\ */}}
+\DoxyCodeLine{00638\ \ \ date.HighPart\ =\ UserTime.dwHighDateTime;}
+\DoxyCodeLine{00639\ \ \ date.LowPart\ =\ UserTime.dwLowDateTime;}
+\DoxyCodeLine{00640\ \ \ adjust.QuadPart\ =\ 11644473600000\ *\ 10000;}
+\DoxyCodeLine{00641\ \ \ date.QuadPart\ -\/=\ adjust.QuadPart;}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ date.QuadPart\ /\ 10000000;}
+\DoxyCodeLine{00644\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ (date.QuadPart\ \%\ 10000000)\ *\ (\mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}\ /\ 100);}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#elif\ PSNIP\_CLOCK\_CPU\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETRUSAGE}}
+\DoxyCodeLine{00646\ \ \ \textcolor{keyword}{struct\ }rusage\ usage;}
+\DoxyCodeLine{00647\ \ \ \textcolor{keywordflow}{if}\ (getrusage(RUSAGE\_SELF,\ \&usage)\ !=\ 0)}
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/8;}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ usage.ru\_utime.tv\_sec;}
+\DoxyCodeLine{00651\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ tv.tv\_usec\ *\ 1000;}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00653\ \ \ (void)\ res;}
+\DoxyCodeLine{00654\ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00658\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00352}{Psnip\+Clock\+Timespec\+::nanoseconds}}, \mbox{\hyperlink{munit_8c_source_l00527}{PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC}}, and \mbox{\hyperlink{munit_8c_source_l00351}{Psnip\+Clock\+Timespec\+::seconds}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00750}{psnip\+\_\+clock\+\_\+get\+\_\+time()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a9f8f21fa831b45847855bf4025db0935_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a10505b39a259cff310005a488505bfe4}\index{munit.c@{munit.c}!psnip\_clock\_get\_precision@{psnip\_clock\_get\_precision}}
+\index{psnip\_clock\_get\_precision@{psnip\_clock\_get\_precision}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_get\_precision()}{psnip\_clock\_get\_precision()}}
+{\footnotesize\ttfamily \label{munit_8c_a10505b39a259cff310005a488505bfe4} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} psnip\+\_\+clock\+\_\+get\+\_\+precision (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}}}]{clock\+\_\+type}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00733}{733}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keywordflow}{switch}\ (clock\_type)\ \{}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e}{PSNIP\_CLOCK\_TYPE\_MONOTONIC}}:}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a6efe0c9463d2f1f09029c6058a5c2a81}{psnip\_clock\_monotonic\_get\_precision}}();}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4}{PSNIP\_CLOCK\_TYPE\_CPU}}:}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a5ab643fbf15da6629efe0367a17ef9c9}{psnip\_clock\_cpu\_get\_precision}}();}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931}{PSNIP\_CLOCK\_TYPE\_WALL}}:}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a3d6f693b07f7c5f1e1d5a4270132daae}{psnip\_clock\_wall\_get\_precision}}();}
+\DoxyCodeLine{00741\ \ \ \ \ \}}
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \ \ \ \ \mbox{\hyperlink{munit_8c_ab5044d54f7e8a7d837fade0d93287192}{PSNIP\_CLOCK\_UNREACHABLE}}();}
+\DoxyCodeLine{00744\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00745\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00603}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+precision()}}, \mbox{\hyperlink{munit_8c_source_l00661}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+precision()}}, \mbox{\hyperlink{munit_8c_source_l00343}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+CPU}}, \mbox{\hyperlink{munit_8c_source_l00347}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+MONOTONIC}}, \mbox{\hyperlink{munit_8c_source_l00339}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+WALL}}, \mbox{\hyperlink{munit_8c_source_l00373}{PSNIP\+\_\+\+CLOCK\+\_\+\+UNREACHABLE}}, and \mbox{\hyperlink{munit_8c_source_l00562}{psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+precision()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a10505b39a259cff310005a488505bfe4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_ac95b680812516e1af53ef95ac27444ec}\index{munit.c@{munit.c}!psnip\_clock\_get\_time@{psnip\_clock\_get\_time}}
+\index{psnip\_clock\_get\_time@{psnip\_clock\_get\_time}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_get\_time()}{psnip\_clock\_get\_time()}}
+{\footnotesize\ttfamily \label{munit_8c_ac95b680812516e1af53ef95ac27444ec} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int psnip\+\_\+clock\+\_\+get\+\_\+time (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cb}{Psnip\+Clock\+Type}}}]{clock\+\_\+type}{, }\item[{struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}}]{res}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00750}{750}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00751\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(res\ !=\ NULL);}
+\DoxyCodeLine{00752\ }
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{keywordflow}{switch}\ (clock\_type)\ \{}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbae923f017a2cdeb456ae1716b0a098b6e}{PSNIP\_CLOCK\_TYPE\_MONOTONIC}}:}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_aaf6da39f7c6c03486a2b520106f33afb}{psnip\_clock\_monotonic\_get\_time}}(res);}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cbac572748a04c48e786ccad10e54e766f4}{PSNIP\_CLOCK\_TYPE\_CPU}}:}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a9f8f21fa831b45847855bf4025db0935}{psnip\_clock\_cpu\_get\_time}}(res);}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{munit_8c_afee753045f3b209603b31e159a7c59cba5c6b8180503343a1c15aeeef734f4931}{PSNIP\_CLOCK\_TYPE\_WALL}}:}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{munit_8c_a12a2ac48afaed6bcc7896d92c1420e3d}{psnip\_clock\_wall\_get\_time}}(res);}
+\DoxyCodeLine{00760\ \ \ \ \ \}}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00763\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert()}}, \mbox{\hyperlink{munit_8c_source_l00618}{psnip\+\_\+clock\+\_\+cpu\+\_\+get\+\_\+time()}}, \mbox{\hyperlink{munit_8c_source_l00683}{psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+time()}}, \mbox{\hyperlink{munit_8c_source_l00343}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+CPU}}, \mbox{\hyperlink{munit_8c_source_l00347}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+MONOTONIC}}, \mbox{\hyperlink{munit_8c_source_l00339}{PSNIP\+\_\+\+CLOCK\+\_\+\+TYPE\+\_\+\+WALL}}, and \mbox{\hyperlink{munit_8c_source_l00577}{psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+time()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_ac95b680812516e1af53ef95ac27444ec_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a6efe0c9463d2f1f09029c6058a5c2a81}\index{munit.c@{munit.c}!psnip\_clock\_monotonic\_get\_precision@{psnip\_clock\_monotonic\_get\_precision}}
+\index{psnip\_clock\_monotonic\_get\_precision@{psnip\_clock\_monotonic\_get\_precision}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_monotonic\_get\_precision()}{psnip\_clock\_monotonic\_get\_precision()}}
+{\footnotesize\ttfamily \label{munit_8c_a6efe0c9463d2f1f09029c6058a5c2a81} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+precision (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00661}{661}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)}}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_getres(PSNIP\_CLOCK\_CLOCK\_GETTIME\_MONOTONIC);}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}}
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{keyword}{static}\ mach\_timebase\_info\_data\_t\ tbi\ =\ \{\ 0,\ \};}
+\DoxyCodeLine{00668\ \ \ \textcolor{keywordflow}{if}\ (tbi.denom\ ==\ 0)}
+\DoxyCodeLine{00669\ \ \ \ \ mach\_timebase\_info(\&tbi);}
+\DoxyCodeLine{00670\ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\_uint32\_t}})\ (tbi.numer\ /\ tbi.denom);}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}}
+\DoxyCodeLine{00672\ \ \ \textcolor{keywordflow}{return}\ 1000;}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}}
+\DoxyCodeLine{00674\ \ \ LARGE\_INTEGER\ Frequency;}
+\DoxyCodeLine{00675\ \ \ QueryPerformanceFrequency(\&Frequency);}
+\DoxyCodeLine{00676\ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\_uint32\_t}})\ ((Frequency.QuadPart\ >\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}})\ ?\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}\ :\ Frequency.QuadPart);}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00678\ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00680\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00527}{PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC}}, and \mbox{\hyperlink{munit_8c_source_l00300}{psnip\+\_\+uint32\+\_\+t}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00733}{psnip\+\_\+clock\+\_\+get\+\_\+precision()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a6efe0c9463d2f1f09029c6058a5c2a81_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_aaf6da39f7c6c03486a2b520106f33afb}\index{munit.c@{munit.c}!psnip\_clock\_monotonic\_get\_time@{psnip\_clock\_monotonic\_get\_time}}
+\index{psnip\_clock\_monotonic\_get\_time@{psnip\_clock\_monotonic\_get\_time}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_monotonic\_get\_time()}{psnip\_clock\_monotonic\_get\_time()}}
+{\footnotesize\ttfamily \label{munit_8c_aaf6da39f7c6c03486a2b520106f33afb} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int psnip\+\_\+clock\+\_\+monotonic\+\_\+get\+\_\+time (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}}]{res}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00683}{683}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)}}
+\DoxyCodeLine{00685\ \ \ \ \ (void)\ res;}
+\DoxyCodeLine{00686\ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_gettime(PSNIP\_CLOCK\_CLOCK\_GETTIME\_MONOTONIC,\ res);}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_MACH\_ABSOLUTE\_TIME}}
+\DoxyCodeLine{00690\ \ \ \ \ \mbox{\hyperlink{munit_8c_a2d8a192bec9dabd8adc588392f04ee53}{psnip\_uint64\_t}}\ nsec\ =\ mach\_absolute\_time();}
+\DoxyCodeLine{00691\ \ \ \textcolor{keyword}{static}\ mach\_timebase\_info\_data\_t\ tbi\ =\ \{\ 0,\ \};}
+\DoxyCodeLine{00692\ \ \ \textcolor{keywordflow}{if}\ (tbi.denom\ ==\ 0)}
+\DoxyCodeLine{00693\ \ \ \ \ mach\_timebase\_info(\&tbi);}
+\DoxyCodeLine{00694\ \ \ nsec\ *=\ ((\mbox{\hyperlink{munit_8c_a2d8a192bec9dabd8adc588392f04ee53}{psnip\_uint64\_t}})\ tbi.numer)\ /\ ((\mbox{\hyperlink{munit_8c_a2d8a192bec9dabd8adc588392f04ee53}{psnip\_uint64\_t}})\ tbi.denom);}
+\DoxyCodeLine{00695\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ nsec\ /\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}};}
+\DoxyCodeLine{00696\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ nsec\ \%\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}};}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_QUERYPERFORMANCECOUNTER}}
+\DoxyCodeLine{00698\ \ \ LARGE\_INTEGER\ t,\ f;}
+\DoxyCodeLine{00699\ \ \ \textcolor{keywordflow}{if}\ (QueryPerformanceCounter(\&t)\ ==\ 0)}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/12;}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \ \ QueryPerformanceFrequency(\&f);}
+\DoxyCodeLine{00703\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ t.QuadPart\ /\ f.QuadPart;}
+\DoxyCodeLine{00704\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ t.QuadPart\ \%\ f.QuadPart;}
+\DoxyCodeLine{00705\ \ \ \textcolor{keywordflow}{if}\ (f.QuadPart\ >\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}})}
+\DoxyCodeLine{00706\ \ \ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ /=\ f.QuadPart\ /\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}};}
+\DoxyCodeLine{00707\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00708\ \ \ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ *=\ \mbox{\hyperlink{munit_8c_a7ee339646af39db208ccdb415e7ea226}{PSNIP\_CLOCK\_NSEC\_PER\_SEC}}\ /\ f.QuadPart;}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_MONOTONIC\_METHOD)\ \&\&\ PSNIP\_CLOCK\_MONOTONIC\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETTICKCOUNT64}}
+\DoxyCodeLine{00710\ \ \ \textcolor{keyword}{const}\ ULONGLONG\ msec\ =\ GetTickCount64();}
+\DoxyCodeLine{00711\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ msec\ /\ 1000;}
+\DoxyCodeLine{00712\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ sec\ \%\ 1000;}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00714\ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00716\ }
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00718\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00352}{Psnip\+Clock\+Timespec\+::nanoseconds}}, \mbox{\hyperlink{munit_8c_source_l00527}{PSNIP\+\_\+\+CLOCK\+\_\+\+NSEC\+\_\+\+PER\+\_\+\+SEC}}, \mbox{\hyperlink{munit_8c_source_l00299}{psnip\+\_\+uint64\+\_\+t}}, and \mbox{\hyperlink{munit_8c_source_l00351}{Psnip\+Clock\+Timespec\+::seconds}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00750}{psnip\+\_\+clock\+\_\+get\+\_\+time()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{d7/d13/munit_8c_aaf6da39f7c6c03486a2b520106f33afb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a3d6f693b07f7c5f1e1d5a4270132daae}\index{munit.c@{munit.c}!psnip\_clock\_wall\_get\_precision@{psnip\_clock\_wall\_get\_precision}}
+\index{psnip\_clock\_wall\_get\_precision@{psnip\_clock\_wall\_get\_precision}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_wall\_get\_precision()}{psnip\_clock\_wall\_get\_precision()}}
+{\footnotesize\ttfamily \label{munit_8c_a3d6f693b07f7c5f1e1d5a4270132daae} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} \mbox{\hyperlink{munit_8c_a35da8c605cf27f73b477fb82fe16d9ba}{psnip\+\_\+uint32\+\_\+t}} psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+precision (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00562}{562}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_WALL\_METHOD)}}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_getres(PSNIP\_CLOCK\_CLOCK\_GETTIME\_WALL);}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keywordflow}{return}\ 1000000;}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_TIME}}
+\DoxyCodeLine{00570\ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00572\ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00574\ \}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00733}{psnip\+\_\+clock\+\_\+get\+\_\+precision()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a3d6f693b07f7c5f1e1d5a4270132daae_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{munit_8c_a12a2ac48afaed6bcc7896d92c1420e3d}\index{munit.c@{munit.c}!psnip\_clock\_wall\_get\_time@{psnip\_clock\_wall\_get\_time}}
+\index{psnip\_clock\_wall\_get\_time@{psnip\_clock\_wall\_get\_time}!munit.c@{munit.c}}
+\doxysubsubsection{\texorpdfstring{psnip\_clock\_wall\_get\_time()}{psnip\_clock\_wall\_get\_time()}}
+{\footnotesize\ttfamily \label{munit_8c_a12a2ac48afaed6bcc7896d92c1420e3d} 
+\mbox{\hyperlink{munit_8c_a2ee720763bdc8818e9e652cc6296e1ec}{PSNIP\+\_\+\+CLOCK\+\_\+\+\_\+\+FUNCTION}} int psnip\+\_\+clock\+\_\+wall\+\_\+get\+\_\+time (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_psnip_clock_timespec}{Psnip\+Clock\+Timespec}} \texorpdfstring{$\ast$}{*}}]{res}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{munit_8c_source_l00577}{577}} of file \mbox{\hyperlink{munit_8c_source}{munit.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00578\ \ \ \ \ (void)\ res;}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#if\ !defined(PSNIP\_CLOCK\_WALL\_METHOD)}}
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_CLOCK\_GETTIME}}
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keywordflow}{return}\ psnip\_clock\_\_clock\_gettime(PSNIP\_CLOCK\_CLOCK\_GETTIME\_WALL,\ res);}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_TIME}}
+\DoxyCodeLine{00585\ \ \ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ time(NULL);}
+\DoxyCodeLine{00586\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ 0;}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#elif\ defined(PSNIP\_CLOCK\_WALL\_METHOD)\ \&\&\ PSNIP\_CLOCK\_WALL\_METHOD\ ==\ PSNIP\_CLOCK\_METHOD\_GETTIMEOFDAY}}
+\DoxyCodeLine{00588\ \ \ \textcolor{keyword}{struct\ }timeval\ tv;}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \textcolor{keywordflow}{if}\ (gettimeofday(\&tv,\ NULL)\ !=\ 0)}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/6;}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac1803243ca3b63a9a5108d15413ba5ec}{seconds}}\ =\ tv.tv\_sec;}
+\DoxyCodeLine{00594\ \ \ res-\/>\mbox{\hyperlink{struct_psnip_clock_timespec_ac87c57aa16e8add676e877686e843125}{nanoseconds}}\ =\ tv.tv\_usec\ *\ 1000;}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00596\ \ \ \textcolor{keywordflow}{return}\ -\/2;}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00600\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{munit_8c_source_l00352}{Psnip\+Clock\+Timespec\+::nanoseconds}}, and \mbox{\hyperlink{munit_8c_source_l00351}{Psnip\+Clock\+Timespec\+::seconds}}.
+
+
+
+Referenced by \mbox{\hyperlink{munit_8c_source_l00750}{psnip\+\_\+clock\+\_\+get\+\_\+time()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d13/munit_8c_a12a2ac48afaed6bcc7896d92c1420e3d_icgraph}
+\end{center}
+\end{figure}

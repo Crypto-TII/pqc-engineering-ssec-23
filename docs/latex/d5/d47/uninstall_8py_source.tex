@@ -1,0 +1,119 @@
+\doxysection{uninstall.\+py}
+\hypertarget{uninstall_8py_source}{}\label{uninstall_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/uninstall.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/commands/uninstall.py}}
+\mbox{\hyperlink{uninstall_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1uninstall}{00001}}\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00002}00002\ \textcolor{keyword}{from}\ optparse\ \textcolor{keyword}{import}\ Values}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1utils}{pip.\_vendor.packaging.utils}}\ \textcolor{keyword}{import}\ canonicalize\_name}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli}{pip.\_internal.cli}}\ \textcolor{keyword}{import}\ cmdoptions}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1base__command}{pip.\_internal.cli.base\_command}}\ \textcolor{keyword}{import}\ Command}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1req__command}{pip.\_internal.cli.req\_command}}\ \textcolor{keyword}{import}\ SessionCommandMixin,\ warn\_if\_run\_as\_root}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00010}00010\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1status__codes}{pip.\_internal.cli.status\_codes}}\ \textcolor{keyword}{import}\ SUCCESS}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00011}00011\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ InstallationError}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00012}00012\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req}{pip.\_internal.req}}\ \textcolor{keyword}{import}\ parse\_requirements}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00013}00013\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1req_1_1constructors}{pip.\_internal.req.constructors}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00014}00014\ \ \ \ \ install\_req\_from\_line,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00015}00015\ \ \ \ \ install\_req\_from\_parsed\_requirement,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00016}00016\ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00018}00018\ \ \ \ \ check\_externally\_managed,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00019}00019\ \ \ \ \ protect\_pip\_from\_modification\_on\_windows,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00020}00020\ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__internal_1_1commands_1_1uninstall_a0b14e488ae28d98d262453f3e9cd6e4d}{00022}}\ logger\ =\ logging.getLogger(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00025}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command}{00025}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command}{UninstallCommand}}(\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command}{Command}},\ \mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_session_command_mixin}{SessionCommandMixin}}):}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00026}00026\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ Uninstall\ packages.}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00028}00028\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ pip\ is\ able\ to\ uninstall\ most\ installed\ packages.\ Known\ exceptions\ are:}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00030}00030\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ -\/\ Pure\ distutils\ packages\ installed\ with\ \`{}\`{}python\ setup.py\ install\`{}\`{},\ which}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ \ \ leave\ behind\ no\ metadata\ to\ determine\ what\ files\ were\ installed.}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ -\/\ Script\ wrappers\ installed\ by\ \`{}\`{}python\ setup.py\ develop\`{}\`{}.}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00036}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command}{00036}}\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ <package>\ ...}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \%prog\ [options]\ -\/r\ <requirements\ file>\ ..."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00040}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command_a1168021049b96b5b9957aa2186f7f72c}{00040}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command_a1168021049b96b5b9957aa2186f7f72c}{add\_options}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/r"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/requirement"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}requirements"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ default=[],}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}file"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ help=(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninstall\ all\ the\ packages\ listed\ in\ the\ given\ requirements\ "{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}file.\ \ This\ option\ can\ be\ used\ multiple\ times."{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/y"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/yes"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}yes"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Don't\ ask\ for\ confirmation\ of\ uninstall\ deletions."{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.root\_user\_action())}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}}.add\_option(cmdoptions.override\_externally\_managed())}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00062}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command}{00062}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a90eee7a4677ca8b1ed116364a24367f9}{parser}}.insert\_option\_group(0,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a65b10bf886efe83b795318fdc83e4aaa}{cmd\_opts}})}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command_aed702143af1fdca26efdec21bf5c396e}{00064}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1commands_1_1uninstall_1_1_uninstall_command_aed702143af1fdca26efdec21bf5c396e}{run}}(self,\ options:\ Values,\ args:\ List[str])\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ session\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1req__command_1_1_session_command_mixin_accd08325c81aa870a90c1ee683c499f1}{get\_default\_session}}(options)}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ reqs\_to\_uninstall\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ name\ \textcolor{keywordflow}{in}\ args:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ install\_req\_from\_line(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isolated=options.isolated\_mode,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.name:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reqs\_to\_uninstall[canonicalize\_name(req.name)]\ =\ req}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logger.warning(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Invalid\ requirement:\ \%r\ ignored\ -\/"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ the\ uninstall\ command\ expects\ named"{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ requirements."{}},}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ filename\ \textcolor{keywordflow}{in}\ options.requirements:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ parsed\_req\ \textcolor{keywordflow}{in}\ parse\_requirements(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename,\ options=options,\ session=session}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ install\_req\_from\_parsed\_requirement(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed\_req,\ isolated=options.isolated\_mode}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ req.name:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reqs\_to\_uninstall[canonicalize\_name(req.name)]\ =\ req}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ reqs\_to\_uninstall:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_installation_error}{InstallationError}}(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}You\ must\ give\ at\ least\ one\ requirement\ to\ \{self.name\}\ (see\ "{}}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{'"{}pip\ help\ \{self.name\}"{})'}}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.override\_externally\_managed:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ check\_externally\_managed()}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ protect\_pip\_from\_modification\_on\_windows(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ modifying\_pip=\textcolor{stringliteral}{"{}pip"{}}\ \textcolor{keywordflow}{in}\ reqs\_to\_uninstall}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ req\ \textcolor{keywordflow}{in}\ reqs\_to\_uninstall.values():}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ uninstall\_pathset\ =\ req.uninstall(}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ auto\_confirm=options.yes,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verbose=self.\mbox{\hyperlink{classpip_1_1__internal_1_1cli_1_1base__command_1_1_command_a97b1cc04ec204ba7f1507498beb1d460}{verbosity}}\ >\ 0,}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ uninstall\_pathset:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uninstall\_pathset.commit()}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.root\_user\_action\ ==\ \textcolor{stringliteral}{"{}warn"{}}:}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ warn\_if\_run\_as\_root()}
+\DoxyCodeLine{\Hypertarget{uninstall_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SUCCESS}
+
+\end{DoxyCode}

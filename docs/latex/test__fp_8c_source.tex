@@ -1,0 +1,270 @@
+\doxysection{test\+\_\+fp.\+c}
+\hypertarget{test__fp_8c_source}{}\label{test__fp_8c_source}\index{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/c-\/code/tests/test\_fp.c@{C:/Users/liwuen/Desktop/Doxygen local test/pqc-\/engineering-\/ssec-\/23/c-\/code/tests/test\_fp.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ <fp.h>}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}test\_declarations.h"{}}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}test\_utils.h"{}}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00006}00006\ \textcolor{keyword}{static}\ MunitResult\ sample(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00007}00007\ \ \ \ \ fp\_t\ seed,\ rnd,\ aux,\ one;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00008}00008\ \ \ \ \ uint8\_t\ value\_equality,\ expected\_value;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00009}00009\ \ \ \ \ uint32\_t\ num\_checks\ =\ 10000;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00010}00010\ \ \ \ \ RANDOM\_FP\_ELEMENT(seed);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00011}00011\ \ \ \ \ fp\_set\_to\_zero(rnd);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00012}00012\ \ \ \ \ fp\_set\_to\_zero(aux);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00013}00013\ \ \ \ \ fp\_set\_to\_one(one);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00015}00015\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_BYTES,\ seed,\ rnd);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00017}00017\ \ \ \ \ fp\_copy(aux,\ FIELD\_CHARACTERISTIC);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00018}00018\ \ \ \ \ assert\_memory\_equal(FIELD\_BYTES,\ aux,\ FIELD\_CHARACTERISTIC);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00020}00020\ \ \ \ \ aux[FIELD\_64BITS\_WORDS\ -\/\ 1]++;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00021}00021\ \ \ \ \ value\_equality\ =\ fp\_is\_smaller(aux,\ FIELD\_CHARACTERISTIC);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00022}00022\ \ \ \ \ expected\_value\ =\ 0x00;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00023}00023\ \ \ \ \ assert\_memory\_equal(\textcolor{keyword}{sizeof}(uint8\_t),\ \&expected\_value,\ \&value\_equality);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00025}00025\ \ \ \ \ aux[FIELD\_64BITS\_WORDS\ -\/\ 1]\ -\/=\ 2;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00026}00026\ \ \ \ \ value\_equality\ =\ fp\_is\_smaller(aux,\ FIELD\_CHARACTERISTIC);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00027}00027\ \ \ \ \ expected\_value\ =\ 0x01;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00028}00028\ \ \ \ \ assert\_memory\_equal(\textcolor{keyword}{sizeof}(uint8\_t),\ \&expected\_value,\ \&value\_equality);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ num\_checks;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00031}00031\ \ \ \ \ \ \ \ \ fp\_sample(rnd);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00032}00032\ \ \ \ \ \ \ \ \ value\_equality\ =\ fp\_is\_smaller(rnd,\ FIELD\_CHARACTERISTIC);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00033}00033\ \ \ \ \ \ \ \ \ assert\_memory\_equal(\textcolor{keyword}{sizeof}(uint8\_t),\ \&expected\_value,\ \&value\_equality);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00034}00034\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00038}00038\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00041}00041\ \textcolor{keyword}{static}\ MunitResult\ is\_zero(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00043}00043\ \ \ \ \ fp\_t\ a;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00044}00044\ \ \ \ \ fp\_set\_to\_zero(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00045}00045\ \ \ \ \ assert\_true(fp\_is\_zero(a));}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00046}00046\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00047}00047\ \ \ \ \ assert\_false(fp\_is\_zero(a));}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00053}00053\ \textcolor{keyword}{static}\ MunitResult\ add\_and\_sub(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00055}00055\ \ \ \ \ fp\_t\ a,\ b,\ c,\ d,\ e,\ f;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00057}00057\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00058}00058\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00059}00059\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00060}00060\ \ \ \ \ fp\_set\_to\_zero(d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00062}00062\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ d);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00064}00064\ \ \ \ \ fp\_add(c,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00065}00065\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ a,\ c);\ \ \ \ \ \ \textcolor{comment}{//\ a\ +\ 0\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00066}00066\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00067}00067\ \ \ \ \ fp\_add(c,\ b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00068}00068\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ a,\ c);\ \ \ \ \ \ \textcolor{comment}{//\ 0\ +\ a\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00070}00070\ \ \ \ \ fp\_neg(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00071}00071\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);\ \ \textcolor{comment}{//\ -\/a\ !=\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00072}00072\ \ \ \ \ fp\_add(c,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00073}00073\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ d);\ \ \ \ \ \ \textcolor{comment}{//\ a\ -\/\ a\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00074}00074\ \ \ \ \ fp\_add(c,\ b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00075}00075\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ d);\ \ \ \ \ \ \textcolor{comment}{//\ (-\/a)\ +\ a\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00077}00077\ \ \ \ \ fp\_add(b,\ a,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00078}00078\ \ \ \ \ fp\_half(c,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00079}00079\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ a);\ \ \ \ \ \ \textcolor{comment}{//\ (2a)/2\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00081}00081\ \ \ \ \ RANDOM\_FP\_ELEMENT(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00082}00082\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ b,\ d);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00084}00084\ \ \ \ \ fp\_add(c,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00085}00085\ \ \ \ \ fp\_sub(d,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00086}00086\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ b,\ d);\ \ \textcolor{comment}{//\ a\ +\ b\ !=\ a\ -\/\ b}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00088}00088\ \ \ \ \ fp\_sub(e,\ c,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00089}00089\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ e,\ a);\ \ \ \ \ \ \textcolor{comment}{//\ (a\ +\ b)\ -\/\ b\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00091}00091\ \ \ \ \ fp\_add(f,\ d,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00092}00092\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ f,\ a);\ \ \ \ \ \ \textcolor{comment}{//\ (a\ -\/\ b)\ +\ b\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00094}00094\ \ \ \ \ fp\_add(e,\ c,\ d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00095}00095\ \ \ \ \ fp\_half(e,\ e);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00096}00096\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ e,\ a);\ \ \ \ \ \ \textcolor{comment}{//\ ([a\ +\ b]\ +\ [a\ -\/\ b])/2\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00098}00098\ \ \ \ \ fp\_sub(f,\ c,\ d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00099}00099\ \ \ \ \ fp\_half(f,\ f);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00100}00100\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ f,\ b);\ \ \ \ \ \ \textcolor{comment}{//\ ([a\ +\ b]\ -\/\ [a\ -\/\ b])/2\ =\ b}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00102}00102\ \ \ \ \ fp\_sub(c,\ b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00103}00103\ \ \ \ \ fp\_neg(c,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00104}00104\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ d);\ \ \ \ \ \ \textcolor{comment}{//\ (a\ -\/\ b)\ =\ -\/(b\ -\/\ a)}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00107}00107\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00110}00110\ \textcolor{keyword}{static}\ MunitResult\ mul\_and\_sqr(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00111}00111\ \ \ \ \ fp\_t\ a,\ b,\ c,\ d;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00113}00113\ \ \ \ \ fp\_set\_to\_zero(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00114}00114\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00115}00115\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00116}00116\ \ \ \ \ fp\_set\_to\_zero(d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00118}00118\ \ \ \ \ a[0]\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00119}00119\ \ \ \ \ fp\_copy(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00121}00121\ \ \ \ \ fp\_to\_mont(b,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00122}00122\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ MONTGOMERY\_CONSTANT\_ONE);\ \ \ \ \textcolor{comment}{//\ 1\ -\/>\ R}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00124}00124\ \ \ \ \ fp\_from\_mont(b,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00125}00125\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ a);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ R\ -\/>\ 1}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00127}00127\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00128}00128\ \ \ \ \ fp\_mul(b,\ a,\ MONTGOMERY\_CONSTANT\_ONE);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00129}00129\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ a);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ *\ 1\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00131}00131\ \ \ \ \ fp\_mul(b,\ MONTGOMERY\_CONSTANT\_ONE,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00132}00132\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ a);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1\ *\ a\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00134}00134\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00135}00135\ \ \ \ \ fp\_mul(b,\ a,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00136}00136\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ c);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ *\ 0\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00138}00138\ \ \ \ \ fp\_mul(b,\ c,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00139}00139\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ c);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\ *\ a\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00141}00141\ \ \ \ \ c[0]\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00142}00142\ \ \ \ \ fp\_to\_mont(c,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00143}00143\ \ \ \ \ fp\_add(b,\ a,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00144}00144\ \ \ \ \ fp\_mul(d,\ a,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00145}00145\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ d);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 2\ *\ a\ =\ a\ +\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00147}00147\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00148}00148\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00149}00149\ \ \ \ \ fp\_sqr(b,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00150}00150\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ c);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\string^2\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00152}00152\ \ \ \ \ fp\_set\_to\_one(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00153}00153\ \ \ \ \ fp\_sqr(b,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00154}00154\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ MONTGOMERY\_CONSTANT\_ONE);\ \ \ \ \textcolor{comment}{//\ 1\string^2\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00156}00156\ \ \ \ \ fp\_sqr(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00157}00157\ \ \ \ \ fp\_mul(c,\ a,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00158}00158\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ c);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ *\ a\ =\ a\string^2}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00161}00161\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00164}00164\ \textcolor{keyword}{static}\ MunitResult\ inv(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00166}00166\ \ \ \ \ fp\_t\ a,\ b,\ c;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00168}00168\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00169}00169\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00170}00170\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00172}00172\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ c);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00174}00174\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00175}00175\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00177}00177\ \ \ \ \ fp\_inv(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00178}00178\ \ \ \ \ fp\_mul(c,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00179}00179\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ MONTGOMERY\_CONSTANT\_ONE);\ \ \ \ \textcolor{comment}{//\ a\ *\ a⁻¹\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00181}00181\ \ \ \ \ fp\_inv(b,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00182}00182\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (a⁻¹)⁻¹\ =\ a}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00184}00184\ \ \ \ \ fp\_set\_to\_one(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00185}00185\ \ \ \ \ fp\_inv(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00186}00186\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (1⁻¹)\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00188}00188\ \ \ \ \ fp\_mul(c,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00189}00189\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ c,\ MONTGOMERY\_CONSTANT\_ONE);\ \ \ \ \textcolor{comment}{//\ 1\ *\ 1\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00191}00191\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00192}00192\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00194}00194\ \textcolor{keyword}{static}\ MunitResult\ square\_root(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00196}00196\ \ \ \ \ fp\_t\ a,\ b,\ c,\ d;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00198}00198\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00199}00199\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00200}00200\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00201}00201\ \ \ \ \ fp\_set\_to\_zero(d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00203}00203\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ c);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00204}00204\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00206}00206\ \ \ \ \ \textcolor{comment}{//\ b\ =\ \ a\string^2}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00207}00207\ \ \ \ \ fp\_sqr(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ c\ =\ sqrt(b)}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00210}00210\ \ \ \ \ fp\_sqrt(c,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00212}00212\ \ \ \ \ \textcolor{comment}{//\ d\ \ =\ c\string^2}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00213}00213\ \ \ \ \ fp\_sqr(d,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00214}00214\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00216}00216\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00217}00217\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00219}00219\ \textcolor{keyword}{static}\ MunitResult\ cube\_root(MUNIT\_UNUSED\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_munit_parameter}{MunitParameter}}\ params[],\ MUNIT\_UNUSED\ \textcolor{keywordtype}{void}\ *user\_data\_or\_fixture)\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00221}00221\ \ \ \ \ fp\_t\ a,\ b,\ c,\ d;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{if}(FIELD\_BITS\ ==\ 381\ ||\ FIELD\_BITS\ ==\ 575\ ||\ FIELD\_BITS\ ==\ 765)\{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_SKIP;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00227}00227\ \ \ \ \ RANDOM\_FP\_ELEMENT(a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00228}00228\ \ \ \ \ fp\_set\_to\_zero(b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00229}00229\ \ \ \ \ fp\_set\_to\_zero(c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00230}00230\ \ \ \ \ fp\_set\_to\_zero(d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00232}00232\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ c);\ \ \textcolor{comment}{//\ Random\ value\ different\ from\ zero}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00233}00233\ \ \ \ \ assert\_memory\_not\_equal(FIELD\_64BITS\_WORDS,\ a,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00235}00235\ \ \ \ \ \textcolor{comment}{//\ b\ =\ \ a\string^3}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00236}00236\ \ \ \ \ fp\_sqr(b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00237}00237\ \ \ \ \ fp\_mul(b,\ b,\ a);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00239}00239\ \ \ \ \ \textcolor{comment}{//\ c\ =\ sqrt(b)}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00240}00240\ \ \ \ \ fp\_curt(c,\ b);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00242}00242\ \ \ \ \ \textcolor{comment}{//\ d\ \ =\ c\string^2}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00243}00243\ \ \ \ \ fp\_sqr(d,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00244}00244\ \ \ \ \ fp\_mul(d,\ d,\ c);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00245}00245\ \ \ \ \ assert\_memory\_equal(FIELD\_64BITS\_WORDS,\ b,\ d);}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{return}\ MUNIT\_OK;}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00248}00248\ \}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00250}00250\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00251}00251\ \textcolor{comment}{\ *\ Register\ test\ cases}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00252}00252\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00254}00254\ \mbox{\hyperlink{struct_munit_test}{MunitTest}}\ test\_fp[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00255}00255\ \ \ \ \ \ \ \ \ TEST\_CASE(sample),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00256}00256\ \ \ \ \ \ \ \ \ TEST\_CASE(is\_zero),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00257}00257\ \ \ \ \ \ \ \ \ TEST\_CASE(add\_and\_sub),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ TEST\_CASE(mul\_and\_sqr),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ TEST\_CASE(inv),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00260}00260\ \ \ \ \ \ \ \ \ TEST\_CASE(square\_root),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ TEST\_CASE(cube\_root),}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ TEST\_END}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00263}00263\ \};}
+\DoxyCodeLine{\Hypertarget{test__fp_8c_source_l00264}00264\ }
+
+\end{DoxyCode}

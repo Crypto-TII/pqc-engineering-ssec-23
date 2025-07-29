@@ -1,0 +1,173 @@
+\doxysection{pip.\+\_\+vendor.\+rich.\+jupyter Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter}{}\label{namespacepip_1_1__vendor_1_1rich_1_1jupyter}\index{pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1jupyter_1_1_jupyter_mixin}{Jupyter\+Mixin}}
+\item 
+class \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1jupyter_1_1_jupyter_renderable}{Jupyter\+Renderable}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a9b6393b0ece6ef7738d5663d06376ff8}{\+\_\+render\+\_\+segments}} (Iterable\mbox{[}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment}{Segment}}\mbox{]} segments)
+\item 
+None \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a10a08278897a387657ad6c6224267029}{display}} (Iterable\mbox{[}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment}{Segment}}\mbox{]} segments, str text)
+\item 
+None \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a6549943c81e6e05d33ecfdd13372c902}{print}} (\texorpdfstring{$\ast$}{*}Any args, \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}Any kwargs)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+str \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a4c7bd67cbae310564749820768ca4d82}{JUPYTER\+\_\+\+HTML\+\_\+\+FORMAT}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a9b6393b0ece6ef7738d5663d06376ff8}\index{pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}!\_render\_segments@{\_render\_segments}}
+\index{\_render\_segments@{\_render\_segments}!pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}}
+\doxysubsubsection{\texorpdfstring{\_render\_segments()}{\_render\_segments()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a9b6393b0ece6ef7738d5663d06376ff8} 
+ str \+\_\+render\+\_\+segments (\begin{DoxyParamCaption}\item[{Iterable\mbox{[}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment}{Segment}}\mbox{]}}]{segments}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{jupyter_8py_source_l00059}{59}} of file \mbox{\hyperlink{jupyter_8py_source}{jupyter.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00059\ \textcolor{keyword}{def\ }\_render\_segments(segments:\ Iterable[Segment])\ -\/>\ str:}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{def\ }escape(text:\ str)\ -\/>\ str:}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Escape\ html."{}"{}"{}}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text.replace(\textcolor{stringliteral}{"{}\&"{}},\ \textcolor{stringliteral}{"{}\&amp;"{}}).replace(\textcolor{stringliteral}{"{}<"{}},\ \textcolor{stringliteral}{"{}\&lt;"{}}).replace(\textcolor{stringliteral}{"{}>"{}},\ \textcolor{stringliteral}{"{}\&gt;"{}})}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ fragments:\ List[str]\ =\ []}
+\DoxyCodeLine{00065\ \ \ \ \ append\_fragment\ =\ fragments.append}
+\DoxyCodeLine{00066\ \ \ \ \ theme\ =\ DEFAULT\_TERMINAL\_THEME}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{for}\ text,\ style,\ control\ \textcolor{keywordflow}{in}\ Segment.simplify(segments):}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ control:}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ text\ =\ escape(text)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style:}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ rule\ =\ style.get\_html\_style(theme)}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ text\ =\ f\textcolor{stringliteral}{'<span\ style="{}\{rule\}"{}>\{text\}</span>'}\ \textcolor{keywordflow}{if}\ rule\ \textcolor{keywordflow}{else}\ text}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ style.link:}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text\ =\ f\textcolor{stringliteral}{'<a\ href="{}\{style.link\}"{}\ target="{}\_blank"{}>\{text\}</a>'}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ append\_fragment(text)}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ code\ =\ \textcolor{stringliteral}{"{}"{}}.join(fragments)}
+\DoxyCodeLine{00079\ \ \ \ \ html\ =\ JUPYTER\_HTML\_FORMAT.format(code=code)}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{return}\ html}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{jupyter_8py_source_l00046}{Jupyter\+Mixin.\+\_\+repr\+\_\+mimebundle\+\_\+()}}, and \mbox{\hyperlink{jupyter_8py_source_l00084}{display()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d4/dbb/namespacepip_1_1__vendor_1_1rich_1_1jupyter_a9b6393b0ece6ef7738d5663d06376ff8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a10a08278897a387657ad6c6224267029}\index{pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}!display@{display}}
+\index{display@{display}!pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a10a08278897a387657ad6c6224267029} 
+ None display (\begin{DoxyParamCaption}\item[{Iterable\mbox{[}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment}{Segment}}\mbox{]}}]{segments}{, }\item[{str}]{text}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Render segments to Jupyter.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{jupyter_8py_source_l00084}{84}} of file \mbox{\hyperlink{jupyter_8py_source}{jupyter.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00084\ \textcolor{keyword}{def\ }display(segments:\ Iterable[Segment],\ text:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Render\ segments\ to\ Jupyter."{}"{}"{}}}
+\DoxyCodeLine{00086\ \ \ \ \ html\ =\ \_render\_segments(segments)}
+\DoxyCodeLine{00087\ \ \ \ \ jupyter\_renderable\ =\ JupyterRenderable(html,\ text)}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{from}\ IPython.display\ \textcolor{keyword}{import}\ display\ \textcolor{keyword}{as}\ ipython\_display}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ ipython\_display(jupyter\_renderable)}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{except}\ ModuleNotFoundError:}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ the\ case\ where\ the\ Console\ has\ force\_jupyter=True,}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ but\ IPython\ is\ not\ installed.}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{jupyter_8py_source_l00059}{\+\_\+render\+\_\+segments()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=259pt]{d4/dbb/namespacepip_1_1__vendor_1_1rich_1_1jupyter_a10a08278897a387657ad6c6224267029_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a6549943c81e6e05d33ecfdd13372c902}\index{pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}!print@{print}}
+\index{print@{print}!pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a6549943c81e6e05d33ecfdd13372c902} 
+ None print (\begin{DoxyParamCaption}\item[{\texorpdfstring{$\ast$}{*}Any}]{args}{, }\item[{\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}Any}]{kwargs}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Proxy for Console print.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{jupyter_8py_source_l00098}{98}} of file \mbox{\hyperlink{jupyter_8py_source}{jupyter.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00098\ \textcolor{keyword}{def\ }print(*args:\ Any,\ **kwargs:\ Any)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Proxy\ for\ Console\ print."{}"{}"{}}}
+\DoxyCodeLine{00100\ \ \ \ \ console\ =\ get\_console()}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{return}\ console.print(*args,\ **kwargs)}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{__vendor_2rich_2____init_____8py_source_l00023}{pip.\+\_\+vendor.\+rich.\+get\+\_\+console()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{d4/dbb/namespacepip_1_1__vendor_1_1rich_1_1jupyter_a6549943c81e6e05d33ecfdd13372c902_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a4c7bd67cbae310564749820768ca4d82}\index{pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}!JUPYTER\_HTML\_FORMAT@{JUPYTER\_HTML\_FORMAT}}
+\index{JUPYTER\_HTML\_FORMAT@{JUPYTER\_HTML\_FORMAT}!pip.\_vendor.rich.jupyter@{pip.\_vendor.rich.jupyter}}
+\doxysubsubsection{\texorpdfstring{JUPYTER\_HTML\_FORMAT}{JUPYTER\_HTML\_FORMAT}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1rich_1_1jupyter_a4c7bd67cbae310564749820768ca4d82} 
+str JUPYTER\+\_\+\+HTML\+\_\+\+FORMAT}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ \textcolor{stringliteral}{"{}"{}"{}\(\backslash\)}}
+\DoxyCodeLine{00002\ \textcolor{stringliteral}{<pre\ style="{}white-\/space:pre;overflow-\/x:auto;line-\/height:normal;font-\/family:Menlo,'DejaVu\ Sans\ Mono',consolas,'Courier\ New',monospace"{}>\{code\}</pre>}}
+\DoxyCodeLine{00003\ \textcolor{stringliteral}{"{}"{}"{}}}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{jupyter_8py_source_l00013}{13}} of file \mbox{\hyperlink{jupyter_8py_source}{jupyter.\+py}}.
+

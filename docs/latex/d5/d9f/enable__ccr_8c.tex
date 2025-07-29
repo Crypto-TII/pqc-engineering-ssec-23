@@ -1,0 +1,97 @@
+\doxysection{E\+:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/enable\+\_\+ccr/enable\+\_\+ccr.c File Reference}
+\hypertarget{enable__ccr_8c}{}\label{enable__ccr_8c}\index{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/enable\_ccr/enable\_ccr.c@{E:/pqc-\/engineering-\/ssec-\/23/c-\/code/benchmarks/enable\_ccr/enable\_ccr.c}}
+{\ttfamily \#include $<$linux/module.\+h$>$}\newline
+{\ttfamily \#include $<$linux/kernel.\+h$>$}\newline
+Include dependency graph for enable\+\_\+ccr.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{da/d3c/enable__ccr_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{enable__ccr_8c_a27001c4998e1238ef05c4ce5a753b8be}{enable\+\_\+ccr}} (void \texorpdfstring{$\ast$}{*}info)
+\item 
+int \mbox{\hyperlink{enable__ccr_8c_ae52690ce6969b799366b2c5feba67b8c}{init\+\_\+module}} (void)
+\item 
+\mbox{\hyperlink{enable__ccr_8c_a92c6e294b85be9501050af89a48fd19c}{MODULE\+\_\+\+LICENSE}} ("{}CC0"{})
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{enable__ccr_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{enable__ccr_8c_a27001c4998e1238ef05c4ce5a753b8be}\index{enable\_ccr.c@{enable\_ccr.c}!enable\_ccr@{enable\_ccr}}
+\index{enable\_ccr@{enable\_ccr}!enable\_ccr.c@{enable\_ccr.c}}
+\doxysubsubsection{\texorpdfstring{enable\_ccr()}{enable\_ccr()}}
+{\footnotesize\ttfamily \label{enable__ccr_8c_a27001c4998e1238ef05c4ce5a753b8be} 
+void enable\+\_\+ccr (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{info}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{enable__ccr_8c_source_l00004}{4}} of file \mbox{\hyperlink{enable__ccr_8c_source}{enable\+\_\+ccr.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\ \ \ \#ifdef\ \_\_aarch64\_\_ }}
+\DoxyCodeLine{00007\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}MSR\ PMUSERENR\_EL0,\ \%0"{}}\ ::\textcolor{stringliteral}{"{}r"{}}(1));}
+\DoxyCodeLine{00008\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}MSR\ PMCR\_EL0,\ \%0"{}}\ ::\textcolor{stringliteral}{"{}r"{}}(1));}
+\DoxyCodeLine{00009\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}MSR\ PMCNTENSET\_EL0,\ \%0"{}}\ ::\textcolor{stringliteral}{"{}r"{}}(0x80000000));}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\ \ \ \#else }}
+\DoxyCodeLine{00011\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}mcr\ p15,\ 0,\ \%0,\ c9,\ c14,\ 0"{}}\ ::\ \textcolor{stringliteral}{"{}r"{}}(1));}
+\DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}mcr\ p15,\ 0,\ \%0,\ c9,\ c12,\ 0"{}}\ ::\ \textcolor{stringliteral}{"{}r"{}}(1\ |\ 16));}
+\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}mcr\ p15,\ 0,\ \%0,\ c9,\ c12,\ 1"{}}\ ::\ \textcolor{stringliteral}{"{}r"{}}(0x8000000f));}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\ \ \ \#endif }}
+\DoxyCodeLine{00015\ \}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{enable__ccr_8c_source_l00017}{init\+\_\+module()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{d5/d9f/enable__ccr_8c_a27001c4998e1238ef05c4ce5a753b8be_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{enable__ccr_8c_ae52690ce6969b799366b2c5feba67b8c}\index{enable\_ccr.c@{enable\_ccr.c}!init\_module@{init\_module}}
+\index{init\_module@{init\_module}!enable\_ccr.c@{enable\_ccr.c}}
+\doxysubsubsection{\texorpdfstring{init\_module()}{init\_module()}}
+{\footnotesize\ttfamily \label{enable__ccr_8c_ae52690ce6969b799366b2c5feba67b8c} 
+int init\+\_\+module (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{enable__ccr_8c_source_l00017}{17}} of file \mbox{\hyperlink{enable__ccr_8c_source}{enable\+\_\+ccr.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \ \ \ on\_each\_cpu(\mbox{\hyperlink{enable__ccr_8c_a27001c4998e1238ef05c4ce5a753b8be}{enable\_ccr}},\ NULL,\ 0);}
+\DoxyCodeLine{00020\ \ \ \ printk(KERN\_INFO\ \textcolor{stringliteral}{"{}Userspace\ access\ to\ CCR\ enabled\(\backslash\)n"{}});}
+\DoxyCodeLine{00021\ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00022\ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{enable__ccr_8c_source_l00004}{enable\+\_\+ccr()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{d5/d9f/enable__ccr_8c_ae52690ce6969b799366b2c5feba67b8c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{enable__ccr_8c_a92c6e294b85be9501050af89a48fd19c}\index{enable\_ccr.c@{enable\_ccr.c}!MODULE\_LICENSE@{MODULE\_LICENSE}}
+\index{MODULE\_LICENSE@{MODULE\_LICENSE}!enable\_ccr.c@{enable\_ccr.c}}
+\doxysubsubsection{\texorpdfstring{MODULE\_LICENSE()}{MODULE\_LICENSE()}}
+{\footnotesize\ttfamily \label{enable__ccr_8c_a92c6e294b85be9501050af89a48fd19c} 
+MODULE\+\_\+\+LICENSE (\begin{DoxyParamCaption}\item[{"{}CC0"{}}]{}{}\end{DoxyParamCaption})}
+

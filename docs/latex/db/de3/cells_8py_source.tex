@@ -1,0 +1,160 @@
+\doxysection{cells.\+py}
+\hypertarget{cells_8py_source}{}\label{cells_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/cells.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/cells.py}}
+\mbox{\hyperlink{cells_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells}{00001}}\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00002}00002\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ lru\_cache}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00003}00003\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Callable,\ List}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00005}00005\ \textcolor{keyword}{from}\ .\_cell\_widths\ \textcolor{keyword}{import}\ CELL\_WIDTHS}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00007}00007\ \textcolor{comment}{\#\ Regex\ to\ match\ sequence\ of\ the\ most\ common\ character\ ranges}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00008}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_ae6fb614eb0b838cd6ebd2053ec3686f7}{00008}}\ \_is\_single\_cell\_widths\ =\ re.compile(\textcolor{stringliteral}{"{}\string^[\(\backslash\)u0020-\/\(\backslash\)u006f\(\backslash\)u00a0\(\backslash\)u02ff\(\backslash\)u0370-\/\(\backslash\)u0482]*\$"{}}).match}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00011}00011\ \textcolor{preprocessor}{@lru\_cache(4096)}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00012}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_af8040f181e78c9d7377349a21813f023}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_af8040f181e78c9d7377349a21813f023}{cached\_cell\_len}}(text:\ str)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00013}00013\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ number\ of\ cells\ required\ to\ display\ text.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00014}00014\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00015}00015\ \textcolor{stringliteral}{\ \ \ \ This\ method\ always\ caches,\ which\ may\ use\ up\ a\ lot\ of\ memory.\ It\ is\ recommended\ to\ use}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00016}00016\ \textcolor{stringliteral}{\ \ \ \ \`{}cell\_len\`{}\ over\ this\ method.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00017}00017\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ text\ (str):\ Text\ to\ display.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00020}00020\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ int:\ Get\ the\ number\ of\ cells\ required\ to\ display\ text.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00024}00024\ \ \ \ \ \_get\_size\ =\ get\_character\_cell\_size}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00025}00025\ \ \ \ \ total\_size\ =\ sum(\_get\_size(character)\ \textcolor{keywordflow}{for}\ character\ \textcolor{keywordflow}{in}\ text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{return}\ total\_size}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00029}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a0f6f1b8c1d6d2bcf35f32bccc4edb4a6}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a0f6f1b8c1d6d2bcf35f32bccc4edb4a6}{cell\_len}}(text:\ str,\ \_cell\_len:\ Callable[[str],\ int]\ =\ cached\_cell\_len)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ number\ of\ cells\ required\ to\ display\ text.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00031}00031\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ text\ (str):\ Text\ to\ display.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00034}00034\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ int:\ Get\ the\ number\ of\ cells\ required\ to\ display\ text.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{if}\ len(text)\ <\ 512:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_cell\_len(text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00040}00040\ \ \ \ \ \_get\_size\ =\ get\_character\_cell\_size}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00041}00041\ \ \ \ \ total\_size\ =\ sum(\_get\_size(character)\ \textcolor{keywordflow}{for}\ character\ \textcolor{keywordflow}{in}\ text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{return}\ total\_size}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00045}00045\ \textcolor{preprocessor}{@lru\_cache(maxsize=4096)}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00046}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a1da6a654595395ec6e47eabb594e39fc}{00046}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a1da6a654595395ec6e47eabb594e39fc}{get\_character\_cell\_size}}(character:\ str)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00047}00047\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ cell\ size\ of\ a\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00048}00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ character\ (str):\ A\ single\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00051}00051\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ int:\ Number\ of\ cells\ (0,\ 1\ or\ 2)\ occupied\ by\ that\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a035c4038edbef7e0680f3852bf6e2857}{\_get\_codepoint\_cell\_size}}(ord(character))}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00058}00058\ \textcolor{preprocessor}{@lru\_cache(maxsize=4096)}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00059}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a035c4038edbef7e0680f3852bf6e2857}{00059}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a035c4038edbef7e0680f3852bf6e2857}{\_get\_codepoint\_cell\_size}}(codepoint:\ int)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00060}00060\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ cell\ size\ of\ a\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00061}00061\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ codepoint\ (int):\ Codepoint\ of\ a\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00064}00064\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ int:\ Number\ of\ cells\ (0,\ 1\ or\ 2)\ occupied\ by\ that\ character.}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00069}00069\ \ \ \ \ \_table\ =\ CELL\_WIDTHS}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00070}00070\ \ \ \ \ lower\_bound\ =\ 0}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00071}00071\ \ \ \ \ upper\_bound\ =\ len(\_table)\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00072}00072\ \ \ \ \ index\ =\ (lower\_bound\ +\ upper\_bound)\ //\ 2}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ start,\ end,\ width\ =\ \_table[index]}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ codepoint\ <\ start:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ upper\_bound\ =\ index\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ codepoint\ >\ end:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ lower\_bound\ =\ index\ +\ 1}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0\ \textcolor{keywordflow}{if}\ width\ ==\ -\/1\ \textcolor{keywordflow}{else}\ width}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ upper\_bound\ <\ lower\_bound:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ index\ =\ (lower\_bound\ +\ upper\_bound)\ //\ 2}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{return}\ 1}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00087}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a9dbf873cc6e4bdffb28ff64c30eb615b}{00087}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a9dbf873cc6e4bdffb28ff64c30eb615b}{set\_cell\_size}}(text:\ str,\ total:\ int)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00088}00088\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Set\ the\ length\ of\ a\ string\ to\ fit\ within\ given\ number\ of\ cells."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_ae6fb614eb0b838cd6ebd2053ec3686f7}{\_is\_single\_cell\_widths}}(text):}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ size\ =\ len(text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ size\ <\ total:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text\ +\ \textcolor{stringliteral}{"{}\ "{}}\ *\ (total\ -\/\ size)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text[:total]}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00096}00096\ \ \ \ \ \textcolor{keywordflow}{if}\ total\ <=\ 0:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00098}00098\ \ \ \ \ cell\_size\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a0f6f1b8c1d6d2bcf35f32bccc4edb4a6}{cell\_len}}(text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{if}\ cell\_size\ ==\ total:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}\ cell\_size\ <\ total:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text\ +\ \textcolor{stringliteral}{"{}\ "{}}\ *\ (total\ -\/\ cell\_size)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00104}00104\ \ \ \ \ start\ =\ 0}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00105}00105\ \ \ \ \ end\ =\ len(text)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00107}00107\ \ \ \ \ \textcolor{comment}{\#\ Binary\ search\ until\ we\ find\ the\ right\ size}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ pos\ =\ (start\ +\ end)\ //\ 2}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ before\ =\ text[:\ pos\ +\ 1]}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ before\_len\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a0f6f1b8c1d6d2bcf35f32bccc4edb4a6}{cell\_len}}(before)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ before\_len\ ==\ total\ +\ 1\ \textcolor{keywordflow}{and}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_a0f6f1b8c1d6d2bcf35f32bccc4edb4a6}{cell\_len}}(before[-\/1])\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ before[:-\/1]\ +\ \textcolor{stringliteral}{"{}\ "{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ before\_len\ ==\ total:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ before}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ before\_len\ >\ total:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ end\ =\ pos}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ start\ =\ pos}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00122}00122\ \textcolor{comment}{\#\ TODO:\ This\ is\ inefficient}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00123}00123\ \textcolor{comment}{\#\ TODO:\ This\ might\ not\ work\ with\ CWJ\ type\ characters}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00124}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_acddb59f2b564d468bf52a8970df2c3d6}{00124}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1cells_acddb59f2b564d468bf52a8970df2c3d6}{chop\_cells}}(text:\ str,\ max\_size:\ int,\ position:\ int\ =\ 0)\ -\/>\ List[str]:}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00125}00125\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Break\ text\ in\ to\ equal\ (cell)\ length\ strings,\ returning\ the\ characters\ in\ reverse}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ order"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ \_get\_character\_cell\_size\ =\ get\_character\_cell\_size}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ characters\ =\ [}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ (character,\ \_get\_character\_cell\_size(character))\ for\ character\ in\ text}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ ]}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ total\_size\ =\ position}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ lines:\ List[List[str]]\ =\ [[]]}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ append\ =\ lines[-\/1].append}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00134}00134\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ for\ character,\ size\ in\ reversed(characters):}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ total\_size\ +\ size\ >\ max\_size:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ lines.append([character])}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ append\ =\ lines[-\/1].append}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ total\_size\ =\ size}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ else:}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ total\_size\ +=\ size}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ append(character)}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00143}00143\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ return\ ["{}"{}.join(line)\ for\ line\ in\ lines]}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00145}00145\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00146}00146\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00147}00147\ \textcolor{stringliteral}{if\ \_\_name\_\_\ ==\ "{}\_\_main\_\_"{}:\ \ \#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00148}00148\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00149}00149\ \textcolor{stringliteral}{\ \ \ \ print(get\_character\_cell\_size("{}😽"{}))}}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ for\ line\ in\ chop\_cells("{}"{}"{}}这是对亚洲语言支持的测试。面对模棱两可的想法，拒绝猜测的诱惑。"{}"{}"{},\ 8):}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ print(line)}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00152}00152\ \ \ \ \ for\ n\ in\ range(80,\ 1,\ -\/1):}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ print(set\_cell\_size("{}"{}"{}这是对亚洲语言支持的测试。面对模棱两可的想法，拒绝猜测的诱惑。"{}"{}"{},\ n)\ +\ "{}|"{})}
+\DoxyCodeLine{\Hypertarget{cells_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ print("{}x"{}\ *\ n)}
+
+\end{DoxyCode}

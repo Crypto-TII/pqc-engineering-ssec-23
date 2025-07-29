@@ -1,0 +1,406 @@
+\doxysection{setup Namespace Reference}
+\hypertarget{namespacesetup}{}\label{namespacesetup}\index{setup@{setup}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacesetup_a59e670ef57c21d42bccbf9418238097b}{arguments}} (args=sys.\+argv\mbox{[}1\+:\mbox{]})
+\item 
+\mbox{\hyperlink{namespacesetup_a5481c58f9eb4db716f2add572fd7aaf5}{Progress\+Bar}} (index, total, label)
+\item 
+\mbox{\hyperlink{namespacesetup_a23290d41f09b49cd02f24401b523f2b0}{l2r}} (\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}, exponent)
+\item 
+\mbox{\hyperlink{namespacesetup_af69fa5d743c6427269365ac72e74ee8d}{is\+\_\+quadratic\+\_\+residue}} (\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}})
+\item 
+\mbox{\hyperlink{namespacesetup_adddacdeaa86d2c78e6375650dd248914}{sqrt\+\_\+fp}} (\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}, check=True)
+\item 
+\mbox{\hyperlink{namespacesetup_a47a8a50f512137448c32f1afc6d2b605}{sqrt\+\_\+fp2}} (\mbox{\hyperlink{to__model_8m_ae72ab0a319852f0c6d43e6937c1063bd}{a}}, root2\+\_\+squared, check=True)
+\item 
+\mbox{\hyperlink{namespacesetup_aa7a97b2d5b53964a84fe0e2cbc9c1dca}{setup\+\_\+fp}} (bits)
+\item 
+\mbox{\hyperlink{namespacesetup_a8ea48afa7bd3eedc38172d80d3b120c2}{setup\+\_\+fq}} (bits)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacesetup_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacesetup_a59e670ef57c21d42bccbf9418238097b}\index{setup@{setup}!arguments@{arguments}}
+\index{arguments@{arguments}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{arguments()}{arguments()}}
+{\footnotesize\ttfamily \label{namespacesetup_a59e670ef57c21d42bccbf9418238097b} 
+arguments (\begin{DoxyParamCaption}\item[{}]{args}{ = {\ttfamily sys.argv\mbox{[}1\+:\mbox{]}}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00015}{15}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00015\ \textcolor{keyword}{def\ }arguments(args=sys.argv[1:]):}
+\DoxyCodeLine{00016\ \ \ \ \ parser\ =\ argparse.ArgumentParser(description=\textcolor{stringliteral}{"{}Parses\ command."{}})}
+\DoxyCodeLine{00017\ \ \ \ \ parser.add\_argument(\textcolor{stringliteral}{'-\/b'},\ \textcolor{stringliteral}{'-\/-\/bits'},\ type=int,\ help=\textcolor{stringliteral}{'Bitlength\ of\ the\ field\ characteristic'},\ required=\textcolor{keyword}{True})}
+\DoxyCodeLine{00018\ \ \ \ \ parser.add\_argument(\textcolor{stringliteral}{'-\/v'},\ \textcolor{stringliteral}{'-\/-\/verbose'},\ action=\textcolor{stringliteral}{'store\_true'},\ help=\textcolor{stringliteral}{'verbose\ help'})}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordflow}{if}\ len(sys.argv)\ ==\ 1:}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ parser.print\_help(sys.stderr)}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ sys.exit(1)}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ options\ =\ parser.parse\_args(args)}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{return}\ options}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacesetup_af69fa5d743c6427269365ac72e74ee8d}\index{setup@{setup}!is\_quadratic\_residue@{is\_quadratic\_residue}}
+\index{is\_quadratic\_residue@{is\_quadratic\_residue}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{is\_quadratic\_residue()}{is\_quadratic\_residue()}}
+{\footnotesize\ttfamily \label{namespacesetup_af69fa5d743c6427269365ac72e74ee8d} 
+is\+\_\+quadratic\+\_\+residue (\begin{DoxyParamCaption}\item[{}]{a}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00053}{53}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00053\ \textcolor{keyword}{def\ }is\_quadratic\_residue(a):}
+\DoxyCodeLine{00054\ \ \ \ \ p\ =\ a.parent().characteristic()}
+\DoxyCodeLine{00055\ \ \ \ \ q\ =\ a.parent().cardinality()}
+\DoxyCodeLine{00056\ \ \ \ \ m\ =\ int(log(q,\ p))}
+\DoxyCodeLine{00057\ \ \ \ \ b\ =\ 1\ *\ a}
+\DoxyCodeLine{00058\ \ \ \ \ c\ =\ 1}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{for}\ index\ \textcolor{keywordflow}{in}\ range(0,\ m,\ 1):}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ c\ *=\ b}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ b\ =\ l2r(b,\ p)}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordflow}{not}\ (l2r(c,\ (p\ -\/\ 1)\ //\ 2)\ -\/\ 1)}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{setup_8py_source_l00038}{l2r()}}.
+
+
+
+Referenced by \mbox{\hyperlink{setup_8py_source_l00137}{setup\+\_\+fq()}}, \mbox{\hyperlink{setup_8py_source_l00066}{sqrt\+\_\+fp()}}, and \mbox{\hyperlink{setup_8py_source_l00077}{sqrt\+\_\+fp2()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{dd/dc4/namespacesetup_af69fa5d743c6427269365ac72e74ee8d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dd/dc4/namespacesetup_af69fa5d743c6427269365ac72e74ee8d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacesetup_a23290d41f09b49cd02f24401b523f2b0}\index{setup@{setup}!l2r@{l2r}}
+\index{l2r@{l2r}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{l2r()}{l2r()}}
+{\footnotesize\ttfamily \label{namespacesetup_a23290d41f09b49cd02f24401b523f2b0} 
+l2r (\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{exponent}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00038}{38}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00038\ \textcolor{keyword}{def\ }l2r(a,\ exponent):}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{\#\ Left-\/to-\/right\ algorithm:\ Exponentiation\ over\ finite\ fields}}
+\DoxyCodeLine{00040\ \ \ \ \ temporal\ =\ 1\ *\ exponent}
+\DoxyCodeLine{00041\ \ \ \ \ power\ =\ a\ *\ 1}
+\DoxyCodeLine{00042\ \ \ \ \ result\ =\ 1}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{while}\ temporal\ >\ 0:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (temporal\ \%\ 2)\ ==\ 1:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ result\ *\ power;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ power\ =\ power**2}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Dividing\ m\ by\ 2\ in\ every\ iteration}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ temporal\ =\ temporal\ //\ 2}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{setup_8py_source_l00053}{is\+\_\+quadratic\+\_\+residue()}}, \mbox{\hyperlink{setup_8py_source_l00101}{setup\+\_\+fp()}}, \mbox{\hyperlink{setup_8py_source_l00137}{setup\+\_\+fq()}}, \mbox{\hyperlink{setup_8py_source_l00066}{sqrt\+\_\+fp()}}, and \mbox{\hyperlink{setup_8py_source_l00077}{sqrt\+\_\+fp2()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dd/dc4/namespacesetup_a23290d41f09b49cd02f24401b523f2b0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacesetup_a5481c58f9eb4db716f2add572fd7aaf5}\index{setup@{setup}!ProgressBar@{ProgressBar}}
+\index{ProgressBar@{ProgressBar}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{ProgressBar()}{ProgressBar()}}
+{\footnotesize\ttfamily \label{namespacesetup_a5481c58f9eb4db716f2add572fd7aaf5} 
+Progress\+Bar (\begin{DoxyParamCaption}\item[{}]{index}{, }\item[{}]{total}{, }\item[{}]{label}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00029}{29}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00029\ \textcolor{keyword}{def\ }ProgressBar(index,\ total,\ label):}
+\DoxyCodeLine{00030\ \ \ \ \ n\_bar\ =\ 50\ \ \textcolor{comment}{\#\ Progress\ bar\ width}}
+\DoxyCodeLine{00031\ \ \ \ \ progress\ =\ index\ /\ total}
+\DoxyCodeLine{00032\ \ \ \ \ sys.stdout.write(\textcolor{stringliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{00033\ \ \ \ \ sys.stdout.write(f\textcolor{stringliteral}{"{}[\{'='\ *\ int(n\_bar\ *\ progress):\{n\_bar\}s\}]\ \{int(100\ *\ progress)\}\%\ \ \{label\}"{}})}
+\DoxyCodeLine{00034\ \ \ \ \ sys.stdout.flush()}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacesetup_aa7a97b2d5b53964a84fe0e2cbc9c1dca}\index{setup@{setup}!setup\_fp@{setup\_fp}}
+\index{setup\_fp@{setup\_fp}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{setup\_fp()}{setup\_fp()}}
+{\footnotesize\ttfamily \label{namespacesetup_aa7a97b2d5b53964a84fe0e2cbc9c1dca} 
+setup\+\_\+fp (\begin{DoxyParamCaption}\item[{}]{bits}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00101}{101}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00101\ \textcolor{keyword}{def\ }setup\_fp(bits):}
+\DoxyCodeLine{00102\ \ \ \ \ p\ =\ previous\_prime(2**bits)}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{while}\ (p\ \%\ 4\ !=\ 3)\ \textcolor{keywordflow}{or}\ (p**2\ \%\ 16\ !=\ 9)\ or(\ (p**2\ -\/\ 1)\ \%\ 9\ ==\ 0)\ \textcolor{keywordflow}{or}\ (p\ \%\ 3\ ==\ 1):}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ p\ =\ previous\_prime(p)}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(p\ \%\ 4\ ==\ 3)\ \ \ \ \ \ \textcolor{comment}{\#\ p\ =\ 3\ mod\ 4}}
+\DoxyCodeLine{00107\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(p**2\ \%\ 16\ ==\ 9)\ \ \textcolor{comment}{\#\ p\string^2\ =\ 9\ mod\ 16}}
+\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}((p**2\ -\/\ 1)\ \%\ 9)\ \ \textcolor{comment}{\#\ 9\ does\ NOT\ divide\ (p\string^2\ -\/\ 1)}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ print(\textcolor{stringliteral}{'\(\backslash\)n+++++++\ Setup'})}
+\DoxyCodeLine{00111\ \ \ \ \ print(f\textcolor{stringliteral}{'p:\ \{hex(p)\}'})}
+\DoxyCodeLine{00112\ \ \ \ \ print(f\textcolor{stringliteral}{'p\ \%\ 4\ =\ \{p\ \%\ 4\}'})}
+\DoxyCodeLine{00113\ \ \ \ \ print(f\textcolor{stringliteral}{'p\ \%\ 3\ =\ \{p\ \%\ 3\}\(\backslash\)n'})}
+\DoxyCodeLine{00114\ \ \ \ \ f\ =\ \{2:\ \textcolor{stringliteral}{'(p\ +\ 1)'},\ 1:\ \textcolor{stringliteral}{'(p\ -\/\ 1)'}\}[p\ \%\ 3]}
+\DoxyCodeLine{00115\ \ \ \ \ g\ =\ \{1:\ \textcolor{stringliteral}{'(p\ +\ 1)'},\ 2:\ \textcolor{stringliteral}{'(p\ -\/\ 1)'}\}[p\ \%\ 3]}
+\DoxyCodeLine{00116\ \ \ \ \ print(f\textcolor{stringliteral}{'In\ particular,\ 3\ divides\ \{f\}\ but\ not\ \{g\}\(\backslash\)n'})}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{\#\ Prime\ Field}}
+\DoxyCodeLine{00119\ \ \ \ \ Fq\ =\ GF(p)}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{def\ }sqrt\_fq(input,\ check=True):}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sqrt\_fp(input,\ check=check)}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ r3\ =\ (2*p\ -\/\ 1)\ //\ 3}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{def\ }curt\_fq(a):}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ l2r(a,\ r3)}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ setup\ =\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'Fp'}:\ Fq,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'sqrt'}:\ sqrt\_fq,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'curt'}:\ curt\_fq,}
+\DoxyCodeLine{00131\ \ \ \ \ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordflow}{return}\ setup}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert()}}, \mbox{\hyperlink{setup_8py_source_l00038}{l2r()}}, and \mbox{\hyperlink{setup_8py_source_l00066}{sqrt\+\_\+fp()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dd/dc4/namespacesetup_aa7a97b2d5b53964a84fe0e2cbc9c1dca_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacesetup_a8ea48afa7bd3eedc38172d80d3b120c2}\index{setup@{setup}!setup\_fq@{setup\_fq}}
+\index{setup\_fq@{setup\_fq}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{setup\_fq()}{setup\_fq()}}
+{\footnotesize\ttfamily \label{namespacesetup_a8ea48afa7bd3eedc38172d80d3b120c2} 
+setup\+\_\+fq (\begin{DoxyParamCaption}\item[{}]{bits}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00137}{137}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00137\ \textcolor{keyword}{def\ }setup\_fq(bits):}
+\DoxyCodeLine{00138\ \ \ \ \ p\ =\ previous\_prime(2**bits)}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordflow}{while}\ (p\ \%\ 4\ !=\ 3)\ \textcolor{keywordflow}{or}\ (p**2\ \%\ 16\ !=\ 9)\ or(\ (p**2\ -\/\ 1)\ \%\ 9\ ==\ 0):}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ p\ =\ previous\_prime(p)}
+\DoxyCodeLine{00141\ \ \ \ \ }
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(p\ \%\ 4\ ==\ 3)\ \ \ \ \ \ \textcolor{comment}{\#\ p\ =\ 3\ mod\ 4}}
+\DoxyCodeLine{00143\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(p**2\ \%\ 16\ ==\ 9)\ \ \textcolor{comment}{\#\ p\string^2\ =\ 9\ mod\ 16}}
+\DoxyCodeLine{00144\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}((p**2\ -\/\ 1)\ \%\ 9)\ \ \textcolor{comment}{\#\ 9\ does\ NOT\ divide\ (p\string^2\ -\/\ 1)}}
+\DoxyCodeLine{00145\ \ \ \ \ }
+\DoxyCodeLine{00146\ \ \ \ \ print(\textcolor{stringliteral}{'\(\backslash\)n+++++++\ Setup'})}
+\DoxyCodeLine{00147\ \ \ \ \ print(f\textcolor{stringliteral}{'p:\ \{hex(p)\}'})}
+\DoxyCodeLine{00148\ \ \ \ \ print(f\textcolor{stringliteral}{'p\ \%\ 4\ =\ \{p\ \%\ 4\}'})}
+\DoxyCodeLine{00149\ \ \ \ \ print(f\textcolor{stringliteral}{'p\ \%\ 3\ =\ \{p\ \%\ 3\}\(\backslash\)n'})}
+\DoxyCodeLine{00150\ \ \ \ \ f\ =\ \{2:\ \textcolor{stringliteral}{'(p\ +\ 1)'},\ 1:\ \textcolor{stringliteral}{'(p\ -\/\ 1)'}\}[p\ \%\ 3]}
+\DoxyCodeLine{00151\ \ \ \ \ g\ =\ \{1:\ \textcolor{stringliteral}{'(p\ +\ 1)'},\ 2:\ \textcolor{stringliteral}{'(p\ -\/\ 1)'}\}[p\ \%\ 3]}
+\DoxyCodeLine{00152\ \ \ \ \ print(f\textcolor{stringliteral}{'In\ particular,\ 3\ divides\ \{f\}\ but\ not\ \{g\}\(\backslash\)n'})}
+\DoxyCodeLine{00153\ \ \ \ \ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{\#\ Prime\ Field}}
+\DoxyCodeLine{00155\ \ \ \ \ Fp\ =\ GF(p)}
+\DoxyCodeLine{00156\ \ \ \ \ Rx\ =\ PolynomialRing(Fp,\ name=\textcolor{stringliteral}{"{}x"{}})}
+\DoxyCodeLine{00157\ \ \ \ \ X\ =\ Rx.gens()[0]}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{\#\ Quadratic\ Field\ }}
+\DoxyCodeLine{00160\ \ \ \ \ Fq\ =\ Fp.extension(X**2\ +\ 1,\ \textcolor{stringliteral}{'i'})}
+\DoxyCodeLine{00161\ \ \ \ \ rootq\ =\ Fq.gen()}
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(rootq**2\ +\ 1\ ==\ 0)}
+\DoxyCodeLine{00163\ \ \ \ \ Rx\ =\ PolynomialRing(Fq,\ name=\textcolor{stringliteral}{"{}x"{}})}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{\#\ Non\ quadratic\ residue}}
+\DoxyCodeLine{00166\ \ \ \ \ rootq2\_squared\ =\ rootq}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordflow}{while}\ is\_quadratic\_residue(-\/rootq2\_squared):}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ rootq2\_squared\ +=\ 1}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{def\ }sqrt\_fq(input,\ check=True):}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sqrt\_fp2(input,\ rootq2\_squared,\ check=check)}
+\DoxyCodeLine{00172\ \ \ \ \ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{\#\ Concerning\ 3rd\ roots\ of\ unity}}
+\DoxyCodeLine{00174\ \ \ \ \ N3\ =\ (p**2\ -\/\ 1)\ //\ 3}
+\DoxyCodeLine{00175\ \ \ \ \ r3\ =\ ZZ(3).inverse\_mod(N3)\ \ \textcolor{comment}{\#\ assume\ three\ does\ not\ divide\ p\ -\/\ 1,\ but\ p\ +\ 1\ does}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{def\ }curt\_fq(a):}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ l2r(a,\ r3)}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ zeta3\ =\ (-\/1\ +\ sqrt\_fq(Fq(-\/3)))\ /\ Fq(2)}
+\DoxyCodeLine{00180\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(zeta3**3\ ==\ 1)}
+\DoxyCodeLine{00181\ \ \ \ \ }
+\DoxyCodeLine{00182\ \ \ \ \ setup\ =\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{stringliteral}{'Fq'}:\ Fq,}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{stringliteral}{'Rx'}:Rx,}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{stringliteral}{'ζ₃'}:zeta3,}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{stringliteral}{'sqrt'}:\ sqrt\_fq,}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{stringliteral}{'curt'}:\ curt\_fq,}
+\DoxyCodeLine{00188\ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{return}\ setup}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert()}}, \mbox{\hyperlink{setup_8py_source_l00053}{is\+\_\+quadratic\+\_\+residue()}}, \mbox{\hyperlink{setup_8py_source_l00038}{l2r()}}, and \mbox{\hyperlink{setup_8py_source_l00077}{sqrt\+\_\+fp2()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dd/dc4/namespacesetup_a8ea48afa7bd3eedc38172d80d3b120c2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacesetup_adddacdeaa86d2c78e6375650dd248914}\index{setup@{setup}!sqrt\_fp@{sqrt\_fp}}
+\index{sqrt\_fp@{sqrt\_fp}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{sqrt\_fp()}{sqrt\_fp()}}
+{\footnotesize\ttfamily \label{namespacesetup_adddacdeaa86d2c78e6375650dd248914} 
+sqrt\+\_\+fp (\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{check}{ = {\ttfamily True}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00066}{66}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00066\ \textcolor{keyword}{def\ }sqrt\_fp(a,\ check=True):}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{\#\ Square\ root\ over\ Fp}}
+\DoxyCodeLine{00068\ \ \ \ \ p\ =\ a.parent().characteristic()}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(p\ \%\ 4\ ==\ 3)}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{if}\ check:}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ is\_quadratic\_residue(a):}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{return}\ l2r(a,\ (p\ +\ 1)\ //\ 4)}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert()}}, \mbox{\hyperlink{setup_8py_source_l00053}{is\+\_\+quadratic\+\_\+residue()}}, and \mbox{\hyperlink{setup_8py_source_l00038}{l2r()}}.
+
+
+
+Referenced by \mbox{\hyperlink{setup_8py_source_l00101}{setup\+\_\+fp()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=332pt]{dd/dc4/namespacesetup_adddacdeaa86d2c78e6375650dd248914_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=216pt]{dd/dc4/namespacesetup_adddacdeaa86d2c78e6375650dd248914_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacesetup_a47a8a50f512137448c32f1afc6d2b605}\index{setup@{setup}!sqrt\_fp2@{sqrt\_fp2}}
+\index{sqrt\_fp2@{sqrt\_fp2}!setup@{setup}}
+\doxysubsubsection{\texorpdfstring{sqrt\_fp2()}{sqrt\_fp2()}}
+{\footnotesize\ttfamily \label{namespacesetup_a47a8a50f512137448c32f1afc6d2b605} 
+sqrt\+\_\+fp2 (\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{root2\+\_\+squared}{, }\item[{}]{check}{ = {\ttfamily True}}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{setup_8py_source_l00077}{77}} of file \mbox{\hyperlink{setup_8py_source}{setup.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00077\ \textcolor{keyword}{def\ }sqrt\_fp2(a,\ root2\_squared,\ check=True):}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{\#\ Square\ root\ over\ Fq\ with\ q\ =\ p²:\ Kong\ et\ al.\ algorithm.\ We\ assume\ p²\ =\ 9\ mod\ 16\ and\ p\ =\ 3\ mod\ 4}}
+\DoxyCodeLine{00079\ \ \ \ \ p\ =\ a.parent().characteristic()}
+\DoxyCodeLine{00080\ \ \ \ \ q\ =\ p**2}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert}}(q\ \%\ 16\ ==\ 9)}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{if}\ check:}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ is\_quadratic\_residue(a):}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ exponent1\ =\ (q\ -\/\ 9)\ //\ 16}
+\DoxyCodeLine{00087\ \ \ \ \ exponent2\ =\ (q\ -\/\ 9)\ //\ 8}
+\DoxyCodeLine{00088\ \ \ \ \ b\ =\ l2r(2\ *\ a,\ exponent1)}
+\DoxyCodeLine{00089\ \ \ \ \ c\ =\ 2\ *\ a\ *\ b**2}
+\DoxyCodeLine{00090\ \ \ \ \ r\ =\ c**2}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ s0\ =\ a\ *\ b\ *\ (c\ -\/\ 1)}
+\DoxyCodeLine{00093\ \ \ \ \ constant3\ =\ l2r(root2\_squared,\ exponent2)}
+\DoxyCodeLine{00094\ \ \ \ \ u\ =\ b\ *\ constant3}
+\DoxyCodeLine{00095\ \ \ \ \ c\ =\ 2\ *\ u**2\ *\ root2\_squared**2\ *\ a}
+\DoxyCodeLine{00096\ \ \ \ \ s1\ =\ u\ *\ root2\_squared\ *\ a\ *\ (c\ -\/\ 1)}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{return}\ (ZZ(1\ -\/\ r)\ >>\ 1)\ *\ s0\ +\ (ZZ(1\ +\ r)\ >>\ 1)\ *\ s1}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{j-invariants_8m_aba44bac1e95ab5b14d78991821cf743c}{assert()}}, \mbox{\hyperlink{setup_8py_source_l00053}{is\+\_\+quadratic\+\_\+residue()}}, and \mbox{\hyperlink{setup_8py_source_l00038}{l2r()}}.
+
+
+
+Referenced by \mbox{\hyperlink{setup_8py_source_l00137}{setup\+\_\+fq()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{dd/dc4/namespacesetup_a47a8a50f512137448c32f1afc6d2b605_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=221pt]{dd/dc4/namespacesetup_a47a8a50f512137448c32f1afc6d2b605_icgraph}
+\end{center}
+\end{figure}

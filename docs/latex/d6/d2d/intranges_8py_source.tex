@@ -1,0 +1,60 @@
+\doxysection{intranges.\+py}
+\hypertarget{intranges_8py_source}{}\label{intranges_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/idna/intranges.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/idna/intranges.py}}
+\mbox{\hyperlink{intranges_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00002}00002\ \textcolor{stringliteral}{Given\ a\ list\ of\ integers,\ made\ up\ of\ (hopefully)\ a\ small\ number\ of\ long\ runs}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00003}00003\ \textcolor{stringliteral}{of\ consecutive\ integers,\ compute\ a\ representation\ of\ the\ form}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00004}00004\ \textcolor{stringliteral}{((start1,\ end1),\ (start2,\ end2)\ ...).\ Then\ answer\ the\ question\ "{}was\ x\ present}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00005}00005\ \textcolor{stringliteral}{in\ the\ original\ list?"{}\ in\ time\ O(log(\#\ runs)).}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00008}00008\ \textcolor{keyword}{import}\ bisect}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00009}00009\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Tuple}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00011}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_a307669c1a5aa3282ae0d82f0dfb376ab}{00011}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_a307669c1a5aa3282ae0d82f0dfb376ab}{intranges\_from\_list}}(list\_:\ List[int])\ -\/>\ Tuple[int,\ ...]:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00012}00012\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Represent\ a\ list\ of\ integers\ as\ a\ sequence\ of\ ranges:}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ ((start\_0,\ end\_0),\ (start\_1,\ end\_1),\ ...),\ such\ that\ the\ original}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00014}00014\ \textcolor{stringliteral}{\ \ \ \ integers\ are\ exactly\ those\ x\ such\ that\ start\_i\ <=\ x\ <\ end\_i\ for\ some\ i.}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00015}00015\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00016}00016\ \textcolor{stringliteral}{\ \ \ \ Ranges\ are\ encoded\ as\ single\ integers\ (start\ <<\ 32\ |\ end),\ not\ as\ tuples.}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00019}00019\ \ \ \ \ sorted\_list\ =\ sorted(list\_)}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00020}00020\ \ \ \ \ ranges\ =\ []}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00021}00021\ \ \ \ \ last\_write\ =\ -\/1}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(len(sorted\_list)):}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ i+1\ <\ len(sorted\_list):}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ sorted\_list[i]\ ==\ sorted\_list[i+1]-\/1:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ current\_range\ =\ sorted\_list[last\_write+1:i+1]}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ ranges.append(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ae753b04f33ecbfc5290d7b5c37f81dac}{\_encode\_range}}(current\_range[0],\ current\_range[-\/1]\ +\ 1))}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ last\_write\ =\ i}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{return}\ tuple(ranges)}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00032}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ae753b04f33ecbfc5290d7b5c37f81dac}{00032}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ae753b04f33ecbfc5290d7b5c37f81dac}{\_encode\_range}}(start:\ int,\ end:\ int)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{return}\ (start\ <<\ 32)\ |\ end}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00035}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_aa27053a49d3d45ca19158613760f2e00}{00035}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_aa27053a49d3d45ca19158613760f2e00}{\_decode\_range}}(r:\ int)\ -\/>\ Tuple[int,\ int]:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{return}\ (r\ >>\ 32),\ (r\ \&\ ((1\ <<\ 32)\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00039}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ac8f8797d9acab9a40fc6f061f8d32759}{00039}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ac8f8797d9acab9a40fc6f061f8d32759}{intranges\_contain}}(int\_:\ int,\ ranges:\ Tuple[int,\ ...])\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Determine\ if\ \`{}int\_\`{}\ falls\ into\ one\ of\ the\ ranges\ in\ \`{}ranges\`{}."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00041}00041\ \ \ \ \ tuple\_\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_ae753b04f33ecbfc5290d7b5c37f81dac}{\_encode\_range}}(int\_,\ 0)}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00042}00042\ \ \ \ \ pos\ =\ bisect.bisect\_left(ranges,\ tuple\_)}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00043}00043\ \ \ \ \ \textcolor{comment}{\#\ we\ could\ be\ immediately\ ahead\ of\ a\ tuple\ (start,\ end)}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00044}00044\ \ \ \ \ \textcolor{comment}{\#\ with\ start\ <\ int\_\ <=\ end}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{if}\ pos\ >\ 0:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ left,\ right\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_aa27053a49d3d45ca19158613760f2e00}{\_decode\_range}}(ranges[pos-\/1])}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ left\ <=\ int\_\ <\ right:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00049}00049\ \ \ \ \ \textcolor{comment}{\#\ or\ we\ could\ be\ immediately\ behind\ a\ tuple\ (int\_,\ end)}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{if}\ pos\ <\ len(ranges):}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ left,\ \_\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1idna_1_1intranges_aa27053a49d3d45ca19158613760f2e00}{\_decode\_range}}(ranges[pos])}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ left\ ==\ int\_:}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{intranges_8py_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+
+\end{DoxyCode}

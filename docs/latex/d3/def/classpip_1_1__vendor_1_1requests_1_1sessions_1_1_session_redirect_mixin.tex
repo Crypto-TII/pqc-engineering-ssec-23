@@ -1,0 +1,488 @@
+\doxysection{Session\+Redirect\+Mixin Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin}{}\label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin}\index{SessionRedirectMixin@{SessionRedirectMixin}}
+
+
+Inheritance diagram for Session\+Redirect\+Mixin\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{d4/d08/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}{get\+\_\+redirect\+\_\+target}} (self, resp)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6}{should\+\_\+strip\+\_\+auth}} (self, old\+\_\+url, new\+\_\+url)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}{resolve\+\_\+redirects}} (self, resp, req, stream=False, timeout=None, verify=True, cert=None, proxies=None, yield\+\_\+requests=False, \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}adapter\+\_\+kwargs)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c}{rebuild\+\_\+auth}} (self, prepared\+\_\+request, response)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd}{rebuild\+\_\+proxies}} (self, prepared\+\_\+request, proxies)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a}{rebuild\+\_\+method}} (self, prepared\+\_\+request, response)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}{cookies}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00106}{106}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b}\index{SessionRedirectMixin@{SessionRedirectMixin}!get\_redirect\_target@{get\_redirect\_target}}
+\index{get\_redirect\_target@{get\_redirect\_target}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{get\_redirect\_target()}{get\_redirect\_target()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b} 
+get\+\_\+redirect\+\_\+target (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{resp}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Receives a Response. Returns a redirect URI or ``None``\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00107}{107}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{def\ }get\_redirect\_target(self,\ resp):}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Receives\ a\ Response.\ Returns\ a\ redirect\ URI\ or\ \`{}\`{}None\`{}\`{}"{}"{}"{}}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Due\ to\ the\ nature\ of\ how\ requests\ processes\ redirects\ this\ method\ will}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ be\ called\ at\ least\ once\ upon\ the\ original\ response\ and\ at\ least\ twice}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ on\ each\ subsequent\ redirect\ response\ (if\ any).}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ a\ custom\ mixin\ is\ used\ to\ handle\ this\ logic,\ it\ may\ be\ advantageous}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ cache\ the\ redirect\ location\ onto\ the\ response\ object\ as\ a\ private}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ attribute.}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ resp.is\_redirect:}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =\ resp.headers[\textcolor{stringliteral}{"{}location"{}}]}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Currently\ the\ underlying\ http\ module\ on\ py3\ decode\ headers}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ latin1,\ but\ empirical\ evidence\ suggests\ that\ latin1\ is\ very}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ rarely\ used\ with\ non-\/ASCII\ characters\ in\ HTTP\ headers.}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ It\ is\ more\ likely\ to\ get\ UTF8\ header\ rather\ than\ latin1.}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ causes\ incorrect\ handling\ of\ UTF8\ encoded\ location\ headers.}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ To\ solve\ this,\ we\ re-\/encode\ the\ location\ in\ latin1.}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =\ location.encode(\textcolor{stringliteral}{"{}latin1"{}})}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ to\_native\_string(location,\ \textcolor{stringliteral}{"{}utf8"{}})}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00126\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{sessions_8py_source_l00170}{resolve\+\_\+redirects()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a62b9f574341531d32cac009ed5fadf9b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c}\index{SessionRedirectMixin@{SessionRedirectMixin}!rebuild\_auth@{rebuild\_auth}}
+\index{rebuild\_auth@{rebuild\_auth}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{rebuild\_auth()}{rebuild\_auth()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c} 
+rebuild\+\_\+auth (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{prepared\+\_\+request}{, }\item[{}]{response}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}When being redirected we may want to strip authentication from the
+request to avoid leaking credentials. This method intelligently removes
+and reapplies authentication where possible to avoid credential loss.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00283}{283}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{def\ }rebuild\_auth(self,\ prepared\_request,\ response):}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}When\ being\ redirected\ we\ may\ want\ to\ strip\ authentication\ from\ the}}
+\DoxyCodeLine{00285\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ request\ to\ avoid\ leaking\ credentials.\ This\ method\ intelligently\ removes}}
+\DoxyCodeLine{00286\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ and\ reapplies\ authentication\ where\ possible\ to\ avoid\ credential\ loss.}}
+\DoxyCodeLine{00287\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ url\ =\ prepared\_request.url}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}Authorization"{}}\ \textcolor{keywordflow}{in}\ headers\ \textcolor{keywordflow}{and}\ self.should\_strip\_auth(}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ response.request.url,\ url}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we\ get\ redirected\ to\ a\ new\ host,\ we\ should\ strip\ out\ any}}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ authentication\ headers.}}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ del\ headers[\textcolor{stringliteral}{"{}Authorization"{}}]}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ .netrc\ might\ have\ more\ auth\ for\ us\ on\ our\ new\ host.}}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ new\_auth\ =\ get\_netrc\_auth(url)\ \textcolor{keywordflow}{if}\ self.trust\_env\ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\_auth\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.prepare\_auth(new\_auth)}
+\DoxyCodeLine{00302\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{sessions_8py_source_l00127}{should\+\_\+strip\+\_\+auth()}}, and \mbox{\hyperlink{sessions_8py_source_l00440}{Session.\+trust\+\_\+env}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=277pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_af1d0ff5f3ec99206653c6986ff5a7c1c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a}\index{SessionRedirectMixin@{SessionRedirectMixin}!rebuild\_method@{rebuild\_method}}
+\index{rebuild\_method@{rebuild\_method}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{rebuild\_method()}{rebuild\_method()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a} 
+rebuild\+\_\+method (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{prepared\+\_\+request}{, }\item[{}]{response}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}When being redirected we may want to change the method of the request
+based on certain specs or browser behavior.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00334}{334}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{def\ }rebuild\_method(self,\ prepared\_request,\ response):}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}When\ being\ redirected\ we\ may\ want\ to\ change\ the\ method\ of\ the\ request}}
+\DoxyCodeLine{00336\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ based\ on\ certain\ specs\ or\ browser\ behavior.}}
+\DoxyCodeLine{00337\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ method\ =\ prepared\_request.method}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://tools.ietf.org/html/rfc7231\#section-\/6.4.4}}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.see\_other\ \textcolor{keywordflow}{and}\ method\ !=\ \textcolor{stringliteral}{"{}HEAD"{}}:}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Do\ what\ the\ browsers\ do,\ despite\ standards...}}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ First,\ turn\ 302s\ into\ GETs.}}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.found\ \textcolor{keywordflow}{and}\ method\ !=\ \textcolor{stringliteral}{"{}HEAD"{}}:}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Second,\ if\ a\ POST\ is\ responded\ to\ with\ a\ 301,\ turn\ it\ into\ a\ GET.}}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ bizarre\ behaviour\ is\ explained\ in\ Issue\ 1704.}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ response.status\_code\ ==\ codes.moved\ \textcolor{keywordflow}{and}\ method\ ==\ \textcolor{stringliteral}{"{}POST"{}}:}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}GET"{}}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ prepared\_request.method\ =\ method}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{sessions_8py_source_l00170}{resolve\+\_\+redirects()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a30b50d8e183c453a1c92fe5265a9a34a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd}\index{SessionRedirectMixin@{SessionRedirectMixin}!rebuild\_proxies@{rebuild\_proxies}}
+\index{rebuild\_proxies@{rebuild\_proxies}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{rebuild\_proxies()}{rebuild\_proxies()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_ae4c50a4a42be37efc838c81e6108f2dd} 
+rebuild\+\_\+proxies (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{prepared\+\_\+request}{, }\item[{}]{proxies}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}This method re-evaluates the proxy configuration by considering the
+environment variables. If we are redirected to a URL covered by
+NO_PROXY, we strip the proxy configuration. Otherwise, we set missing
+proxy keys for this URL (in case they were stripped by a previous
+redirect).
+
+This method also replaces the Proxy-Authorization header where
+necessary.
+
+:rtype: dict
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00303}{303}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keyword}{def\ }rebuild\_proxies(self,\ prepared\_request,\ proxies):}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}This\ method\ re-\/evaluates\ the\ proxy\ configuration\ by\ considering\ the}}
+\DoxyCodeLine{00305\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ environment\ variables.\ If\ we\ are\ redirected\ to\ a\ URL\ covered\ by}}
+\DoxyCodeLine{00306\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ NO\_PROXY,\ we\ strip\ the\ proxy\ configuration.\ Otherwise,\ we\ set\ missing}}
+\DoxyCodeLine{00307\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ proxy\ keys\ for\ this\ URL\ (in\ case\ they\ were\ stripped\ by\ a\ previous}}
+\DoxyCodeLine{00308\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ redirect).}}
+\DoxyCodeLine{00309\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00310\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ method\ also\ replaces\ the\ Proxy-\/Authorization\ header\ where}}
+\DoxyCodeLine{00311\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ necessary.}}
+\DoxyCodeLine{00312\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00313\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :rtype:\ dict}}
+\DoxyCodeLine{00314\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ scheme\ =\ urlparse(prepared\_request.url).scheme}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ new\_proxies\ =\ resolve\_proxies(prepared\_request,\ proxies,\ self.trust\_env)}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}\ \textcolor{keywordflow}{in}\ headers:}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ del\ headers[\textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}]}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ username,\ password\ =\ get\_auth\_from\_url(new\_proxies[scheme])}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ username,\ password\ =\ \textcolor{keywordtype}{None},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib3\ handles\ proxy\ authorization\ for\ us\ in\ the\ standard\ adapter.}}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Avoid\ appending\ this\ to\ TLS\ tunneled\ requests\ where\ it\ may\ be\ leaked.}}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ scheme.startswith(\textcolor{stringliteral}{'https'})\ \textcolor{keywordflow}{and}\ username\ \textcolor{keywordflow}{and}\ password:}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}Proxy-\/Authorization"{}}]\ =\ \_basic\_auth\_str(username,\ password)}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_proxies}
+\DoxyCodeLine{00333\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{sessions_8py_source_l00440}{Session.\+trust\+\_\+env}}.
+
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3}\index{SessionRedirectMixin@{SessionRedirectMixin}!resolve\_redirects@{resolve\_redirects}}
+\index{resolve\_redirects@{resolve\_redirects}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{resolve\_redirects()}{resolve\_redirects()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3} 
+resolve\+\_\+redirects (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{resp}{, }\item[{}]{req}{, }\item[{}]{stream}{ = {\ttfamily False}, }\item[{}]{timeout}{ = {\ttfamily None}, }\item[{}]{verify}{ = {\ttfamily True}, }\item[{}]{cert}{ = {\ttfamily None}, }\item[{}]{proxies}{ = {\ttfamily None}, }\item[{}]{yield\+\_\+requests}{ = {\ttfamily False}, }\item[{\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{adapter\+\_\+kwargs}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Receives a Response. Returns a generator of Responses or Requests.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00159}{159}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00170\ \ \ \ \ ):}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Receives\ a\ Response.\ Returns\ a\ generator\ of\ Responses\ or\ Requests."{}"{}"{}}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ hist\ =\ []\ \ \textcolor{comment}{\#\ keep\ track\ of\ history}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ url\ =\ self.get\_redirect\_target(resp)}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ previous\_fragment\ =\ urlparse(req.url).fragment}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ url:}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request\ =\ req.copy()}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ history\ and\ keep\ track\ of\ redirects.}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ resp.history\ must\ ignore\ the\ original\ request\ in\ this\ loop}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ hist.append(resp)}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ resp.history\ =\ hist[1:]}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp.content\ \ \textcolor{comment}{\#\ Consume\ socket\ so\ it\ can\ be\ released}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ (ChunkedEncodingError,\ ContentDecodingError,\ RuntimeError):}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp.raw.read(decode\_content=\textcolor{keyword}{False})}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(resp.history)\ >=\ self.max\_redirects:}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TooManyRedirects(}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Exceeded\ \{self.max\_redirects\}\ redirects."{}},\ response=resp}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Release\ the\ connection\ back\ into\ the\ pool.}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ resp.close()}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ redirection\ without\ scheme\ (see:\ RFC\ 1808\ Section\ 4)}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ url.startswith(\textcolor{stringliteral}{"{}//"{}}):}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed\_rurl\ =\ urlparse(resp.url)}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ \textcolor{stringliteral}{"{}:"{}}.join([to\_native\_string(parsed\_rurl.scheme),\ url])}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Normalize\ url\ case\ and\ attach\ previous\ fragment\ if\ needed\ (RFC\ 7231\ 7.1.2)}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ parsed\ =\ urlparse(url)}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ parsed.fragment\ ==\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{and}\ previous\_fragment:}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed\ =\ parsed.\_replace(fragment=previous\_fragment)}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ parsed.fragment:}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ previous\_fragment\ =\ parsed.fragment}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ parsed.geturl()}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Facilitate\ relative\ 'location'\ headers,\ as\ allowed\ by\ RFC\ 7231.}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (e.g.\ '/path/to/resource'\ instead\ of\ 'http://domain.tld/path/to/resource')}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Compliant\ with\ RFC3986,\ we\ percent\ encode\ the\ url.}}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ parsed.netloc:}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ urljoin(resp.url,\ requote\_uri(url))}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ requote\_uri(url)}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.url\ =\ to\_native\_string(url)}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ self.rebuild\_method(prepared\_request,\ resp)}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://github.com/psf/requests/issues/1084}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ resp.status\_code\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes.temporary\_redirect,}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes.permanent\_redirect,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ https://github.com/psf/requests/issues/3490}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ purged\_headers\ =\ (\textcolor{stringliteral}{"{}Content-\/Length"{}},\ \textcolor{stringliteral}{"{}Content-\/Type"{}},\ \textcolor{stringliteral}{"{}Transfer-\/Encoding"{}})}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ header\ \textcolor{keywordflow}{in}\ purged\_headers:}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.headers.pop(header,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.body\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ headers\ =\ prepared\_request.headers}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ headers.pop(\textcolor{stringliteral}{"{}Cookie"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Extract\ any\ cookies\ sent\ on\ the\ response\ to\ the\ cookiejar}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ the\ new\ request.\ Because\ we've\ mutated\ our\ copied\ prepared}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ request,\ use\ the\ old\ one\ that\ we\ haven't\ yet\ touched.}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(prepared\_request.\_cookies,\ req,\ resp.raw)}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ merge\_cookies(prepared\_request.\_cookies,\ self.cookies)}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ prepared\_request.prepare\_cookies(prepared\_request.\_cookies)}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Rebuild\ auth\ and\ proxy\ information.}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ proxies\ =\ self.rebuild\_proxies(prepared\_request,\ proxies)}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ self.rebuild\_auth(prepared\_request,\ resp)}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ failed\ tell()\ sets\ \`{}\_body\_position`\ to\ \`{}object()`.\ This\ non-\/None}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ value\ ensures\ \`{}rewindable`\ will\ be\ True,\ allowing\ us\ to\ raise\ an}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ UnrewindableBodyError,\ instead\ of\ hanging\ the\ connection.}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ rewindable\ =\ prepared\_request.\_body\_position\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ (}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Content-\/Length"{}}\ \textcolor{keywordflow}{in}\ headers\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}Transfer-\/Encoding"{}}\ \textcolor{keywordflow}{in}\ headers}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Attempt\ to\ rewind\ consumed\ file-\/like\ object.}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rewindable:}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rewind\_body(prepared\_request)}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Override\ the\ original\ request.}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ prepared\_request}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ yield\_requests:}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ req}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resp\ =\ self.send(}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ req,}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stream=stream,}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timeout=timeout,}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verify=verify,}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cert=cert,}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proxies=proxies,}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ allow\_redirects=\textcolor{keyword}{False},}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ **adapter\_kwargs,}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extract\_cookies\_to\_jar(self.cookies,\ prepared\_request,\ resp.raw)}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ extract\ redirect\ url,\ if\ any,\ for\ the\ next\ loop}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ url\ =\ self.get\_redirect\_target(resp)}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ resp}
+\DoxyCodeLine{00282\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{sessions_8py_source_l00107}{get\+\_\+redirect\+\_\+target()}}, \mbox{\hyperlink{sessions_8py_source_l00436}{Session.\+max\+\_\+redirects}}, and \mbox{\hyperlink{sessions_8py_source_l00334}{rebuild\+\_\+method()}}.
+
+
+
+Referenced by \mbox{\hyperlink{sessions_8py_source_l00673}{Session.\+send()}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=303pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a37eca0b428de757f5dfe05976fb43cd3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6}\index{SessionRedirectMixin@{SessionRedirectMixin}!should\_strip\_auth@{should\_strip\_auth}}
+\index{should\_strip\_auth@{should\_strip\_auth}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{should\_strip\_auth()}{should\_strip\_auth()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6} 
+should\+\_\+strip\+\_\+auth (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{old\+\_\+url}{, }\item[{}]{new\+\_\+url}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Decide whether Authorization header should be removed when redirecting\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00127}{127}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{def\ }should\_strip\_auth(self,\ old\_url,\ new\_url):}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Decide\ whether\ Authorization\ header\ should\ be\ removed\ when\ redirecting"{}"{}"{}}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ old\_parsed\ =\ urlparse(old\_url)}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ new\_parsed\ =\ urlparse(new\_url)}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ old\_parsed.hostname\ !=\ new\_parsed.hostname:}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Special\ case:\ allow\ http\ -\/>\ https\ redirect\ when\ using\ the\ standard}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ ports.\ This\ isn't\ specified\ by\ RFC\ 7235,\ but\ is\ kept\ to\ avoid}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ breaking\ backwards\ compatibility\ with\ older\ versions\ of\ requests}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ allowed\ any\ redirects\ on\ the\ same\ host.}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ old\_parsed.scheme\ ==\ \textcolor{stringliteral}{"{}http"{}}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ old\_parsed.port\ \textcolor{keywordflow}{in}\ (80,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.scheme\ ==\ \textcolor{stringliteral}{"{}https"{}}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.port\ \textcolor{keywordflow}{in}\ (443,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ default\ port\ usage\ corresponding\ to\ scheme.}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ changed\_port\ =\ old\_parsed.port\ !=\ new\_parsed.port}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ changed\_scheme\ =\ old\_parsed.scheme\ !=\ new\_parsed.scheme}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ default\_port\ =\ (DEFAULT\_PORTS.get(old\_parsed.scheme,\ \textcolor{keywordtype}{None}),\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{not}\ changed\_scheme}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ old\_parsed.port\ \textcolor{keywordflow}{in}\ default\_port}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ new\_parsed.port\ \textcolor{keywordflow}{in}\ default\_port}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Standard\ case:\ root\ URI\ must\ match}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ changed\_port\ \textcolor{keywordflow}{or}\ changed\_scheme}
+\DoxyCodeLine{00158\ }
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{sessions_8py_source_l00283}{rebuild\+\_\+auth()}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=277pt]{d3/def/classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_a0bde8e57f0cd67a44286b2ad679bb0a6_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-variable-members}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1}\index{SessionRedirectMixin@{SessionRedirectMixin}!cookies@{cookies}}
+\index{cookies@{cookies}!SessionRedirectMixin@{SessionRedirectMixin}}
+\doxysubsubsection{\texorpdfstring{cookies}{cookies}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1requests_1_1sessions_1_1_session_redirect_mixin_acf6806cb451532910e49b7c25b368ec1} 
+cookies}
+
+
+
+Definition at line \mbox{\hyperlink{sessions_8py_source_l00241}{241}} of file \mbox{\hyperlink{sessions_8py_source}{sessions.\+py}}.
+
+
+
+Referenced by \mbox{\hyperlink{sessions_8py_source_l00459}{Session.\+prepare\+\_\+request()}}, and \mbox{\hyperlink{sessions_8py_source_l00673}{Session.\+send()}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/requests/\mbox{\hyperlink{sessions_8py}{sessions.\+py}}\end{DoxyCompactItemize}

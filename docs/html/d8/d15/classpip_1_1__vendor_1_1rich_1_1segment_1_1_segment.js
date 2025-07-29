@@ -1,0 +1,27 @@
+var classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment =
+[
+    [ "__bool__", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#af466df7f15887a199aa900cbe8542937", null ],
+    [ "__rich_repr__", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#aec83ca0f92c083c90f491552001d68a9", null ],
+    [ "_split_cells", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a067ed744a45f08fc147cb9a2b0cc1b88", null ],
+    [ "adjust_line_length", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#ac6182d71f7639778af2d2504b17d34d3", null ],
+    [ "align_bottom", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a6618903a155a43db2e926a92f1dcdb22", null ],
+    [ "align_middle", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a8ae7ba1e3e26ad44e8e7580b15b7793e", null ],
+    [ "align_top", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#ac34b052695d75e35bd8b11a49c138500", null ],
+    [ "apply_style", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#af56c6d6847bb0b404108a84cc79cda54", null ],
+    [ "cell_length", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#ac9633667b70c53896aa33eb25b908354", null ],
+    [ "divide", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a05cc722a8a9dae44d2f69a32b3f617a1", null ],
+    [ "filter_control", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a0a74deab536f8ed956af0c444177f3db", null ],
+    [ "get_line_length", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a3bccfc0bb8a577e93a1ad95f27797237", null ],
+    [ "get_shape", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a098b4e6529d9d665db8496be4cb195c1", null ],
+    [ "is_control", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#ad01c8a8ff3a9536ea1adbab2ddaf15f4", null ],
+    [ "line", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#acb8fc9f86ab84ed1359e06a7eea31590", null ],
+    [ "remove_color", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#ab89fd1959e4e3474b8e6ffc8ade67cdd", null ],
+    [ "set_shape", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a4c522b05466bcdcf589b38a0ebcdc701", null ],
+    [ "simplify", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a4599e0110d07cd961513dc8e89a08ccb", null ],
+    [ "split_and_crop_lines", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a351bbd92d390c64594207a6bf52f6e9b", null ],
+    [ "split_cells", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#aaf5f97c112cd76afe58ec0bf9228e067", null ],
+    [ "split_lines", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a26d8031227c63d27ffcbcb803b146b3b", null ],
+    [ "strip_links", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#a4b93b9a9b37cffa9ae91c7d65991294d", null ],
+    [ "strip_styles", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#aaf5f1a127a1643611f498e9312c6f01f", null ],
+    [ "text", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html#af575f17e6be3f269b86b041a60560dbf", null ]
+];

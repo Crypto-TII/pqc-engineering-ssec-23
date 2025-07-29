@@ -1,0 +1,25 @@
+var namespacepip_1_1__vendor_1_1packaging_1_1version =
+[
+    [ "_BaseVersion", "d9/d99/classpip_1_1__vendor_1_1packaging_1_1version_1_1___base_version.html", "d9/d99/classpip_1_1__vendor_1_1packaging_1_1version_1_1___base_version" ],
+    [ "InvalidVersion", "d5/d39/classpip_1_1__vendor_1_1packaging_1_1version_1_1_invalid_version.html", null ],
+    [ "LegacyVersion", "db/d53/classpip_1_1__vendor_1_1packaging_1_1version_1_1_legacy_version.html", "db/d53/classpip_1_1__vendor_1_1packaging_1_1version_1_1_legacy_version" ],
+    [ "Version", "d6/d65/classpip_1_1__vendor_1_1packaging_1_1version_1_1_version.html", "d6/d65/classpip_1_1__vendor_1_1packaging_1_1version_1_1_version" ],
+    [ "_cmpkey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#aa7f2d3c8e1e4a6df628a475a33ec0062", null ],
+    [ "_legacy_cmpkey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a455c0a5be106bc94d5489e7b5d96039b", null ],
+    [ "_parse_letter_version", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a2d05d90d479ac7021adc9cd65a4b1cc8", null ],
+    [ "_parse_local_version", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a73c103308edd8b03e76f803a4a8d90a3", null ],
+    [ "_parse_version_parts", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a6cd6ec6ffe49a82a0c7ca817d9e5c2aa", null ],
+    [ "parse", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a42d3743f7293754d7bbe77ddd45d91bb", null ],
+    [ "_legacy_version_component_re", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a5d5f6ad2e377722a78021a2348f4b8ae", null ],
+    [ "_legacy_version_replacement_map", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#af36d42809161a0a2982532506e88c653", null ],
+    [ "_local_version_separators", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a9752155874d94b20de4a2aac83679a52", null ],
+    [ "_Version", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a5fa77912ddefb04b09d9a22ecd66c315", null ],
+    [ "CmpKey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a99276b1c54871b3958c20e214fc4cf9d", null ],
+    [ "InfiniteTypes", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a2d949184f0e00365dd81411d1f20ff34", null ],
+    [ "LegacyCmpKey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#accf467f86a99eaec52830cf6a995cb80", null ],
+    [ "LocalType", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#adcb2cc79a2713ff431f8d503658d5dd0", null ],
+    [ "PrePostDevType", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#aaa3169cde3c6e7c84e59c85e80b34c99", null ],
+    [ "SubLocalType", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#ac07cd23fc96027079885c0f9121da91e", null ],
+    [ "VERSION_PATTERN", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a189d219f0e31abbfc4f1b0f59168ffc4", null ],
+    [ "VersionComparisonMethod", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a6b6ed813c9f7881780bbce905f1bc28d", null ]
+];

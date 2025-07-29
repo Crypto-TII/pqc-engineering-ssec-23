@@ -1,0 +1,28 @@
+var namespacepip_1_1__vendor_1_1requests_1_1exceptions =
+[
+    [ "ChunkedEncodingError", "d4/d92/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_chunked_encoding_error.html", null ],
+    [ "ConnectionError", "d8/dd6/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_connection_error.html", null ],
+    [ "ConnectTimeout", "d8/d11/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_connect_timeout.html", null ],
+    [ "ContentDecodingError", "d0/daf/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_content_decoding_error.html", null ],
+    [ "FileModeWarning", "d7/d20/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_file_mode_warning.html", null ],
+    [ "HTTPError", "d0/d0c/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_h_t_t_p_error.html", null ],
+    [ "InvalidHeader", "d6/daa/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_header.html", null ],
+    [ "InvalidJSONError", "d2/dfa/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_j_s_o_n_error.html", null ],
+    [ "InvalidProxyURL", "d7/dcc/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_proxy_u_r_l.html", null ],
+    [ "InvalidSchema", "d6/d80/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_schema.html", null ],
+    [ "InvalidURL", "df/d98/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_invalid_u_r_l.html", null ],
+    [ "JSONDecodeError", "d7/d23/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_j_s_o_n_decode_error.html", "d7/d23/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_j_s_o_n_decode_error" ],
+    [ "MissingSchema", "d6/dae/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_missing_schema.html", null ],
+    [ "ProxyError", "de/db1/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_proxy_error.html", null ],
+    [ "ReadTimeout", "d3/d03/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_read_timeout.html", null ],
+    [ "RequestException", "df/d94/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_request_exception.html", "df/d94/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_request_exception" ],
+    [ "RequestsDependencyWarning", "dc/d58/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_requests_dependency_warning.html", null ],
+    [ "RequestsWarning", "d2/d8f/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_requests_warning.html", null ],
+    [ "RetryError", "df/d86/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_retry_error.html", null ],
+    [ "SSLError", "dd/dc5/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_s_s_l_error.html", null ],
+    [ "StreamConsumedError", "da/d46/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_stream_consumed_error.html", null ],
+    [ "Timeout", "d2/df9/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_timeout.html", null ],
+    [ "TooManyRedirects", "d0/dc6/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_too_many_redirects.html", null ],
+    [ "UnrewindableBodyError", "d3/dc2/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_unrewindable_body_error.html", null ],
+    [ "URLRequired", "de/dc3/classpip_1_1__vendor_1_1requests_1_1exceptions_1_1_u_r_l_required.html", null ]
+];

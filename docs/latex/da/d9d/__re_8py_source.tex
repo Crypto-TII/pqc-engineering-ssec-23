@@ -1,0 +1,113 @@
+\doxysection{\+\_\+re.\+py}
+\hypertarget{__re_8py_source}{}\label{__re_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tomli/\_re.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tomli/\_re.py}}
+\mbox{\hyperlink{__re_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re}{00001}}\ \textcolor{comment}{\#\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00002}00002\ \textcolor{comment}{\#\ SPDX-\/FileCopyrightText:\ 2021\ Taneli\ Hukkinen}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00003}00003\ \textcolor{comment}{\#\ Licensed\ to\ PSF\ under\ a\ Contributor\ Agreement.}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00005}00005\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ annotations}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00007}00007\ \textcolor{keyword}{from}\ datetime\ \textcolor{keyword}{import}\ date,\ datetime,\ time,\ timedelta,\ timezone,\ tzinfo}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00008}00008\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ lru\_cache}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00009}00009\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00010}00010\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00012}00012\ \textcolor{keyword}{from}\ .\_types\ \textcolor{keyword}{import}\ ParseFloat}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00014}00014\ \textcolor{comment}{\#\ E.g.}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00015}00015\ \textcolor{comment}{\#\ -\/\ 00:32:00.999999}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00016}00016\ \textcolor{comment}{\#\ -\/\ 00:32:00}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00017}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a4c199950be2dfe014ab2f82df5a5a091}{00017}}\ \_TIME\_RE\_STR\ =\ \textcolor{stringliteral}{r"{}([01][0-\/9]|2[0-\/3]):([0-\/5][0-\/9]):([0-\/5][0-\/9])(?:\(\backslash\).([0-\/9]\{1,6\})[0-\/9]*)?"{}}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00019}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_abb016607d2c04c51c860062057d9557b}{00019}}\ RE\_NUMBER\ =\ re.compile(}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00020}00020\ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00021}00021\ \textcolor{stringliteral}{0}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00022}00022\ \textcolor{stringliteral}{(?:}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ x[0-\/9A-\/Fa-\/f](?:\_?[0-\/9A-\/Fa-\/f])*\ \ \ \#\ hex}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ |}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ b[01](?:\_?[01])*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ bin}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ |}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ o[0-\/7](?:\_?[0-\/7])*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ oct}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00028}00028\ \textcolor{stringliteral}{)}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00029}00029\ \textcolor{stringliteral}{|}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00030}00030\ \textcolor{stringliteral}{[+-\/]?(?:0|[1-\/9](?:\_?[0-\/9])*)\ \ \ \ \ \ \ \ \ \#\ dec,\ integer\ part}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00031}00031\ \textcolor{stringliteral}{(?P<floatpart>}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ (?:\(\backslash\).[0-\/9](?:\_?[0-\/9])*)?\ \ \ \ \ \ \ \ \ \#\ optional\ fractional\ part}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ (?:[eE][+-\/]?[0-\/9](?:\_?[0-\/9])*)?\ \ \#\ optional\ exponent\ part}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00034}00034\ \textcolor{stringliteral}{)}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00035}00035\ \textcolor{stringliteral}{"{}"{}"{}},}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00036}00036\ \ \ \ \ flags=re.VERBOSE,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00037}00037\ )}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a5cb364b083cb9cfcf469fa3656711beb}{00038}}\ RE\_LOCALTIME\ =\ re.compile(\_TIME\_RE\_STR)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00039}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a7435404a7643e8c74cd781f1740f4e70}{00039}}\ RE\_DATETIME\ =\ re.compile(}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00040}00040\ \ \ \ \ rf\textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00041}00041\ \textcolor{stringliteral}{([0-\/9]\{\{4\}\})-\/(0[1-\/9]|1[0-\/2])-\/(0[1-\/9]|[12][0-\/9]|3[01])\ \ \#\ date,\ e.g.\ 1988-\/10-\/27}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00042}00042\ \textcolor{stringliteral}{(?:}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ [Tt\ ]}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ \{\_TIME\_RE\_STR\}}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ (?:([Zz])|([+-\/])([01][0-\/9]|2[0-\/3]):([0-\/5][0-\/9]))?\ \ \#\ optional\ time\ offset}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00046}00046\ \textcolor{stringliteral}{)?}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00047}00047\ \textcolor{stringliteral}{"{}"{}"{}},}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00048}00048\ \ \ \ \ flags=re.VERBOSE,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00049}00049\ )}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00052}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a68bd18a4ec27751bcdf50faed790a04b}{00052}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a68bd18a4ec27751bcdf50faed790a04b}{match\_to\_datetime}}(match:\ re.Match)\ -\/>\ datetime\ |\ date:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00053}00053\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ a\ \`{}RE\_DATETIME\`{}\ match\ to\ \`{}datetime.datetime\`{}\ or\ \`{}datetime.date\`{}.}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00054}00054\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ Raises\ ValueError\ if\ the\ match\ does\ not\ correspond\ to\ a\ valid\ date}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ or\ datetime.}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00058}00058\ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ year\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ month\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ day\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ hour\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ minute\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ sec\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ micros\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ zulu\_time,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ offset\_sign\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ offset\_hour\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ offset\_minute\_str,}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00070}00070\ \ \ \ \ )\ =\ match.groups()}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00071}00071\ \ \ \ \ year,\ month,\ day\ =\ int(year\_str),\ int(month\_str),\ int(day\_str)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{if}\ hour\_str\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ date(year,\ month,\ day)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00074}00074\ \ \ \ \ hour,\ minute,\ sec\ =\ int(hour\_str),\ int(minute\_str),\ int(sec\_str)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00075}00075\ \ \ \ \ micros\ =\ int(micros\_str.ljust(6,\ \textcolor{stringliteral}{"{}0"{}}))\ \textcolor{keywordflow}{if}\ micros\_str\ \textcolor{keywordflow}{else}\ 0}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ offset\_sign\_str:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ tz:\ tzinfo\ |\ \textcolor{keywordtype}{None}\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a16e28f64652c8b911a25f06c2a7d8c73}{cached\_tz}}(}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ offset\_hour\_str,\ offset\_minute\_str,\ offset\_sign\_str}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{elif}\ zulu\_time:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ tz\ =\ timezone.utc}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00082}00082\ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ local\ date-\/time}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ tz\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{return}\ datetime(year,\ month,\ day,\ hour,\ minute,\ sec,\ micros,\ tzinfo=tz)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00087}00087\ \textcolor{preprocessor}{@lru\_cache(maxsize=None)}}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00088}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a16e28f64652c8b911a25f06c2a7d8c73}{00088}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a16e28f64652c8b911a25f06c2a7d8c73}{cached\_tz}}(hour\_str:\ str,\ minute\_str:\ str,\ sign\_str:\ str)\ -\/>\ timezone:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00089}00089\ \ \ \ \ sign\ =\ 1\ \textcolor{keywordflow}{if}\ sign\_str\ ==\ \textcolor{stringliteral}{"{}+"{}}\ \textcolor{keywordflow}{else}\ -\/1}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{return}\ timezone(}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ timedelta(}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ hours=sign\ *\ int(hour\_str),}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ minutes=sign\ *\ int(minute\_str),}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00095}00095\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00098}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a8f871ee3017e6b8fb8b3498d0860ba95}{00098}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a8f871ee3017e6b8fb8b3498d0860ba95}{match\_to\_localtime}}(match:\ re.Match)\ -\/>\ time:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00099}00099\ \ \ \ \ hour\_str,\ minute\_str,\ sec\_str,\ micros\_str\ =\ match.groups()}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00100}00100\ \ \ \ \ micros\ =\ int(micros\_str.ljust(6,\ \textcolor{stringliteral}{"{}0"{}}))\ \textcolor{keywordflow}{if}\ micros\_str\ \textcolor{keywordflow}{else}\ 0}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{return}\ time(int(hour\_str),\ int(minute\_str),\ int(sec\_str),\ micros)}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00104}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a86eed0c62877965a866b66268ddbcd1d}{00104}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tomli_1_1__re_a86eed0c62877965a866b66268ddbcd1d}{match\_to\_number}}(match:\ re.Match,\ parse\_float:\ ParseFloat)\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{if}\ match.group(\textcolor{stringliteral}{"{}floatpart"{}}):}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parse\_float(match.group())}
+\DoxyCodeLine{\Hypertarget{__re_8py_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{return}\ int(match.group(),\ 0)}
+
+\end{DoxyCode}

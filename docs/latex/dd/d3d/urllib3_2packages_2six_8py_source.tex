@@ -1,0 +1,1082 @@
+\doxysection{six.\+py}
+\hypertarget{urllib3_2packages_2six_8py_source}{}\label{urllib3_2packages_2six_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/packages/six.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/urllib3/packages/six.py}}
+\mbox{\hyperlink{urllib3_2packages_2six_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2010-\/2020\ Benjamin\ Peterson}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00002}00002\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00003}00003\ \textcolor{comment}{\#\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a\ copy}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00004}00004\ \textcolor{comment}{\#\ of\ this\ software\ and\ associated\ documentation\ files\ (the\ "{}Software"{}),\ to\ deal}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00005}00005\ \textcolor{comment}{\#\ in\ the\ Software\ without\ restriction,\ including\ without\ limitation\ the\ rights}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00006}00006\ \textcolor{comment}{\#\ to\ use,\ copy,\ modify,\ merge,\ publish,\ distribute,\ sublicense,\ and/or\ sell}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00007}00007\ \textcolor{comment}{\#\ copies\ of\ the\ Software,\ and\ to\ permit\ persons\ to\ whom\ the\ Software\ is}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00008}00008\ \textcolor{comment}{\#\ furnished\ to\ do\ so,\ subject\ to\ the\ following\ conditions:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00009}00009\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00010}00010\ \textcolor{comment}{\#\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be\ included\ in\ all}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00011}00011\ \textcolor{comment}{\#\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00012}00012\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00013}00013\ \textcolor{comment}{\#\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS\ OR}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00014}00014\ \textcolor{comment}{\#\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF\ MERCHANTABILITY,}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00015}00015\ \textcolor{comment}{\#\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00016}00016\ \textcolor{comment}{\#\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00017}00017\ \textcolor{comment}{\#\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00018}00018\ \textcolor{comment}{\#\ OUT\ OF\ OR\ IN\ CONNECTION\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00019}00019\ \textcolor{comment}{\#\ SOFTWARE.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00021}00021\ \textcolor{stringliteral}{"{}"{}"{}Utilities\ for\ writing\ code\ that\ runs\ on\ Python\ 2\ and\ 3"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00023}00023\ \textcolor{keyword}{from}\ \_\_future\_\_\ \textcolor{keyword}{import}\ absolute\_import}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00025}00025\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00026}00026\ \textcolor{keyword}{import}\ itertools}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00027}00027\ \textcolor{keyword}{import}\ operator}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00028}00028\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00029}00029\ \textcolor{keyword}{import}\ types}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00031}00031\ \_\_author\_\_\ =\ \textcolor{stringliteral}{"{}Benjamin\ Peterson\ <benjamin@python.org>"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00032}00032\ \_\_version\_\_\ =\ \textcolor{stringliteral}{"{}1.16.0"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00035}00035\ \textcolor{comment}{\#\ Useful\ for\ very\ coarse\ version\ differentiation.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00036}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ac095c6921ddf8b58ebfdbc1078f73a66}{00036}}\ PY2\ =\ sys.version\_info[0]\ ==\ 2}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00037}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a7e1ac87a9110c3e1b393a3934bada468}{00037}}\ PY3\ =\ sys.version\_info[0]\ ==\ 3}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00038}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae86e51b6dd24a42f61b3922334fc89a4}{00038}}\ PY34\ =\ sys.version\_info[0:2]\ >=\ (3,\ 4)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00040}00040\ \textcolor{keywordflow}{if}\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00041}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a4960f01de741b19ea31a8c33d3183c35}{00041}}\ \ \ \ \ string\_types\ =\ (str,)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00042}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ac50b03ddc6ec3074ab77f5b2dda13bec}{00042}}\ \ \ \ \ integer\_types\ =\ (int,)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00043}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a1515f6c9d29b4a7e56f605874dd8ffb2}{00043}}\ \ \ \ \ class\_types\ =\ (type,)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00044}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae388b6f61424eb7c470064f732bda4a8}{00044}}\ \ \ \ \ text\_type\ =\ str}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00045}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae860a9bb55c0b5018b4fadccc8f332d1}{00045}}\ \ \ \ \ binary\_type\ =\ bytes}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00047}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a978821d431cca68714fc73ce31cc42d5}{00047}}\ \ \ \ \ MAXSIZE\ =\ sys.maxsize}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00048}00048\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00049}00049\ \ \ \ \ string\_types\ =\ (basestring,)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00050}00050\ \ \ \ \ integer\_types\ =\ (int,\ long)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00051}00051\ \ \ \ \ class\_types\ =\ (type,\ types.ClassType)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00052}00052\ \ \ \ \ text\_type\ =\ unicode}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00053}00053\ \ \ \ \ binary\_type\ =\ str}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform.startswith(\textcolor{stringliteral}{"{}java"{}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Jython\ always\ uses\ 32\ bits.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ MAXSIZE\ =\ int((1\ <<\ 31)\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ It's\ possible\ to\ have\ sizeof(long)\ !=\ sizeof(Py\_ssize\_t).}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00060}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_x}{00060}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_x}{X}}(object):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00061}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_x_a6781b036ba1c606be31ad87a0d530414}{00061}}\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_x_a6781b036ba1c606be31ad87a0d530414}{\_\_len\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1\ <<\ 31}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ len(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_x}{X}}())}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OverflowError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 32-\/bit}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ MAXSIZE\ =\ int((1\ <<\ 31)\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 64-\/bit}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ MAXSIZE\ =\ int((1\ <<\ 63)\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ del\ X}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00074}00074\ \textcolor{keywordflow}{if}\ PY34:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00075}00075\ \ \ \ \ \textcolor{keyword}{from}\ importlib.util\ \textcolor{keyword}{import}\ spec\_from\_loader}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00076}00076\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00077}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af6c621dce3158b28de03ccdf6bd6738a}{00077}}\ \ \ \ \ spec\_from\_loader\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00080}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_abd98a67e03dfe524d187e6c6f9390504}{00080}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_abd98a67e03dfe524d187e6c6f9390504}{\_add\_doc}}(func,\ doc):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00081}00081\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ documentation\ to\ a\ function."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00082}00082\ \ \ \ \ func.\_\_doc\_\_\ =\ doc}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00085}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa0d7aacd2bd1e7da07c00e77a65dd20a}{00085}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa0d7aacd2bd1e7da07c00e77a65dd20a}{\_import\_module}}(name):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00086}00086\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Import\ module,\ returning\ the\ module\ after\ the\ last\ dot."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00087}00087\ \ \ \ \ \_\_import\_\_(name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{return}\ sys.modules[name]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00091}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr}{00091}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr}{\_LazyDescr}}(object):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00092}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_aa5c59eb0448d191d2675e5ccbb3b7e15}{00092}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_aa5c59eb0448d191d2675e5ccbb3b7e15}{\_\_init\_\_}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00093}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_ab74e6bf80237ddc4109968cedc58c151}{00093}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_ab74e6bf80237ddc4109968cedc58c151}{name}}\ =\ name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00095}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_a1f692938855341ac747f1539ea3f2388}{00095}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_a1f692938855341ac747f1539ea3f2388}{\_\_get\_\_}}(self,\ obj,\ tp):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ result\ =\ self.\_resolve()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ setattr(obj,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_ab74e6bf80237ddc4109968cedc58c151}{name}},\ result)\ \ \textcolor{comment}{\#\ Invokes\ \_\_set\_\_.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ a\ bit\ ugly,\ but\ it\ avoids\ running\ this\ again\ by}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ removing\ this\ descriptor.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ delattr(obj.\_\_class\_\_,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr_ab74e6bf80237ddc4109968cedc58c151}{name}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{00107}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr}{\_LazyDescr}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00108}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a06666d5fde4b933ab13b67a7617024ef}{00108}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a06666d5fde4b933ab13b67a7617024ef}{\_\_init\_\_}}(self,\ name,\ old,\ new=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ super(MovedModule,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a06666d5fde4b933ab13b67a7617024ef}{\_\_init\_\_}}(name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\ =\ name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00113}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a4b97eb97db2365148a5c3a5070f0cdd1}{00113}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}}\ =\ new}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}}\ =\ old}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00117}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_aeb4cea38f5331bc2464a6cc98aa8a82f}{00117}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_aeb4cea38f5331bc2464a6cc98aa8a82f}{\_resolve}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa0d7aacd2bd1e7da07c00e77a65dd20a}{\_import\_module}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00120}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_abf4a75d66a2d79adb80aadc1f506400d}{00120}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_abf4a75d66a2d79adb80aadc1f506400d}{\_\_getattr\_\_}}(self,\ attr):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \_module\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module_aeb4cea38f5331bc2464a6cc98aa8a82f}{\_resolve}}()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ value\ =\ getattr(\_module,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ setattr(self,\ attr,\ value)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00127}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module}{00127}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module}{\_LazyModule}}(types.ModuleType):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00128}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_aa5c59eb0448d191d2675e5ccbb3b7e15}{00128}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_aa5c59eb0448d191d2675e5ccbb3b7e15}{\_\_init\_\_}}(self,\ name):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ super(\_LazyModule,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_aa5c59eb0448d191d2675e5ccbb3b7e15}{\_\_init\_\_}}(name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_ad177ab805429f8817d35e4f2e4c2767a}{\_\_doc\_\_}}\ =\ self.\_\_class\_\_.\_\_doc\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00132}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_a730d89d8fb785025930a6bc7a5b8652b}{00132}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_a730d89d8fb785025930a6bc7a5b8652b}{\_\_dir\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ attrs\ =\ [\textcolor{stringliteral}{"{}\_\_doc\_\_"{}},\ \textcolor{stringliteral}{"{}\_\_name\_\_"{}}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ attrs\ +=\ [attr.name\ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_aea28e4f1220647785e7da5fe8939e5ed}{\_moved\_attributes}}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ attrs}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00137}00137\ \ \ \ \ \textcolor{comment}{\#\ Subclasses\ should\ override\ this}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00138}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module_aea28e4f1220647785e7da5fe8939e5ed}{00138}}\ \ \ \ \ \_moved\_attributes\ =\ []}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00141}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{00141}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_descr}{\_LazyDescr}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00142}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_ab72a0a2e8e782ad276d1bf5bf42bd418}{00142}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_ab72a0a2e8e782ad276d1bf5bf42bd418}{\_\_init\_\_}}(self,\ name,\ old\_mod,\ new\_mod,\ old\_attr=None,\ new\_attr=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ super(MovedAttribute,\ self).\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_ab72a0a2e8e782ad276d1bf5bf42bd418}{\_\_init\_\_}}(name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\_mod\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_mod\ =\ name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00147}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a4b97eb97db2365148a5c3a5070f0cdd1}{00147}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}}\ =\ new\_mod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ new\_attr\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ old\_attr\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_attr\ =\ name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_attr\ =\ old\_attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00153}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a710acfac10f0042826d2d6d9c213ae7b}{00153}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a710acfac10f0042826d2d6d9c213ae7b}{attr}}\ =\ new\_attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}}\ =\ old\_mod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ old\_attr\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ old\_attr\ =\ name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a710acfac10f0042826d2d6d9c213ae7b}{attr}}\ =\ old\_attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00160}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_aeb4cea38f5331bc2464a6cc98aa8a82f}{00160}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_aeb4cea38f5331bc2464a6cc98aa8a82f}{\_resolve}}(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ module\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa0d7aacd2bd1e7da07c00e77a65dd20a}{\_import\_module}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a4b97eb97db2365148a5c3a5070f0cdd1}{mod}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getattr(module,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute_a710acfac10f0042826d2d6d9c213ae7b}{attr}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00165}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer}{00165}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer}{\_SixMetaPathImporter}}(object):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00167}00167\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00168}00168\ \textcolor{stringliteral}{\ \ \ \ A\ meta\ path\ importer\ to\ import\ six.moves\ and\ its\ submodules.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00169}00169\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ This\ class\ implements\ a\ PEP302\ finder\ and\ loader.\ It\ should\ be\ compatible}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ with\ Python\ 2.5\ and\ all\ existing\ versions\ of\ Python3}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00174}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a05b5d14ccdee0e5ab787d04d7df68fa3}{00174}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a05b5d14ccdee0e5ab787d04d7df68fa3}{\_\_init\_\_}}(self,\ six\_module\_name):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00175}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_ab74e6bf80237ddc4109968cedc58c151}{00175}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_ab74e6bf80237ddc4109968cedc58c151}{name}}\ =\ six\_module\_name}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00176}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{00176}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00178}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2d119edab2f891dae8425965da5df1bd}{00178}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2d119edab2f891dae8425965da5df1bd}{\_add\_module}}(self,\ mod,\ *fullnames):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ fullname\ \textcolor{keywordflow}{in}\ fullnames:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}[self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_ab74e6bf80237ddc4109968cedc58c151}{name}}\ +\ \textcolor{stringliteral}{"{}."{}}\ +\ fullname]\ =\ mod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00182}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a0164bcdbaaab821d5865fa8011555783}{00182}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a0164bcdbaaab821d5865fa8011555783}{\_get\_module}}(self,\ fullname):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}[self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_ab74e6bf80237ddc4109968cedc58c151}{name}}\ +\ \textcolor{stringliteral}{"{}."{}}\ +\ fullname]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00185}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe255bcbc5bbaba26476b3b65ca346f3}{00185}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe255bcbc5bbaba26476b3b65ca346f3}{find\_module}}(self,\ fullname,\ path=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ fullname\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00190}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a265be8f64f8e9e9eb0e8274aeb45c8d0}{00190}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a265be8f64f8e9e9eb0e8274aeb45c8d0}{find\_spec}}(self,\ fullname,\ path,\ target=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ fullname\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af6c621dce3158b28de03ccdf6bd6738a}{spec\_from\_loader}}(fullname,\ self)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00195}00195\ \ \ \ \ \textcolor{keyword}{def\ }\_\_get\_module(self,\ fullname):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_afe4b44eefd1ac014411e7818d7f560ad}{known\_modules}}[fullname]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ImportError(\textcolor{stringliteral}{"{}This\ loader\ does\ not\ know\ module\ "{}}\ +\ fullname)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00201}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a636c812ab1b897fefe7dab737d7f10f9}{00201}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a636c812ab1b897fefe7dab737d7f10f9}{load\_module}}(self,\ fullname):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ in\ case\ of\ a\ reload}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sys.modules[fullname]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ mod\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a9b079c6eb99dab475fa0821cfe9ab623}{\_\_get\_module}}(fullname)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(mod,\ MovedModule):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ mod\ =\ mod.\_resolve()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ mod.\_\_loader\_\_\ =\ self}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ sys.modules[fullname]\ =\ mod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00215}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_af9c0d845202dab323a8e537313b24a0f}{00215}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_af9c0d845202dab323a8e537313b24a0f}{is\_package}}(self,\ fullname):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00217}00217\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Return\ true,\ if\ the\ named\ module\ is\ a\ package.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00218}00218\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00219}00219\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ We\ need\ this\ method\ to\ get\ correct\ spec\ objects\ with}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Python\ 3.4\ (see\ PEP451)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hasattr(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a9b079c6eb99dab475fa0821cfe9ab623}{\_\_get\_module}}(fullname),\ \textcolor{stringliteral}{"{}\_\_path\_\_"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00224}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a022cc291e93577f85bfee1a431ca9055}{00224}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a022cc291e93577f85bfee1a431ca9055}{get\_code}}(self,\ fullname):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00226}00226\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00227}00227\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Required,\ if\ is\_package\ is\ implemented"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a9b079c6eb99dab475fa0821cfe9ab623}{\_\_get\_module}}(fullname)\ \ \textcolor{comment}{\#\ eventually\ raises\ ImportError}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00231}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a9ec9c92dfcd2bea1a2a71938f89e99f3}{00231}}\ \ \ \ \ get\_source\ =\ get\_code\ \ \textcolor{comment}{\#\ same\ as\ get\_code}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00233}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2e904c212c416db176d579dc481d9e5f}{00233}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2e904c212c416db176d579dc481d9e5f}{create\_module}}(self,\ spec):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a636c812ab1b897fefe7dab737d7f10f9}{load\_module}}(spec.name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00236}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2556e54852f9aca4186487ec12d2501e}{00236}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___six_meta_path_importer_a2556e54852f9aca4186487ec12d2501e}{exec\_module}}(self,\ module):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00240}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a94a5dc5c156d7d6960d4ab943479a473}{00240}}\ \_importer\ =\ \_SixMetaPathImporter(\_\_name\_\_)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00243}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___moved_items}{00243}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___moved_items}{\_MovedItems}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module}{\_LazyModule}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00245}00245\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Lazy\ loading\ of\ moved\ objects"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00247}00247\ \ \ \ \ \_\_path\_\_\ =\ []\ \ \textcolor{comment}{\#\ mark\ as\ package}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00250}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a292feb2aa81db88c299342f7aa674006}{00250}}\ \_moved\_attributes\ =\ [}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00251}00251\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}cStringIO"{}},\ \textcolor{stringliteral}{"{}cStringIO"{}},\ \textcolor{stringliteral}{"{}io"{}},\ \textcolor{stringliteral}{"{}StringIO"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00252}00252\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}filter"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}ifilter"{}},\ \textcolor{stringliteral}{"{}filter"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00253}00253\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}filterfalse"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}ifilterfalse"{}},\ \textcolor{stringliteral}{"{}filterfalse"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00255}00255\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00256}00256\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}input"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}raw\_input"{}},\ \textcolor{stringliteral}{"{}input"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00257}00257\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}intern"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}sys"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00258}00258\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}map"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}imap"{}},\ \textcolor{stringliteral}{"{}map"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00259}00259\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}getcwd"{}},\ \textcolor{stringliteral}{"{}os"{}},\ \textcolor{stringliteral}{"{}os"{}},\ \textcolor{stringliteral}{"{}getcwdu"{}},\ \textcolor{stringliteral}{"{}getcwd"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00260}00260\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}getcwdb"{}},\ \textcolor{stringliteral}{"{}os"{}},\ \textcolor{stringliteral}{"{}os"{}},\ \textcolor{stringliteral}{"{}getcwd"{}},\ \textcolor{stringliteral}{"{}getcwdb"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00261}00261\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}getoutput"{}},\ \textcolor{stringliteral}{"{}commands"{}},\ \textcolor{stringliteral}{"{}subprocess"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00262}00262\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}range"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}xrange"{}},\ \textcolor{stringliteral}{"{}range"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00263}00263\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reload\_module"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}importlib"{}}\ \textcolor{keywordflow}{if}\ PY34\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}imp"{}},\ \textcolor{stringliteral}{"{}reload"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00265}00265\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00266}00266\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}reduce"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}functools"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00267}00267\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}shlex\_quote"{}},\ \textcolor{stringliteral}{"{}pipes"{}},\ \textcolor{stringliteral}{"{}shlex"{}},\ \textcolor{stringliteral}{"{}quote"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00268}00268\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}StringIO"{}},\ \textcolor{stringliteral}{"{}StringIO"{}},\ \textcolor{stringliteral}{"{}io"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00269}00269\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}UserDict"{}},\ \textcolor{stringliteral}{"{}UserDict"{}},\ \textcolor{stringliteral}{"{}collections"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00270}00270\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}UserList"{}},\ \textcolor{stringliteral}{"{}UserList"{}},\ \textcolor{stringliteral}{"{}collections"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00271}00271\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}UserString"{}},\ \textcolor{stringliteral}{"{}UserString"{}},\ \textcolor{stringliteral}{"{}collections"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00272}00272\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}xrange"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}xrange"{}},\ \textcolor{stringliteral}{"{}range"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00273}00273\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(\textcolor{stringliteral}{"{}zip"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}izip"{}},\ \textcolor{stringliteral}{"{}zip"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00274}00274\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_attribute}{MovedAttribute}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}zip\_longest"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}itertools"{}},\ \textcolor{stringliteral}{"{}izip\_longest"{}},\ \textcolor{stringliteral}{"{}zip\_longest"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00276}00276\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00277}00277\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}builtins"{}},\ \textcolor{stringliteral}{"{}\_\_builtin\_\_"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00278}00278\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}configparser"{}},\ \textcolor{stringliteral}{"{}ConfigParser"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00279}00279\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}collections\_abc"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}collections"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}collections.abc"{}}\ \textcolor{keywordflow}{if}\ sys.version\_info\ >=\ (3,\ 3)\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}collections"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00283}00283\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00284}00284\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}copyreg"{}},\ \textcolor{stringliteral}{"{}copy\_reg"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00285}00285\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}dbm\_gnu"{}},\ \textcolor{stringliteral}{"{}gdbm"{}},\ \textcolor{stringliteral}{"{}dbm.gnu"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00286}00286\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}dbm\_ndbm"{}},\ \textcolor{stringliteral}{"{}dbm"{}},\ \textcolor{stringliteral}{"{}dbm.ndbm"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00287}00287\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_dummy\_thread"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}dummy\_thread"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_dummy\_thread"{}}\ \textcolor{keywordflow}{if}\ sys.version\_info\ <\ (3,\ 9)\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}\_thread"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00291}00291\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00292}00292\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}http\_cookiejar"{}},\ \textcolor{stringliteral}{"{}cookielib"{}},\ \textcolor{stringliteral}{"{}http.cookiejar"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00293}00293\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}http\_cookies"{}},\ \textcolor{stringliteral}{"{}Cookie"{}},\ \textcolor{stringliteral}{"{}http.cookies"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00294}00294\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}html\_entities"{}},\ \textcolor{stringliteral}{"{}htmlentitydefs"{}},\ \textcolor{stringliteral}{"{}html.entities"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00295}00295\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}html\_parser"{}},\ \textcolor{stringliteral}{"{}HTMLParser"{}},\ \textcolor{stringliteral}{"{}html.parser"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00296}00296\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}http\_client"{}},\ \textcolor{stringliteral}{"{}httplib"{}},\ \textcolor{stringliteral}{"{}http.client"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00297}00297\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}email\_mime\_base"{}},\ \textcolor{stringliteral}{"{}email.MIMEBase"{}},\ \textcolor{stringliteral}{"{}email.mime.base"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00298}00298\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}email\_mime\_image"{}},\ \textcolor{stringliteral}{"{}email.MIMEImage"{}},\ \textcolor{stringliteral}{"{}email.mime.image"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00299}00299\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}email\_mime\_multipart"{}},\ \textcolor{stringliteral}{"{}email.MIMEMultipart"{}},\ \textcolor{stringliteral}{"{}email.mime.multipart"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00300}00300\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}email\_mime\_nonmultipart"{}},\ \textcolor{stringliteral}{"{}email.MIMENonMultipart"{}},\ \textcolor{stringliteral}{"{}email.mime.nonmultipart"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00302}00302\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00303}00303\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}email\_mime\_text"{}},\ \textcolor{stringliteral}{"{}email.MIMEText"{}},\ \textcolor{stringliteral}{"{}email.mime.text"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00304}00304\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}BaseHTTPServer"{}},\ \textcolor{stringliteral}{"{}BaseHTTPServer"{}},\ \textcolor{stringliteral}{"{}http.server"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00305}00305\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}CGIHTTPServer"{}},\ \textcolor{stringliteral}{"{}CGIHTTPServer"{}},\ \textcolor{stringliteral}{"{}http.server"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00306}00306\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}SimpleHTTPServer"{}},\ \textcolor{stringliteral}{"{}SimpleHTTPServer"{}},\ \textcolor{stringliteral}{"{}http.server"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00307}00307\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}cPickle"{}},\ \textcolor{stringliteral}{"{}cPickle"{}},\ \textcolor{stringliteral}{"{}pickle"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00308}00308\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}queue"{}},\ \textcolor{stringliteral}{"{}Queue"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00309}00309\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}reprlib"{}},\ \textcolor{stringliteral}{"{}repr"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00310}00310\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}socketserver"{}},\ \textcolor{stringliteral}{"{}SocketServer"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00311}00311\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}\_thread"{}},\ \textcolor{stringliteral}{"{}thread"{}},\ \textcolor{stringliteral}{"{}\_thread"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00312}00312\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter"{}},\ \textcolor{stringliteral}{"{}Tkinter"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00313}00313\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_dialog"{}},\ \textcolor{stringliteral}{"{}Dialog"{}},\ \textcolor{stringliteral}{"{}tkinter.dialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00314}00314\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_filedialog"{}},\ \textcolor{stringliteral}{"{}FileDialog"{}},\ \textcolor{stringliteral}{"{}tkinter.filedialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00315}00315\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_scrolledtext"{}},\ \textcolor{stringliteral}{"{}ScrolledText"{}},\ \textcolor{stringliteral}{"{}tkinter.scrolledtext"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00316}00316\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_simpledialog"{}},\ \textcolor{stringliteral}{"{}SimpleDialog"{}},\ \textcolor{stringliteral}{"{}tkinter.simpledialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00317}00317\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_tix"{}},\ \textcolor{stringliteral}{"{}Tix"{}},\ \textcolor{stringliteral}{"{}tkinter.tix"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00318}00318\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_ttk"{}},\ \textcolor{stringliteral}{"{}ttk"{}},\ \textcolor{stringliteral}{"{}tkinter.ttk"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00319}00319\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_constants"{}},\ \textcolor{stringliteral}{"{}Tkconstants"{}},\ \textcolor{stringliteral}{"{}tkinter.constants"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00320}00320\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_dnd"{}},\ \textcolor{stringliteral}{"{}Tkdnd"{}},\ \textcolor{stringliteral}{"{}tkinter.dnd"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00321}00321\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_colorchooser"{}},\ \textcolor{stringliteral}{"{}tkColorChooser"{}},\ \textcolor{stringliteral}{"{}tkinter.colorchooser"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00322}00322\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_commondialog"{}},\ \textcolor{stringliteral}{"{}tkCommonDialog"{}},\ \textcolor{stringliteral}{"{}tkinter.commondialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00323}00323\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_tkfiledialog"{}},\ \textcolor{stringliteral}{"{}tkFileDialog"{}},\ \textcolor{stringliteral}{"{}tkinter.filedialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00324}00324\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_font"{}},\ \textcolor{stringliteral}{"{}tkFont"{}},\ \textcolor{stringliteral}{"{}tkinter.font"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00325}00325\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_messagebox"{}},\ \textcolor{stringliteral}{"{}tkMessageBox"{}},\ \textcolor{stringliteral}{"{}tkinter.messagebox"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00326}00326\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}tkinter\_tksimpledialog"{}},\ \textcolor{stringliteral}{"{}tkSimpleDialog"{}},\ \textcolor{stringliteral}{"{}tkinter.simpledialog"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00327}00327\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}urllib\_parse"{}},\ \_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves.urllib\_parse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00328}00328\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}urllib\_error"{}},\ \_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves.urllib\_error"{}},\ \textcolor{stringliteral}{"{}urllib.error"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00329}00329\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}urllib"{}},\ \_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves.urllib"{}},\ \_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves.urllib"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00330}00330\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}urllib\_robotparser"{}},\ \textcolor{stringliteral}{"{}robotparser"{}},\ \textcolor{stringliteral}{"{}urllib.robotparser"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00331}00331\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}xmlrpc\_client"{}},\ \textcolor{stringliteral}{"{}xmlrpclib"{}},\ \textcolor{stringliteral}{"{}xmlrpc.client"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00332}00332\ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}xmlrpc\_server"{}},\ \textcolor{stringliteral}{"{}SimpleXMLRPCServer"{}},\ \textcolor{stringliteral}{"{}xmlrpc.server"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00333}00333\ ]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00334}00334\ \textcolor{comment}{\#\ Add\ windows\ specific\ modules.}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00335}00335\ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}win32"{}}:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00336}00336\ \ \ \ \ \_moved\_attributes\ +=\ [}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_moved_module}{MovedModule}}(\textcolor{stringliteral}{"{}winreg"{}},\ \textcolor{stringliteral}{"{}\_winreg"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00338}00338\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00340}00340\ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ \_moved\_attributes:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00341}00341\ \ \ \ \ setattr(\_MovedItems,\ attr.name,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00342}00342\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(attr,\ MovedModule):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \_importer.\_add\_module(attr,\ \textcolor{stringliteral}{"{}moves."{}}\ +\ attr.name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00344}00344\ del\ attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00346}00346\ \_MovedItems.\_moved\_attributes\ =\ \_moved\_attributes}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00348}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae2a5519d94110b60f90737fa87a9cfbe}{00348}}\ moves\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___moved_items}{\_MovedItems}}(\_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00349}00349\ \_importer.\_add\_module(moves,\ \textcolor{stringliteral}{"{}moves"{}})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00352}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__parse}{00352}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__parse}{Module\_six\_moves\_urllib\_parse}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module}{\_LazyModule}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00354}00354\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Lazy\ loading\ of\ moved\ objects\ in\ six.moves.urllib\_parse"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00357}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af9df4f5fe5ff9c115577fa70c247a7a4}{00357}}\ \_urllib\_parse\_moved\_attributes\ =\ [}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00358}00358\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}ParseResult"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00359}00359\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}SplitResult"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00360}00360\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}parse\_qs"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00361}00361\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}parse\_qsl"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00362}00362\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urldefrag"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00363}00363\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urljoin"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00364}00364\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00365}00365\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urlsplit"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00366}00366\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urlunparse"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00367}00367\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urlunsplit"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00368}00368\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}quote"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00369}00369\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}quote\_plus"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00370}00370\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}unquote"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00371}00371\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}unquote\_plus"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00372}00372\ \ \ \ \ MovedAttribute(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}unquote\_to\_bytes"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}},\ \textcolor{stringliteral}{"{}unquote"{}},\ \textcolor{stringliteral}{"{}unquote\_to\_bytes"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00374}00374\ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00375}00375\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}urlencode"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00376}00376\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}splitquery"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00377}00377\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}splittag"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00378}00378\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}splituser"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00379}00379\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}splitvalue"{}},\ \textcolor{stringliteral}{"{}urllib"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00380}00380\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}uses\_fragment"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00381}00381\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}uses\_netloc"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00382}00382\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}uses\_params"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00383}00383\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}uses\_query"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00384}00384\ \ \ \ \ MovedAttribute(\textcolor{stringliteral}{"{}uses\_relative"{}},\ \textcolor{stringliteral}{"{}urlparse"{}},\ \textcolor{stringliteral}{"{}urllib.parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00385}00385\ ]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00386}00386\ \textcolor{keywordflow}{for}\ attr\ \textcolor{keywordflow}{in}\ \_urllib\_parse\_moved\_attributes:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00387}00387\ \ \ \ \ setattr(Module\_six\_moves\_urllib\_parse,\ attr.name,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00388}00388\ del\ attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00390}00390\ Module\_six\_moves\_urllib\_parse.\_moved\_attributes\ =\ \_urllib\_parse\_moved\_attributes}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00392}00392\ \_importer.\_add\_module(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00393}00393\ \ \ \ \ Module\_six\_moves\_urllib\_parse(\_\_name\_\_\ +\ \textcolor{stringliteral}{"{}.moves.urllib\_parse"{}}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00394}00394\ \ \ \ \ \textcolor{stringliteral}{"{}moves.urllib\_parse"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00395}00395\ \ \ \ \ \textcolor{stringliteral}{"{}moves.urllib.parse"{}},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00396}00396\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00399}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__error}{00399}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__error}{Module\_six\_moves\_urllib\_error}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1___lazy_module}{\_LazyModule}}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00401}00401\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Lazy\ loading\ of\ moved\ objects\ in\ six.moves.urllib\_error"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00402}00402\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00403}00403\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00404}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a2d3001ad556bd616eab02454e67451cc}{00404}}\ \textcolor{stringliteral}{\_urllib\_error\_moved\_attributes\ =\ [}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00405}00405\ \textcolor{stringliteral}{\ \ \ \ MovedAttribute("{}URLError"{},\ "{}urllib2"{},\ "{}urllib.error"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00406}00406\ \textcolor{stringliteral}{\ \ \ \ MovedAttribute("{}HTTPError"{},\ "{}urllib2"{},\ "{}urllib.error"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00407}00407\ \textcolor{stringliteral}{\ \ \ \ MovedAttribute("{}ContentTooShortError"{},\ "{}urllib"{},\ "{}urllib.error"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00408}00408\ \textcolor{stringliteral}{]}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00409}00409\ \textcolor{stringliteral}{for\ attr\ in\ \_urllib\_error\_moved\_attributes:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00410}00410\ \textcolor{stringliteral}{\ \ \ \ setattr(Module\_six\_moves\_urllib\_error,\ attr.name,\ attr)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00411}00411\ \textcolor{stringliteral}{del\ attr}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00412}00412\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00413}00413\ \textcolor{stringliteral}{Module\_six\_moves\_urllib\_error.\_moved\_attributes\ =\ \_urllib\_error\_moved\_attributes}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00414}00414\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00415}00415\ \textcolor{stringliteral}{\_importer.\_add\_module(}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00416}00416\ \textcolor{stringliteral}{\ \ \ \ Module\_six\_moves\_urllib\_error(\_\_name\_\_\ +\ "{}.moves.urllib.error"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00417}00417\ \textcolor{stringliteral}{\ \ \ \ "{}moves.urllib\_error"{},}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00418}00418\ \textcolor{stringliteral}{\ \ \ \ "{}moves.urllib.error"{},}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00419}00419\ \textcolor{stringliteral}{)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00420}00420\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00421}00421\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00422}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__request}{00422}}\ \textcolor{stringliteral}{class\ Module\_six\_moves\_urllib\_request(\_LazyModule):}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00423}00423\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00424}00424\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}Lazy\ loading\ of\ moved\ objects\ in\ six.moves.urllib\_request"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00427}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ab2cfce929f0f14a296b9af1d52d75947}{00427}}\ \_urllib\_request\_moved\_attributes\ =\ [}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00428}00428\ \ \ \ \ MovedAttribute("{}urlopen"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00429}00429\ \ \ \ \ MovedAttribute("{}install\_opener"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00430}00430\ \ \ \ \ MovedAttribute("{}build\_opener"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00431}00431\ \ \ \ \ MovedAttribute("{}pathname2url"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00432}00432\ \ \ \ \ MovedAttribute("{}url2pathname"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00433}00433\ \ \ \ \ MovedAttribute("{}getproxies"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00434}00434\ \ \ \ \ MovedAttribute("{}Request"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00435}00435\ \ \ \ \ MovedAttribute("{}OpenerDirector"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00436}00436\ \ \ \ \ MovedAttribute("{}HTTPDefaultErrorHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00437}00437\ \ \ \ \ MovedAttribute("{}HTTPRedirectHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00438}00438\ \ \ \ \ MovedAttribute("{}HTTPCookieProcessor"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00439}00439\ \ \ \ \ MovedAttribute("{}ProxyHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00440}00440\ \ \ \ \ MovedAttribute("{}BaseHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00441}00441\ \ \ \ \ MovedAttribute("{}HTTPPasswordMgr"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00442}00442\ \ \ \ \ MovedAttribute("{}HTTPPasswordMgrWithDefaultRealm"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00443}00443\ \ \ \ \ MovedAttribute("{}AbstractBasicAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00444}00444\ \ \ \ \ MovedAttribute("{}HTTPBasicAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00445}00445\ \ \ \ \ MovedAttribute("{}ProxyBasicAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00446}00446\ \ \ \ \ MovedAttribute("{}AbstractDigestAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00447}00447\ \ \ \ \ MovedAttribute("{}HTTPDigestAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00448}00448\ \ \ \ \ MovedAttribute("{}ProxyDigestAuthHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00449}00449\ \ \ \ \ MovedAttribute("{}HTTPHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00450}00450\ \ \ \ \ MovedAttribute("{}HTTPSHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00451}00451\ \ \ \ \ MovedAttribute("{}FileHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00452}00452\ \ \ \ \ MovedAttribute("{}FTPHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00453}00453\ \ \ \ \ MovedAttribute("{}CacheFTPHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00454}00454\ \ \ \ \ MovedAttribute("{}UnknownHandler"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00455}00455\ \ \ \ \ MovedAttribute("{}HTTPErrorProcessor"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00456}00456\ \ \ \ \ MovedAttribute("{}urlretrieve"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00457}00457\ \ \ \ \ MovedAttribute("{}urlcleanup"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00458}00458\ \ \ \ \ MovedAttribute("{}URLopener"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00459}00459\ \ \ \ \ MovedAttribute("{}FancyURLopener"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00460}00460\ \ \ \ \ MovedAttribute("{}proxy\_bypass"{},\ "{}urllib"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00461}00461\ \ \ \ \ MovedAttribute("{}parse\_http\_list"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00462}00462\ \ \ \ \ MovedAttribute("{}parse\_keqv\_list"{},\ "{}urllib2"{},\ "{}urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00463}00463\ ]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00464}00464\ for\ attr\ in\ \_urllib\_request\_moved\_attributes:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00465}00465\ \ \ \ \ setattr(Module\_six\_moves\_urllib\_request,\ attr.name,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00466}00466\ del\ attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00468}00468\ Module\_six\_moves\_urllib\_request.\_moved\_attributes\ =\ \_urllib\_request\_moved\_attributes}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00470}00470\ \_importer.\_add\_module(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00471}00471\ \ \ \ \ Module\_six\_moves\_urllib\_request(\_\_name\_\_\ +\ "{}.moves.urllib.request"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00472}00472\ \ \ \ \ "{}moves.urllib\_request"{},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00473}00473\ \ \ \ \ "{}moves.urllib.request"{},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00474}00474\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00475}00475\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00477}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__response}{00477}}\ class\ Module\_six\_moves\_urllib\_response(\_LazyModule):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00479}00479\ \ \ \ \ "{}"{}"{}Lazy\ loading\ of\ moved\ objects\ in\ six.moves.urllib\_response"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00481}00481\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00482}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a210d610b13822559a14bbf259c5d95ac}{00482}}\ \_urllib\_response\_moved\_attributes\ =\ [}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00483}00483\ \ \ \ \ MovedAttribute("{}addbase"{},\ "{}urllib"{},\ "{}urllib.response"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00484}00484\ \ \ \ \ MovedAttribute("{}addclosehook"{},\ "{}urllib"{},\ "{}urllib.response"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00485}00485\ \ \ \ \ MovedAttribute("{}addinfo"{},\ "{}urllib"{},\ "{}urllib.response"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00486}00486\ \ \ \ \ MovedAttribute("{}addinfourl"{},\ "{}urllib"{},\ "{}urllib.response"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00487}00487\ ]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00488}00488\ for\ attr\ in\ \_urllib\_response\_moved\_attributes:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00489}00489\ \ \ \ \ setattr(Module\_six\_moves\_urllib\_response,\ attr.name,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00490}00490\ del\ attr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00492}00492\ Module\_six\_moves\_urllib\_response.\_moved\_attributes\ =\ \_urllib\_response\_moved\_attributes}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00494}00494\ \_importer.\_add\_module(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00495}00495\ \ \ \ \ Module\_six\_moves\_urllib\_response(\_\_name\_\_\ +\ "{}.moves.urllib.response"{}),}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00496}00496\ \ \ \ \ "{}moves.urllib\_response"{},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00497}00497\ \ \ \ \ "{}moves.urllib.response"{},}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00498}00498\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00501}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib__robotparser}{00501}}\ class\ Module\_six\_moves\_urllib\_robotparser(\_LazyModule):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00503}00503\ \ \ \ \ "{}"{}"{}Lazy\ loading\ of\ moved\ objects\ in\ six.moves.urllib\_robotparse\textcolor{stringliteral}{r"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00504}00504\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00505}00505\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00506}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae087ad044a8ab73df9f99534ee029a31}{00506}}\ \textcolor{stringliteral}{\_urllib\_robotparser\_moved\_attributes\ =\ [}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00507}00507\ \textcolor{stringliteral}{\ \ \ \ MovedAttribute("{}RobotFileParser"{},\ "{}robotparser"{},\ "{}urllib.robotparser"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00508}00508\ \textcolor{stringliteral}{]}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00509}00509\ \textcolor{stringliteral}{for\ attr\ in\ \_urllib\_robotparser\_moved\_attributes:}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00510}00510\ \textcolor{stringliteral}{\ \ \ \ setattr(Module\_six\_moves\_urllib\_robotparser,\ attr.name,\ attr)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00511}00511\ \textcolor{stringliteral}{del\ attr}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00512}00512\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00513}00513\ \textcolor{stringliteral}{Module\_six\_moves\_urllib\_robotparser.\_moved\_attributes\ =\ (}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00514}00514\ \textcolor{stringliteral}{\ \ \ \ \_urllib\_robotparser\_moved\_attributes}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00515}00515\ \textcolor{stringliteral}{)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00516}00516\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00517}00517\ \textcolor{stringliteral}{\_importer.\_add\_module(}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00518}00518\ \textcolor{stringliteral}{\ \ \ \ Module\_six\_moves\_urllib\_robotparser(\_\_name\_\_\ +\ "{}.moves.urllib.robotparser"{}),}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00519}00519\ \textcolor{stringliteral}{\ \ \ \ "{}moves.urllib\_robotparser"{},}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00520}00520\ \textcolor{stringliteral}{\ \ \ \ "{}moves.urllib.robotparser"{},}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00521}00521\ \textcolor{stringliteral}{)}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00522}00522\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00523}00523\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00524}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib}{00524}}\ \textcolor{stringliteral}{class\ Module\_six\_moves\_urllib(types.ModuleType):}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00525}00525\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00526}00526\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}Create\ a\ six.moves.urllib\ namespace\ that\ resembles\ the\ Python\ 3\ namespace"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00527}00527\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00528}00528\ \ \ \ \ \_\_path\_\_\ =\ []\ \ \#\ mark\ as\ package}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00529}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_a43814ef7cee0bfb8d826140c58d06f48}{00529}}\ \ \ \ \ parse\ =\ \_importer.\_get\_module("{}moves.urllib\_parse"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00530}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_af10dacfa214e2575bb2e0ee407c242e0}{00530}}\ \ \ \ \ error\ =\ \_importer.\_get\_module("{}moves.urllib\_error"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00531}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_a51e6a0d2bcb8531a5e5adcd66a77aa3b}{00531}}\ \ \ \ \ request\ =\ \_importer.\_get\_module("{}moves.urllib\_request"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00532}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_a8ab7bcb35ce5bba05608c72da6b4a0d3}{00532}}\ \ \ \ \ response\ =\ \_importer.\_get\_module("{}moves.urllib\_response"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00533}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_aa6b202b826cafe8a90dc2658fa2f5795}{00533}}\ \ \ \ \ robotparser\ =\ \_importer.\_get\_module("{}moves.urllib\_robotparser"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00534}00534\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00535}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_module__six__moves__urllib_a730d89d8fb785025930a6bc7a5b8652b}{00535}}\ \ \ \ \ def\ \_\_dir\_\_(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00536}00536\ \ \ \ \ \ \ \ \ return\ ["{}parse"{},\ "{}error"{},\ "{}request"{},\ "{}response"{},\ "{}robotparser"{}]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00538}00538\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00539}00539\ \_importer.\_add\_module(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00540}00540\ \ \ \ \ Module\_six\_moves\_urllib(\_\_name\_\_\ +\ "{}.moves.urllib"{}),\ "{}moves.urllib"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00541}00541\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00542}00542\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00544}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae46deb768272f5c52c8587a4933ee66d}{00544}}\ def\ add\_move(move):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00545}00545\ \ \ \ \ "{}"{}"{}Add\ an\ item\ to\ six.moves."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00546}00546\ \ \ \ \ setattr(\_MovedItems,\ move.name,\ move)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00549}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa11ba04caccd893a58628a9c001631ed}{00549}}\ def\ remove\_move(name):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00550}00550\ \ \ \ \ "{}"{}"{}Remove\ item\ from\ six.moves."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00551}00551\ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ delattr(\_MovedItems,\ name)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00553}00553\ \ \ \ \ except\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00554}00554\ \ \ \ \ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ del\ moves.\_\_dict\_\_[name]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ except\ KeyError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ raise\ AttributeError("{}no\ such\ move,\ \%r"{}\ \%\ (name,))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00560}00560\ if\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00561}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a0fd80d2bb10b1b779cee72bf295fead5}{00561}}\ \ \ \ \ \_meth\_func\ =\ "{}\_\_func\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00562}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ac488f669652a544cde3869e504060daf}{00562}}\ \ \ \ \ \_meth\_self\ =\ "{}\_\_self\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00564}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a3ad79e656dcad5034c373df7637e83ca}{00564}}\ \ \ \ \ \_func\_closure\ =\ "{}\_\_closure\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00565}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a217842a863e55c6fdf1f7d16dbf55416}{00565}}\ \ \ \ \ \_func\_code\ =\ "{}\_\_code\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00566}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_abe891a61cbc02853c1a414aeb0c3849a}{00566}}\ \ \ \ \ \_func\_defaults\ =\ "{}\_\_defaults\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00567}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a8392c22a932cec998eb0661529515420}{00567}}\ \ \ \ \ \_func\_globals\ =\ "{}\_\_globals\_\_"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00568}00568\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00569}00569\ \ \ \ \ \_meth\_func\ =\ "{}im\_func"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00570}00570\ \ \ \ \ \_meth\_self\ =\ "{}im\_self"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00572}00572\ \ \ \ \ \_func\_closure\ =\ "{}func\_closure"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00573}00573\ \ \ \ \ \_func\_code\ =\ "{}func\_code"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00574}00574\ \ \ \ \ \_func\_defaults\ =\ "{}func\_defaults"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00575}00575\ \ \ \ \ \_func\_globals\ =\ "{}func\_globals"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00576}00576\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00578}00578\ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00579}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a9f53645a3cea50b6ce258ae8e6eee7bd}{00579}}\ \ \ \ \ advance\_iterator\ =\ next}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00580}00580\ except\ NameError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00582}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a3d19d7c9448e162dd609e8cb0133887c}{00582}}\ \ \ \ \ def\ advance\_iterator(it):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00583}00583\ \ \ \ \ \ \ \ \ return\ it.next()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00585}00585\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00586}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_acde7555eca71d1f823fbaf6f6a1f4670}{00586}}\ next\ =\ advance\_iterator}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00589}00589\ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00590}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a08704a0a0d017c3bc0e369ad198407e7}{00590}}\ \ \ \ \ callable\ =\ callable}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00591}00591\ except\ NameError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00593}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ad3273646ed7a7e6387dd5a7e26c64293}{00593}}\ \ \ \ \ def\ callable(obj):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00594}00594\ \ \ \ \ \ \ \ \ return\ any("{}\_\_call\_\_"{}\ in\ klass.\_\_dict\_\_\ for\ klass\ in\ type(obj).\_\_mro\_\_)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00595}00595\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00597}00597\ if\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00599}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a8f83c7cf01652d1f7f9aeb27554cda16}{00599}}\ \ \ \ \ def\ get\_unbound\_function(unbound):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00600}00600\ \ \ \ \ \ \ \ \ return\ unbound}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00602}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ab01193c2aa38da50451da668ac7d08ee}{00602}}\ \ \ \ \ create\_bound\_method\ =\ types.MethodType}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00604}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a2aa90e49bb9c85a40676cf780d7b9904}{00604}}\ \ \ \ \ def\ create\_unbound\_method(func,\ cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00605}00605\ \ \ \ \ \ \ \ \ return\ func}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00607}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ab98ab372c63eaaf5e78f53002b678126}{00607}}\ \ \ \ \ Iterator\ =\ object}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00608}00608\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00609}00609\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00610}00610\ \ \ \ \ def\ get\_unbound\_function(unbound):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00611}00611\ \ \ \ \ \ \ \ \ return\ unbound.im\_func}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00613}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a13c6e107e84e7cfb61f0b742fb254742}{00613}}\ \ \ \ \ def\ create\_bound\_method(func,\ obj):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ return\ types.MethodType(func,\ obj,\ obj.\_\_class\_\_)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00615}00615\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00616}00616\ \ \ \ \ def\ create\_unbound\_method(func,\ cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00617}00617\ \ \ \ \ \ \ \ \ return\ types.MethodType(func,\ None,\ cls)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00619}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_iterator}{00619}}\ \ \ \ \ class\ Iterator(object):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00620}\mbox{\hyperlink{classpip_1_1__vendor_1_1urllib3_1_1packages_1_1six_1_1_iterator_a3281ab2046e7d68746e7f76deeb99fed}{00620}}\ \ \ \ \ \ \ \ \ def\ next(self):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ return\ type(self).\_\_next\_\_(self)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00623}00623\ \ \ \ \ callable\ =\ callable}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00624}00624\ \_add\_doc(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00625}00625\ \ \ \ \ get\_unbound\_function,\ "{}"{}"{}Get\ the\ function\ out\ of\ a\ possibly\ unbound\ function"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00626}00626\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00627}00627\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00629}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af509a490f0e61cd0435bc2e163cac53a}{00629}}\ get\_method\_function\ =\ operator.attrgetter(\_meth\_func)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00630}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a159e7e6d267714da0f22708063c4d40a}{00630}}\ get\_method\_self\ =\ operator.attrgetter(\_meth\_self)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00631}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ab02e0ace4e51e9960b1397bbbfb91a79}{00631}}\ get\_function\_closure\ =\ operator.attrgetter(\_func\_closure)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00632}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a91b98f03da5932b3a1705047a2b6a2c2}{00632}}\ get\_function\_code\ =\ operator.attrgetter(\_func\_code)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00633}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af8420c0ee32f8a3c9f93b5d5ed0a3ca3}{00633}}\ get\_function\_defaults\ =\ operator.attrgetter(\_func\_defaults)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00634}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae8d47902accb9aa295c11a65c69ca36c}{00634}}\ get\_function\_globals\ =\ operator.attrgetter(\_func\_globals)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00637}00637\ if\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00639}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_abde0ee2f81c7ba1e4bad3dba7dd637aa}{00639}}\ \ \ \ \ def\ iterkeys(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00640}00640\ \ \ \ \ \ \ \ \ return\ iter(d.keys(**kw))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00642}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a627450e41e2a4066aa90e6d1f38a786c}{00642}}\ \ \ \ \ def\ itervalues(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00643}00643\ \ \ \ \ \ \ \ \ return\ iter(d.values(**kw))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00645}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a51490aca49bcad61d8cb075a8544305f}{00645}}\ \ \ \ \ def\ iteritems(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00646}00646\ \ \ \ \ \ \ \ \ return\ iter(d.items(**kw))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00647}00647\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00648}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa875a4976284fc1dbfdce4b50b53a396}{00648}}\ \ \ \ \ def\ iterlists(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00649}00649\ \ \ \ \ \ \ \ \ return\ iter(d.lists(**kw))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00651}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a17dcbcc15b89add913104f464052e82d}{00651}}\ \ \ \ \ viewkeys\ =\ operator.methodcaller("{}keys"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00653}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a3f4e074811104652fdd2880d1112e0a5}{00653}}\ \ \ \ \ viewvalues\ =\ operator.methodcaller("{}values"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00654}00654\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00655}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a93f61007888d1fdde8cc4fd5d3eb97e0}{00655}}\ \ \ \ \ viewitems\ =\ operator.methodcaller("{}items"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00656}00656\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00657}00657\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00658}00658\ \ \ \ \ def\ iterkeys(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00659}00659\ \ \ \ \ \ \ \ \ return\ d.iterkeys(**kw)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00660}00660\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00661}00661\ \ \ \ \ def\ itervalues(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00662}00662\ \ \ \ \ \ \ \ \ return\ d.itervalues(**kw)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00663}00663\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00664}00664\ \ \ \ \ def\ iteritems(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00665}00665\ \ \ \ \ \ \ \ \ return\ d.iteritems(**kw)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00667}00667\ \ \ \ \ def\ iterlists(d,\ **kw):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00668}00668\ \ \ \ \ \ \ \ \ return\ d.iterlists(**kw)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00669}00669\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00670}00670\ \ \ \ \ viewkeys\ =\ operator.methodcaller("{}viewkeys"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00671}00671\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00672}00672\ \ \ \ \ viewvalues\ =\ operator.methodcaller("{}viewvalues"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00673}00673\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00674}00674\ \ \ \ \ viewitems\ =\ operator.methodcaller("{}viewitems"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00675}00675\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00676}00676\ \_add\_doc(iterkeys,\ "{}Return\ an\ iterator\ over\ the\ keys\ of\ a\ dictionary."{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00677}00677\ \_add\_doc(itervalues,\ "{}Return\ an\ iterator\ over\ the\ values\ of\ a\ dictionary."{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00678}00678\ \_add\_doc(iteritems,\ "{}Return\ an\ iterator\ over\ the\ (key,\ value)\ pairs\ of\ a\ dictionary."{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00679}00679\ \_add\_doc(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00680}00680\ \ \ \ \ iterlists,\ "{}Return\ an\ iterator\ over\ the\ (key,\ [values])\ pairs\ of\ a\ dictionary."{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00681}00681\ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00682}00682\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00683}00683\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00684}00684\ if\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00686}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a72587fe33e32af9796860bd3beb7599f}{00686}}\ \ \ \ \ def\ b(s):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ return\ s.encode("{}latin-\/1"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00688}00688\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00689}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a2558e6d58b4c0d33c6a55f0356ca6630}{00689}}\ \ \ \ \ def\ u(s):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00692}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aff21e09ce6f4aa5f68563993aa135907}{00692}}\ \ \ \ \ unichr\ =\ chr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00693}00693\ \ \ \ \ import\ struct}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00695}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a1d52c176b02f297897c3933e9be955a8}{00695}}\ \ \ \ \ int2byte\ =\ struct.Struct("{}>B"{}).pack}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00696}00696\ \ \ \ \ del\ struct}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00697}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af2584c73d91540b37dd55cb19dd8644a}{00697}}\ \ \ \ \ byte2int\ =\ operator.itemgetter(0)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00698}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a26487390b627282621d412c53f25e765}{00698}}\ \ \ \ \ indexbytes\ =\ operator.getitem}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00699}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a0cfaf104701f1c2d20eab0490fb34233}{00699}}\ \ \ \ \ iterbytes\ =\ iter}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00700}00700\ \ \ \ \ import\ io}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00702}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aa7e8970b8792641eb67460a32926dae7}{00702}}\ \ \ \ \ StringIO\ =\ io.StringIO}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00703}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a0068b6e1bfaa2ae9873affc7be5d07bd}{00703}}\ \ \ \ \ BytesIO\ =\ io.BytesIO}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00704}00704\ \ \ \ \ del\ io}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00705}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a99ea41b7a14bd365ef67252215428a6b}{00705}}\ \ \ \ \ \_assertCountEqual\ =\ "{}assertCountEqual"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00706}00706\ \ \ \ \ if\ sys.version\_info[1]\ <=\ 1:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00707}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af7823470327af9184b798323c2fe60f6}{00707}}\ \ \ \ \ \ \ \ \ \_assertRaisesRegex\ =\ "{}assertRaisesRegexp"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00708}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_aceb77cc6720d3ac0b6a8d1c291bfef12}{00708}}\ \ \ \ \ \ \ \ \ \_assertRegex\ =\ "{}assertRegexpMatches"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00709}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ae288a7d6271485e4858bfe1d5f725446}{00709}}\ \ \ \ \ \ \ \ \ \_assertNotRegex\ =\ "{}assertNotRegexpMatches"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00710}00710\ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00711}00711\ \ \ \ \ \ \ \ \ \_assertRaisesRegex\ =\ "{}assertRaisesRegex"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ \_assertRegex\ =\ "{}assertRegex"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ \_assertNotRegex\ =\ "{}assertNotRegex"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00714}00714\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00715}00715\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00716}00716\ \ \ \ \ def\ b(s):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00717}00717\ \ \ \ \ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00719}00719\ \ \ \ \ \#\ Workaround\ for\ standalone\ backslash}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00720}00720\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00721}00721\ \ \ \ \ def\ u(s):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00722}00722\ \ \ \ \ \ \ \ \ return\ unicode(s.replace(r"{}\(\backslash\)\(\backslash\)"{},\ r"{}\(\backslash\)\(\backslash\)\(\backslash\)\(\backslash\)"{}),\ "{}unicode\_escape"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00723}00723\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00724}00724\ \ \ \ \ unichr\ =\ unichr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00725}00725\ \ \ \ \ int2byte\ =\ chr}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00726}00726\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00727}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a15d356a6fc5d99da3506659827a16524}{00727}}\ \ \ \ \ def\ byte2int(bs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00728}00728\ \ \ \ \ \ \ \ \ return\ ord(bs[0])}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00729}00729\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00730}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a5b64dbcbbfe8525e074d1c167954fbba}{00730}}\ \ \ \ \ def\ indexbytes(buf,\ i):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ return\ ord(buf[i])}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00732}00732\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00733}00733\ \ \ \ \ iterbytes\ =\ functools.partial(itertools.imap,\ ord)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00734}00734\ \ \ \ \ import\ StringIO}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00735}00735\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00736}00736\ \ \ \ \ StringIO\ =\ BytesIO\ =\ StringIO.StringIO}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00737}00737\ \ \ \ \ \_assertCountEqual\ =\ "{}assertItemsEqual"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00738}00738\ \ \ \ \ \_assertRaisesRegex\ =\ "{}assertRaisesRegexp"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00739}00739\ \ \ \ \ \_assertRegex\ =\ "{}assertRegexpMatches"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00740}00740\ \ \ \ \ \_assertNotRegex\ =\ "{}assertNotRegexpMatches"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00741}00741\ \_add\_doc(b,\ "{}"{}"{}Byte\ literal"{}"{}"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00742}00742\ \_add\_doc(u,\ "{}"{}"{}Text\ literal"{}"{}"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00743}00743\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00744}00744\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00745}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ad615cd2ba559e4adde95b44d715d62a6}{00745}}\ def\ assertCountEqual(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00746}00746\ \ \ \ \ return\ getattr(self,\ \_assertCountEqual)(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00747}00747\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00748}00748\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00749}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a087c26cee5e280b74fe62cc8159ec985}{00749}}\ def\ assertRaisesRegex(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00750}00750\ \ \ \ \ return\ getattr(self,\ \_assertRaisesRegex)(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00752}00752\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00753}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a4956039f45f2e4d0795e41ecc607df82}{00753}}\ def\ assertRegex(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00754}00754\ \ \ \ \ return\ getattr(self,\ \_assertRegex)(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00756}00756\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00757}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a5e5476c14118f556b1b022debf0d66ba}{00757}}\ def\ assertNotRegex(self,\ *args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00758}00758\ \ \ \ \ return\ getattr(self,\ \_assertNotRegex)(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00759}00759\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00760}00760\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00761}00761\ if\ PY3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00762}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_adfa57940725dff0a53c9a746e16a4668}{00762}}\ \ \ \ \ exec\_\ =\ getattr(moves.builtins,\ "{}exec"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00764}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a98dd451fcce13f1096836155739a6e33}{00764}}\ \ \ \ \ def\ reraise(tp,\ value,\ tb=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00766}00766\ \ \ \ \ \ \ \ \ \ \ \ \ if\ value\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ tp()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00768}00768\ \ \ \ \ \ \ \ \ \ \ \ \ if\ value.\_\_traceback\_\_\ is\ not\ tb:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raise\ value.with\_traceback(tb)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ raise\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00771}00771\ \ \ \ \ \ \ \ \ finally:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ None}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ tb\ =\ None}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00774}00774\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00775}00775\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00777}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_adbf62cdbd332f4e3a51ee9a2ba240ac6}{00777}}\ \ \ \ \ def\ exec\_(\_code\_,\ \_globs\_=None,\ \_locs\_=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00778}00778\ \ \ \ \ \ \ \ \ "{}"{}"{}Execute\ code\ in\ a\ namespace."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00779}00779\ \ \ \ \ \ \ \ \ if\ \_globs\_\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ \ \ \ \ frame\ =\ sys.\_getframe(1)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00781}00781\ \ \ \ \ \ \ \ \ \ \ \ \ \_globs\_\ =\ frame.f\_globals}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ if\ \_locs\_\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00783}00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_locs\_\ =\ frame.f\_locals}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ del\ frame}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00785}00785\ \ \ \ \ \ \ \ \ elif\ \_locs\_\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00786}00786\ \ \ \ \ \ \ \ \ \ \ \ \ \_locs\_\ =\ \_globs\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00787}00787\ \ \ \ \ \ \ \ \ exec\ ("{}"{}"{}exec\ \_code\_\ in\ \_globs\_,\ \_locs\_"{}"{}"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00788}00788\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00789}00789\ \ \ \ \ exec\_(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00790}00790\ \ \ \ \ \ \ \ \ "{}"{}"{}def\ reraise(tp,\ value,\ tb=None):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00791}00791\ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00792}00792\ \ \ \ \ \ \ \ \ raise\ tp,\ value,\ tb}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00793}00793\ \ \ \ \ finally:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00794}00794\ \ \ \ \ \ \ \ \ tb\ =\ None}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00795}00795\ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00796}00796\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00799}00799\ if\ sys.version\_info[:2]\ >\ (3,):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00800}00800\ \ \ \ \ exec\_(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00801}00801\ \ \ \ \ \ \ \ \ "{}"{}"{}def\ raise\_from(value,\ from\_value):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00802}00802\ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00803}00803\ \ \ \ \ \ \ \ \ raise\ value\ from\ from\_value}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00804}00804\ \ \ \ \ finally:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00805}00805\ \ \ \ \ \ \ \ \ value\ =\ None}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00806}00806\ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00807}00807\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00808}00808\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00809}00809\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00810}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a0cb604f4c63331c6883c99a3ad186789}{00810}}\ \ \ \ \ def\ raise\_from(value,\ from\_value):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00811}00811\ \ \ \ \ \ \ \ \ raise\ value}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00812}00812\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00814}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a68f59087f1ec8a82c8f4889184291b51}{00814}}\ print\_\ =\ getattr(moves.builtins,\ "{}print"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00815}00815\ if\ print\_\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00816}00816\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00817}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a78b7052a29344ec8975a4e92ae59f0b7}{00817}}\ \ \ \ \ def\ print\_(*args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ "{}"{}"{}The\ new-\/style\ print\ function\ for\ Python\ 2.4\ and\ 2.5."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00819}00819\ \ \ \ \ \ \ \ \ fp\ =\ kwargs.pop("{}file"{},\ sys.stdout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00820}00820\ \ \ \ \ \ \ \ \ if\ fp\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00821}00821\ \ \ \ \ \ \ \ \ \ \ \ \ return}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00822}00822\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00823}00823\ \ \ \ \ \ \ \ \ def\ write(data):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00824}00824\ \ \ \ \ \ \ \ \ \ \ \ \ if\ not\ isinstance(data,\ basestring):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ str(data)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00826}00826\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ If\ the\ file\ has\ an\ encoding,\ encode\ unicode\ with\ it.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00827}00827\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isinstance(fp,\ file)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ isinstance(data,\ unicode)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ fp.encoding\ is\ not\ None}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ errors\ =\ getattr(fp,\ "{}errors"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ errors\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ errors\ =\ "{}strict"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ data.encode(fp.encoding,\ errors)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ fp.write(data)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00837}00837\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00838}00838\ \ \ \ \ \ \ \ \ want\_unicode\ =\ False}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00839}00839\ \ \ \ \ \ \ \ \ sep\ =\ kwargs.pop("{}sep"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00840}00840\ \ \ \ \ \ \ \ \ if\ sep\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ if\ isinstance(sep,\ unicode):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ want\_unicode\ =\ True}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ elif\ not\ isinstance(sep,\ str):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raise\ TypeError("{}sep\ must\ be\ None\ or\ a\ string"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00845}00845\ \ \ \ \ \ \ \ \ end\ =\ kwargs.pop("{}end"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00846}00846\ \ \ \ \ \ \ \ \ if\ end\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ if\ isinstance(end,\ unicode):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ want\_unicode\ =\ True}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ elif\ not\ isinstance(end,\ str):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raise\ TypeError("{}end\ must\ be\ None\ or\ a\ string"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00851}00851\ \ \ \ \ \ \ \ \ if\ kwargs:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ raise\ TypeError("{}invalid\ keyword\ arguments\ to\ print()"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00853}00853\ \ \ \ \ \ \ \ \ if\ not\ want\_unicode:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00854}00854\ \ \ \ \ \ \ \ \ \ \ \ \ for\ arg\ in\ args:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ isinstance(arg,\ unicode):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ want\_unicode\ =\ True}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00858}00858\ \ \ \ \ \ \ \ \ if\ want\_unicode:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ newline\ =\ unicode("{}\(\backslash\)n"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ unicode("{}\ "{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00861}00861\ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ newline\ =\ "{}\(\backslash\)n"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ "{}\ "{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00864}00864\ \ \ \ \ \ \ \ \ if\ sep\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ sep\ =\ space}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00866}00866\ \ \ \ \ \ \ \ \ if\ end\ is\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ end\ =\ newline}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00868}00868\ \ \ \ \ \ \ \ \ for\ i,\ arg\ in\ enumerate(args):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ if\ i:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write(sep)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ write(arg)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00872}00872\ \ \ \ \ \ \ \ \ write(end)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00873}00873\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00875}00875\ if\ sys.version\_info[:2]\ <\ (3,\ 3):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00876}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_af881302b249ed4b00cd94b8813cab4a5}{00876}}\ \ \ \ \ \_print\ =\ print\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00877}00877\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00878}00878\ \ \ \ \ def\ print\_(*args,\ **kwargs):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00879}00879\ \ \ \ \ \ \ \ \ fp\ =\ kwargs.get("{}file"{},\ sys.stdout)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00880}00880\ \ \ \ \ \ \ \ \ flush\ =\ kwargs.pop("{}flush"{},\ False)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00881}00881\ \ \ \ \ \ \ \ \ \_print(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00882}00882\ \ \ \ \ \ \ \ \ if\ flush\ and\ fp\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ fp.flush()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00884}00884\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00885}00885\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00886}00886\ \_add\_doc(reraise,\ "{}"{}"{}Reraise\ an\ exception."{}"{}"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00887}00887\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00888}00888\ if\ sys.version\_info[0:2]\ <\ (3,\ 4):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00889}00889\ \ \ \ \ \#\ This\ does\ exactly\ the\ same\ what\ the\ :func:\`{}py3:functools.update\_wrapper\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00890}00890\ \ \ \ \ \#\ function\ does\ on\ Python\ versions\ after\ 3.2.\ It\ sets\ the\ \`{}\`{}\_\_wrapped\_\_\`{}\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00891}00891\ \ \ \ \ \#\ attribute\ on\ \`{}\`{}wrapper\`{}\`{}\ object\ and\ it\ doesn't\ raise\ an\ error\ if\ any\ of}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00892}00892\ \ \ \ \ \#\ the\ attributes\ mentioned\ in\ \`{}\`{}assigned\`{}\`{}\ and\ \`{}\`{}updated\`{}\`{}\ are\ missing\ on}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00893}00893\ \ \ \ \ \#\ \`{}\`{}wrapped\`{}\`{}\ object.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00894}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a8eac9405f1332a29cf639bcb147db1b5}{00894}}\ \ \ \ \ def\ \_update\_wrapper(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00895}00895\ \ \ \ \ \ \ \ \ wrapper,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00896}00896\ \ \ \ \ \ \ \ \ wrapped,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00897}00897\ \ \ \ \ \ \ \ \ assigned=functools.WRAPPER\_ASSIGNMENTS,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00898}00898\ \ \ \ \ \ \ \ \ updated=functools.WRAPPER\_UPDATES,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00899}00899\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00900}00900\ \ \ \ \ \ \ \ \ for\ attr\ in\ assigned:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ try:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00902}00902\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ getattr(wrapped,\ attr)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00903}00903\ \ \ \ \ \ \ \ \ \ \ \ \ except\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00904}00904\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ continue}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ setattr(wrapper,\ attr,\ value)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00907}00907\ \ \ \ \ \ \ \ \ for\ attr\ in\ updated:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00908}00908\ \ \ \ \ \ \ \ \ \ \ \ \ getattr(wrapper,\ attr).update(getattr(wrapped,\ attr,\ \{\}))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00909}00909\ \ \ \ \ \ \ \ \ wrapper.\_\_wrapped\_\_\ =\ wrapped}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00910}00910\ \ \ \ \ \ \ \ \ return\ wrapper}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00911}00911\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00912}00912\ \ \ \ \ \_update\_wrapper.\_\_doc\_\_\ =\ functools.update\_wrapper.\_\_doc\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00913}00913\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00914}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a603fa0f0709bd7873ecea95c9848c758}{00914}}\ \ \ \ \ def\ wraps(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00915}00915\ \ \ \ \ \ \ \ \ wrapped,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00916}00916\ \ \ \ \ \ \ \ \ assigned=functools.WRAPPER\_ASSIGNMENTS,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00917}00917\ \ \ \ \ \ \ \ \ updated=functools.WRAPPER\_UPDATES,}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00918}00918\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00919}00919\ \ \ \ \ \ \ \ \ return\ functools.partial(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \_update\_wrapper,\ wrapped=wrapped,\ assigned=assigned,\ updated=updated}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00921}00921\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00922}00922\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00923}00923\ \ \ \ \ wraps.\_\_doc\_\_\ =\ functools.wraps.\_\_doc\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00924}00924\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00925}00925\ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00926}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a3ccd6112165f85417877e69453f28882}{00926}}\ \ \ \ \ wraps\ =\ functools.wraps}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00927}00927\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00928}00928\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00929}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a6c367ee8a6f71d34ad2589104ba7979d}{00929}}\ def\ with\_metaclass(meta,\ *bases):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00930}00930\ \ \ \ \ "{}"{}"{}Create\ a\ base\ class\ with\ a\ metaclass."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00931}00931\ \ \ \ \ \#\ This\ requires\ a\ bit\ of\ explanation:\ the\ basic\ idea\ is\ to\ make\ a\ dummy}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00932}00932\ \ \ \ \ \#\ metaclass\ for\ one\ level\ of\ class\ instantiation\ that\ replaces\ itself\ with}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00933}00933\ \ \ \ \ \#\ the\ actual\ metaclass.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00934}00934\ \ \ \ \ class\ metaclass(type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00935}00935\ \ \ \ \ \ \ \ \ def\ \_\_new\_\_(cls,\ name,\ this\_bases,\ d):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00936}00936\ \ \ \ \ \ \ \ \ \ \ \ \ if\ sys.version\_info[:2]\ >=\ (3,\ 7):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00937}00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ This\ version\ introduced\ PEP\ 560\ that\ requires\ a\ bit}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00938}00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ of\ extra\ care\ (we\ mimic\ what\ is\ done\ by\ \_\_build\_class\_\_).}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resolved\_bases\ =\ types.resolve\_bases(bases)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ resolved\_bases\ is\ not\ bases:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00941}00941\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d["{}\_\_orig\_bases\_\_"{}]\ =\ bases}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00942}00942\ \ \ \ \ \ \ \ \ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00943}00943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resolved\_bases\ =\ bases}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00944}00944\ \ \ \ \ \ \ \ \ \ \ \ \ return\ meta(name,\ resolved\_bases,\ d)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00945}00945\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00946}00946\ \ \ \ \ \ \ \ \ @classmethod}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00947}00947\ \ \ \ \ \ \ \ \ def\ \_\_prepare\_\_(cls,\ name,\ this\_bases):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00948}00948\ \ \ \ \ \ \ \ \ \ \ \ \ return\ meta.\_\_prepare\_\_(name,\ bases)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00949}00949\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00950}00950\ \ \ \ \ return\ type.\_\_new\_\_(metaclass,\ "{}temporary\_class"{},\ (),\ \{\})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00951}00951\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00952}00952\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00953}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a606d1bb93fb4cd81e87a6613408589c4}{00953}}\ def\ add\_metaclass(metaclass):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00954}00954\ \ \ \ \ "{}"{}"{}Class\ decorator\ for\ creating\ a\ class\ with\ a\ metaclass."{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00955}00955\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00956}00956\ \ \ \ \ def\ wrapper(cls):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00957}00957\ \ \ \ \ \ \ \ \ orig\_vars\ =\ cls.\_\_dict\_\_.copy()}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00958}00958\ \ \ \ \ \ \ \ \ slots\ =\ orig\_vars.get("{}\_\_slots\_\_"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00959}00959\ \ \ \ \ \ \ \ \ if\ slots\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00960}00960\ \ \ \ \ \ \ \ \ \ \ \ \ if\ isinstance(slots,\ str):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00961}00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slots\ =\ [slots]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00962}00962\ \ \ \ \ \ \ \ \ \ \ \ \ for\ slots\_var\ in\ slots:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00963}00963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orig\_vars.pop(slots\_var)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00964}00964\ \ \ \ \ \ \ \ \ orig\_vars.pop("{}\_\_dict\_\_"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00965}00965\ \ \ \ \ \ \ \ \ orig\_vars.pop("{}\_\_weakref\_\_"{},\ None)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00966}00966\ \ \ \ \ \ \ \ \ if\ hasattr(cls,\ "{}\_\_qualname\_\_"{}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00967}00967\ \ \ \ \ \ \ \ \ \ \ \ \ orig\_vars["{}\_\_qualname\_\_"{}]\ =\ cls.\_\_qualname\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00968}00968\ \ \ \ \ \ \ \ \ return\ metaclass(cls.\_\_name\_\_,\ cls.\_\_bases\_\_,\ orig\_vars)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00969}00969\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00970}00970\ \ \ \ \ return\ wrapper}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00971}00971\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00972}00972\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00973}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_adb7215af9e8aed78bf7bae70dcef0f53}{00973}}\ def\ ensure\_binary(s,\ encoding="{}utf-\/8"{},\ errors="{}strict"{}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00974}00974\ \ \ \ \ "{}"{}"{}Coerce\ **s**\ to\ six.binary\_type.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00975}00975\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00976}00976\ \ \ \ \ For\ Python\ 2:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00977}00977\ \ \ \ \ \ \ -\/\ \`{}unicode\`{}\ -\/>\ encoded\ to\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00978}00978\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00979}00979\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00980}00980\ \ \ \ \ For\ Python\ 3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00981}00981\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ encoded\ to\ \`{}bytes\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00982}00982\ \ \ \ \ \ \ -\/\ \`{}bytes\`{}\ -\/>\ \`{}bytes\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00983}00983\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00984}00984\ \ \ \ \ if\ isinstance(s,\ binary\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00985}00985\ \ \ \ \ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00986}00986\ \ \ \ \ if\ isinstance(s,\ text\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00987}00987\ \ \ \ \ \ \ \ \ return\ s.encode(encoding,\ errors)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00988}00988\ \ \ \ \ raise\ TypeError("{}not\ expecting\ type\ '\%s'"{}\ \%\ type(s))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00989}00989\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00990}00990\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00991}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_ad41304fa0a544d44dde0f31ab2464996}{00991}}\ def\ ensure\_str(s,\ encoding="{}utf-\/8"{},\ errors="{}strict"{}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00992}00992\ \ \ \ \ "{}"{}"{}Coerce\ *s*\ to\ \`{}str\`{}.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00993}00993\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00994}00994\ \ \ \ \ For\ Python\ 2:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00995}00995\ \ \ \ \ \ \ -\/\ \`{}unicode\`{}\ -\/>\ encoded\ to\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00996}00996\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00997}00997\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00998}00998\ \ \ \ \ For\ Python\ 3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l00999}00999\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01000}01000\ \ \ \ \ \ \ -\/\ \`{}bytes\`{}\ -\/>\ decoded\ to\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01001}01001\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01002}01002\ \ \ \ \ \#\ Optimization:\ Fast\ return\ for\ the\ common\ case.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01003}01003\ \ \ \ \ if\ type(s)\ is\ str:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01004}01004\ \ \ \ \ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01005}01005\ \ \ \ \ if\ PY2\ and\ isinstance(s,\ text\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01006}01006\ \ \ \ \ \ \ \ \ return\ s.encode(encoding,\ errors)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01007}01007\ \ \ \ \ elif\ PY3\ and\ isinstance(s,\ binary\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01008}01008\ \ \ \ \ \ \ \ \ return\ s.decode(encoding,\ errors)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01009}01009\ \ \ \ \ elif\ not\ isinstance(s,\ (text\_type,\ binary\_type)):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01010}01010\ \ \ \ \ \ \ \ \ raise\ TypeError("{}not\ expecting\ type\ '\%s'"{}\ \%\ type(s))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01011}01011\ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01012}01012\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01013}01013\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01014}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a7990bdff1adc8bb6f844244cf528e90e}{01014}}\ def\ ensure\_text(s,\ encoding="{}utf-\/8"{},\ errors="{}strict"{}):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01015}01015\ \ \ \ \ "{}"{}"{}Coerce\ *s*\ to\ six.text\_type.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01016}01016\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01017}01017\ \ \ \ \ For\ Python\ 2:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01018}01018\ \ \ \ \ \ \ -\/\ \`{}unicode\`{}\ -\/>\ \`{}unicode\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01019}01019\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ \`{}unicode\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01020}01020\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01021}01021\ \ \ \ \ For\ Python\ 3:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01022}01022\ \ \ \ \ \ \ -\/\ \`{}str\`{}\ -\/>\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01023}01023\ \ \ \ \ \ \ -\/\ \`{}bytes\`{}\ -\/>\ decoded\ to\ \`{}str\`{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01024}01024\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01025}01025\ \ \ \ \ if\ isinstance(s,\ binary\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01026}01026\ \ \ \ \ \ \ \ \ return\ s.decode(encoding,\ errors)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01027}01027\ \ \ \ \ elif\ isinstance(s,\ text\_type):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01028}01028\ \ \ \ \ \ \ \ \ return\ s}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01029}01029\ \ \ \ \ else:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01030}01030\ \ \ \ \ \ \ \ \ raise\ TypeError("{}not\ expecting\ type\ '\%s'"{}\ \%\ type(s))}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01031}01031\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01032}01032\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01033}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a1875fb18d0f5fdb4ce7a10beb82eaaea}{01033}}\ def\ python\_2\_unicode\_compatible(klass):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01034}01034\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01035}01035\ \ \ \ \ A\ class\ decorator\ that\ defines\ \_\_unicode\_\_\ and\ \_\_str\_\_\ methods\ under\ Python\ 2.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01036}01036\ \ \ \ \ Under\ Python\ 3\ it\ does\ nothing.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01037}01037\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01038}01038\ \ \ \ \ To\ support\ Python\ 2\ and\ 3\ with\ a\ single\ code\ base,\ define\ a\ \_\_str\_\_\ method}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01039}01039\ \ \ \ \ returning\ text\ and\ apply\ this\ decorator\ to\ the\ class.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01040}01040\ \ \ \ \ "{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01041}01041\ \ \ \ \ if\ PY2:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01042}01042\ \ \ \ \ \ \ \ \ if\ "{}\_\_str\_\_"{}\ not\ in\ klass.\_\_dict\_\_:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01043}01043\ \ \ \ \ \ \ \ \ \ \ \ \ raise\ ValueError(}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01044}01044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}@python\_2\_unicode\_compatible\ cannot\ be\ applied\ "{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01045}01045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}to\ \%s\ because\ it\ doesn't\ define\ \_\_str\_\_()."{}\ \%\ klass.\_\_name\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01046}01046\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01047}01047\ \ \ \ \ \ \ \ \ klass.\_\_unicode\_\_\ =\ klass.\_\_str\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01048}01048\ \ \ \ \ \ \ \ \ klass.\_\_str\_\_\ =\ lambda\ self:\ self.\_\_unicode\_\_().encode("{}utf-\/8"{})}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01049}01049\ \ \ \ \ return\ klass}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01050}01050\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01051}01051\ }
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01052}01052\ \#\ Complete\ the\ moves\ implementation.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01053}01053\ \#\ This\ code\ is\ at\ the\ end\ of\ this\ module\ to\ speed\ up\ module\ loading.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01054}01054\ \#\ Turn\ this\ module\ into\ a\ package.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01055}01055\ \_\_path\_\_\ =\ []\ \ \#\ required\ for\ PEP\ 302\ and\ PEP\ 451}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01056}01056\ \_\_package\_\_\ =\ \_\_name\_\_\ \ \#\ see\ PEP\ 366\ @ReservedAssignment}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01057}01057\ if\ globals().get("{}\_\_spec\_\_"{})\ is\ not\ None:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01058}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1packages_1_1six_a3c11fbbe0e656a9608c8d60a10d3baa2}{01058}}\ \ \ \ \ \_\_spec\_\_.submodule\_search\_locations\ =\ []\ \ \#\ PEP\ 451\ @UndefinedVariable}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01059}01059\ \#\ Remove\ other\ six\ meta\ path\ importers,\ since\ they\ cause\ problems.\ This\ can}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01060}01060\ \#\ happen\ if\ six\ is\ removed\ from\ sys.modules\ and\ then\ reloaded.\ (Setuptools\ does}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01061}01061\ \#\ this\ for\ some\ reason.)}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01062}01062\ if\ sys.meta\_path:}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01063}01063\ \ \ \ \ for\ i,\ importer\ in\ enumerate(sys.meta\_path):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01064}01064\ \ \ \ \ \ \ \ \ \#\ Here's\ some\ real\ nastiness:\ Another\ "{}instance"{}\ of\ the\ six\ module\ might}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01065}01065\ \ \ \ \ \ \ \ \ \#\ be\ floating\ around.\ Therefore,\ we\ can't\ use\ isinstance()\ to\ check\ for}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01066}01066\ \ \ \ \ \ \ \ \ \#\ the\ six\ meta\ path\ importer,\ since\ the\ other\ six\ instance\ will\ have}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01067}01067\ \ \ \ \ \ \ \ \ \#\ inserted\ an\ importer\ with\ different\ class.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01068}01068\ \ \ \ \ \ \ \ \ if\ (}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01069}01069\ \ \ \ \ \ \ \ \ \ \ \ \ type(importer).\_\_name\_\_\ ==\ "{}\_SixMetaPathImporter"{}}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01070}01070\ \ \ \ \ \ \ \ \ \ \ \ \ and\ importer.name\ ==\ \_\_name\_\_}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01071}01071\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01072}01072\ \ \ \ \ \ \ \ \ \ \ \ \ del\ sys.meta\_path[i]}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01073}01073\ \ \ \ \ \ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01074}01074\ \ \ \ \ del\ i,\ importer}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01075}01075\ \#\ Finally,\ add\ the\ importer\ to\ the\ meta\ path\ import\ hook.}
+\DoxyCodeLine{\Hypertarget{urllib3_2packages_2six_8py_source_l01076}01076\ sys.meta\_path.append(\_importer)}
+
+\end{DoxyCode}

@@ -1,0 +1,142 @@
+\doxysection{\+\_\+musllinux.\+py}
+\hypertarget{__musllinux_8py_source}{}\label{__musllinux_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/packaging/\_musllinux.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/packaging/\_musllinux.py}}
+\mbox{\hyperlink{__musllinux_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}PEP\ 656\ support.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00002}00002\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00003}00003\ \textcolor{stringliteral}{This\ module\ implements\ logic\ to\ detect\ if\ the\ currently\ running\ Python\ is}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00004}00004\ \textcolor{stringliteral}{linked\ against\ musl,\ and\ what\ musl\ version\ is\ used.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00007}00007\ \textcolor{keyword}{import}\ contextlib}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00008}00008\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00009}00009\ \textcolor{keyword}{import}\ operator}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00010}00010\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00011}00011\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00012}00012\ \textcolor{keyword}{import}\ struct}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00013}00013\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00014}00014\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00015}00015\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ IO,\ Iterator,\ NamedTuple,\ Optional,\ Tuple}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00018}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7a091086f739f6ae954ee5212d542773}{00018}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7a091086f739f6ae954ee5212d542773}{\_read\_unpacked}}(f:\ IO[bytes],\ fmt:\ str)\ -\/>\ Tuple[int,\ ...]:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{return}\ struct.unpack(fmt,\ f.read(struct.calcsize(fmt)))}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00022}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_ab314558f873b4b25de766b8d9fe1f8cb}{00022}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_ab314558f873b4b25de766b8d9fe1f8cb}{\_parse\_ld\_musl\_from\_elf}}(f:\ IO[bytes])\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Detect\ musl\ libc\ location\ by\ parsing\ the\ Python\ executable.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00024}00024\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ Based\ on:\ https://gist.github.com/lyssdod/f51579ae8d93c8657a5564aefc2ffbca}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ ELF\ header:\ https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00028}00028\ \ \ \ \ f.seek(0)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ ident\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7a091086f739f6ae954ee5212d542773}{\_read\_unpacked}}(f,\ \textcolor{stringliteral}{"{}16B"{}})}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{except}\ struct.error:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{if}\ ident[:4]\ !=\ tuple(b\textcolor{stringliteral}{"{}\(\backslash\)x7fELF"{}}):\ \ \textcolor{comment}{\#\ Invalid\ magic,\ not\ ELF.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00035}00035\ \ \ \ \ f.seek(struct.calcsize(\textcolor{stringliteral}{"{}HHI"{}}),\ 1)\ \ \textcolor{comment}{\#\ Skip\ file\ type,\ machine,\ and\ version.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ e\_fmt:\ Format\ for\ program\ header.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ p\_fmt:\ Format\ for\ section\ header.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ p\_idx:\ Indexes\ to\ find\ p\_type,\ p\_offset,\ and\ p\_filesz.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ e\_fmt,\ p\_fmt,\ p\_idx\ =\ \{}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ 1:\ (\textcolor{stringliteral}{"{}IIIIHHH"{}},\ \textcolor{stringliteral}{"{}IIIIIIII"{}},\ (0,\ 1,\ 4)),\ \ \textcolor{comment}{\#\ 32-\/bit.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ 2:\ (\textcolor{stringliteral}{"{}QQQIHHH"{}},\ \textcolor{stringliteral}{"{}IIQQQQQQ"{}},\ (0,\ 2,\ 5)),\ \ \textcolor{comment}{\#\ 64-\/bit.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \}[ident[4]]}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ p\_get\ =\ operator.itemgetter(*p\_idx)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00050}00050\ \ \ \ \ \textcolor{comment}{\#\ Find\ the\ interpreter\ section\ and\ return\ its\ content.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \_,\ e\_phoff,\ \_,\ \_,\ \_,\ e\_phentsize,\ e\_phnum\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7a091086f739f6ae954ee5212d542773}{\_read\_unpacked}}(f,\ e\_fmt)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{except}\ struct.error:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(e\_phnum\ +\ 1):}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ f.seek(e\_phoff\ +\ e\_phentsize\ *\ i)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ p\_type,\ p\_offset,\ p\_filesz\ =\ p\_get(\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7a091086f739f6ae954ee5212d542773}{\_read\_unpacked}}(f,\ p\_fmt))}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ struct.error:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ p\_type\ !=\ 3:\ \ \textcolor{comment}{\#\ Not\ PT\_INTERP.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ f.seek(p\_offset)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ interpreter\ =\ os.fsdecode(f.read(p\_filesz)).strip(\textcolor{stringliteral}{"{}\(\backslash\)0"{}})}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}musl"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ interpreter:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ interpreter}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00071}\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1__musllinux_1_1___musl_version}{00071}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1__musllinux_1_1___musl_version}{\_MuslVersion}}(NamedTuple):}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00072}00072\ \ \ \ \ major:\ int}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00073}00073\ \ \ \ \ minor:\ int}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00076}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a2620993b185e0634e7bc4a808a519656}{00076}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a2620993b185e0634e7bc4a808a519656}{\_parse\_musl\_version}}(output:\ str)\ -\/>\ Optional[\_MuslVersion]:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00077}00077\ \ \ \ \ lines\ =\ [n\ \textcolor{keywordflow}{for}\ n\ \textcolor{keywordflow}{in}\ (n.strip()\ \textcolor{keywordflow}{for}\ n\ \textcolor{keywordflow}{in}\ output.splitlines())\ \textcolor{keywordflow}{if}\ n]}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{if}\ len(lines)\ <\ 2\ \textcolor{keywordflow}{or}\ lines[0][:4]\ !=\ \textcolor{stringliteral}{"{}musl"{}}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00080}00080\ \ \ \ \ m\ =\ re.match(\textcolor{stringliteral}{r"{}Version\ (\(\backslash\)d+)\(\backslash\).(\(\backslash\)d+)"{}},\ lines[1])}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ m:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00083}00083\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1__musllinux_1_1___musl_version}{\_MuslVersion}}(major=int(m.group(1)),\ minor=int(m.group(2)))}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00086}00086\ \textcolor{preprocessor}{@functools.lru\_cache()}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00087}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a03ca7d73773a47903049fa4af274adb0}{00087}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a03ca7d73773a47903049fa4af274adb0}{\_get\_musl\_version}}(executable:\ str)\ -\/>\ Optional[\_MuslVersion]:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00088}00088\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Detect\ currently-\/running\ musl\ runtime\ version.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00089}00089\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ This\ is\ done\ by\ checking\ the\ specified\ executable's\ dynamic\ linking}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ \ \ information,\ and\ invoking\ the\ loader\ to\ parse\ its\ output\ for\ a\ version}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ string.\ If\ the\ loader\ is\ musl,\ the\ output\ would\ be\ something\ like::}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00093}00093\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ musl\ libc\ (x86\_64)}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Version\ 1.2.2}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Dynamic\ Program\ Loader}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00097}00097\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00098}00098\ \ \ \ \ \textcolor{keyword}{with}\ contextlib.ExitStack()\ \textcolor{keyword}{as}\ stack:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ stack.enter\_context(open(executable,\ \textcolor{stringliteral}{"{}rb"{}}))}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ ld\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_ab314558f873b4b25de766b8d9fe1f8cb}{\_parse\_ld\_musl\_from\_elf}}(f)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ ld:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00106}00106\ \ \ \ \ proc\ =\ subprocess.run([ld],\ stderr=subprocess.PIPE,\ universal\_newlines=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a2620993b185e0634e7bc4a808a519656}{\_parse\_musl\_version}}(proc.stderr)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00110}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7b5e1f36794d5209de428f2f9fa6c1d0}{00110}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7b5e1f36794d5209de428f2f9fa6c1d0}{platform\_tags}}(arch:\ str)\ -\/>\ Iterator[str]:}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00111}00111\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generate\ musllinux\ tags\ compatible\ to\ the\ current\ platform.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00112}00112\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ :param\ arch:\ Should\ be\ the\ part\ of\ platform\ tag\ after\ the\ \`{}\`{}linux\_\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ prefix,\ e.g.\ \`{}\`{}x86\_64\`{}\`{}.\ The\ \`{}\`{}linux\_\`{}\`{}\ prefix\ is\ assumed\ as\ a}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ prerequisite\ for\ the\ current\ platform\ to\ be\ musllinux-\/compatible.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00116}00116\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00117}00117\ \textcolor{stringliteral}{\ \ \ \ :returns:\ An\ iterator\ of\ compatible\ musllinux\ tags.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00119}00119\ \ \ \ \ sys\_musl\ =\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a03ca7d73773a47903049fa4af274adb0}{\_get\_musl\_version}}(sys.executable)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{if}\ sys\_musl\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:\ \ \textcolor{comment}{\#\ Python\ not\ dynamically\ linked\ against\ musl.}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{for}\ minor\ \textcolor{keywordflow}{in}\ range(sys\_musl.minor,\ -\/1,\ -\/1):}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ f\textcolor{stringliteral}{"{}musllinux\_\{sys\_musl.major\}\_\{minor\}\_\{arch\}"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00126}00126\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00127}00127\ \ \ \ \ \textcolor{keyword}{import}\ sysconfig}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00129}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a87a7fe3a4776d32719a1a7151c91cad6}{00129}}\ \ \ \ \ plat\ =\ sysconfig.get\_platform()}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00130}00130\ \ \ \ \ \textcolor{keyword}{assert}\ plat.startswith(\textcolor{stringliteral}{"{}linux-\/"{}}),\ \textcolor{stringliteral}{"{}not\ linux"{}}}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00132}00132\ \ \ \ \ print(\textcolor{stringliteral}{"{}plat:"{}},\ plat)}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00133}00133\ \ \ \ \ print(\textcolor{stringliteral}{"{}musl:"{}},\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a03ca7d73773a47903049fa4af274adb0}{\_get\_musl\_version}}(sys.executable))}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00134}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_afb358f48b1646c750fb9da6c6585be2b}{00134}}\ \ \ \ \ print(\textcolor{stringliteral}{"{}tags:"{}},\ end=\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00135}00135\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_a7b5e1f36794d5209de428f2f9fa6c1d0}{platform\_tags}}(re.sub(\textcolor{stringliteral}{r"{}[.-\/]"{}},\ \textcolor{stringliteral}{"{}\_"{}},\ plat.split(\textcolor{stringliteral}{"{}-\/"{}},\ 1)[-\/1])):}
+\DoxyCodeLine{\Hypertarget{__musllinux_8py_source_l00136}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1__musllinux_aaccc9105df5383111407fd5b41255e23}{00136}}\ \ \ \ \ \ \ \ \ print(t,\ end=\textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ \ \ "{}})}
+
+\end{DoxyCode}

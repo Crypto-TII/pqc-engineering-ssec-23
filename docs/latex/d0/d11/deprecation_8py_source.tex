@@ -1,0 +1,126 @@
+\doxysection{deprecation.\+py}
+\hypertarget{deprecation_8py_source}{}\label{deprecation_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/deprecation.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/deprecation.py}}
+\mbox{\hyperlink{deprecation_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00002}00002\ \textcolor{stringliteral}{A\ module\ that\ implements\ tooling\ to\ enable\ easy\ warnings\ about\ deprecations.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00003}00003\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00005}00005\ \textcolor{keyword}{import}\ logging}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00006}00006\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00007}00007\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Optional,\ TextIO,\ Type,\ Union}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00009}00009\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1version}{pip.\_vendor.packaging.version}}\ \textcolor{keyword}{import}\ parse}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00011}00011\ \textcolor{keyword}{from}\ pip\ \textcolor{keyword}{import}\ \_\_version\_\_\ \textcolor{keyword}{as}\ current\_version\ \ \textcolor{comment}{\#\ NOTE:\ tests\ patch\ this\ name.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00013}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_a5b41e2637803cc720de8f3a141594c5a}{00013}}\ DEPRECATION\_MSG\_PREFIX\ =\ \textcolor{stringliteral}{"{}DEPRECATION:\ "{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00016}\mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1deprecation_1_1_pip_deprecation_warning}{00016}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1deprecation_1_1_pip_deprecation_warning}{PipDeprecationWarning}}(Warning):}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00020}\mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1deprecation_1_1_pip_deprecation_warning_aa379e2b472c9d47c6ecc8ec547fa0f48}{00020}}\ \_original\_showwarning:\ Any\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00023}00023\ \textcolor{comment}{\#\ Warnings\ <-\/>\ Logging\ Integration}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_acfa5c99bb3cf71d1b7875b88e348d2bd}{00024}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_acfa5c99bb3cf71d1b7875b88e348d2bd}{\_showwarning}}(}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00025}00025\ \ \ \ \ message:\ Union[Warning,\ str],}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00026}00026\ \ \ \ \ category:\ Type[Warning],}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00027}00027\ \ \ \ \ filename:\ str,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00028}00028\ \ \ \ \ lineno:\ int,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00029}00029\ \ \ \ \ file:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00030}00030\ \ \ \ \ line:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00031}00031\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}\ file\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_original\_showwarning\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \_original\_showwarning(message,\ category,\ filename,\ lineno,\ file,\ line)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{elif}\ issubclass(category,\ PipDeprecationWarning):}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ use\ a\ specially\ named\ logger\ which\ will\ handle\ all\ of\ the}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ deprecation\ messages\ for\ pip.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ logger\ =\ logging.getLogger(\textcolor{stringliteral}{"{}pip.\_internal.deprecations"{}})}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ logger.warning(message)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \_original\_showwarning(message,\ category,\ filename,\ lineno,\ file,\ line)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00044}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_a51b8fbaae95b8fce80bcf014e6d01178}{00044}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_a51b8fbaae95b8fce80bcf014e6d01178}{install\_warning\_logger}}()\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00045}00045\ \ \ \ \ \textcolor{comment}{\#\ Enable\ our\ Deprecation\ Warnings}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00046}00046\ \ \ \ \ warnings.simplefilter(\textcolor{stringliteral}{"{}default"{}},\ PipDeprecationWarning,\ append=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{global}\ \_original\_showwarning}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{if}\ \_original\_showwarning\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \_original\_showwarning\ =\ warnings.showwarning}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ warnings.showwarning\ =\ \_showwarning}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00055}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_acb639648bd7181a83782ef19683f14bf}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1deprecation_acb639648bd7181a83782ef19683f14bf}{deprecated}}(}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00056}00056\ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00057}00057\ \ \ \ \ reason:\ str,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00058}00058\ \ \ \ \ replacement:\ Optional[str],}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00059}00059\ \ \ \ \ gone\_in:\ Optional[str],}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00060}00060\ \ \ \ \ feature\_flag:\ Optional[str]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00061}00061\ \ \ \ \ issue:\ Optional[int]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00062}00062\ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00063}00063\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Helper\ to\ deprecate\ existing\ functionality.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00064}00064\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ reason:}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Textual\ reason\ shown\ to\ the\ user\ about\ why\ this\ functionality\ has}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ been\ deprecated.\ Should\ be\ a\ complete\ sentence.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ replacement:}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Textual\ suggestion\ shown\ to\ the\ user\ about\ what\ alternative}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ functionality\ they\ can\ use.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00071}00071\ \textcolor{stringliteral}{\ \ \ \ gone\_in:}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00072}00072\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ version\ of\ pip\ does\ this\ functionality\ should\ get\ removed\ in.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00073}00073\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Raises\ an\ error\ if\ pip's\ current\ version\ is\ greater\ than\ or\ equal\ to}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00074}00074\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ this.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00075}00075\ \textcolor{stringliteral}{\ \ \ \ feature\_flag:}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00076}00076\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Command-\/line\ flag\ of\ the\ form\ -\/-\/use-\/feature=\{feature\_flag\}\ for\ testing}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00077}00077\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ upcoming\ functionality.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00078}00078\ \textcolor{stringliteral}{\ \ \ \ issue:}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00079}00079\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Issue\ number\ on\ the\ tracker\ that\ would\ serve\ as\ a\ useful\ place\ for}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00080}00080\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ users\ to\ find\ related\ discussion\ and\ provide\ feedback.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ Determine\ whether\ or\ not\ the\ feature\ is\ already\ gone\ in\ this\ version.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00084}00084\ \ \ \ \ is\_gone\ =\ gone\_in\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ parse(current\_version)\ >=\ parse(gone\_in)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00086}00086\ \ \ \ \ message\_parts\ =\ [}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ (reason,\ f\textcolor{stringliteral}{"{}\{DEPRECATION\_MSG\_PREFIX\}\{\{\}\}"{}}),}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ gone\_in,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}pip\ \{\}\ will\ enforce\ this\ behaviour\ change."{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ is\_gone}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}Since\ pip\ \{\},\ this\ is\ no\ longer\ supported."{}},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ replacement,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}A\ possible\ replacement\ is\ \{\}."{}},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ feature\_flag,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}You\ can\ use\ the\ flag\ -\/-\/use-\/feature=\{\}\ to\ test\ the\ upcoming\ behaviour."{}}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ is\_gone}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ issue,}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Discussion\ can\ be\ found\ at\ https://github.com/pypa/pip/issues/\{\}"{}},}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00108}00108\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00110}00110\ \ \ \ \ message\ =\ \textcolor{stringliteral}{"{}\ "{}}.join(}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ format\_str.format(value)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ value,\ format\_str\ \textcolor{keywordflow}{in}\ message\_parts}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ format\_str\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00114}00114\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00116}00116\ \ \ \ \ \textcolor{comment}{\#\ Raise\ as\ an\ error\ if\ this\ behaviour\ is\ deprecated.}}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_gone:}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1deprecation_1_1_pip_deprecation_warning}{PipDeprecationWarning}}(message)}
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{deprecation_8py_source_l00120}00120\ \ \ \ \ warnings.warn(message,\ category=PipDeprecationWarning,\ stacklevel=2)}
+
+\end{DoxyCode}

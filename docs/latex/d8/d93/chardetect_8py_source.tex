@@ -1,0 +1,118 @@
+\doxysection{chardetect.\+py}
+\hypertarget{chardetect_8py_source}{}\label{chardetect_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/chardet/cli/chardetect.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/chardet/cli/chardetect.py}}
+\mbox{\hyperlink{chardetect_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect}{00001}}\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00002}00002\ \textcolor{stringliteral}{Script\ which\ takes\ one\ or\ more\ file\ paths\ and\ reports\ on\ their\ detected}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00003}00003\ \textcolor{stringliteral}{encodings}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00004}00004\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00005}00005\ \textcolor{stringliteral}{Example::}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00007}00007\ \textcolor{stringliteral}{\ \ \ \ \%\ chardetect\ somefile\ someotherfile}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ somefile:\ windows-\/1252\ with\ confidence\ 0.5}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00009}00009\ \textcolor{stringliteral}{\ \ \ \ someotherfile:\ ascii\ with\ confidence\ 1.0}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00010}00010\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00011}00011\ \textcolor{stringliteral}{If\ no\ paths\ are\ provided,\ it\ takes\ its\ input\ from\ stdin.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00012}00012\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00013}00013\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00016}00016\ \textcolor{keyword}{import}\ argparse}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00017}00017\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00018}00018\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Iterable,\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00020}00020\ \textcolor{keyword}{from}\ ..\ \textcolor{keyword}{import}\ \_\_version\_\_}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00021}00021\ \textcolor{keyword}{from}\ ..universaldetector\ \textcolor{keyword}{import}\ UniversalDetector}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00024}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a5724677d0b3192a59e7194e8b677fd54}{00024}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a5724677d0b3192a59e7194e8b677fd54}{description\_of}}(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00025}00025\ \ \ \ \ lines:\ Iterable[bytes],}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00026}00026\ \ \ \ \ name:\ str\ =\ \textcolor{stringliteral}{"{}stdin"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00027}00027\ \ \ \ \ minimal:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00028}00028\ \ \ \ \ should\_rename\_legacy:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00029}00029\ )\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ Return\ a\ string\ describing\ the\ probable\ encoding\ of\ a\ file\ or}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ list\ of\ strings.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00033}00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ :param\ lines:\ The\ lines\ to\ get\ the\ encoding\ of.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ :type\ lines:\ Iterable\ of\ bytes}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ :param\ name:\ Name\ of\ file\ or\ collection\ of\ lines}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ :type\ name:\ str}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ :param\ should\_rename\_legacy:\ \ Should\ we\ rename\ legacy\ encodings\ to}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ their\ more\ modern\ equivalents?}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ :type\ should\_rename\_legacy:\ \ \ \`{}\`{}bool\`{}\`{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00042}00042\ \ \ \ \ u\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1chardet_1_1universaldetector_1_1_universal_detector}{UniversalDetector}}(should\_rename\_legacy=should\_rename\_legacy)}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ lines:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ line\ =\ bytearray(line)}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ u.feed(line)}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ shortcut\ out\ of\ the\ loop\ to\ save\ reading\ further\ -\/\ particularly\ useful\ if\ we\ read\ a\ BOM.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ u.done:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00049}00049\ \ \ \ \ u.close()}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00050}00050\ \ \ \ \ result\ =\ u.result}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{if}\ minimal:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result[\textcolor{stringliteral}{"{}encoding"{}}]}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{if}\ result[\textcolor{stringliteral}{"{}encoding"{}}]:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{'\{name\}:\ \{result["{}encoding"{}]\}\ with\ confidence\ \{result["{}confidence"{}]\}'}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{name\}:\ no\ result"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00058}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a1202986433753cb915a04bbd960b5b94}{00058}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a1202986433753cb915a04bbd960b5b94}{main}}(argv:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00059}00059\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ Handles\ command\ line\ arguments\ and\ gets\ things\ started.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00061}00061\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ :param\ argv:\ List\ of\ arguments,\ as\ if\ specified\ on\ the\ command-\/line.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ If\ None,\ \`{}\`{}sys.argv[1:]\`{}\`{}\ is\ used\ instead.}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ :type\ argv:\ list\ of\ str}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00066}00066\ \ \ \ \ \textcolor{comment}{\#\ Get\ command\ line\ arguments}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00067}00067\ \ \ \ \ parser\ =\ argparse.ArgumentParser(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ description=(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Takes\ one\ or\ more\ file\ paths\ and\ reports\ their\ detected\ encodings"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00071}00071\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00072}00072\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}input"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}File\ whose\ encoding\ we\ would\ like\ to\ determine.\ (default:\ stdin)"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ type=argparse.FileType(\textcolor{stringliteral}{"{}rb"{}}),}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ nargs=\textcolor{stringliteral}{"{}*"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ default=[sys.stdin.buffer],}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00078}00078\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00079}00079\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/minimal"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Print\ only\ the\ encoding\ to\ standard\ output"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00083}00083\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00084}00084\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/l"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/legacy"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Rename\ legacy\ encodings\ to\ more\ modern\ ones."{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00089}00089\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00090}00090\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},\ action=\textcolor{stringliteral}{"{}version"{}},\ version=f\textcolor{stringliteral}{"{}\%(prog)s\ \{\_\_version\_\_\}"{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00092}00092\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00093}00093\ \ \ \ \ args\ =\ parser.parse\_args(argv)}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{for}\ f\ \textcolor{keywordflow}{in}\ args.input:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ f.isatty():}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}You\ are\ running\ chardetect\ interactively.\ Press\ "{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CTRL-\/D\ twice\ at\ the\ start\ of\ a\ blank\ line\ to\ signal\ the\ "{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}end\ of\ your\ input.\ If\ you\ want\ help,\ run\ chardetect\ "{}}}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/help\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file=sys.stderr,}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a5724677d0b3192a59e7194e8b677fd54}{description\_of}}(}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f,\ f.name,\ minimal=args.minimal,\ should\_rename\_legacy=args.legacy}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00111}00111\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{chardetect_8py_source_l00112}00112\ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1chardet_1_1cli_1_1chardetect_a1202986433753cb915a04bbd960b5b94}{main}}()}
+
+\end{DoxyCode}

@@ -1,0 +1,157 @@
+\doxysection{measure.\+py}
+\hypertarget{measure_8py_source}{}\label{measure_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/measure.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/measure.py}}
+\mbox{\hyperlink{measure_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1measure}{00001}}\ \textcolor{keyword}{from}\ operator\ \textcolor{keyword}{import}\ itemgetter}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00002}00002\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ TYPE\_CHECKING,\ Callable,\ NamedTuple,\ Optional,\ Sequence}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00004}00004\ \textcolor{keyword}{from}\ .\ \textcolor{keyword}{import}\ errors}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00005}00005\ \textcolor{keyword}{from}\ .protocol\ \textcolor{keyword}{import}\ is\_renderable,\ rich\_cast}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00007}00007\ \textcolor{keywordflow}{if}\ TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00008}00008\ \ \ \ \ \textcolor{keyword}{from}\ .console\ \textcolor{keyword}{import}\ Console,\ ConsoleOptions,\ RenderableType}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00011}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{00011}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(NamedTuple):}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00012}00012\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Stores\ the\ minimum\ and\ maximum\ widths\ (in\ characters)\ required\ to\ render\ an\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00014}00014\ \ \ \ \ minimum:\ int}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00015}00015\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Minimum\ number\ of\ cells\ required\ to\ render."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00016}00016\ \ \ \ \ maximum:\ int}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Maximum\ number\ of\ cells\ required\ to\ render."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00019}00019\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00020}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a53dd29a9723be1ddadeedc68a0bd1600}{00020}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a53dd29a9723be1ddadeedc68a0bd1600}{span}}(self)\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ difference\ between\ maximum\ and\ minimum."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.maximum\ -\/\ self.minimum}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00024}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a4cdac25f3543e097cbfb6e94020a900d}{00024}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a4cdac25f3543e097cbfb6e94020a900d}{normalize}}(self)\ -\/>\ "{}Measurement"{}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ measurement\ that\ ensures\ that\ minimum\ <=\ maximum\ and\ minimum\ >=\ 0}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00026}00026\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Measurement:\ A\ normalized\ measurement.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ minimum,\ maximum\ =\ self}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ minimum\ =\ min(max(0,\ minimum),\ maximum)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(max(0,\ minimum),\ max(0,\ max(minimum,\ maximum)))}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00034}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a8ce50cbfce6ae60081192171301e4943}{00034}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a8ce50cbfce6ae60081192171301e4943}{with\_maximum}}(self,\ width:\ int)\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ a\ RenderableWith\ where\ the\ widths\ are\ <=\ width.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00036}00036\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ width\ (int):\ Maximum\ desired\ width.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Measurement:\ New\ Measurement\ object.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ minimum,\ maximum\ =\ self}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(min(minimum,\ width),\ min(maximum,\ width))}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a2747c85d71141c90ee78c22ca117e705}{00046}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a2747c85d71141c90ee78c22ca117e705}{with\_minimum}}(self,\ width:\ int)\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ a\ RenderableWith\ where\ the\ widths\ are\ >=\ width.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00048}00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ width\ (int):\ Minimum\ desired\ width.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00051}00051\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Measurement:\ New\ Measurement\ object.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ minimum,\ maximum\ =\ self}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ width\ =\ max(0,\ width)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(max(minimum,\ width),\ max(maximum,\ width))}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00059}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_ab901574ee1eaa219b440da87d3fb26fe}{00059}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_ab901574ee1eaa219b440da87d3fb26fe}{clamp}}(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ self,\ min\_width:\ Optional[int]\ =\ \textcolor{keywordtype}{None},\ max\_width:\ Optional[int]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00061}00061\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Clamp\ a\ measurement\ within\ the\ specified\ range.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00063}00063\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ min\_width\ (int):\ Minimum\ desired\ width,\ or\ \`{}\`{}None\`{}\`{}\ for\ no\ minimum.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ max\_width\ (int):\ Maximum\ desired\ width,\ or\ \`{}\`{}None\`{}\`{}\ for\ no\ maximum.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00067}00067\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Measurement:\ New\ Measurement\ object.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ measurement\ =\ self}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ min\_width\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ measurement\ =\ measurement.with\_minimum(min\_width)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ max\_width\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ measurement\ =\ measurement.with\_maximum(max\_width)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ measurement}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00078}00078\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00079}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_ae4e487ac384ce4c12058edd87e8ed6ea}{00079}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_ae4e487ac384ce4c12058edd87e8ed6ea}{get}}(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ cls,\ console:\ \textcolor{stringliteral}{"{}Console"{}},\ options:\ \textcolor{stringliteral}{"{}ConsoleOptions"{}},\ renderable:\ \textcolor{stringliteral}{"{}RenderableType"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00081}00081\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ a\ measurement\ for\ a\ renderable.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00083}00083\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00084}00084\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00085}00085\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ console\ (\string~rich.console.Console):\ Console\ instance.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00086}00086\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ options\ (\string~rich.console.ConsoleOptions):\ Console\ options.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00087}00087\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ renderable\ (RenderableType):\ An\ object\ that\ may\ be\ rendered\ with\ Rich.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00088}00088\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Raises:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ errors.NotRenderableError:\ If\ the\ object\ is\ not\ renderable.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00091}00091\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00092}00092\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00093}00093\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Measurement:\ Measurement\ object\ containing\ range\ of\ character\ widths\ required\ to\ render\ the\ object.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00094}00094\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \_max\_width\ =\ options.max\_width}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \_max\_width\ <\ 1:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(0,\ 0)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(renderable,\ str):}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ renderable\ =\ console.render\_str(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderable,\ markup=options.markup,\ highlight=\textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ renderable\ =\ rich\_cast(renderable)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ is\_renderable(renderable):}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ get\_console\_width:\ Optional[}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Callable[[\textcolor{stringliteral}{"{}Console"{}},\ \textcolor{stringliteral}{"{}ConsoleOptions"{}}],\ \textcolor{stringliteral}{"{}Measurement"{}}]}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ ]\ =\ getattr(renderable,\ \textcolor{stringliteral}{"{}\_\_rich\_measure\_\_"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ get\_console\_width\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ render\_width\ =\ (}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ get\_console\_width(console,\ options)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a4cdac25f3543e097cbfb6e94020a900d}{normalize}}()}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement_a8ce50cbfce6ae60081192171301e4943}{with\_maximum}}(\_max\_width)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ render\_width.maximum\ <\ 1:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(0,\ 0)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ render\_width.normalize()}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(0,\ \_max\_width)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1errors_1_1_not_renderable_error}{errors.NotRenderableError}}(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Unable\ to\ get\ render\ width\ for\ \{renderable!r\};\ "{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ str,\ Segment,\ or\ object\ with\ \_\_rich\_console\_\_\ method\ is\ required"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00125}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1measure_a361526b86d1d3890b58cb3eb18d67265}{00125}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1measure_a361526b86d1d3890b58cb3eb18d67265}{measure\_renderables}}(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00126}00126\ \ \ \ \ console:\ \textcolor{stringliteral}{"{}Console"{}},}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00127}00127\ \ \ \ \ options:\ \textcolor{stringliteral}{"{}ConsoleOptions"{}},}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00128}00128\ \ \ \ \ renderables:\ Sequence[\textcolor{stringliteral}{"{}RenderableType"{}}],}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00129}00129\ )\ -\/>\ \textcolor{stringliteral}{"{}Measurement"{}}:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00130}00130\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ a\ measurement\ that\ would\ fit\ a\ number\ of\ renderables.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00131}00131\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ console\ (\string~rich.console.Console):\ Console\ instance.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ options\ (\string~rich.console.ConsoleOptions):\ Console\ options.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ renderables\ (Iterable[RenderableType]):\ One\ or\ more\ renderable\ objects.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00136}00136\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Measurement:\ Measurement\ object\ containing\ range\ of\ character\ widths\ required\ to}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ contain\ all\ given\ renderables.}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ renderables:}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(0,\ 0)}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00143}00143\ \ \ \ \ get\_measurement\ =\ Measurement.get}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00144}00144\ \ \ \ \ measurements\ =\ [}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ get\_measurement(console,\ options,\ renderable)\ \textcolor{keywordflow}{for}\ renderable\ \textcolor{keywordflow}{in}\ renderables}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00146}00146\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00147}00147\ \ \ \ \ measured\_width\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1measure_1_1_measurement}{Measurement}}(}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ max(measurements,\ key=itemgetter(0)).minimum,}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ max(measurements,\ key=itemgetter(1)).maximum,}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00150}00150\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{measure_8py_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{return}\ measured\_width}
+
+\end{DoxyCode}

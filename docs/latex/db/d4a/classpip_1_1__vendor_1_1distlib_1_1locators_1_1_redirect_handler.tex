@@ -1,0 +1,100 @@
+\doxysection{Redirect\+Handler Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler}{}\label{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler}\index{RedirectHandler@{RedirectHandler}}
+
+
+Inheritance diagram for Redirect\+Handler\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{d0/d75/classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Redirect\+Handler\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{d5/dce/classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_a6f7d0b79cfe643b63a05b070c2c72967}{http\+\_\+error\+\_\+302}} (self, req, \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}, code, msg, headers)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_ae7c09ee0df66b77ee4bd79bf6237ea28}{http\+\_\+error\+\_\+301}} = \mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_a6f7d0b79cfe643b63a05b070c2c72967}{http\+\_\+error\+\_\+302}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}A class to work around a bug in some Python 3.2.x releases.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{locators_8py_source_l00055}{55}} of file \mbox{\hyperlink{locators_8py_source}{locators.\+py}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_a6f7d0b79cfe643b63a05b070c2c72967}\index{RedirectHandler@{RedirectHandler}!http\_error\_302@{http\_error\_302}}
+\index{http\_error\_302@{http\_error\_302}!RedirectHandler@{RedirectHandler}}
+\doxysubsubsection{\texorpdfstring{http\_error\_302()}{http\_error\_302()}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_a6f7d0b79cfe643b63a05b070c2c72967} 
+http\+\_\+error\+\_\+302 (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{req}{, }\item[{}]{fp}{, }\item[{}]{code}{, }\item[{}]{msg}{, }\item[{}]{headers}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{locators_8py_source_l00064}{64}} of file \mbox{\hyperlink{locators_8py_source}{locators.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{def\ }http\_error\_302(self,\ req,\ fp,\ code,\ msg,\ headers):}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Some\ servers\ (incorrectly)\ return\ multiple\ Location\ headers}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ (so\ probably\ same\ goes\ for\ URI).\ \ Use\ first\ header.}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ newurl\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{'location'},\ \textcolor{stringliteral}{'uri'}):}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{in}\ headers:}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newurl\ =\ headers[key]}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ newurl\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ urlparts\ =\ urlparse(newurl)}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ urlparts.scheme\ ==\ \textcolor{stringliteral}{''}:}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ newurl\ =\ urljoin(req.get\_full\_url(),\ newurl)}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ hasattr(headers,\ \textcolor{stringliteral}{'replace\_header'}):}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ headers.replace\_header(key,\ newurl)}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ headers[key]\ =\ newurl}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ BaseRedirectHandler.http\_error\_302(self,\ req,\ fp,\ code,\ msg,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ headers)}
+\DoxyCodeLine{00083\ }
+
+\end{DoxyCode}
+
+
+\label{doc-variable-members}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_ae7c09ee0df66b77ee4bd79bf6237ea28}\index{RedirectHandler@{RedirectHandler}!http\_error\_301@{http\_error\_301}}
+\index{http\_error\_301@{http\_error\_301}!RedirectHandler@{RedirectHandler}}
+\doxysubsubsection{\texorpdfstring{http\_error\_301}{http\_error\_301}}
+{\footnotesize\ttfamily \label{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_ae7c09ee0df66b77ee4bd79bf6237ea28} 
+http\+\_\+error\+\_\+301 = \mbox{\hyperlink{classpip_1_1__vendor_1_1distlib_1_1locators_1_1_redirect_handler_a6f7d0b79cfe643b63a05b070c2c72967}{http\+\_\+error\+\_\+302}}\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line \mbox{\hyperlink{locators_8py_source_l00084}{84}} of file \mbox{\hyperlink{locators_8py_source}{locators.\+py}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/distlib/\mbox{\hyperlink{locators_8py}{locators.\+py}}\end{DoxyCompactItemize}

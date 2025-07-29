@@ -1,0 +1,382 @@
+\doxysection{prompt.\+py}
+\hypertarget{prompt_8py_source}{}\label{prompt_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/prompt.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/rich/prompt.py}}
+\mbox{\hyperlink{prompt_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt}{00001}}\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Any,\ Generic,\ List,\ Optional,\ TextIO,\ TypeVar,\ Union,\ overload}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00003}00003\ \textcolor{keyword}{from}\ .\ \textcolor{keyword}{import}\ get\_console}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00004}00004\ \textcolor{keyword}{from}\ .console\ \textcolor{keyword}{import}\ Console}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00005}00005\ \textcolor{keyword}{from}\ .text\ \textcolor{keyword}{import}\ Text,\ TextType}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00007}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_a311c8b4e7650091e39cc1fc7ca93808c}{00007}}\ PromptType\ =\ TypeVar(\textcolor{stringliteral}{"{}PromptType"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00008}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_aae2dd21bf0c841631fc746ce06af2f1c}{00008}}\ DefaultType\ =\ TypeVar(\textcolor{stringliteral}{"{}DefaultType"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00011}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_error}{00011}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_error}{PromptError}}(Exception):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00012}00012\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Exception\ base\ class\ for\ prompt\ related\ errors."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00015}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response}{00015}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response}{InvalidResponse}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_error}{PromptError}}):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Exception\ to\ indicate\ a\ response\ was\ invalid.\ Raise\ this\ within\ process\_response()\ to\ indicate\ an\ error}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ and\ provide\ an\ error\ message.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00018}00018\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ message\ (Union[str,\ Text]):\ Error\ message.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00023}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_a3685da4ab03e0f9210a7d16941eb6c45}{00023}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_a3685da4ab03e0f9210a7d16941eb6c45}{\_\_init\_\_}}(self,\ message:\ TextType)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00024}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_ab8140947611504abcb64a4c277effcf5}{00024}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_ab8140947611504abcb64a4c277effcf5}{message}}\ =\ message}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00026}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_ac61398a32ce881591f80283d2601798f}{00026}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_ac61398a32ce881591f80283d2601798f}{\_\_rich\_\_}}(self)\ -\/>\ TextType:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response_ab8140947611504abcb64a4c277effcf5}{message}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00030}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{00030}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{PromptBase}}(Generic[PromptType]):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Ask\ the\ user\ for\ input\ until\ a\ valid\ response\ is\ received.\ This\ is\ the\ base\ class,\ see\ one\ of}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ the\ concrete\ classes\ for\ examples.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00033}00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ prompt\ (TextType,\ optional):\ Prompt\ text.\ Defaults\ to\ "{}"{}.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ console\ (Console,\ optional):\ A\ Console\ instance\ or\ None\ to\ use\ global\ console.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ password\ (bool,\ optional):\ Enable\ password\ input.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ choices\ (List[str],\ optional):\ A\ list\ of\ valid\ choices.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ show\_default\ (bool,\ optional):\ Show\ default\ in\ prompt.\ Defaults\ to\ True.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ show\_choices\ (bool,\ optional):\ Show\ choices\ in\ prompt.\ Defaults\ to\ True.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00043}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3fd7592f4abddb72bb94a501da12a99b}{00043}}\ \ \ \ \ response\_type:\ type\ =\ str}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00045}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3f09abc3580084ac5c5a3470c8237c0d}{00045}}\ \ \ \ \ validate\_error\_message\ =\ \textcolor{stringliteral}{"{}[prompt.invalid]Please\ enter\ a\ valid\ value"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00046}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a631d618fd4299328759975a220ac7816}{00046}}\ \ \ \ \ illegal\_choice\_message\ =\ (}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}[prompt.invalid.choice]Please\ select\ one\ of\ the\ available\ options"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00048}00048\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00049}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_aff2710629546fd85e0209d28f012d4df}{00049}}\ \ \ \ \ prompt\_suffix\ =\ \textcolor{stringliteral}{"{}:\ "{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00051}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{00051}}\ \ \ \ \ choices:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00053}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_acaae484ab7f15428245010c99e55f81e}{00053}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_acaae484ab7f15428245010c99e55f81e}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ prompt:\ TextType\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ console:\ Optional[Console]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ password:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ choices:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ show\_default:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ show\_choices:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00062}00062\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00063}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a59b27486da7ae78f25305f338b4b2fce}{00063}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a59b27486da7ae78f25305f338b4b2fce}{console}}\ =\ console\ \textcolor{keywordflow}{or}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_abe3da41509e860a6feb9f3ea8eb12be4}{get\_console}}()}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00064}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a969d45fc13e59869f2281b54d1615b4d}{00064}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a969d45fc13e59869f2281b54d1615b4d}{prompt}}\ =\ (}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ Text.from\_markup(prompt,\ style=\textcolor{stringliteral}{"{}prompt"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(prompt,\ str)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ prompt}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00069}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a9dbb300e28bc21c8dab41b01883918eb}{00069}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a9dbb300e28bc21c8dab41b01883918eb}{password}}\ =\ password}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ choices\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}\ =\ choices}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00072}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a1746db4949aee8ea53fb8a6d27dfa487}{00072}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a1746db4949aee8ea53fb8a6d27dfa487}{show\_default}}\ =\ show\_default}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00073}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a39b7316c0273e214c23a6521eeec21af}{00073}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a39b7316c0273e214c23a6521eeec21af}{show\_choices}}\ =\ show\_choices}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00075}00075\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00076}00076\ \ \ \ \ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00077}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ab453987375843c8a3e7c02fdc6138e7b}{00077}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ab453987375843c8a3e7c02fdc6138e7b}{ask}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ prompt:\ TextType\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ console:\ Optional[Console]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ password:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ choices:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ show\_default:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ show\_choices:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ default:\ DefaultType,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00088}00088\ \ \ \ \ )\ -\/>\ Union[DefaultType,\ PromptType]:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00091}00091\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00092}00092\ \ \ \ \ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00093}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ad967c82eb99019924b1601564613fd04}{00093}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ab453987375843c8a3e7c02fdc6138e7b}{ask}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ prompt:\ TextType\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ console:\ Optional[Console]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ password:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ choices:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ show\_default:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ show\_choices:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00103}00103\ \ \ \ \ )\ -\/>\ PromptType:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00106}00106\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00107}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a31e46d035ce54519454b8c899b604bf0}{00107}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ab453987375843c8a3e7c02fdc6138e7b}{ask}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ prompt:\ TextType\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ *,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ console:\ Optional[Console]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ password:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ choices:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ show\_default:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ show\_choices:\ bool\ =\ \textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ default:\ Any\ =\ ...,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00118}00118\ \ \ \ \ )\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Shortcut\ to\ construct\ and\ run\ a\ prompt\ loop\ and\ return\ the\ result.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00120}00120\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00122}00122\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ >>>\ filename\ =\ Prompt.ask("{}Enter\ a\ filename"{})}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00123}00123\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00124}00124\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ prompt\ (TextType,\ optional):\ Prompt\ text.\ Defaults\ to\ "{}"{}.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ console\ (Console,\ optional):\ A\ Console\ instance\ or\ None\ to\ use\ global\ console.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ password\ (bool,\ optional):\ Enable\ password\ input.\ Defaults\ to\ False.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ choices\ (List[str],\ optional):\ A\ list\ of\ valid\ choices.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ show\_default\ (bool,\ optional):\ Show\ default\ in\ prompt.\ Defaults\ to\ True.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ show\_choices\ (bool,\ optional):\ Show\ choices\ in\ prompt.\ Defaults\ to\ True.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ stream\ (TextIO,\ optional):\ Optional\ text\ file\ open\ for\ reading\ to\ get\ input.\ Defaults\ to\ None.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \_prompt\ =\ cls(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ prompt,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ console=console,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ password=password,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ choices=choices,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ show\_default=show\_default,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ show\_choices=show\_choices,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_prompt(default=default,\ stream=stream)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00143}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3da689c73dda96650fab06c8a3fa1399}{00143}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3da689c73dda96650fab06c8a3fa1399}{render\_default}}(self,\ default:\ DefaultType)\ -\/>\ Text:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Turn\ the\ supplied\ default\ in\ to\ a\ Text\ instance.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00145}00145\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00147}00147\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ default\ (DefaultType):\ Default\ value.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00148}00148\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00149}00149\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00150}00150\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Text:\ Text\ containing\ rendering\ of\ default\ value.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00151}00151\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(f\textcolor{stringliteral}{"{}(\{default\})"{}},\ \textcolor{stringliteral}{"{}prompt.default"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a46bccee7a1e2872e8e9b1496ed120a35}{00154}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a46bccee7a1e2872e8e9b1496ed120a35}{make\_prompt}}(self,\ default:\ DefaultType)\ -\/>\ Text:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Make\ prompt\ text.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00156}00156\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00157}00157\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ default\ (DefaultType):\ Default\ value.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00159}00159\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00161}00161\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ Text:\ Text\ to\ display\ in\ prompt.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00162}00162\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ prompt\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a969d45fc13e59869f2281b54d1615b4d}{prompt}}.copy()}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ prompt.end\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a39b7316c0273e214c23a6521eeec21af}{show\_choices}}\ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \_choices\ =\ \textcolor{stringliteral}{"{}/"{}}.join(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ choices\ =\ f\textcolor{stringliteral}{"{}[\{\_choices\}]"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ prompt.append(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ prompt.append(choices,\ \textcolor{stringliteral}{"{}prompt.choices"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ default\ !=\ ...}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a1746db4949aee8ea53fb8a6d27dfa487}{show\_default}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ isinstance(default,\ (str,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3fd7592f4abddb72bb94a501da12a99b}{response\_type}}))}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00176}00176\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ prompt.append(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \_default\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3da689c73dda96650fab06c8a3fa1399}{render\_default}}(default)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ prompt.append(\_default)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ prompt.append(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_aff2710629546fd85e0209d28f012d4df}{prompt\_suffix}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ prompt}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00185}00185\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00186}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a16c72221ba60834996a3ec3827102fcd}{00186}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a16c72221ba60834996a3ec3827102fcd}{get\_input}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ console:\ Console,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ prompt:\ TextType,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ password:\ bool,}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00192}00192\ \ \ \ \ )\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ input\ from\ user.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00194}00194\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ console\ (Console):\ Console\ instance.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ prompt\ (TextType):\ Prompt\ text.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00198}00198\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ password\ (bool):\ Enable\ password\ entry.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00199}00199\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00201}00201\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ str:\ String\ from\ user.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00202}00202\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ console.input(prompt,\ password=password,\ stream=stream)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00205}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a4f34524ce6c5463f6378d4d1297304d6}{00205}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a4f34524ce6c5463f6378d4d1297304d6}{check\_choice}}(self,\ value:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Check\ value\ is\ in\ the\ list\ of\ valid\ choices.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00207}00207\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00208}00208\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00209}00209\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ value\ (str):\ Value\ entered\ by\ user.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00210}00210\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00211}00211\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00212}00212\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ bool:\ True\ if\ choice\ was\ valid,\ otherwise\ False.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00213}00213\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value.strip()\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00217}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a2186310f806bc795a45a155a2957400c}{00217}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a2186310f806bc795a45a155a2957400c}{process\_response}}(self,\ value:\ str)\ -\/>\ PromptType:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Process\ response\ from\ user,\ convert\ to\ prompt\ type.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00219}00219\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ value\ (str):\ String\ typed\ by\ user.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00222}00222\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00223}00223\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Raises:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00224}00224\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ InvalidResponse:\ If\ \`{}\`{}value\`{}\`{}\ is\ invalid.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00225}00225\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00226}00226\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00227}00227\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ PromptType:\ The\ value\ to\ be\ returned\ from\ ask\ method.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00228}00228\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ value\ =\ value.strip()}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ return\_value:\ PromptType\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3fd7592f4abddb72bb94a501da12a99b}{response\_type}}(value)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response}{InvalidResponse}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3f09abc3580084ac5c5a3470c8237c0d}{validate\_error\_message}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a4f34524ce6c5463f6378d4d1297304d6}{check\_choice}}(value):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response}{InvalidResponse}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a631d618fd4299328759975a220ac7816}{illegal\_choice\_message}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ return\_value}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00240}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_aae46bfe8753996dc664f55e9bbc03ee4}{00240}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_aae46bfe8753996dc664f55e9bbc03ee4}{on\_validate\_error}}(self,\ value:\ str,\ error:\ InvalidResponse)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Called\ to\ handle\ validation\ error.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00242}00242\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00244}00244\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ value\ (str):\ String\ entered\ by\ user.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ error\ (InvalidResponse):\ Exception\ instance\ the\ initiated\ the\ error.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00246}00246\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a59b27486da7ae78f25305f338b4b2fce}{console}}.\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(error)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00249}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a5b24fc435edcd7405c2dcda2a05b6aa9}{00249}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a5b24fc435edcd7405c2dcda2a05b6aa9}{pre\_prompt}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Hook\ to\ display\ something\ before\ the\ prompt."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00252}00252\ \ \ \ \ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00253}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae8f418626ea4c01f16bfad387f6d1b48}{00253}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae8f418626ea4c01f16bfad387f6d1b48}{\_\_call\_\_}}(self,\ *,\ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None})\ -\/>\ PromptType:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00256}00256\ \ \ \ \ \textcolor{preprocessor}{@overload}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00257}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_acdf29c29f64a57360ae0f31671e96488}{00257}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae8f418626ea4c01f16bfad387f6d1b48}{\_\_call\_\_}}(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ self,\ *,\ default:\ DefaultType,\ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00259}00259\ \ \ \ \ )\ -\/>\ Union[PromptType,\ DefaultType]:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00262}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a74be9f5205a77363e3a348f4897bcff4}{00262}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae8f418626ea4c01f16bfad387f6d1b48}{\_\_call\_\_}}(self,\ *,\ default:\ Any\ =\ ...,\ stream:\ Optional[TextIO]\ =\ \textcolor{keywordtype}{None})\ -\/>\ Any:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Run\ the\ prompt\ loop.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00264}00264\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00265}00265\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00266}00266\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ default\ (Any,\ optional):\ Optional\ default\ value.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00267}00267\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00268}00268\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00269}00269\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ PromptType:\ Processed\ value.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00270}00270\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a5b24fc435edcd7405c2dcda2a05b6aa9}{pre\_prompt}}()}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ prompt\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a46bccee7a1e2872e8e9b1496ed120a35}{make\_prompt}}(default)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a16c72221ba60834996a3ec3827102fcd}{get\_input}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a59b27486da7ae78f25305f338b4b2fce}{console}},\ prompt,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a9dbb300e28bc21c8dab41b01883918eb}{password}},\ stream=stream)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ ==\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{and}\ default\ !=\ ...:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ default}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\_value\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a2186310f806bc795a45a155a2957400c}{process\_response}}(value)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ InvalidResponse\ \textcolor{keyword}{as}\ error:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_aae46bfe8753996dc664f55e9bbc03ee4}{on\_validate\_error}}(value,\ error)}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ return\_value}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00286}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt}{00286}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt}{Prompt}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{PromptBase}}[str]):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00287}00287\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ prompt\ that\ returns\ a\ str.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00288}00288\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00289}00289\ \textcolor{stringliteral}{\ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00290}00290\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ name\ =\ Prompt.ask("{}Enter\ your\ name"{})}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00291}00291\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00292}00292\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00293}00293\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00295}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt}{00295}}\ \ \ \ \ response\_type\ =\ str}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00298}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_int_prompt}{00298}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_int_prompt}{IntPrompt}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{PromptBase}}[int]):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00299}00299\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ prompt\ that\ returns\ an\ integer.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00300}00300\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00301}00301\ \textcolor{stringliteral}{\ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00302}00302\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ burrito\_count\ =\ IntPrompt.ask("{}How\ many\ burritos\ do\ you\ want\ to\ order"{})}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00303}00303\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00304}00304\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00306}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_int_prompt}{00306}}\ \ \ \ \ response\_type\ =\ int}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00307}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_int_prompt}{00307}}\ \ \ \ \ validate\_error\_message\ =\ \textcolor{stringliteral}{"{}[prompt.invalid]Please\ enter\ a\ valid\ integer\ number"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00310}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_float_prompt}{00310}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_float_prompt}{FloatPrompt}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{PromptBase}}[int]):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00311}00311\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ prompt\ that\ returns\ a\ float.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00312}00312\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00313}00313\ \textcolor{stringliteral}{\ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00314}00314\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ temperature\ =\ FloatPrompt.ask("{}Enter\ desired\ temperature"{})}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00315}00315\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00316}00316\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00318}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_float_prompt}{00318}}\ \ \ \ \ response\_type\ =\ float}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00319}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_float_prompt}{00319}}\ \ \ \ \ validate\_error\_message\ =\ \textcolor{stringliteral}{"{}[prompt.invalid]Please\ enter\ a\ number"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00322}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm}{00322}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm}{Confirm}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base}{PromptBase}}[bool]):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00323}00323\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}A\ yes\ /\ no\ confirmation\ prompt.}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00324}00324\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00325}00325\ \textcolor{stringliteral}{\ \ \ \ Example:}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00326}00326\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ >>>\ if\ Confirm.ask("{}Continue"{}):}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00327}00327\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ run\_job()}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00328}00328\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00329}00329\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00331}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm}{00331}}\ \ \ \ \ response\_type\ =\ bool}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00332}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm}{00332}}\ \ \ \ \ validate\_error\_message\ =\ \textcolor{stringliteral}{"{}[prompt.invalid]Please\ enter\ Y\ or\ N"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00333}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm}{00333}}\ \ \ \ \ choices:\ List[str]\ =\ [\textcolor{stringliteral}{"{}y"{}},\ \textcolor{stringliteral}{"{}n"{}}]}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00335}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm_a3da689c73dda96650fab06c8a3fa1399}{00335}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm_a3da689c73dda96650fab06c8a3fa1399}{render\_default}}(self,\ default:\ DefaultType)\ -\/>\ Text:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Render\ the\ default\ as\ (y)\ or\ (n)\ rather\ than\ True/False."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ yes,\ no\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1text_1_1_text}{Text}}(f\textcolor{stringliteral}{"{}(\{yes\})"{}}\ \textcolor{keywordflow}{if}\ default\ \textcolor{keywordflow}{else}\ f\textcolor{stringliteral}{"{}(\{no\})"{}},\ style=\textcolor{stringliteral}{"{}prompt.default"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00340}\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm_a4b1a6f8c627dc40704cc5f5eb1126d0f}{00340}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_confirm_a4b1a6f8c627dc40704cc5f5eb1126d0f}{process\_response}}(self,\ value:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ choices\ to\ a\ bool."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ value\ =\ value.strip().lower()}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_invalid_response}{InvalidResponse}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_a3f09abc3580084ac5c5a3470c8237c0d}{validate\_error\_message}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value\ ==\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1rich_1_1prompt_1_1_prompt_base_ae294d5d27d03c1b351d9f513f5cf8b2b}{choices}}[0]}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00348}00348\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:\ \ \textcolor{comment}{\#\ pragma:\ no\ cover}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00350}00350\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich}{pip.\_vendor.rich}}\ \textcolor{keyword}{import}\ \textcolor{keywordflow}{print}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00352}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_affb1327b18bf08a379d19eef89cf1ed1}{00352}}\ \ \ \ \ \textcolor{keywordflow}{if}\ Confirm.ask(\textcolor{stringliteral}{"{}Run\ [i]prompt[/i]\ tests?"{}},\ default=\textcolor{keyword}{True}):}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00354}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_a937d4dd628a8858b443a399410d2600b}{00354}}\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ IntPrompt.ask(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}:rocket:\ Enter\ a\ number\ between\ [b]1[/b]\ and\ [b]10[/b]"{}},\ default=5}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ result\ >=\ 1\ \textcolor{keywordflow}{and}\ result\ <=\ 10:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(\textcolor{stringliteral}{"{}:pile\_of\_poo:\ [prompt.invalid]Number\ must\ be\ between\ 1\ and\ 10"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(f\textcolor{stringliteral}{"{}number=\{result\}"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00363}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_a9dbb300e28bc21c8dab41b01883918eb}{00363}}\ \ \ \ \ \ \ \ \ \ \ \ \ password\ =\ Prompt.ask(}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Please\ enter\ a\ password\ [cyan](must\ be\ at\ least\ 5\ characters)"{}},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ password=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(password)\ >=\ 5:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(\textcolor{stringliteral}{"{}[prompt.invalid]password\ too\ short"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(f\textcolor{stringliteral}{"{}password=\{password!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00372}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_1_1prompt_ab933ec85a4151beaa3cd4b00fd532438}{00372}}\ \ \ \ \ \ \ \ \ fruit\ =\ Prompt.ask(\textcolor{stringliteral}{"{}Enter\ a\ fruit"{}},\ choices=[\textcolor{stringliteral}{"{}apple"{}},\ \textcolor{stringliteral}{"{}orange"{}},\ \textcolor{stringliteral}{"{}pear"{}}])}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(f\textcolor{stringliteral}{"{}fruit=\{fruit!r\}"{}})}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00375}00375\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{prompt_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1rich_a8a2823688ea254925e2c61335dd86dca}{print}}(\textcolor{stringliteral}{"{}[b]OK\ :loudly\_crying\_face:"{}})}
+
+\end{DoxyCode}

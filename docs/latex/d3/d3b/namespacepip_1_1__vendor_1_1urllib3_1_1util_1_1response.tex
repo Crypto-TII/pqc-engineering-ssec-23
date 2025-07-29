@@ -1,0 +1,179 @@
+\doxysection{pip.\+\_\+vendor.\+urllib3.\+util.\+response Namespace Reference}
+\hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response}{}\label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response}\index{pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_a33762a57a4106a0668ced93e0464b45b}{is\+\_\+fp\+\_\+closed}} (obj)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ab98def5b105c07bdb5845c1a0ad3f55b}{assert\+\_\+header\+\_\+parsing}} (headers)
+\item 
+\mbox{\hyperlink{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ac6b625dccb11e74aceba4fb07c407293}{is\+\_\+response\+\_\+to\+\_\+head}} (response)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ab98def5b105c07bdb5845c1a0ad3f55b}\index{pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}!assert\_header\_parsing@{assert\_header\_parsing}}
+\index{assert\_header\_parsing@{assert\_header\_parsing}!pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}}
+\doxysubsubsection{\texorpdfstring{assert\_header\_parsing()}{assert\_header\_parsing()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ab98def5b105c07bdb5845c1a0ad3f55b} 
+assert\+\_\+header\+\_\+parsing (\begin{DoxyParamCaption}\item[{}]{headers}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Asserts whether all headers have been successfully parsed.
+Extracts encountered errors from the result of parsing headers.
+
+Only works on Python 3.
+
+:param http.client.HTTPMessage headers: Headers to verify.
+
+:raises urllib3.exceptions.HeaderParsingError:
+    If parsing errors are found.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{util_2response_8py_source_l00040}{40}} of file \mbox{\hyperlink{util_2response_8py_source}{response.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00040\ \textcolor{keyword}{def\ }assert\_header\_parsing(headers):}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00042\ \textcolor{stringliteral}{\ \ \ \ Asserts\ whether\ all\ headers\ have\ been\ successfully\ parsed.}}
+\DoxyCodeLine{00043\ \textcolor{stringliteral}{\ \ \ \ Extracts\ encountered\ errors\ from\ the\ result\ of\ parsing\ headers.}}
+\DoxyCodeLine{00044\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00045\ \textcolor{stringliteral}{\ \ \ \ Only\ works\ on\ Python\ 3.}}
+\DoxyCodeLine{00046\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00047\ \textcolor{stringliteral}{\ \ \ \ :param\ http.client.HTTPMessage\ headers:\ Headers\ to\ verify.}}
+\DoxyCodeLine{00048\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00049\ \textcolor{stringliteral}{\ \ \ \ :raises\ urllib3.exceptions.HeaderParsingError:}}
+\DoxyCodeLine{00050\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ If\ parsing\ errors\ are\ found.}}
+\DoxyCodeLine{00051\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{\#\ This\ will\ fail\ silently\ if\ we\ pass\ in\ the\ wrong\ kind\ of\ parameter.}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{\#\ To\ make\ debugging\ easier\ add\ an\ explicit\ check.}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(headers,\ httplib.HTTPMessage):}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ TypeError(\textcolor{stringliteral}{"{}expected\ httplib.Message,\ got\ \{0\}."{}}.format(type(headers)))}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ defects\ =\ getattr(headers,\ \textcolor{stringliteral}{"{}defects"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00059\ \ \ \ \ get\_payload\ =\ getattr(headers,\ \textcolor{stringliteral}{"{}get\_payload"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ unparsed\_data\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ get\_payload:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ get\_payload\ is\ actually\ email.message.Message.get\_payload;}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we're\ only\ interested\ in\ the\ result\ if\ it's\ not\ a\ multipart\ message}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ headers.is\_multipart():}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ get\_payload()}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(payload,\ (bytes,\ str)):}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unparsed\_data\ =\ payload}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{if}\ defects:}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ httplib\ is\ assuming\ a\ response\ body\ is\ available}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ when\ parsing\ headers\ even\ when\ httplib\ only\ sends}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ header\ data\ to\ parse\_headers()\ This\ results\ in}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ defects\ on\ multipart\ responses\ in\ particular.}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ See:\ https://github.com/urllib3/urllib3/issues/800}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ So\ we\ ignore\ the\ following\ defects:}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ StartBoundaryNotFoundDefect:}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ The\ claimed\ start\ boundary\ was\ never\ found.}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/\ MultipartInvariantViolationDefect:}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ A\ message\ claimed\ to\ be\ a\ multipart\ but\ no\ subparts\ were\ found.}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ defects\ =\ [}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ defect}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ defect\ \textcolor{keywordflow}{in}\ defects}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defect,\ (StartBoundaryNotFoundDefect,\ MultipartInvariantViolationDefect)}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{if}\ defects\ \textcolor{keywordflow}{or}\ unparsed\_data:}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ HeaderParsingError(defects=defects,\ unparsed\_data=unparsed\_data)}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_a33762a57a4106a0668ced93e0464b45b}\index{pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}!is\_fp\_closed@{is\_fp\_closed}}
+\index{is\_fp\_closed@{is\_fp\_closed}!pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}}
+\doxysubsubsection{\texorpdfstring{is\_fp\_closed()}{is\_fp\_closed()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_a33762a57a4106a0668ced93e0464b45b} 
+is\+\_\+fp\+\_\+closed (\begin{DoxyParamCaption}\item[{}]{obj}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Checks whether a given file-like object is closed.
+
+:param obj:
+    The file-like object to check.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{util_2response_8py_source_l00009}{9}} of file \mbox{\hyperlink{util_2response_8py_source}{response.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00009\ \textcolor{keyword}{def\ }is\_fp\_closed(obj):}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00011\ \textcolor{stringliteral}{\ \ \ \ Checks\ whether\ a\ given\ file-\/like\ object\ is\ closed.}}
+\DoxyCodeLine{00012\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00013\ \textcolor{stringliteral}{\ \ \ \ :param\ obj:}}
+\DoxyCodeLine{00014\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ The\ file-\/like\ object\ to\ check.}}
+\DoxyCodeLine{00015\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ \`{}isclosed()`\ first,\ in\ case\ Python3\ doesn't\ set\ \`{}closed`.}}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ GH\ Issue\ \#928}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.isclosed()}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ via\ the\ official\ file-\/like-\/object\ way.}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.closed}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ if\ the\ object\ is\ a\ container\ for\ another\ file-\/like\ object\ that}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ gets\ released\ on\ exhaustion\ (e.g.\ HTTPResponse).}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.fp\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Unable\ to\ determine\ whether\ fp\ is\ closed."{}})}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ }
+
+\end{DoxyCode}
+\Hypertarget{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ac6b625dccb11e74aceba4fb07c407293}\index{pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}!is\_response\_to\_head@{is\_response\_to\_head}}
+\index{is\_response\_to\_head@{is\_response\_to\_head}!pip.\_vendor.urllib3.util.response@{pip.\_vendor.urllib3.util.response}}
+\doxysubsubsection{\texorpdfstring{is\_response\_to\_head()}{is\_response\_to\_head()}}
+{\footnotesize\ttfamily \label{namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1response_ac6b625dccb11e74aceba4fb07c407293} 
+is\+\_\+response\+\_\+to\+\_\+head (\begin{DoxyParamCaption}\item[{}]{response}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Checks whether the request of a response has been a HEAD-request.
+Handles the quirks of AppEngine.
+
+:param http.client.HTTPResponse response:
+    Response to check if the originating request
+    used 'HEAD' as a method.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{util_2response_8py_source_l00094}{94}} of file \mbox{\hyperlink{util_2response_8py_source}{response.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00094\ \textcolor{keyword}{def\ }is\_response\_to\_head(response):}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{00096\ \textcolor{stringliteral}{\ \ \ \ Checks\ whether\ the\ request\ of\ a\ response\ has\ been\ a\ HEAD-\/request.}}
+\DoxyCodeLine{00097\ \textcolor{stringliteral}{\ \ \ \ Handles\ the\ quirks\ of\ AppEngine.}}
+\DoxyCodeLine{00098\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00099\ \textcolor{stringliteral}{\ \ \ \ :param\ http.client.HTTPResponse\ response:}}
+\DoxyCodeLine{00100\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Response\ to\ check\ if\ the\ originating\ request}}
+\DoxyCodeLine{00101\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ used\ 'HEAD'\ as\ a\ method.}}
+\DoxyCodeLine{00102\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{\#\ FIXME:\ Can\ we\ do\ this\ somehow\ without\ accessing\ private\ httplib\ \_method?}}
+\DoxyCodeLine{00104\ \ \ \ \ method\ =\ response.\_method}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(method,\ int):\ \ \textcolor{comment}{\#\ Platform-\/specific:\ Appengine}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ method\ ==\ 3}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{return}\ method.upper()\ ==\ \textcolor{stringliteral}{"{}HEAD"{}}}
+
+\end{DoxyCode}

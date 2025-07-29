@@ -1,0 +1,614 @@
+\doxysection{\+\_\+\+\_\+init\+\_\+\+\_\+.\+py}
+\hypertarget{__vendor_2tenacity_2____init_____8py_source}{}\label{__vendor_2tenacity_2____init_____8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/\_\_init\_\_.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_vendor/tenacity/\_\_init\_\_.py}}
+\mbox{\hyperlink{__vendor_2tenacity_2____init_____8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity}{00001}}\ \textcolor{comment}{\#\ Copyright\ 2016-\/2018\ Julien\ Danjou}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00002}00002\ \textcolor{comment}{\#\ Copyright\ 2017\ Elisey\ Zanko}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ 2016\ Étienne\ Bersac}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00004}00004\ \textcolor{comment}{\#\ Copyright\ 2016\ Joshua\ Harlow}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00005}00005\ \textcolor{comment}{\#\ Copyright\ 2013-\/2014\ Ray\ Holder}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00006}00006\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00007}00007\ \textcolor{comment}{\#\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00008}00008\ \textcolor{comment}{\#\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00009}00009\ \textcolor{comment}{\#\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00010}00010\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00011}00011\ \textcolor{comment}{\#\ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00012}00012\ \textcolor{comment}{\#}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00013}00013\ \textcolor{comment}{\#\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00014}00014\ \textcolor{comment}{\#\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00015}00015\ \textcolor{comment}{\#\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00016}00016\ \textcolor{comment}{\#\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00017}00017\ \textcolor{comment}{\#\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00020}00020\ \textcolor{keyword}{import}\ functools}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00021}00021\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00022}00022\ \textcolor{keyword}{import}\ threading}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00023}00023\ \textcolor{keyword}{import}\ time}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00024}00024\ \textcolor{keyword}{import}\ typing\ \textcolor{keyword}{as}\ t}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00025}00025\ \textcolor{keyword}{import}\ warnings}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00026}00026\ \textcolor{keyword}{from}\ abc\ \textcolor{keyword}{import}\ ABC,\ abstractmethod}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00027}00027\ \textcolor{keyword}{from}\ concurrent\ \textcolor{keyword}{import}\ futures}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00028}00028\ \textcolor{keyword}{from}\ inspect\ \textcolor{keyword}{import}\ iscoroutinefunction}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00030}00030\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ retry\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00031}00031\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_base\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00032}00032\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_all\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00033}00033\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_always\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00034}00034\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_any\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00035}00035\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_exception\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00036}00036\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_exception\_type\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00037}00037\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_exception\_cause\_type\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00038}00038\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_not\_exception\_type\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00039}00039\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_not\_result\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00040}00040\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_result\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00041}00041\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_never\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00042}00042\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_unless\_exception\_type\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00043}00043\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_exception\_message\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00044}00044\ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ retry\_if\_not\_exception\_message\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00046}00046\ \textcolor{comment}{\#\ Import\ all\ nap\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00047}00047\ \textcolor{keyword}{from}\ .nap\ \textcolor{keyword}{import}\ sleep\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00048}00048\ \textcolor{keyword}{from}\ .nap\ \textcolor{keyword}{import}\ sleep\_using\_event\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00050}00050\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ stop\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00051}00051\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_after\_attempt\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00052}00052\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_after\_delay\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00053}00053\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_all\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00054}00054\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_any\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00055}00055\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_never\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00056}00056\ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ stop\_when\_event\_set\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00058}00058\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ wait\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00059}00059\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_chain\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00060}00060\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_combine\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00061}00061\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_exponential\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00062}00062\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_fixed\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00063}00063\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_incrementing\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00064}00064\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_none\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00065}00065\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_random\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00066}00066\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_random\_exponential\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00067}00067\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_random\_exponential\ \textcolor{keyword}{as}\ wait\_full\_jitter\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00068}00068\ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ wait\_exponential\_jitter\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00070}00070\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ before\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00071}00071\ \textcolor{keyword}{from}\ .before\ \textcolor{keyword}{import}\ before\_log\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00072}00072\ \textcolor{keyword}{from}\ .before\ \textcolor{keyword}{import}\ before\_nothing\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00074}00074\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ after\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00075}00075\ \textcolor{keyword}{from}\ .after\ \textcolor{keyword}{import}\ after\_log\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00076}00076\ \textcolor{keyword}{from}\ .after\ \textcolor{keyword}{import}\ after\_nothing\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00078}00078\ \textcolor{comment}{\#\ Import\ all\ built-\/in\ after\ strategies\ for\ easier\ usage.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00079}00079\ \textcolor{keyword}{from}\ .before\_sleep\ \textcolor{keyword}{import}\ before\_sleep\_log\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00080}00080\ \textcolor{keyword}{from}\ .before\_sleep\ \textcolor{keyword}{import}\ before\_sleep\_nothing\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00082}00082\ \textcolor{comment}{\#\ Replace\ a\ conditional\ import\ with\ a\ hard-\/coded\ None\ so\ that\ pip\ does}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00083}00083\ \textcolor{comment}{\#\ not\ attempt\ to\ use\ tornado\ even\ if\ it\ is\ present\ in\ the\ environment.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00084}00084\ \textcolor{comment}{\#\ If\ tornado\ is\ non-\/None,\ tenacity\ will\ attempt\ to\ execute\ some\ code}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00085}00085\ \textcolor{comment}{\#\ that\ is\ sensitive\ to\ the\ version\ of\ tornado,\ which\ could\ break\ pip}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00086}00086\ \textcolor{comment}{\#\ if\ an\ old\ version\ is\ found.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00087}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a51495464181f19e1fadf2e579535b8d1}{00087}}\ tornado\ =\ \textcolor{keywordtype}{None}\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00089}00089\ \textcolor{keywordflow}{if}\ t.TYPE\_CHECKING:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00090}00090\ \ \ \ \ \textcolor{keyword}{import}\ types}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00092}00092\ \ \ \ \ \textcolor{keyword}{from}\ .retry\ \textcolor{keyword}{import}\ RetryBaseT}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00093}00093\ \ \ \ \ \textcolor{keyword}{from}\ .stop\ \textcolor{keyword}{import}\ StopBaseT}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00094}00094\ \ \ \ \ \textcolor{keyword}{from}\ .wait\ \textcolor{keyword}{import}\ WaitBaseT}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00097}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a036742d83c310c47a19e18eacc29e38a}{00097}}\ WrappedFnReturnT\ =\ t.TypeVar(\textcolor{stringliteral}{"{}WrappedFnReturnT"{}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00098}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_ad4197f35759d95535252b6a793352a9c}{00098}}\ WrappedFn\ =\ t.TypeVar(\textcolor{stringliteral}{"{}WrappedFn"{}},\ bound=t.Callable[...,\ t.Any])}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00101}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_try_again}{00101}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_try_again}{TryAgain}}(Exception):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00102}00102\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Always\ retry\ the\ executed\ function\ when\ raised."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00105}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a75386d05b083398b7f378ac04f6505ef}{00105}}\ NO\_RESULT\ =\ object()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00108}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_attempt}{00108}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_attempt}{DoAttempt}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00112}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_sleep}{00112}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_sleep}{DoSleep}}(float):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00116}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action}{00116}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action}{BaseAction}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00117}00117\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Base\ class\ for\ representing\ actions\ to\ take\ by\ retry\ object.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00118}00118\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ \ \ Concrete\ implementations\ must\ define:}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00120}00120\ \textcolor{stringliteral}{\ \ \ \ -\/\ \_\_init\_\_:\ to\ initialize\ all\ necessary\ fields}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00121}00121\ \textcolor{stringliteral}{\ \ \ \ -\/\ REPR\_FIELDS:\ class\ variable\ specifying\ attributes\ to\ include\ in\ repr(self)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00122}00122\ \textcolor{stringliteral}{\ \ \ \ -\/\ NAME:\ for\ identification\ in\ retry\ object\ methods\ and\ callbacks}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00123}00123\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00125}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_a2ef8db225ca292ec46734e7b601c5082}{00125}}\ \ \ \ \ REPR\_FIELDS:\ t.Sequence[str]\ =\ ()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00126}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_adfeeefdb5fbb76c7f632814db3bbb1da}{00126}}\ \ \ \ \ NAME:\ t.Optional[str]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00128}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_aea815b0c6c23fc48a11ee0404b782c7a}{00128}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00129}00129\ \ \ \ \ \ \ \ \ state\_str\ =\ \textcolor{stringliteral}{"{},\ "{}}.join(f\textcolor{stringliteral}{"{}\{field\}=\{getattr(self,\ field)!r\}"{}}\ \textcolor{keywordflow}{for}\ field\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_a2ef8db225ca292ec46734e7b601c5082}{REPR\_FIELDS}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{self.\_\_class\_\_.\_\_name\_\_\}(\{state\_str\})"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00132}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_ae07f7930f92d3591c93e2381cd5be285}{00132}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repr(self)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00136}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action}{00136}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action}{RetryAction}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_action}{BaseAction}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00137}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action}{00137}}\ \ \ \ \ REPR\_FIELDS\ =\ (\textcolor{stringliteral}{"{}sleep"{}},)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00138}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action}{00138}}\ \ \ \ \ NAME\ =\ \textcolor{stringliteral}{"{}retry"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00140}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action_aaa37a548dab4eac73a939503a4e4411a}{00140}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action_aaa37a548dab4eac73a939503a4e4411a}{\_\_init\_\_}}(self,\ sleep:\ t.SupportsFloat)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00141}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action_a64ec70591e393276b5f75643496fcc97}{00141}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action_a64ec70591e393276b5f75643496fcc97}{sleep}}\ =\ float(sleep)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00144}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a766afab8b6fabd81f1179b5cde468e01}{00144}}\ \_unset\ =\ object()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00147}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{00147}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(first:\ t.Union[t.Any,\ object],\ second:\ t.Any)\ -\/>\ t.Any:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{return}\ second\ \textcolor{keywordflow}{if}\ first\ \textcolor{keywordflow}{is}\ \_unset\ \textcolor{keywordflow}{else}\ first}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00151}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error}{00151}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error}{RetryError}}(Exception):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00152}00152\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Encapsulates\ the\ last\ attempt\ instance\ right\ before\ giving\ up."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00154}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_ad4a7c92ec2c6335535a51f9a90d21b6e}{00154}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_ad4a7c92ec2c6335535a51f9a90d21b6e}{\_\_init\_\_}}(self,\ last\_attempt:\ \textcolor{stringliteral}{"{}Future"{}})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00155}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_afe6e33cffe2e685839c69ba4f0034c0f}{00155}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_afe6e33cffe2e685839c69ba4f0034c0f}{last\_attempt}}\ =\ last\_attempt}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00156}00156\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_ad4a7c92ec2c6335535a51f9a90d21b6e}{\_\_init\_\_}}(last\_attempt)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00158}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_a89474762129cd20adee0ce23ee79713c}{00158}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_a89474762129cd20adee0ce23ee79713c}{reraise}}(self)\ -\/>\ "{}t.NoReturn"{}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_afe6e33cffe2e685839c69ba4f0034c0f}{last\_attempt}}.failed:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_afe6e33cffe2e685839c69ba4f0034c0f}{last\_attempt}}.result()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ self}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00163}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_ae07f7930f92d3591c93e2381cd5be285}{00163}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_error_ae07f7930f92d3591c93e2381cd5be285}{\_\_str\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{self.\_\_class\_\_.\_\_name\_\_\}[\{self.last\_attempt\}]"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00167}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager}{00167}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager}{AttemptManager}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00168}00168\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Manage\ attempt\ context."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00170}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_a99aadb2862013fd5b3eb000745834bcc}{00170}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_a99aadb2862013fd5b3eb000745834bcc}{\_\_init\_\_}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00171}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_ac66becba6f511343167cd9e4ba27a334}{00171}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_ac66becba6f511343167cd9e4ba27a334}{retry\_state}}\ =\ retry\_state}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00173}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_a4f5df005d5c8fa0e58492caccb946e1e}{00173}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_a4f5df005d5c8fa0e58492caccb946e1e}{\_\_enter\_\_}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00176}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_aa882bafec4bc76e2b65c8a8da4dfda9b}{00176}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager_aa882bafec4bc76e2b65c8a8da4dfda9b}{\_\_exit\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00177}00177\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00178}00178\ \ \ \ \ \ \ \ \ exc\_type:\ t.Optional[t.Type[BaseException]],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00179}00179\ \ \ \ \ \ \ \ \ exc\_value:\ t.Optional[BaseException],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00180}00180\ \ \ \ \ \ \ \ \ traceback:\ t.Optional[\textcolor{stringliteral}{"{}types.TracebackType"{}}],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00181}00181\ \ \ \ \ )\ -\/>\ t.Optional[bool]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ exc\_type\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ exc\_value\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ self.retry\_state.set\_exception((exc\_type,\ exc\_value,\ traceback))}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}\ \ \textcolor{comment}{\#\ Swallow\ exception.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ don't\ have\ the\ result,\ actually.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ self.retry\_state.set\_result(\textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00191}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying}{00191}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying}{BaseRetrying}}(ABC):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00192}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a80ece1cb3abc6295e9b17913f1f6d1b4}{00192}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a80ece1cb3abc6295e9b17913f1f6d1b4}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00193}00193\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00194}00194\ \ \ \ \ \ \ \ \ sleep:\ t.Callable[[t.Union[int,\ float]],\ \textcolor{keywordtype}{None}]\ =\ sleep,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00195}00195\ \ \ \ \ \ \ \ \ stop:\ \textcolor{stringliteral}{"{}StopBaseT"{}}\ =\ stop\_never,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00196}00196\ \ \ \ \ \ \ \ \ wait:\ \textcolor{stringliteral}{"{}WaitBaseT"{}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none}{wait\_none}}(),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00197}00197\ \ \ \ \ \ \ \ \ retry:\ \textcolor{stringliteral}{"{}RetryBaseT"{}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__if__exception__type}{retry\_if\_exception\_type}}(),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00198}00198\ \ \ \ \ \ \ \ \ before:\ t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]\ =\ before\_nothing,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00199}00199\ \ \ \ \ \ \ \ \ after:\ t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]\ =\ after\_nothing,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00200}00200\ \ \ \ \ \ \ \ \ before\_sleep:\ t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00201}00201\ \ \ \ \ \ \ \ \ reraise:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00202}00202\ \ \ \ \ \ \ \ \ retry\_error\_cls:\ t.Type[RetryError]\ =\ RetryError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00203}00203\ \ \ \ \ \ \ \ \ retry\_error\_callback:\ t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ t.Any]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00204}00204\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00205}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{00205}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}\ =\ sleep}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00206}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a2d6abedce0377a7a23305ce566382d23}{00206}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a2d6abedce0377a7a23305ce566382d23}{stop}}\ =\ stop}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00207}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aec035d60ec8593d0a233af1c0456e57c}{00207}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aec035d60ec8593d0a233af1c0456e57c}{wait}}\ =\ wait}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00208}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af6ce9532eff4ab447fa4598622e1c4f2}{00208}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af6ce9532eff4ab447fa4598622e1c4f2}{retry}}\ =\ retry}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00209}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af1e6ee5fdf02d1c9683d942a09904647}{00209}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af1e6ee5fdf02d1c9683d942a09904647}{before}}\ =\ before}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00210}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a364ef5075b72dd3e5a405a28c969d962}{00210}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a364ef5075b72dd3e5a405a28c969d962}{after}}\ =\ after}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00211}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a503f0c086b740ca0120b11d5efcae0d7}{00211}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a503f0c086b740ca0120b11d5efcae0d7}{before\_sleep}}\ =\ before\_sleep}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00212}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ad22085908b45bf54e1e531249eeb60f4}{00212}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ad22085908b45bf54e1e531249eeb60f4}{reraise}}\ =\ reraise}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00213}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a596b51ace6f87e124d37b5db1f9a24e8}{00213}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a596b51ace6f87e124d37b5db1f9a24e8}{\_local}}\ =\ threading.local()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00214}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a279b1e41e186a6e8d2a0110a99a60061}{00214}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a279b1e41e186a6e8d2a0110a99a60061}{retry\_error\_cls}}\ =\ retry\_error\_cls}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00215}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ae107a6a1f2027e41dac4b7e5e60399cd}{00215}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ae107a6a1f2027e41dac4b7e5e60399cd}{retry\_error\_callback}}\ =\ retry\_error\_callback}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00217}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a47ebc4286b5e27c8c73311c050f78f15}{00217}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a47ebc4286b5e27c8c73311c050f78f15}{copy}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00218}00218\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00219}00219\ \ \ \ \ \ \ \ \ sleep:\ t.Union[t.Callable[[t.Union[int,\ float]],\ \textcolor{keywordtype}{None}],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00220}00220\ \ \ \ \ \ \ \ \ stop:\ t.Union[\textcolor{stringliteral}{"{}StopBaseT"{}},\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00221}00221\ \ \ \ \ \ \ \ \ wait:\ t.Union[\textcolor{stringliteral}{"{}WaitBaseT"{}},\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00222}00222\ \ \ \ \ \ \ \ \ retry:\ t.Union[retry\_base,\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00223}00223\ \ \ \ \ \ \ \ \ before:\ t.Union[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00224}00224\ \ \ \ \ \ \ \ \ after:\ t.Union[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00225}00225\ \ \ \ \ \ \ \ \ before\_sleep:\ t.Union[t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00226}00226\ \ \ \ \ \ \ \ \ reraise:\ t.Union[bool,\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00227}00227\ \ \ \ \ \ \ \ \ retry\_error\_cls:\ t.Union[t.Type[RetryError],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00228}00228\ \ \ \ \ \ \ \ \ retry\_error\_callback:\ t.Union[t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ t.Any]],\ object]\ =\ \_unset,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00229}00229\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}BaseRetrying"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Copy\ this\ object\ with\ some\ parameters\ changed\ if\ needed."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\_\_class\_\_(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ sleep=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(sleep,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ stop=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(stop,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a2d6abedce0377a7a23305ce566382d23}{stop}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ wait=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(wait,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aec035d60ec8593d0a233af1c0456e57c}{wait}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ retry=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(retry,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af6ce9532eff4ab447fa4598622e1c4f2}{retry}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ before=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(before,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af1e6ee5fdf02d1c9683d942a09904647}{before}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ after=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(after,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a364ef5075b72dd3e5a405a28c969d962}{after}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ before\_sleep=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(before\_sleep,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a503f0c086b740ca0120b11d5efcae0d7}{before\_sleep}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ reraise=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(reraise,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ad22085908b45bf54e1e531249eeb60f4}{reraise}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ retry\_error\_cls=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(retry\_error\_cls,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a279b1e41e186a6e8d2a0110a99a60061}{retry\_error\_cls}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ retry\_error\_callback=\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_aa4850d1dd7a37e06f5960f1ba8f0fcd4}{\_first\_set}}(retry\_error\_callback,\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ae107a6a1f2027e41dac4b7e5e60399cd}{retry\_error\_callback}}),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00242}00242\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00244}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aea815b0c6c23fc48a11ee0404b782c7a}{00244}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}<\{self.\_\_class\_\_.\_\_name\_\_\}\ object\ at\ 0x\{id(self):x\}\ ("{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}stop=\{self.stop\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}wait=\{self.wait\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}sleep=\{self.sleep\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}retry=\{self.retry\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}before=\{self.before\},\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}after=\{self.after\})>"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00253}00253\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00255}00255\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00256}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{00256}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}(self)\ -\/>\ t.Dict[str,\ t.Any]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ a\ dictionary\ of\ runtime\ statistics.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00258}00258\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00259}00259\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ dictionary\ will\ be\ empty\ when\ the\ controller\ has\ never\ been}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00260}00260\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ran.\ When\ it\ is\ running\ or\ has\ ran\ previously\ it\ should\ have\ (but}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00261}00261\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ may\ not)\ have\ useful\ and/or\ informational\ keys\ and\ values\ when}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00262}00262\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ running\ is\ underway\ and/or\ completed.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00263}00263\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00264}00264\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ warning::\ The\ keys\ in\ this\ dictionary\ **should**\ be\ some\ what}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00265}00265\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stable\ (not\ changing),\ but\ there\ existence\ **may**}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00266}00266\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ change\ between\ major\ releases\ as\ new\ statistics\ are}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00267}00267\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gathered\ or\ removed\ so\ before\ accessing\ keys\ ensure\ that}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00268}00268\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ they\ actually\ exist\ and\ handle\ when\ they\ do\ not.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00269}00269\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00270}00270\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ ..\ note::\ The\ values\ in\ this\ dictionary\ are\ local\ to\ the\ thread}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00271}00271\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ running\ call\ (so\ if\ multiple\ threads\ share\ the\ same\ retrying}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00272}00272\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ object\ -\/\ either\ directly\ or\ indirectly)\ they\ will\ each\ have}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00273}00273\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ there\ own\ view\ of\ statistics\ they\ have\ collected\ (in\ the}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00274}00274\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ future\ we\ may\ provide\ a\ way\ to\ aggregate\ the\ various}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00275}00275\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ statistics\ from\ each\ thread).}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00276}00276\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a596b51ace6f87e124d37b5db1f9a24e8}{\_local}}.statistics\ \ \textcolor{comment}{\#\ type:\ ignore[no-\/any-\/return]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ AttributeError:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a596b51ace6f87e124d37b5db1f9a24e8}{\_local}}.statistics\ =\ t.cast(t.Dict[str,\ t.Any],\ \{\})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a596b51ace6f87e124d37b5db1f9a24e8}{\_local}}.statistics}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00283}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a0cab5b08537d87a8acf2b229f5236bdf}{00283}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a0cab5b08537d87a8acf2b229f5236bdf}{wraps}}(self,\ f:\ WrappedFn)\ -\/>\ WrappedFn:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wrap\ a\ function\ for\ retrying.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00285}00285\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00286}00286\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ :param\ f:\ A\ function\ to\ wraps\ for\ retrying.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00287}00287\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{preprocessor}{@functools.wraps(f)}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }wrapped\_f(*args:\ t.Any,\ **kw:\ t.Any)\ -\/>\ t.Any:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self(f,\ *args,\ **kw)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }retry\_with(*args:\ t.Any,\ **kwargs:\ t.Any)\ -\/>\ WrappedFn:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a47ebc4286b5e27c8c73311c050f78f15}{copy}}(*args,\ **kwargs).\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a0cab5b08537d87a8acf2b229f5236bdf}{wraps}}(f)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00296}00296\ \ \ \ \ \ \ \ \ wrapped\_f.retry\ =\ self\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00297}00297\ \ \ \ \ \ \ \ \ wrapped\_f.retry\_with\ =\ retry\_with\ \ \textcolor{comment}{\#\ type:\ ignore[attr-\/defined]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ wrapped\_f\ \ \textcolor{comment}{\#\ type:\ ignore[return-\/value]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00301}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{00301}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{begin}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00302}00302\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}.\mbox{\hyperlink{prime__search_8m_aebfdce4f6cc7241ba38924f77a12e7cf}{clear}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00303}00303\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}start\_time"{}}]\ =\ time.monotonic()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00304}00304\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}attempt\_number"{}}]\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00305}00305\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}idle\_for"{}}]\ =\ 0}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00307}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{00307}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{iter}}(self,\ retry\_state:\ \textcolor{stringliteral}{"{}RetryCallState"{}})\ -\/>\ t.Union[DoAttempt,\ DoSleep,\ t.Any]:\ \ \textcolor{comment}{\#\ noqa}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00308}00308\ \ \ \ \ \ \ \ \ fut\ =\ retry\_state.outcome}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ fut\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af1e6ee5fdf02d1c9683d942a09904647}{before}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af1e6ee5fdf02d1c9683d942a09904647}{before}}(retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_attempt}{DoAttempt}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00314}00314\ \ \ \ \ \ \ \ \ is\_explicit\_retry\ =\ fut.failed\ \textcolor{keywordflow}{and}\ isinstance(fut.exception(),\ TryAgain)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ (is\_explicit\_retry\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_af6ce9532eff4ab447fa4598622e1c4f2}{retry}}(retry\_state)):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fut.result()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00318}00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a364ef5075b72dd3e5a405a28c969d962}{after}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a364ef5075b72dd3e5a405a28c969d962}{after}}(retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00321}00321\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}delay\_since\_first\_attempt"{}}]\ =\ retry\_state.seconds\_since\_start}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a2d6abedce0377a7a23305ce566382d23}{stop}}(retry\_state):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ae107a6a1f2027e41dac4b7e5e60399cd}{retry\_error\_callback}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ae107a6a1f2027e41dac4b7e5e60399cd}{retry\_error\_callback}}(retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ retry\_exc\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a279b1e41e186a6e8d2a0110a99a60061}{retry\_error\_cls}}(fut)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_ad22085908b45bf54e1e531249eeb60f4}{reraise}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ retry\_exc.reraise()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ retry\_exc\ \textcolor{keyword}{from}\ fut.exception()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aec035d60ec8593d0a233af1c0456e57c}{wait}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ sleep\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aec035d60ec8593d0a233af1c0456e57c}{wait}}(retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ sleep\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00334}00334\ \ \ \ \ \ \ \ \ retry\_state.next\_action\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_action}{RetryAction}}(sleep)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00335}00335\ \ \ \ \ \ \ \ \ retry\_state.idle\_for\ +=\ sleep}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00336}00336\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}idle\_for"{}}]\ +=\ sleep}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00337}00337\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a373225b6a627f1c3d3f649dcbc3f2141}{statistics}}[\textcolor{stringliteral}{"{}attempt\_number"{}}]\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a503f0c086b740ca0120b11d5efcae0d7}{before\_sleep}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a503f0c086b740ca0120b11d5efcae0d7}{before\_sleep}}(retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_do_sleep}{DoSleep}}(sleep)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00344}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aad8559cb4a15109a2b8be689838d6918}{00344}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aad8559cb4a15109a2b8be689838d6918}{\_\_iter\_\_}}(self)\ -\/>\ t.Generator[AttemptManager,\ None,\ None]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00345}00345\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{begin}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00347}00347\ \ \ \ \ \ \ \ \ retry\_state\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{RetryCallState}}(self,\ fn=\textcolor{keywordtype}{None},\ args=(),\ kwargs=\{\})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ do\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{iter}}(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(do,\ DoAttempt):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_attempt_manager}{AttemptManager}}(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(do,\ DoSleep):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.prepare\_for\_next\_attempt()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}(do)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00358}00358\ \ \ \ \ \textcolor{preprocessor}{@abstractmethod}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00359}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aa20ac3fd575822f006cdd3cb3b73d769}{00359}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_aa20ac3fd575822f006cdd3cb3b73d769}{\_\_call\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00360}00360\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00361}00361\ \ \ \ \ \ \ \ \ fn:\ t.Callable[...,\ WrappedFnReturnT],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00362}00362\ \ \ \ \ \ \ \ \ *args:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00363}00363\ \ \ \ \ \ \ \ \ **kwargs:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00364}00364\ \ \ \ \ )\ -\/>\ WrappedFnReturnT:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00368}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retrying}{00368}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retrying}{Retrying}}(\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying}{BaseRetrying}}):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00369}00369\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Retrying\ controller."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00371}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retrying_aa20ac3fd575822f006cdd3cb3b73d769}{00371}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retrying_aa20ac3fd575822f006cdd3cb3b73d769}{\_\_call\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00372}00372\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00373}00373\ \ \ \ \ \ \ \ \ fn:\ t.Callable[...,\ WrappedFnReturnT],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00374}00374\ \ \ \ \ \ \ \ \ *args:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00375}00375\ \ \ \ \ \ \ \ \ **kwargs:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00376}00376\ \ \ \ \ )\ -\/>\ WrappedFnReturnT:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00377}00377\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a5bfd516cc44a7bbd626b3d601030b7}{begin}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00379}00379\ \ \ \ \ \ \ \ \ retry\_state\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{RetryCallState}}(retry\_object=self,\ fn=fn,\ args=args,\ kwargs=kwargs)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ do\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a3a60c52727e5b9e3b47452cb89817c80}{iter}}(retry\_state=retry\_state)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(do,\ DoAttempt):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ fn(*args,\ **kwargs)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ BaseException:\ \ \textcolor{comment}{\#\ noqa:\ B902}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.set\_exception(sys.exc\_info())\ \ \textcolor{comment}{\#\ type:\ ignore[arg-\/type]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.set\_result(result)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ isinstance(do,\ DoSleep):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ retry\_state.prepare\_for\_next\_attempt()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_base_retrying_a64ec70591e393276b5f75643496fcc97}{sleep}}(do)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ do\ \ \textcolor{comment}{\#\ type:\ ignore[no-\/any-\/return]}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00396}00396\ \textcolor{keywordflow}{if}\ sys.version\_info[1]\ >=\ 9:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00397}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_af52bb663a31df731ae4694f7c994e83d}{00397}}\ \ \ \ \ FutureGenericT\ =\ futures.Future[t.Any]}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00398}00398\ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00399}00399\ \ \ \ \ FutureGenericT\ =\ futures.Future}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00402}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future}{00402}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future}{Future}}(FutureGenericT):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00403}00403\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Encapsulates\ a\ (future\ or\ past)\ attempted\ call\ to\ a\ target\ function."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00405}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_abe7584d99565c5aba4ac399669534eed}{00405}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_abe7584d99565c5aba4ac399669534eed}{\_\_init\_\_}}(self,\ attempt\_number:\ int)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00406}00406\ \ \ \ \ \ \ \ \ super().\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_abe7584d99565c5aba4ac399669534eed}{\_\_init\_\_}}()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00407}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a8d4100c2e5373338a689c88949bb8be9}{00407}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a8d4100c2e5373338a689c88949bb8be9}{attempt\_number}}\ =\ attempt\_number}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00409}00409\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00410}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a4d90ca0c72d9d2ebd59b111230c51276}{00410}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a4d90ca0c72d9d2ebd59b111230c51276}{failed}}(self)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ whether\ a\ exception\ is\ being\ held\ in\ this\ future."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.exception()\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00413}00413\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00414}00414\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00415}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a45363bc152962482f4b55480ae9195c7}{00415}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future_a45363bc152962482f4b55480ae9195c7}{construct}}(cls,\ attempt\_number:\ int,\ value:\ t.Any,\ has\_exception:\ bool)\ -\/>\ \textcolor{stringliteral}{"{}Future"{}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Construct\ a\ new\ Future\ object."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00417}00417\ \ \ \ \ \ \ \ \ fut\ =\ cls(attempt\_number)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ has\_exception:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ fut.set\_exception(value)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ fut.set\_result(value)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fut}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00423}00423\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00425}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{00425}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state}{RetryCallState}}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00426}00426\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}State\ related\ to\ a\ single\ call\ wrapped\ with\ Retrying."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00428}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a5ddb4fb3948585da2e885934fbb9df31}{00428}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a5ddb4fb3948585da2e885934fbb9df31}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00429}00429\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00430}00430\ \ \ \ \ \ \ \ \ retry\_object:\ BaseRetrying,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00431}00431\ \ \ \ \ \ \ \ \ fn:\ t.Optional[WrappedFn],}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00432}00432\ \ \ \ \ \ \ \ \ args:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00433}00433\ \ \ \ \ \ \ \ \ kwargs:\ t.Any,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00434}00434\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Retry\ call\ start\ timestamp}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00436}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a2530c3908f0179486a4c2255f792e27a}{00436}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a2530c3908f0179486a4c2255f792e27a}{start\_time}}\ =\ time.monotonic()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Retry\ manager\ object}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00438}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a242e55bba16483e77b44308e885dd3c4}{00438}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a242e55bba16483e77b44308e885dd3c4}{retry\_object}}\ =\ retry\_object}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Function\ wrapped\ by\ this\ retry\ call}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00440}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a0974a961e36e76b4285a848c7e490beb}{00440}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a0974a961e36e76b4285a848c7e490beb}{fn}}\ =\ fn}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Arguments\ of\ the\ function\ wrapped\ by\ this\ retry\ call}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00442}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8187411843a6284ffb964ef3fb9fcab3}{00442}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8187411843a6284ffb964ef3fb9fcab3}{args}}\ =\ args}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Keyword\ arguments\ of\ the\ function\ wrapped\ by\ this\ retry\ call}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00444}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_aca174a4ca5cbfb3d1b2873c5e38f50aa}{00444}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_aca174a4ca5cbfb3d1b2873c5e38f50aa}{kwargs}}\ =\ kwargs}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ The\ number\ of\ the\ current\ attempt}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00447}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8a56f5fae650b8c5bc875e9a11b8e5e9}{00447}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8a56f5fae650b8c5bc875e9a11b8e5e9}{attempt\_number}}:\ int\ =\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Last\ outcome\ (result\ or\ exception)\ produced\ by\ the\ function}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00449}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{00449}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}}:\ t.Optional[Future]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Timestamp\ of\ the\ last\ outcome}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00451}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{00451}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}:\ t.Optional[float]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Time\ spent\ sleeping\ in\ retries}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00453}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_ad17340e85c66ce2f30c06c6b0a454cd1}{00453}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_ad17340e85c66ce2f30c06c6b0a454cd1}{idle\_for}}:\ float\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#:\ Next\ action\ as\ decided\ by\ the\ retry\ manager}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00455}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a842d28e134e67d5692f50f8c959604b7}{00455}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a842d28e134e67d5692f50f8c959604b7}{next\_action}}:\ t.Optional[RetryAction]\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00457}00457\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00458}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a641cd9924f0a8764a46111c1c9246027}{00458}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a641cd9924f0a8764a46111c1c9246027}{seconds\_since\_start}}(self)\ -\/>\ t.Optional[float]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}\ -\/\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a2530c3908f0179486a4c2255f792e27a}{start\_time}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00463}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adc374f26208d39bc4d3e564347ff3027}{00463}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adc374f26208d39bc4d3e564347ff3027}{prepare\_for\_next\_attempt}}(self)\ -\/>\ None:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00464}00464\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00465}00465\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00466}00466\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8a56f5fae650b8c5bc875e9a11b8e5e9}{attempt\_number}}\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00467}00467\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a842d28e134e67d5692f50f8c959604b7}{next\_action}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00469}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_ac5b54d386e9526e5aa1d479d9fe9ee36}{00469}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_ac5b54d386e9526e5aa1d479d9fe9ee36}{set\_result}}(self,\ val:\ t.Any)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00470}00470\ \ \ \ \ \ \ \ \ ts\ =\ time.monotonic()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00471}00471\ \ \ \ \ \ \ \ \ fut\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future}{Future}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8a56f5fae650b8c5bc875e9a11b8e5e9}{attempt\_number}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00472}00472\ \ \ \ \ \ \ \ \ fut.set\_result(val)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00473}00473\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}\ =\ fut,\ ts}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00475}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8ac677b5304a4cac788f445f96f6cf1c}{00475}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8ac677b5304a4cac788f445f96f6cf1c}{set\_exception}}(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00476}00476\ \ \ \ \ \ \ \ \ self,\ exc\_info:\ t.Tuple[t.Type[BaseException],\ BaseException,\ \textcolor{stringliteral}{"{}types.TracebackType|\ None"{}}]}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00477}00477\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00478}00478\ \ \ \ \ \ \ \ \ ts\ =\ time.monotonic()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00479}00479\ \ \ \ \ \ \ \ \ fut\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_future}{Future}}(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_a8a56f5fae650b8c5bc875e9a11b8e5e9}{attempt\_number}})}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00480}00480\ \ \ \ \ \ \ \ \ fut.set\_exception(exc\_info[1])}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00481}00481\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}},\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_adad375dee96ef59098550f0dfe186232}{outcome\_timestamp}}\ =\ fut,\ ts}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00483}\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_aea815b0c6c23fc48a11ee0404b782c7a}{00483}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_aea815b0c6c23fc48a11ee0404b782c7a}{\_\_repr\_\_}}(self)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ \textcolor{stringliteral}{"{}none\ yet"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}}.failed:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ exception\ =\ self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_af47997198e7e7301a1cd8602c7f02acd}{outcome}}.exception()}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ f\textcolor{stringliteral}{"{}failed\ (\{exception.\_\_class\_\_.\_\_name\_\_\}\ \{exception\})"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ f\textcolor{stringliteral}{"{}returned\ \{self.outcome.result()\}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00492}00492\ \ \ \ \ \ \ \ \ slept\ =\ float(round(self.\mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retry_call_state_ad17340e85c66ce2f30c06c6b0a454cd1}{idle\_for}},\ 2))}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00493}00493\ \ \ \ \ \ \ \ \ clsname\ =\ self.\_\_class\_\_.\_\_name\_\_}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}<\{clsname\}\ \{id(self)\}:\ attempt\ \#\{self.attempt\_number\};\ slept\ for\ \{slept\};\ last\ result:\ \{result\}>"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00495}00495\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00497}00497\ \textcolor{preprocessor}{@t.overload}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00498}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a992fbab2f764b26f9fce31715b45d3b4}{00498}}\ \textcolor{keyword}{def\ }retry(func:\ WrappedFn)\ -\/>\ WrappedFn:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00499}00499\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00502}00502\ \textcolor{preprocessor}{@t.overload}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00503}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_a965c55aa21271253332018ded6a35a2a}{00503}}\ \textcolor{keyword}{def\ }retry(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00504}00504\ \ \ \ \ sleep:\ t.Callable[[t.Union[int,\ float]],\ \textcolor{keywordtype}{None}]\ =\ sleep,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00505}00505\ \ \ \ \ stop:\ \textcolor{stringliteral}{"{}StopBaseT"{}}\ =\ stop\_never,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00506}00506\ \ \ \ \ wait:\ \textcolor{stringliteral}{"{}WaitBaseT"{}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__none}{wait\_none}}(),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00507}00507\ \ \ \ \ retry:\ \textcolor{stringliteral}{"{}RetryBaseT"{}}\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__if__exception__type}{retry\_if\_exception\_type}}(),}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00508}00508\ \ \ \ \ before:\ t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]\ =\ before\_nothing,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00509}00509\ \ \ \ \ after:\ t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]\ =\ after\_nothing,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00510}00510\ \ \ \ \ before\_sleep:\ t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ \textcolor{keywordtype}{None}]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00511}00511\ \ \ \ \ reraise:\ bool\ =\ \textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00512}00512\ \ \ \ \ retry\_error\_cls:\ t.Type[\textcolor{stringliteral}{"{}RetryError"{}}]\ =\ RetryError,}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00513}00513\ \ \ \ \ retry\_error\_callback:\ t.Optional[t.Callable[[\textcolor{stringliteral}{"{}RetryCallState"{}}],\ t.Any]]\ =\ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00514}00514\ )\ -\/>\ t.Callable[[WrappedFn],\ WrappedFn]:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00515}00515\ \ \ \ \ ...}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00518}\mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_ade78d9ce31802fd5b59854b52e31e0e0}{00518}}\ \textcolor{keyword}{def\ }retry(*dargs:\ t.Any,\ **dkw:\ t.Any)\ -\/>\ t.Any:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00519}00519\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Wrap\ a\ function\ with\ a\ new\ \`{}Retrying\`{}\ object.}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00520}00520\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00521}00521\ \textcolor{stringliteral}{\ \ \ \ :param\ dargs:\ positional\ arguments\ passed\ to\ Retrying\ object}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00522}00522\ \textcolor{stringliteral}{\ \ \ \ :param\ dkw:\ keyword\ arguments\ passed\ to\ the\ Retrying\ object}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00523}00523\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00524}00524\ \ \ \ \ \textcolor{comment}{\#\ support\ both\ @retry\ and\ @retry()\ as\ valid\ syntax}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00525}00525\ \ \ \ \ \textcolor{keywordflow}{if}\ len(dargs)\ ==\ 1\ \textcolor{keywordflow}{and}\ callable(dargs[0]):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ retry()(dargs[0])}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00527}00527\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00529}00529\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }wrap(f:\ WrappedFn)\ -\/>\ WrappedFn:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(f,\ retry\_base):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ warnings.warn(}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}Got\ retry\_base\ instance\ (\{f.\_\_class\_\_.\_\_name\_\_\})\ as\ callable\ argument,\ "{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}this\ will\ probably\ hang\ indefinitely\ (did\ you\ mean\ retry=\{f.\_\_class\_\_.\_\_name\_\_\}(...)?)"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ r:\ \textcolor{stringliteral}{"{}BaseRetrying"{}}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ iscoroutinefunction(f):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1__asyncio_1_1_async_retrying}{AsyncRetrying}}(*dargs,\ **dkw)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ tornado\ \textcolor{keywordflow}{and}\ hasattr(tornado.gen,\ \textcolor{stringliteral}{"{}is\_coroutine\_function"{}})\ \textcolor{keywordflow}{and}\ tornado.gen.is\_coroutine\_function(f):}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1tornadoweb_1_1_tornado_retrying}{TornadoRetrying}}(*dargs,\ **dkw)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1tenacity_1_1_retrying}{Retrying}}(*dargs,\ **dkw)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00542}00542\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r.wraps(f)}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ wrap}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00546}00546\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00548}00548\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1__asyncio}{pip.\_vendor.tenacity.\_asyncio}}\ \textcolor{keyword}{import}\ AsyncRetrying\ \ \textcolor{comment}{\#\ noqa:E402,I100}}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00549}00549\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00550}00550\ \textcolor{keywordflow}{if}\ tornado:}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00551}00551\ \ \ \ \ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1tenacity_1_1tornadoweb}{pip.\_vendor.tenacity.tornadoweb}}\ \textcolor{keyword}{import}\ TornadoRetrying}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00554}00554\ \_\_all\_\_\ =\ [}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00555}00555\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_base"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00556}00556\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_all"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00557}00557\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_always"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00558}00558\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_any"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00559}00559\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_exception"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00560}00560\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_exception\_type"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00561}00561\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_exception\_cause\_type"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00562}00562\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_not\_exception\_type"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00563}00563\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_not\_result"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00564}00564\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_result"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00565}00565\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_never"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00566}00566\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_unless\_exception\_type"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00567}00567\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_exception\_message"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00568}00568\ \ \ \ \ \textcolor{stringliteral}{"{}retry\_if\_not\_exception\_message"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00569}00569\ \ \ \ \ \textcolor{stringliteral}{"{}sleep"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00570}00570\ \ \ \ \ \textcolor{stringliteral}{"{}sleep\_using\_event"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00571}00571\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_after\_attempt"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00572}00572\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_after\_delay"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00573}00573\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_all"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00574}00574\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_any"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00575}00575\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_never"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00576}00576\ \ \ \ \ \textcolor{stringliteral}{"{}stop\_when\_event\_set"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00577}00577\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_chain"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00578}00578\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_combine"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00579}00579\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_exponential"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00580}00580\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_fixed"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00581}00581\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_incrementing"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00582}00582\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_none"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00583}00583\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_random"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00584}00584\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_random\_exponential"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00585}00585\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_full\_jitter"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00586}00586\ \ \ \ \ \textcolor{stringliteral}{"{}wait\_exponential\_jitter"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00587}00587\ \ \ \ \ \textcolor{stringliteral}{"{}before\_log"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00588}00588\ \ \ \ \ \textcolor{stringliteral}{"{}before\_nothing"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00589}00589\ \ \ \ \ \textcolor{stringliteral}{"{}after\_log"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00590}00590\ \ \ \ \ \textcolor{stringliteral}{"{}after\_nothing"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00591}00591\ \ \ \ \ \textcolor{stringliteral}{"{}before\_sleep\_log"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00592}00592\ \ \ \ \ \textcolor{stringliteral}{"{}before\_sleep\_nothing"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00593}00593\ \ \ \ \ \textcolor{stringliteral}{"{}retry"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00594}00594\ \ \ \ \ \textcolor{stringliteral}{"{}WrappedFn"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00595}00595\ \ \ \ \ \textcolor{stringliteral}{"{}TryAgain"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00596}00596\ \ \ \ \ \textcolor{stringliteral}{"{}NO\_RESULT"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00597}00597\ \ \ \ \ \textcolor{stringliteral}{"{}DoAttempt"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00598}00598\ \ \ \ \ \textcolor{stringliteral}{"{}DoSleep"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00599}00599\ \ \ \ \ \textcolor{stringliteral}{"{}BaseAction"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00600}00600\ \ \ \ \ \textcolor{stringliteral}{"{}RetryAction"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00601}00601\ \ \ \ \ \textcolor{stringliteral}{"{}RetryError"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00602}00602\ \ \ \ \ \textcolor{stringliteral}{"{}AttemptManager"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00603}00603\ \ \ \ \ \textcolor{stringliteral}{"{}BaseRetrying"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00604}00604\ \ \ \ \ \textcolor{stringliteral}{"{}Retrying"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00605}00605\ \ \ \ \ \textcolor{stringliteral}{"{}Future"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00606}00606\ \ \ \ \ \textcolor{stringliteral}{"{}RetryCallState"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00607}00607\ \ \ \ \ \textcolor{stringliteral}{"{}AsyncRetrying"{}},}
+\DoxyCodeLine{\Hypertarget{__vendor_2tenacity_2____init_____8py_source_l00608}00608\ ]}
+
+\end{DoxyCode}

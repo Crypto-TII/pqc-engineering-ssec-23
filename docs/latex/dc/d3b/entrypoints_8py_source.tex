@@ -1,0 +1,90 @@
+\doxysection{entrypoints.\+py}
+\hypertarget{entrypoints_8py_source}{}\label{entrypoints_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/entrypoints.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/utils/entrypoints.py}}
+\mbox{\hyperlink{entrypoints_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints}{00001}}\ \textcolor{keyword}{import}\ itertools}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00003}00003\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00004}00004\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00005}00005\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ List,\ Optional}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00007}00007\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1cli_1_1main}{pip.\_internal.cli.main}}\ \textcolor{keyword}{import}\ main}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00008}00008\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1compat}{pip.\_internal.utils.compat}}\ \textcolor{keyword}{import}\ WINDOWS}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00010}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_a81c278b1bbb43e1c0c34af7ed0b2988e}{00010}}\ \_EXECUTABLE\_NAMES\ =\ [}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00011}00011\ \ \ \ \ \textcolor{stringliteral}{"{}pip"{}},}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00012}00012\ \ \ \ \ f\textcolor{stringliteral}{"{}pip\{sys.version\_info.major\}"{}},}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00013}00013\ \ \ \ \ f\textcolor{stringliteral}{"{}pip\{sys.version\_info.major\}.\{sys.version\_info.minor\}"{}},}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00014}00014\ ]}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00015}00015\ \textcolor{keywordflow}{if}\ WINDOWS:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00016}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_afb4aa08ef1d9361f546abcc016393733}{00016}}\ \ \ \ \ \_allowed\_extensions\ =\ \{\textcolor{stringliteral}{"{}"{}},\ \textcolor{stringliteral}{"{}.exe"{}}\}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00017}00017\ \ \ \ \ \_EXECUTABLE\_NAMES\ =\ [}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00018}00018\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}}.join(parts)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ parts\ \textcolor{keywordflow}{in}\ itertools.product(\_EXECUTABLE\_NAMES,\ \_allowed\_extensions)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00020}00020\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00023}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_a7ec9888390781ad58ef8d79ad60ca548}{00023}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_a7ec9888390781ad58ef8d79ad60ca548}{\_wrapper}}(args:\ Optional[List[str]]\ =\ \textcolor{keywordtype}{None})\ -\/>\ int:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Central\ wrapper\ for\ all\ old\ entrypoints.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ Historically\ pip\ has\ had\ several\ entrypoints\ defined.\ Because\ of\ issues}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ \ \ arising\ from\ PATH,\ sys.path,\ multiple\ Pythons,\ their\ interactions,\ and\ most}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ of\ them\ having\ a\ pip\ installed,\ users\ suffer\ every\ time\ an\ entrypoint\ gets}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ moved.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00030}00030\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ To\ alleviate\ this\ pain,\ and\ provide\ a\ mechanism\ for\ warning\ users\ and}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ directing\ them\ to\ an\ appropriate\ place\ for\ help,\ we\ now\ define\ all\ of}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ our\ old\ entrypoints\ as\ wrappers\ for\ the\ current\ one.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00035}00035\ \ \ \ \ sys.stderr.write(}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}WARNING:\ pip\ is\ being\ invoked\ by\ an\ old\ script\ wrapper.\ This\ will\ "{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}fail\ in\ a\ future\ version\ of\ pip.\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Please\ see\ https://github.com/pypa/pip/issues/5599\ for\ advice\ on\ "{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}fixing\ the\ underlying\ issue.\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}To\ avoid\ this\ problem\ you\ can\ invoke\ Python\ with\ '-\/m\ pip'\ instead\ of\ "{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}running\ pip\ directly.\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00042}00042\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{return}\ main(args)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00046}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_ab8059ec189186f35a1f957a956e6ff68}{00046}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_ab8059ec189186f35a1f957a956e6ff68}{get\_best\_invocation\_for\_this\_pip}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00047}00047\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ figure\ out\ the\ best\ way\ to\ invoke\ pip\ in\ the\ current\ environment."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00048}00048\ \ \ \ \ binary\_directory\ =\ \textcolor{stringliteral}{"{}Scripts"{}}\ \textcolor{keywordflow}{if}\ WINDOWS\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}bin"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00049}00049\ \ \ \ \ binary\_prefix\ =\ os.path.join(sys.prefix,\ binary\_directory)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00051}00051\ \ \ \ \ \textcolor{comment}{\#\ Try\ to\ use\ pip[X[.Y]]\ names,\ if\ those\ executables\ for\ this\ environment\ are}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00052}00052\ \ \ \ \ \textcolor{comment}{\#\ the\ first\ on\ PATH\ with\ that\ name.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00053}00053\ \ \ \ \ path\_parts\ =\ os.path.normcase(os.environ.get(\textcolor{stringliteral}{"{}PATH"{}},\ \textcolor{stringliteral}{"{}"{}})).split(os.pathsep)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00054}00054\ \ \ \ \ exe\_are\_in\_PATH\ =\ os.path.normcase(binary\_prefix)\ \textcolor{keywordflow}{in}\ path\_parts}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ exe\_are\_in\_PATH:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ exe\_name\ \textcolor{keywordflow}{in}\ \_EXECUTABLE\_NAMES:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ found\_executable\ =\ shutil.which(exe\_name)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ binary\_executable\ =\ os.path.join(binary\_prefix,\ exe\_name)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\_executable}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ os.path.exists(binary\_executable)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ os.path.samefile(}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\_executable,}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ binary\_executable,}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exe\_name}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00069}00069\ \ \ \ \ \textcolor{comment}{\#\ Use\ the\ \`{}-\/m`\ invocation,\ if\ there's\ no\ "{}nice"{}\ invocation.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{get\_best\_invocation\_for\_this\_python()\}\ -\/m\ pip"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00073}\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_ad4a52f6fb64e096f71819dc6a281747e}{00073}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1entrypoints_ad4a52f6fb64e096f71819dc6a281747e}{get\_best\_invocation\_for\_this\_python}}()\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00074}00074\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ figure\ out\ the\ best\ way\ to\ invoke\ the\ current\ Python."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00075}00075\ \ \ \ \ exe\ =\ sys.executable}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00076}00076\ \ \ \ \ exe\_name\ =\ os.path.basename(exe)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00078}00078\ \ \ \ \ \textcolor{comment}{\#\ Try\ to\ use\ the\ basename,\ if\ it's\ the\ first\ executable.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00079}00079\ \ \ \ \ found\_executable\ =\ shutil.which(exe\_name)}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{if}\ found\_executable\ \textcolor{keywordflow}{and}\ os.path.samefile(found\_executable,\ exe):}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exe\_name}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ Use\ the\ full\ executable\ name,\ because\ we\ couldn't\ find\ something\ simpler.}}
+\DoxyCodeLine{\Hypertarget{entrypoints_8py_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{return}\ exe}
+
+\end{DoxyCode}

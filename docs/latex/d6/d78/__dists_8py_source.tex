@@ -1,0 +1,230 @@
+\doxysection{\+\_\+dists.\+py}
+\hypertarget{__dists_8py_source}{}\label{__dists_8py_source}\index{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/metadata/importlib/\_dists.py@{E:/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.12/site-\/packages/pip/\_internal/metadata/importlib/\_dists.py}}
+\mbox{\hyperlink{__dists_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00001}\mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1importlib_1_1__dists}{00001}}\ \textcolor{keyword}{import}\ email.message}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00002}00002\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespaceimportlib_1_1metadata}{importlib.metadata}}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00003}00003\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00004}00004\ \textcolor{keyword}{import}\ pathlib}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00005}00005\ \textcolor{keyword}{import}\ zipfile}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00006}00006\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00007}00007\ \ \ \ \ Collection,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00008}00008\ \ \ \ \ Dict,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00009}00009\ \ \ \ \ Iterable,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00010}00010\ \ \ \ \ Iterator,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00011}00011\ \ \ \ \ Mapping,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00012}00012\ \ \ \ \ Optional,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00013}00013\ \ \ \ \ Sequence,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00014}00014\ \ \ \ \ cast,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00015}00015\ )}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00017}00017\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1requirements}{pip.\_vendor.packaging.requirements}}\ \textcolor{keyword}{import}\ Requirement}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00018}00018\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1utils}{pip.\_vendor.packaging.utils}}\ \textcolor{keyword}{import}\ NormalizedName,\ canonicalize\_name}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00019}00019\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__vendor_1_1packaging_1_1version}{pip.\_vendor.packaging.version}}\ \textcolor{keyword}{import}\ parse\ \textcolor{keyword}{as}\ parse\_version}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00021}00021\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1exceptions}{pip.\_internal.exceptions}}\ \textcolor{keyword}{import}\ InvalidWheel,\ UnsupportedWheel}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00022}00022\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1metadata_1_1base}{pip.\_internal.metadata.base}}\ \textcolor{keyword}{import}\ (}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00023}00023\ \ \ \ \ BaseDistribution,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00024}00024\ \ \ \ \ BaseEntryPoint,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00025}00025\ \ \ \ \ DistributionVersion,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00026}00026\ \ \ \ \ InfoPath,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00027}00027\ \ \ \ \ Wheel,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00028}00028\ )}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00029}00029\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1misc}{pip.\_internal.utils.misc}}\ \textcolor{keyword}{import}\ normalize\_path}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00030}00030\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1packaging}{pip.\_internal.utils.packaging}}\ \textcolor{keyword}{import}\ safe\_extra}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00031}00031\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1temp__dir}{pip.\_internal.utils.temp\_dir}}\ \textcolor{keyword}{import}\ TempDirectory}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00032}00032\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacepip_1_1__internal_1_1utils_1_1wheel}{pip.\_internal.utils.wheel}}\ \textcolor{keyword}{import}\ parse\_wheel,\ read\_wheel\_metadata\_file}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00034}00034\ \textcolor{keyword}{from}\ .\_compat\ \textcolor{keyword}{import}\ BasePath,\ get\_dist\_name}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00037}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution}{00037}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution}{WheelDistribution}}(importlib.metadata.Distribution):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00038}00038\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}An\ \`{}\`{}importlib.metadata.Distribution\`{}\`{}\ read\ from\ a\ wheel.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ Although\ \`{}\`{}importlib.metadata.PathDistribution\`{}\`{}\ accepts\ \`{}\`{}zipfile.Path\`{}\`{},}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ its\ implementation\ is\ too\ "{}lazy"{}\ for\ pip's\ needs\ (we\ can't\ keep\ the\ ZipFile}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ handle\ open\ for\ the\ entire\ lifetime\ of\ the\ distribution\ object).}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00043}00043\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ This\ implementation\ eagerly\ reads\ the\ entire\ metadata\ directory\ into\ the}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ memory\ instead,\ and\ operates\ from\ that.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00048}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a16f04369bca46af5ea9173e347842928}{00048}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a16f04369bca46af5ea9173e347842928}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ files:\ Mapping[pathlib.PurePosixPath,\ bytes],}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ info\_location:\ pathlib.PurePosixPath,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00052}00052\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00053}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a78a24d44540228a4d70f96f6fd6486e9}{00053}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a78a24d44540228a4d70f96f6fd6486e9}{\_files}}\ =\ files}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00054}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a88bc1f78356f69e12dba448bf749a6f8}{00054}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a88bc1f78356f69e12dba448bf749a6f8}{info\_location}}\ =\ info\_location}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00056}00056\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00057}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_ac7dfdbab8d7c6ae0f26c369309032b87}{00057}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_ac7dfdbab8d7c6ae0f26c369309032b87}{from\_zipfile}}(}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ zf:\ zipfile.ZipFile,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ name:\ str,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ location:\ str,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00062}00062\ \ \ \ \ )\ -\/>\ \textcolor{stringliteral}{"{}WheelDistribution"{}}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ info\_dir,\ \_\ =\ parse\_wheel(zf,\ name)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ paths\ =\ (}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ (name,\ pathlib.PurePosixPath(name.split(\textcolor{stringliteral}{"{}/"{}},\ 1)[-\/1]))}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ name\ \textcolor{keywordflow}{in}\ zf.namelist()}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ name.startswith(f\textcolor{stringliteral}{"{}\{info\_dir\}/"{}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ files\ =\ \{}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ relpath:\ read\_wheel\_metadata\_file(zf,\ fullpath)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ fullpath,\ relpath\ \textcolor{keywordflow}{in}\ paths}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ info\_location\ =\ pathlib.PurePosixPath(location,\ info\_dir)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(files,\ info\_location)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00076}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a4a2d0aad2f4c46b261234aaa71e6d35c}{00076}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a4a2d0aad2f4c46b261234aaa71e6d35c}{iterdir}}(self,\ path:\ InfoPath)\ -\/>\ Iterator[pathlib.PurePosixPath]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Only\ allow\ iterating\ through\ the\ metadata\ directory.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pathlib.PurePosixPath(str(path))\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a78a24d44540228a4d70f96f6fd6486e9}{\_files}}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ iter(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a78a24d44540228a4d70f96f6fd6486e9}{\_files}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ FileNotFoundError(path)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00082}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_aac08e5dda914fc3c40d43542d6d8e7f3}{00082}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_aac08e5dda914fc3c40d43542d6d8e7f3}{read\_text}}(self,\ filename:\ str)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ data\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a78a24d44540228a4d70f96f6fd6486e9}{\_files}}[pathlib.PurePosixPath(filename)]}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyError:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ text\ =\ data.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnicodeDecodeError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ wheel\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_wheel_distribution_a88bc1f78356f69e12dba448bf749a6f8}{info\_location}}.parent}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ error\ =\ f\textcolor{stringliteral}{"{}Error\ decoding\ metadata\ for\ \{wheel\}:\ \{e\}\ in\ \{filename\}\ file"{}}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_unsupported_wheel}{UnsupportedWheel}}(error)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ text}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00096}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution}{00096}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution}{Distribution}}(\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution}{BaseDistribution}}):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00097}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1e37ff56dfd7f4cf83c4599e7302eb76}{00097}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1e37ff56dfd7f4cf83c4599e7302eb76}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ dist:\ importlib.metadata.Distribution,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ info\_location:\ Optional[BasePath],}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ installed\_location:\ Optional[BasePath],}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00102}00102\ \ \ \ \ )\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00103}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{00103}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}\ =\ dist}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00104}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{00104}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}\ =\ info\_location}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00105}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a5f3304ff2d29548494c731b4f99d3c98}{00105}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a5f3304ff2d29548494c731b4f99d3c98}{\_installed\_location}}\ =\ installed\_location}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00107}00107\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00108}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a67ad4adcc8dda4587f7e53778db10c8e}{00108}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a67ad4adcc8dda4587f7e53778db10c8e}{from\_directory}}(cls,\ directory:\ str)\ -\/>\ BaseDistribution:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ info\_location\ =\ pathlib.Path(directory)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ dist\ =\ importlib.metadata.Distribution.at(info\_location)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(dist,\ info\_location,\ info\_location.parent)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00113}00113\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00114}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_acf1b501226ad58def96909d3edf930ce}{00114}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_acf1b501226ad58def96909d3edf930ce}{from\_metadata\_file\_contents}}(}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ cls,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ metadata\_contents:\ bytes,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ filename:\ str,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ project\_name:\ str,}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00119}00119\ \ \ \ \ )\ -\/>\ BaseDistribution:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Generate\ temp\ dir\ to\ contain\ the\ metadata\ file,\ and\ write\ the\ file\ contents.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ temp\_dir\ =\ pathlib.Path(}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classpip_1_1__internal_1_1utils_1_1temp__dir_1_1_temp_directory}{TempDirectory}}(kind=\textcolor{stringliteral}{"{}metadata"{}},\ globally\_managed=\textcolor{keyword}{True}).path}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ metadata\_path\ =\ temp\_dir\ /\ \textcolor{stringliteral}{"{}METADATA"{}}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ metadata\_path.write\_bytes(metadata\_contents)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Construct\ dist\ pointing\ to\ the\ newly\ created\ directory.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ dist\ =\ importlib.metadata.Distribution.at(metadata\_path.parent)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(dist,\ metadata\_path.parent,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00130}00130\ \ \ \ \ \textcolor{preprocessor}{@classmethod}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00131}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0654d6394ed410f3fa037cc305f96ec6}{00131}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0654d6394ed410f3fa037cc305f96ec6}{from\_wheel}}(cls,\ wheel:\ Wheel,\ name:\ str)\ -\/>\ BaseDistribution:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ wheel.as\_zipfile()\ \textcolor{keyword}{as}\ zf:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist\ =\ WheelDistribution.from\_zipfile(zf,\ name,\ wheel.location)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ zipfile.BadZipFile\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_invalid_wheel}{InvalidWheel}}(wheel.location,\ name)\ \textcolor{keyword}{from}\ e}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ UnsupportedWheel\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classpip_1_1__internal_1_1exceptions_1_1_unsupported_wheel}{UnsupportedWheel}}(f\textcolor{stringliteral}{"{}\{name\}\ has\ an\ invalid\ wheel,\ \{e\}"{}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cls(dist,\ dist.info\_location,\ pathlib.PurePosixPath(wheel.location))}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00141}00141\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00142}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a605a4687ecf34972ad1af2c051e48ba4}{00142}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a605a4687ecf34972ad1af2c051e48ba4}{location}}(self)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}.parent)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00147}00147\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00148}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a476f92fb62deb9b13bae22e9131868a7}{00148}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a476f92fb62deb9b13bae22e9131868a7}{info\_location}}(self)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00153}00153\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00154}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3f7bf0f3bd4a254a5ed514ef95336af7}{00154}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution_a7ffc99ff552b48303bed966bd85654a6}{installed\_location}}(self)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a5f3304ff2d29548494c731b4f99d3c98}{\_installed\_location}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ normalize\_path(str(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a5f3304ff2d29548494c731b4f99d3c98}{\_installed\_location}}))}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00159}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_aaddd59c9bc61b0226557e57f3c73b728}{00159}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_aaddd59c9bc61b0226557e57f3c73b728}{\_get\_dist\_name\_from\_location}}(self)\ -\/>\ Optional[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Try\ to\ get\ the\ name\ from\ the\ metadata\ directory\ name.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00161}00161\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00162}00162\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ This\ is\ much\ faster\ than\ reading\ metadata.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00163}00163\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ stem,\ suffix\ =\ os.path.splitext(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}.name)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ suffix\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}.dist-\/info"{}},\ \textcolor{stringliteral}{"{}.egg-\/info"{}}):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stem.split(\textcolor{stringliteral}{"{}-\/"{}},\ 1)[0]}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00171}00171\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00172}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_ac602c2b113ffb0986ac6fd8f089f0e2f}{00172}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution_af9cd5f758b9e2541b1ebf23598e55a3c}{canonical\_name}}(self)\ -\/>\ NormalizedName:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ name\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_aaddd59c9bc61b0226557e57f3c73b728}{\_get\_dist\_name\_from\_location}}()\ \textcolor{keywordflow}{or}\ get\_dist\_name(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}})}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ canonicalize\_name(name)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00176}00176\ \ \ \ \ \textcolor{preprocessor}{@property}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00177}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a4bfbf862db87b8be4b72c65d77717cbd}{00177}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a4bfbf862db87b8be4b72c65d77717cbd}{version}}(self)\ -\/>\ DistributionVersion:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parse\_version(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}.version)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00180}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_ac8bcd6a67a9d1d8caf404c8ffebeb712}{00180}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_ac8bcd6a67a9d1d8caf404c8ffebeb712}{is\_file}}(self,\ path:\ InfoPath)\ -\/>\ bool:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0810ec22f296abd24f6a497f9d8a566c}{read\_text}}(str(path))\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00183}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a7f421b00c750cb270c3e12765f8a7f46}{00183}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a7f421b00c750cb270c3e12765f8a7f46}{iter\_distutils\_script\_names}}(self)\ -\/>\ Iterator[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ distutils\ installation\ is\ always\ "{}flat"{}\ (not\ in\ e.g.\ egg\ form),\ so}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ this\ distribution's\ info\ location\ is\ NOT\ a\ pathlib.Path\ (but\ e.g.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ zipfile.Path),\ it\ can\ never\ contain\ any\ distutils\ scripts.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}},\ pathlib.Path):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ child\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3064cf8e5ea2324e3fe3f40bfcc91c76}{\_info\_location}}.joinpath(\textcolor{stringliteral}{"{}scripts"{}}).iterdir():}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ child.name}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00192}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0810ec22f296abd24f6a497f9d8a566c}{00192}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0810ec22f296abd24f6a497f9d8a566c}{read\_text}}(self,\ path:\ InfoPath)\ -\/>\ str:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ content\ =\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a0810ec22f296abd24f6a497f9d8a566c}{read\_text}}(str(path))}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ content\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ FileNotFoundError(path)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ content}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00198}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1d5c7e7a42ee88bb6249c29bfa58e5e4}{00198}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1d5c7e7a42ee88bb6249c29bfa58e5e4}{iter\_entry\_points}}(self)\ -\/>\ Iterable[BaseEntryPoint]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ importlib.metadata's\ EntryPoint\ structure\ sasitfies\ BaseEntryPoint.}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}.entry\_points}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00202}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1c1e473926686ecf4fb3f024a0f9f834}{00202}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a1c1e473926686ecf4fb3f024a0f9f834}{\_metadata\_impl}}(self)\ -\/>\ email.message.Message:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ From\ Python\ 3.10+,\ importlib.metadata\ declares\ PackageMetadata\ as\ the}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ return\ type.\ This\ protocol\ is\ unfortunately\ a\ disaster\ now\ and\ misses}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ ton\ of\ fields\ that\ we\ need,\ including\ get()\ and\ get\_payload().\ We}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ rely\ on\ the\ implementation\ that\ the\ object\ is\ actually\ a\ Message\ now,}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ until\ upstream\ can\ improve\ the\ protocol.\ (python/cpython\#94952)}}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cast(email.message.Message,\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a3b50e6635144259a3390843e0953e524}{\_dist}}.metadata)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00210}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_af5c45319cda1343fd1f3f5f8c6027452}{00210}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_af5c45319cda1343fd1f3f5f8c6027452}{iter\_provided\_extras}}(self)\ -\/>\ Iterable[str]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ safe\_extra(extra)\ \textcolor{keywordflow}{for}\ extra\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution_a9cfcb724bbf4bae5f97bc17cf58cf522}{metadata}}.get\_all(\textcolor{stringliteral}{"{}Provides-\/Extra"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00215}\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a13dfc7d317ca0b71bca0706e7db36afa}{00215}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1importlib_1_1__dists_1_1_distribution_a13dfc7d317ca0b71bca0706e7db36afa}{iter\_dependencies}}(self,\ extras:\ Collection[str]\ =\ ())\ -\/>\ Iterable[Requirement]:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ contexts:\ Sequence[Dict[str,\ str]]\ =\ [\{\textcolor{stringliteral}{"{}extra"{}}:\ safe\_extra(e)\}\ \textcolor{keywordflow}{for}\ e\ \textcolor{keywordflow}{in}\ extras]}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ req\_string\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classpip_1_1__internal_1_1metadata_1_1base_1_1_base_distribution_a9cfcb724bbf4bae5f97bc17cf58cf522}{metadata}}.get\_all(\textcolor{stringliteral}{"{}Requires-\/Dist"{}},\ []):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ req\ =\ \mbox{\hyperlink{classpip_1_1__vendor_1_1packaging_1_1requirements_1_1_requirement}{Requirement}}(req\_string)}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ req.marker:}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ req}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ extras\ \textcolor{keywordflow}{and}\ req.marker.evaluate(\{\textcolor{stringliteral}{"{}extra"{}}:\ \textcolor{stringliteral}{"{}"{}}\}):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ req}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ any(req.marker.evaluate(context)\ \textcolor{keywordflow}{for}\ context\ \textcolor{keywordflow}{in}\ contexts):}
+\DoxyCodeLine{\Hypertarget{__dists_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ req}
+
+\end{DoxyCode}
