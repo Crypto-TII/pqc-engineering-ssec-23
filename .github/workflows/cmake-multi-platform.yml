@@ -2,9 +2,9 @@ name: Build and testing multiple primes' targets.
 
 on:
   push:
-    branches: [ "devops-ci-tests" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "devops-ci-tests" ]
+    branches: [ "main" ]
 
 jobs:
   build-all:
@@ -756,28 +756,28 @@ jobs:
 
 
 
-#  test-p783:
-#    name: Test prime 783
-#    runs-on: self-hosted
-#    needs: build-all
-#    steps:
-#      - name: Downloading p783 artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: cmake-build-release
-#          path: ${{ steps.strings.outputs.build-output-dir }}
-#
-#      - name: Restoring execution permission
-#        working-directory: ${{ steps.strings.outputs.build-output-dir }}
-#        run: |
-#          cd tests
-#          chmod +x tests-ssec-p783
-#
-#      - name: Test
-#        working-directory: ${{ steps.strings.outputs.build-output-dir }}
-#        run: |
-#          cd tests
-#          ./tests-ssec-p783
+  test-p783:
+    name: Test prime 783
+    runs-on: self-hosted
+    needs: build-all
+    steps:
+      - name: Downloading p783 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-release
+          path: ${{ steps.strings.outputs.build-output-dir }}
+
+      - name: Restoring execution permission
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: |
+          cd tests
+          chmod +x tests-ssec-p783
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: |
+          cd tests
+          ./tests-ssec-p783
 
   benchmark-p783-cycles:
     name: Benchmark prime 783 (Cycles)
