@@ -2,9 +2,9 @@ name: Build and testing multiple primes' targets.
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "9-create-ci-pipeline-stage-that-can-generate-the-graphs-of-the-experiments" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "9-create-ci-pipeline-stage-that-can-generate-the-graphs-of-the-experiments" ]
 
 jobs:
   build-all:
@@ -44,6 +44,7 @@ jobs:
         run: |
           echo "build-ccode-dir-cycles=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
           echo "build-output-dir-cycles=${{ github.workspace }}/c-code/cmake-build-release-cycles-x8664" >> "$GITHUB_OUTPUT"
+          echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
 
       - name: Configuring CMake for all primes' libraries and tests targets
         run: |
@@ -824,10 +825,21 @@ jobs:
           benchmarks/benchmarks-ssec-p783
 
 
+  report-graph-03:
+    name: Report Figure 03 (Manuscript)
+    runs-on: self-hosted
+    needs: build-cycles
+    steps:
 
+      - name: Generating Figure 03
+        run: |
+          cd reproduce_results
+          cd manuscript_figure_03
+          chmod +x generate_figure_03.sh
+          ./generate_figure_03.sh
 
-
-
-
-
-
+      - name: Upload Generated Figure 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-figure-03
+          path: ${{ steps.strings.outputs.report-graph-03-output-dir }}
