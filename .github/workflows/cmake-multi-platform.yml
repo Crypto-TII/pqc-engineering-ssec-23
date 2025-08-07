@@ -829,11 +829,15 @@ jobs:
   report-graph-03:
     name: Report Figure 03 (Manuscript)
     runs-on: self-hosted
-    needs: build-cycles
     steps:
+      - uses: actions/checkout@v4
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
 
       - name: Generating Figure 03
-        working-directory: ${{ steps.strings.outputs.workspace-dir }}
         run: |
           cd reproduce_results
           cd manuscript_figure_03
