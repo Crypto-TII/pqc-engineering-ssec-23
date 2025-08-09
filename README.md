@@ -193,6 +193,7 @@ The related code to reproduce our results is shown in the tree below.
 ├───📁 high-level-scripts
 ├───📁 obtained_statistics_examples
 ├───📁 reproduce_results
+│   ├───📁 generated_figures               # <= AUTOMATICALLY GENERATED!
 │   ├───📁 manuscript_figure_03
 │   │   ├───📄 benchmark_graph_03.py
 │   │   └───📄 generate_figure_03.sh       # <= NEED TO EXECUTE
@@ -230,6 +231,14 @@ where the original Figure 3 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_03/figure_03_original.png)
 
+A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_03_output` folder. This folder will be automatically generated once the `generate_figure_03.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_03_output
+        └───📄 figure_03_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
+
 <a name="section_03_02"></a>
 ### 3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
 
@@ -251,6 +260,13 @@ where the original Figure 4 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_04/figure_04_original.png)
 
+A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_04_output` folder. This folder will be automatically generated once the `generate_figure_04.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_04_output
+        └───📄 figure_04_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
 
 <a name="section_03_03"></a>
 ### 3.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
@@ -283,6 +299,14 @@ where the original Figure 5 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_05/figure_05_original.png)
 
+Two PDF files are generated with the generated graphs and stored inside the `reproduced_results/generated_figures/figure_05_output` folder. This folder will be automatically generated once the `generate_figure_05.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                   # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_05_output
+        ├───📄 figure_05_01_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+        └───📄 figure_05_02_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
 
 <a name="section_04"></a>
 ## 4. Source-Code Technical Documentation: Doxygen
