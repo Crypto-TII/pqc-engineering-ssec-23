@@ -105,7 +105,7 @@ plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='3-iso
 plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
 plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
 plt.xticks([r + barWidth for r in range(len(IT))],
-           ['p254', 'p255', 'p381'])
+           ['p254', 'p255'])
 # plt.xticks([r + barWidth for r in range(len(IT))],
 #            ['p254', 'p255', 'p381', 'p383', 'p398', 'p511', 'p575', 'p592', 'p765', 'p783'])
 

@@ -7,32 +7,32 @@ on:
     branches: [ "9-create-ci-pipeline-stage-that-can-generate-the-graphs-of-the-experiments" ]
 
 jobs:
-  build-all:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set reusable strings
-        id: strings
-        shell: bash
-        run: |
-          echo "build-ccode-dir=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
-          echo "build-output-dir=${{ github.workspace }}/c-code/cmake-build-release" >> "$GITHUB_OUTPUT"
-
-      - name: Configuring CMake for all primes' libraries and tests targets
-        run: |
-          cd c-code
-          cmake -B cmake-build-release -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build all primes' libraries and tests targets
-        working-directory: ${{ steps.strings.outputs.build-output-dir }}
-        run: |
-          make
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmake-build-release
-          path: ${{ steps.strings.outputs.build-output-dir }}
+#  build-all:
+#    runs-on: self-hosted
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Set reusable strings
+#        id: strings
+#        shell: bash
+#        run: |
+#          echo "build-ccode-dir=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
+#          echo "build-output-dir=${{ github.workspace }}/c-code/cmake-build-release" >> "$GITHUB_OUTPUT"
+#
+#      - name: Configuring CMake for all primes' libraries and tests targets
+#        run: |
+#          cd c-code
+#          cmake -B cmake-build-release -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release
+#
+#      - name: Build all primes' libraries and tests targets
+#        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+#        run: |
+#          make
+#
+#      - name: Upload Build Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: cmake-build-release
+#          path: ${{ steps.strings.outputs.build-output-dir }}
 
   build-cycles:
     runs-on: self-hosted
@@ -263,6 +263,7 @@ jobs:
           benchmarks/benchmarks-ssec-p255 | tee benchmarks_ssec-p255-output.txt
 
       - name: Upload Artifact
+        working-directory: ${{ steps.strings.outputs.workspace-dir}}
         uses: actions/upload-artifact@v4
         with:
           name: cmake-build-p255
@@ -293,28 +294,28 @@ jobs:
 
   ############## P381 ################
 
-  test-p381-cycles:
-    name: Test prime 381 (Cycles)
-    runs-on: self-hosted
-    needs: build-cycles
-    steps:
-      - name: Downloading p381 CYCLES artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
-        run: |
-          cd tests
-          chmod +x tests-ssec-p381
-
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
-        run: |
-          cd tests
-          ./tests-ssec-p381
+#  test-p381-cycles:
+#    name: Test prime 381 (Cycles)
+#    runs-on: self-hosted
+#    needs: build-cycles
+#    steps:
+#      - name: Downloading p381 CYCLES artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-cycles-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#        run: |
+#          cd tests
+#          chmod +x tests-ssec-p381
+#
+#      - name: Test
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#        run: |
+#          cd tests
+#          ./tests-ssec-p381
 
 
 #  test-p381-nanoseconds:
@@ -340,40 +341,39 @@ jobs:
 #          cd tests
 #          ./tests-ssec-p381
 
-  benchmark-p381-cycles:
-    name: Benchmark prime 381 (Cycles)
-    runs-on: self-hosted
-    needs: test-p381-cycles
-    steps:
-      - name: Downloading p381 CYCLES artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
-        run: |
-          cd benchmarks
-          chmod +x benchmarks-ssec-p381
-
-      - name: Benchmarking (Cycles count)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
-        run: |
-          benchmarks/benchmarks-ssec-p381 | tee benchmarks_ssec-p381-output.txt
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmake-build-p381
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#  benchmark-p381-cycles:
+#    name: Benchmark prime 381 (Cycles)
+#    runs-on: self-hosted
+#    needs: test-p381-cycles
+#    steps:
+#      - name: Downloading p381 CYCLES artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-cycles-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#        run: |
+#          cd benchmarks
+#          chmod +x benchmarks-ssec-p381
+#
+#      - name: Benchmarking (Cycles count)
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
+#        run: |
+#          benchmarks/benchmarks-ssec-p381 | tee benchmarks_ssec-p381-output.txt
+#
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: cmake-build-p381
+#          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
   merge-graph-03-04:
     runs-on: self-hosted
     needs:
       - benchmark-p254-cycles
       - benchmark-p255-cycles
-      - benchmark-p381-cycles
     steps:
       - name: Merge Artifacts for Graph 03
         uses: actions/upload-artifact/merge@v4
