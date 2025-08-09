@@ -7,32 +7,6 @@ on:
     branches: [ "9-create-ci-pipeline-stage-that-can-generate-the-graphs-of-the-experiments" ]
 
 jobs:
-#  build-all:
-#    runs-on: self-hosted
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Set reusable strings
-#        id: strings
-#        shell: bash
-#        run: |
-#          echo "build-ccode-dir=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
-#          echo "build-output-dir=${{ github.workspace }}/c-code/cmake-build-release" >> "$GITHUB_OUTPUT"
-#
-#      - name: Configuring CMake for all primes' libraries and tests targets
-#        run: |
-#          cd c-code
-#          cmake -B cmake-build-release -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release
-#
-#      - name: Build all primes' libraries and tests targets
-#        working-directory: ${{ steps.strings.outputs.build-output-dir }}
-#        run: |
-#          make
-#
-#      - name: Upload Build Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cmake-build-release
-#          path: ${{ steps.strings.outputs.build-output-dir }}
 
   build-cycles:
     runs-on: self-hosted
@@ -71,29 +45,29 @@ jobs:
           name: reproduce-results-code
           path: ${{ steps.strings.outputs.reproduce-results-dir }}
 
-  report-graph-05:
-    name: Report Figure 05 (Manuscript)
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set reusable strings
-        id: strings
-        shell: bash
-        run: |
-          echo "report-graph-05-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_05_output" >> "$GITHUB_OUTPUT"
-
-      - name: Generating Figure 05
-        run: |
-          cd reproduce_results
-          cd manuscript_figure_05
-          chmod +x generate_figure_05.sh
-          ./generate_figure_05.sh
-
-      - name: Upload Generated Figure 05
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-figure-05
-          path: ${{ steps.strings.outputs.report-graph-05-output-dir }}
+#  report-graph-05:
+#    name: Report Figure 05 (Manuscript)
+#    runs-on: self-hosted
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Set reusable strings
+#        id: strings
+#        shell: bash
+#        run: |
+#          echo "report-graph-05-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_05_output" >> "$GITHUB_OUTPUT"
+#
+#      - name: Generating Figure 05
+#        run: |
+#          cd reproduce_results
+#          cd manuscript_figure_05
+#          chmod +x generate_figure_05.sh
+#          ./generate_figure_05.sh
+#
+#      - name: Upload Generated Figure 05
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: generated-figure-05
+#          path: ${{ steps.strings.outputs.report-graph-05-output-dir }}
 
 
 ############## P254 ################
@@ -586,7 +560,7 @@ jobs:
           name: benchmarks_ssec-p783-output
           path: benchmarks_ssec-p783-output.txt
 
-  merge-graph-03-04:
+  merge-graph:
     runs-on: self-hosted
     needs:
       - benchmark-p254-cycles
@@ -609,7 +583,7 @@ jobs:
   report-graph-03:
     name: Report Figure 03 (Manuscript)
     runs-on: self-hosted
-    needs: merge-graph-03-04
+    needs: merge-graph
     steps:
       - uses: actions/checkout@v4
 
@@ -647,7 +621,7 @@ jobs:
   report-graph-04:
     name: Report Figure 04 (Manuscript)
     runs-on: self-hosted
-    needs: merge-graph-03-04
+    needs: merge-graph
     steps:
       - uses: actions/checkout@v4
 
@@ -681,3 +655,30 @@ jobs:
         with:
           name: generated-figure-04
           path: ${{ steps.strings.outputs.report-graph-04-output-dir }}
+
+  report-graph-05:
+    name: Report Figure 05 (Manuscript)
+    runs-on: self-hosted
+    needs: merge-graph
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "report-graph-05-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_05_output" >> "$GITHUB_OUTPUT"
+
+      - name: Generating Figure 05 (a) and Figure 05 (b)
+        run: |
+          cp -r obtained_statistics_examples/figure_05_metadata/statistics_output/ reproduce_results/manuscript_figure_05
+          cd reproduce_results
+          mkdir -p generated_figures/figure_05_output
+          cd manuscript_figure_05
+          python3 benchmark_graph_05.py
+
+      - name: Upload Generated Figure 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-figure-05
+          path: ${{ steps.strings.outputs.report-graph-05-output-dir }}
