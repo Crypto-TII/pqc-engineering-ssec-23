@@ -28,13 +28,13 @@ for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-gra
 average_cglhash2.append(matching_values[0])
 average_cglhash3.append(matching_values[1])
 
-# 3. Check for p381
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p381-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
+# # 3. Check for p381
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p381-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
 
 # # 4. Check for p383
 # matching_values = []
