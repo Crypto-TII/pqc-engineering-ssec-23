@@ -387,37 +387,37 @@ jobs:
           name: cmake-build-release-cycles-x8664-graph-04
           pattern: cmake-build-p*
 
-    report-graph-03:
-      name: Report Figure 03 (Manuscript)
-      runs-on: self-hosted
-      needs: merge-graph-03-04
-      steps:
-        - uses: actions/checkout@v4
+  report-graph-03:
+    name: Report Figure 03 (Manuscript)
+    runs-on: self-hosted
+    needs: merge-graph-03-04
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Downloading graph 03 artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: cmake-build-release-cycles-x8664-graph-03
-            path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+      - name: Downloading graph 03 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-release-cycles-x8664-graph-03
+          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
-        - name: Set reusable strings
-          id: strings
-          shell: bash
-          run: |
-            echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
 
-        - name: Generating Figure 03
-          run: |
-            cd reproduce_results
-            mkdir -p generated_figures/figure_03_output
-            cd manuscript_figure_03
-            python3 benchmark_graph_03.py
+      - name: Generating Figure 03
+        run: |
+          cd reproduce_results
+          mkdir -p generated_figures/figure_03_output
+          cd manuscript_figure_03
+          python3 benchmark_graph_03.py
 
-        - name: Upload Generated Figure 03
-          uses: actions/upload-artifact@v4
-          with:
-            name: generated-figure-03
-            path: ${{ steps.strings.outputs.report-graph-03-output-dir }}
+      - name: Upload Generated Figure 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-figure-03
+          path: ${{ steps.strings.outputs.report-graph-03-output-dir }}
 
 
 #  benchmark-p381-nanoseconds:
