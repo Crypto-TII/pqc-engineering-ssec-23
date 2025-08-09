@@ -44,6 +44,7 @@ jobs:
         run: |
           echo "build-ccode-dir-cycles=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
           echo "build-output-dir-cycles=${{ github.workspace }}/c-code/cmake-build-release-cycles-x8664" >> "$GITHUB_OUTPUT"
+          echo "reproduce-results-dir=${{ github.workspace }}/reproduce_results" >> "$GITHUB_OUTPUT"
           echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
           echo "report-graph-04-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_04_output" >> "$GITHUB_OUTPUT"
           echo "workspace-dir=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
@@ -64,11 +65,17 @@ jobs:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
-      - name: Upload C-Code Artifact
+      - name: Upload Reproduce Results Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: c-code
-          path: ${{ steps.strings.outputs.build-ccode-dir-cycles }}
+          name: reproduce-results-code
+          path: ${{ steps.strings.outputs.reproduce-results-dir }}
+
+#      - name: Upload C-Code Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: c-code
+#          path: ${{ steps.strings.outputs.build-ccode-dir-cycles }}
 
 #  build-nanoseconds:
 #    runs-on: self-hosted
@@ -160,8 +167,8 @@ jobs:
       - name: Downloading p254 CYCLES artifact
         uses: actions/download-artifact@v4
         with:
-          name: c-code
-          path: ${{ steps.strings.outputs.build-ccode-dir-cycles }}
+          name: cmake-build-release-cycles-x8664
+          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
       - name: Echo variables after download
         run: |
@@ -172,7 +179,6 @@ jobs:
         run: |
           pwd
           ls -al
-          cd cmake-build-release-cycles-x8664
           cd benchmarks
           chmod +x benchmarks-ssec-p254
 
@@ -180,14 +186,13 @@ jobs:
         run: |
           pwd
           ls -al
-          cd cmake-build-release-cycles-x8664
           benchmarks/benchmarks-ssec-p254 | tee benchmarks_ssec-p254-output.txt
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-build-p254
-          path: cmake-build-release-cycles-x8664
+          name: benchmarks_ssec-p254-output
+          path: benchmarks_ssec-p254-output.txt
 
 
 #  benchmark-p254-nanoseconds:
@@ -283,14 +288,12 @@ jobs:
           ls -al
 
       - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
         run: |
           pwd
           cd benchmarks
           chmod +x benchmarks-ssec-p255
 
       - name: Benchmarking (Cycles count)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
         run: |
           pwd
           benchmarks/benchmarks-ssec-p255 | tee benchmarks_ssec-p255-output.txt
@@ -298,8 +301,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-build-p255
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+          name: benchmarks_ssec-p255-output
+          path: benchmarks_ssec-p255-output.txt
 
 
 #  benchmark-p255-nanoseconds:
@@ -410,14 +413,9 @@ jobs:
       - name: Merge Artifacts for Graph 03
         uses: actions/upload-artifact/merge@v4
         with:
-          name: cmake-build-release-cycles-x8664-graph-03
-          pattern: cmake-build-p*
+          name: benchmarks_ssec
+          pattern: benchmarks_ssec-p*
 
-      - name: Merge Artifacts for Graph 04
-        uses: actions/upload-artifact/merge@v4
-        with:
-          name: cmake-build-release-cycles-x8664-graph-04
-          pattern: cmake-build-p*
 
   report-graph-03:
     name: Report Figure 03 (Manuscript)
@@ -426,11 +424,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Downloading graph 03 artifact
+      - name: Downloading Metadata For Graph 03
         uses: actions/download-artifact@v4
         with:
-          name: cmake-build-release-cycles-x8664-graph-03
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+          name: benchmarks_ssec
+          path: ./c-code/cmake-build-release-cycles-x8664-graph-03
+
+      - name: Downloading Metadata For Graph 04
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmarks_ssec
+          path: ./c-code/cmake-build-release-cycles-x8664-graph-04
+
+      - name: Downloading Reproduce Results Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: reproduce-results-code
+          path: ./reproduce_results
 
       - name: Set reusable strings
         id: strings
