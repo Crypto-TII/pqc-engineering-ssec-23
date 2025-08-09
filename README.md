@@ -309,7 +309,7 @@ To prove that this project can be integrated in an industrial environment where 
 To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
 <p align="center">
-  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="500">
+  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="1000">
 </p>
 
 At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 3: Reproducing the Manuscript Results](#section_03)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
@@ -318,7 +318,7 @@ At the end of the Benchmark stage, the Reporting stage generates the three graph
 All the statistical data and all the graphs are uploaded as public artifacts to provide means to the reader to replicate our results. 
 
 <p align="center">
-  <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="500">
+  <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="1000">
 </p>
 
 <a name="section_06"></a>
