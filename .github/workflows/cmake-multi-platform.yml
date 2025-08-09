@@ -146,11 +146,21 @@ jobs:
 #    needs: test-p254-cycles
     needs: build-cycles
     steps:
+      - name: Echo variables before download
+        run: |
+          pwd
+          tree
+
       - name: Downloading p254 CYCLES artifact
         uses: actions/download-artifact@v4
         with:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+
+      - name: Echo variables after download
+        run: |
+          pwd
+          tree
 
       - name: Restoring execution permission
         working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
@@ -169,7 +179,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cmake-build-p254
-          path: ${{ github.workspace }}/cmake-build-release-cycles-x8664"
+          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
 
 #  benchmark-p254-nanoseconds:
@@ -248,11 +258,21 @@ jobs:
     runs-on: self-hosted
     needs: build-cycles
     steps:
+      - name: Echo variables before download
+        run: |
+          pwd
+          tree
+
       - name: Downloading p255 CYCLES artifact
         uses: actions/download-artifact@v4
         with:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+
+      - name: Echo variables after download
+        run: |
+          pwd
+          tree
 
       - name: Restoring execution permission
         working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
@@ -271,7 +291,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cmake-build-p255
-          path: ${{ github.workspace }}/cmake-build-release-cycles-x8664
+          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
 
 #  benchmark-p255-nanoseconds:
