@@ -64,6 +64,12 @@ jobs:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
+      - name: Upload C-Code Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: c-code
+          path: ${{ steps.strings.outputs.build-ccode-dir-cycles }}
+
 #  build-nanoseconds:
 #    runs-on: self-hosted
 #    steps:
@@ -154,8 +160,8 @@ jobs:
       - name: Downloading p254 CYCLES artifact
         uses: actions/download-artifact@v4
         with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+          name: c-code
+          path: ${{ steps.strings.outputs.build-ccode-dir-cycles }}
 
       - name: Echo variables after download
         run: |
@@ -163,23 +169,25 @@ jobs:
           ls -al
 
       - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
         run: |
           pwd
+          ls -al
+          cd cmake-build-release-cycles-x8664
           cd benchmarks
           chmod +x benchmarks-ssec-p254
 
       - name: Benchmarking (Cycles count)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-cycles }}
         run: |
           pwd
+          ls -al
+          cd cmake-build-release-cycles-x8664
           benchmarks/benchmarks-ssec-p254 | tee benchmarks_ssec-p254-output.txt
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: cmake-build-p254
-          path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+          path: cmake-build-release-cycles-x8664
 
 
 #  benchmark-p254-nanoseconds:
