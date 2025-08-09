@@ -15,7 +15,7 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
    2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_03_02)
    3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_03_03)
 4. [Source-Code Technical Documentation: Doxygen](#section_04)
-5. [Integrated CI/CD: Build, Test and Benchmarking](#section_05)
+5. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_05)
 6. [Additional Resources' Build Process](#section_06)
 7. [Authors](#section_07)
 
@@ -30,12 +30,12 @@ Our paper reached several important results:
 A video summarizing our ideas and contribution (in a general-reader level) is shown below:
 
 <p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=KhoViHztXpE" target="_blank">
- <img src="http://img.youtube.com/vi/KhoViHztXpE/mqdefault.jpg" alt="Watch the video" width="500" border="10" />
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=BjedMooSV30" target="_blank">
+ <img src="http://img.youtube.com/vi/BjedMooSV30/mqdefault.jpg" alt="Watch the video" width="500" border="10" />
 </a>
 </p>
 
-The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE).
+The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=BjedMooSV30).
 
 A general tree description of the source code of our project is shown below.
 
@@ -298,9 +298,9 @@ This will generate an HTML site with interactive diagrams, and plenty of technic
 A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
 
 <a name="section_05"></a>
-## 5. Integrated CI/CD: Build, Test and Benchmarking
+## 5. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
 
-To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting.
 
 <p align="center">
   <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="350">
@@ -310,6 +310,15 @@ To provide CI/CD related capabilities, in our source code we provide a [cmake-mu
 
 <p align="center">
   <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="500">
+</p>
+
+At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 3: Reproducing the Manuscript Results](#section_03)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
+- The benchmark statistics are uploaded in the artifacts marked in **blue**, and
+- The generated manuscript graphs are uploaded in the artifacts marked in **red**.
+All the statistical data and all the graphs are uploaded as public artifacts to provide means to the reader to replicate our results. 
+
+<p align="center">
+  <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="500">
 </p>
 
 <a name="section_06"></a>
