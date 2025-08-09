@@ -36,61 +36,61 @@ for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-gra
 average_cglhash2.append(matching_values[0])
 average_cglhash3.append(matching_values[1])
 
-# 4. Check for p383
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p383-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 5. Check for p398
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p398-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 6. Check for p511
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p511-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 7. Check for p575
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p575-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 8. Check for p592
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p592-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 9. Check for p765
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p765-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
-
-# 10. Check for p783
-matching_values = []
-for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p783-output.txt')):
-    for match in re.finditer(pattern, line):
-        matching_values.append(int(match.group(2)))
-average_cglhash2.append(matching_values[0])
-average_cglhash3.append(matching_values[1])
+# # 4. Check for p383
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p383-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 5. Check for p398
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p398-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 6. Check for p511
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p511-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 7. Check for p575
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p575-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 8. Check for p592
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p592-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 9. Check for p765
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p765-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
+#
+# # 10. Check for p783
+# matching_values = []
+# for i, line in enumerate(open('../../c-code/cmake-build-release-cycles-x8664-graph-03/benchmarks_ssec-p783-output.txt')):
+#     for match in re.finditer(pattern, line):
+#         matching_values.append(int(match.group(2)))
+# average_cglhash2.append(matching_values[0])
+# average_cglhash3.append(matching_values[1])
 
 
 IT = average_cglhash2
@@ -105,7 +105,9 @@ plt.bar(br2, ECE, color ='b', width = barWidth, edgecolor ='grey', label ='3-iso
 plt.xlabel('Primes', fontweight ='bold', fontsize = 15)
 plt.ylabel('CPU Cycles', fontweight ='bold', fontsize = 15)
 plt.xticks([r + barWidth for r in range(len(IT))],
-           ['p254', 'p255', 'p381', 'p383', 'p398', 'p511', 'p575', 'p592', 'p765', 'p783'])
+           ['p254', 'p255', 'p381'])
+# plt.xticks([r + barWidth for r in range(len(IT))],
+#            ['p254', 'p255', 'p381', 'p383', 'p398', 'p511', 'p575', 'p592', 'p765', 'p783'])
 
 plt.title('Benchmarks for the 2-isogenies vs. 3-isogenies walks')
 

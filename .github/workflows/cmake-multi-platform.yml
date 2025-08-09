@@ -64,32 +64,32 @@ jobs:
           name: cmake-build-release-cycles-x8664
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
 
-  build-nanoseconds:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set reusable strings
-        id: strings
-        shell: bash
-        run: |
-          echo "build-ccode-dir-nano=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
-          echo "build-output-dir-nano=${{ github.workspace }}/c-code/cmake-build-release-time-x8664" >> "$GITHUB_OUTPUT"
-
-      - name: Configuring CMake for all primes' libraries and tests targets
-        run: |
-          cd c-code
-          cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
-
-      - name: Build all primes' libraries and tests targets
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          make
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmake-build-release-time-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#  build-nanoseconds:
+#    runs-on: self-hosted
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Set reusable strings
+#        id: strings
+#        shell: bash
+#        run: |
+#          echo "build-ccode-dir-nano=${{ github.workspace }}/c-code" >> "$GITHUB_OUTPUT"
+#          echo "build-output-dir-nano=${{ github.workspace }}/c-code/cmake-build-release-time-x8664" >> "$GITHUB_OUTPUT"
+#
+#      - name: Configuring CMake for all primes' libraries and tests targets
+#        run: |
+#          cd c-code
+#          cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=TIME -DARCHITECTURE=x8664 -B cmake-build-release-time-x8664
+#
+#      - name: Build all primes' libraries and tests targets
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          make
+#
+#      - name: Upload Build Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: cmake-build-release-time-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
 
 ############## P254 ################
 
@@ -117,28 +117,28 @@ jobs:
           ./tests-ssec-p254
 
 
-  test-p254-nanoseconds:
-    name: Test prime 254 (Nanoseconds)
-    runs-on: self-hosted
-    needs: build-nanoseconds
-    steps:
-      - name: Downloading p254 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          chmod +x tests-ssec-p254
-
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          ./tests-ssec-p254
+#  test-p254-nanoseconds:
+#    name: Test prime 254 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: build-nanoseconds
+#    steps:
+#      - name: Downloading p254 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-cycles-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          chmod +x tests-ssec-p254
+#
+#      - name: Test
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          ./tests-ssec-p254
 
   benchmark-p254-cycles:
     name: Benchmark prime 254 (Cycles)
@@ -165,32 +165,31 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-build-release-cycles-x8664-graph
+          name: cmake-build-p254
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
-          merge-multiple: true
 
 
-  benchmark-p254-nanoseconds:
-    name: Benchmark prime 254 (Nanoseconds)
-    runs-on: self-hosted
-    needs: test-p254-nanoseconds
-    steps:
-      - name: Downloading p254 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-time-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd benchmarks
-          chmod +x benchmarks-ssec-p254
-
-      - name: Benchmarking (Nanoseconds)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          benchmarks/benchmarks-ssec-p254 | tee benchmarks_ssec-p254-output.txt
+#  benchmark-p254-nanoseconds:
+#    name: Benchmark prime 254 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: test-p254-nanoseconds
+#    steps:
+#      - name: Downloading p254 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-time-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd benchmarks
+#          chmod +x benchmarks-ssec-p254
+#
+#      - name: Benchmarking (Nanoseconds)
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          benchmarks/benchmarks-ssec-p254 | tee benchmarks_ssec-p254-output.txt
 
   ############## P255 ################
 
@@ -218,28 +217,28 @@ jobs:
           ./tests-ssec-p255
 
 
-  test-p255-nanoseconds:
-    name: Test prime 255 (Nanoseconds)
-    runs-on: self-hosted
-    needs: build-nanoseconds
-    steps:
-      - name: Downloading p255 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          chmod +x tests-ssec-p255
-
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          ./tests-ssec-p255
+#  test-p255-nanoseconds:
+#    name: Test prime 255 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: build-nanoseconds
+#    steps:
+#      - name: Downloading p255 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-cycles-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          chmod +x tests-ssec-p255
+#
+#      - name: Test
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          ./tests-ssec-p255
 
   benchmark-p255-cycles:
     name: Benchmark prime 255 (Cycles)
@@ -266,32 +265,31 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-build-release-cycles-x8664-graph
+          name: cmake-build-p255
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
-          merge-multiple: true
 
 
-  benchmark-p255-nanoseconds:
-    name: Benchmark prime 255 (Nanoseconds)
-    runs-on: self-hosted
-    needs: test-p255-nanoseconds
-    steps:
-      - name: Downloading p255 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-time-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd benchmarks
-          chmod +x benchmarks-ssec-p255
-
-      - name: Benchmarking (Nanoseconds)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          benchmarks/benchmarks-ssec-p255 | tee benchmarks_ssec-p255-output.txt
+#  benchmark-p255-nanoseconds:
+#    name: Benchmark prime 255 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: test-p255-nanoseconds
+#    steps:
+#      - name: Downloading p255 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-time-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd benchmarks
+#          chmod +x benchmarks-ssec-p255
+#
+#      - name: Benchmarking (Nanoseconds)
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          benchmarks/benchmarks-ssec-p255 | tee benchmarks_ssec-p255-output.txt
 
   ############## P381 ################
 
@@ -319,28 +317,28 @@ jobs:
           ./tests-ssec-p381
 
 
-  test-p381-nanoseconds:
-    name: Test prime 381 (Nanoseconds)
-    runs-on: self-hosted
-    needs: build-nanoseconds
-    steps:
-      - name: Downloading p381 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cmake-build-release-cycles-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
-
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          chmod +x tests-ssec-p381
-
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd tests
-          ./tests-ssec-p381
+#  test-p381-nanoseconds:
+#    name: Test prime 381 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: build-nanoseconds
+#    steps:
+#      - name: Downloading p381 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-cycles-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          chmod +x tests-ssec-p381
+#
+#      - name: Test
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd tests
+#          ./tests-ssec-p381
 
   benchmark-p381-cycles:
     name: Benchmark prime 381 (Cycles)
@@ -367,32 +365,82 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-build-release-cycles-x8664-graph
+          name: cmake-build-p381
           path: ${{ steps.strings.outputs.build-output-dir-cycles }}
-          merge-multiple: true
 
-
-  benchmark-p381-nanoseconds:
-    name: Benchmark prime 381 (Nanoseconds)
+  merge-graph-03-04:
     runs-on: self-hosted
-    needs: test-p381-nanoseconds
+    needs:
+      - benchmark-p254-cycles
+      - benchmark-p255-cycles
+      - benchmark-p381-cycles
     steps:
-      - name: Downloading p381 NANOSECONDS artifact
-        uses: actions/download-artifact@v4
+      - name: Merge Artifacts for Graph 03
+        uses: actions/upload-artifact/merge@v4
         with:
-          name: cmake-build-release-time-x8664
-          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+          name: cmake-build-release-cycles-x8664-graph-03
+          pattern: cmake-build-p*
 
-      - name: Restoring execution permission
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          cd benchmarks
-          chmod +x benchmarks-ssec-p381
+      - name: Merge Artifacts for Graph 04
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: cmake-build-release-cycles-x8664-graph-04
+          pattern: cmake-build-p*
 
-      - name: Benchmarking (Nanoseconds)
-        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
-        run: |
-          benchmarks/benchmarks-ssec-p381 | tee benchmarks_ssec-p381-output.txt
+    report-graph-03:
+      name: Report Figure 03 (Manuscript)
+      runs-on: self-hosted
+      needs: merge-graph-03-04
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Downloading graph 03 artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: cmake-build-release-cycles-x8664-graph-03
+            path: ${{ steps.strings.outputs.build-output-dir-cycles }}
+
+        - name: Set reusable strings
+          id: strings
+          shell: bash
+          run: |
+            echo "report-graph-03-output-dir=${{ github.workspace }}/reproduce_results/generated_figures/figure_03_output" >> "$GITHUB_OUTPUT"
+
+        - name: Generating Figure 03
+          run: |
+            cd reproduce_results
+            mkdir -p generated_figures/figure_03_output
+            cd manuscript_figure_03
+            python3 benchmark_graph_03.py
+
+        - name: Upload Generated Figure 03
+          uses: actions/upload-artifact@v4
+          with:
+            name: generated-figure-03
+            path: ${{ steps.strings.outputs.report-graph-03-output-dir }}
+
+
+#  benchmark-p381-nanoseconds:
+#    name: Benchmark prime 381 (Nanoseconds)
+#    runs-on: self-hosted
+#    needs: test-p381-nanoseconds
+#    steps:
+#      - name: Downloading p381 NANOSECONDS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: cmake-build-release-time-x8664
+#          path: ${{ steps.strings.outputs.build-output-dir-nano }}
+#
+#      - name: Restoring execution permission
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          cd benchmarks
+#          chmod +x benchmarks-ssec-p381
+#
+#      - name: Benchmarking (Nanoseconds)
+#        working-directory: ${{ steps.strings.outputs.build-output-dir-nano }}
+#        run: |
+#          benchmarks/benchmarks-ssec-p381 | tee benchmarks_ssec-p381-output.txt
 
 #  ############## P383 ################
 #
