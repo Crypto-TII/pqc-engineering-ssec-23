@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import re
@@ -72,6 +74,14 @@ plt.title('Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our 
 plt.grid(True)
 plt.legend()
 
+graph_save_dir = "../generated_figures"
+graph_05_save_dir = "../generated_figures/figure_05_output"
+if not os.path.exists(graph_save_dir):
+    os.makedirs(graph_save_dir)
+if not os.path.exists(graph_05_save_dir):
+    os.makedirs(graph_05_save_dir)
+
+plt.savefig(f'../generated_figures/figure_05_output/figure_05_01_graph.pdf', format="pdf", bbox_inches="tight")
 
 
 plt.figure(2)
@@ -87,6 +97,7 @@ plt.title('Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our 
 plt.grid(True)
 plt.legend()
 
+plt.savefig(f'../generated_figures/figure_05_output/figure_05_02_graph.pdf', format="pdf", bbox_inches="tight")
 
 
 
