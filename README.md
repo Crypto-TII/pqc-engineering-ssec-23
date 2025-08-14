@@ -16,8 +16,9 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
    3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_03_03)
 4. [Source-Code Technical Documentation: Doxygen](#section_04)
 5. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_05)
-6. [Additional Resources' Build Process](#section_06)
-7. [Authors](#section_07)
+6. [How to download our public Docker container?](#section_06)
+7. [Additional Resources' Build Process](#section_07)
+8. [Authors](#section_08)
 
 <a name="section_01"></a>
 ## 1. Introduction
@@ -54,8 +55,19 @@ A general tree description of the source code of our project is shown below.
 In the following sections, we will cover in detail:
 1. How to build, test, and benchmark,
 2. How to replicate the results reported in the manuscript, 
-3. How to generate the source code technical documentation using Doxygen, and
-4. A real-life production CI/CD pipeline integration.
+3. How to generate the source code technical documentation using Doxygen,
+4. A real-life production CI/CD pipeline integration, and
+5. Detailed instructions on how to download and mount our Docker container.
+
+A detailed (video) tour of our artifact is presented below
+
+<p align="center">
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=hLk_B5NpKRA" target="_blank">
+ <img src="http://img.youtube.com/vi/hLk_B5NpKRA/mqdefault.jpg" alt="A (full) tour of our artifact." width="500" border="10" />
+</a>
+</p>
+
+The YouTube link of our artifact's tour video is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
 
 <a name="section_02"></a>
 ## 2. Setup Process
@@ -346,14 +358,44 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
 </p>
 
 <a name="section_06"></a>
-## 6. Additional Resources' Build Process
+## 6. How to download our public Docker container?
+
+For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
+
+To download our Docker container, simply execute the command below
+```bash
+docker pull tiicrc/github-selfhosted-runner-pqc:latest
+```
+and to verify that it was downloaded correctly, execute
+```bash
+docker images | grep pqc
+```
+
+To mount the docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and execute
+```bash
+docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash
+```
+After mounting, the terminal will change to
+```bash
+/src# <insert commands here>
+```
+At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the experiments presented in [Section 3: Reproducing the Manuscript Results](#section_03), and all the steps to generate the technical documentation using Doxygen as shown in [Section 4: Source-Code Technical Documentation: Doxygen](#section_04) shall work without problems.
+
+<a name="section_07"></a>
+## 7. Additional Resources' Build Process
 
 As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 As part of our experiments, we used a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
 
-<a name="section_07"></a>
-## 7. Authors
+<a name="section_08"></a>
+## 8. Authors and Acknowledgements
+
+We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. 
+
+This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility. 
+
+We invite fellow researchers and practitioners to explore, test, and expand upon our work, helping it grow and evolve in new directions.
 
 For further information, please feel free to contact any of the authors:
 <p align="center">
@@ -361,3 +403,5 @@ For further information, please feel free to contact any of the authors:
     <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
     <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>.
 </p>
+
+
