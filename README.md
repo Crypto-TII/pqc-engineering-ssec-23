@@ -63,12 +63,13 @@ A detailed (video) tour of our artifact is presented below
 
 <p align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=hLk_B5NpKRA" target="_blank">
- <img src="http://img.youtube.com/vi/hLk_B5NpKRA/mqdefault.jpg" alt="A (full) tour of our artifact." width="320" border="10" />
+ <img src="http://img.youtube.com/vi/hLk_B5NpKRA/0.jpg" alt="A (full) tour of our artifact." width="320" border="10" />
 </a>
 </p>
 
 The YouTube link of our artifact's tour video is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
 
+<p align="center">
 <table> 
 <tr> 
 <td align="center"> 
@@ -81,8 +82,7 @@ The YouTube link of our artifact's tour video is shown here: [Let us walk on the
 <img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg" width="320">
 <br> <b>2. Installation & Build</b> </a> 
 </td> 
-</tr> 
-
+</tr>
 <tr> 
 <td align="center"> 
 <a href="https://www.youtube.com/watch?v=VIDEO_ID3"> 
@@ -93,9 +93,9 @@ The YouTube link of our artifact's tour video is shown here: [Let us walk on the
 <img src="https://img.youtube.com/vi/VIDEO_ID4/0.jpg" width="320">
 <br> <b>4. Generating Documentation</b> </a> 
 </td> 
-</tr> 
-
+</tr>
 </table>
+</p>
 
 <a name="section_02"></a>
 ## 2. Setup Process
