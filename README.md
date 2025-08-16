@@ -69,8 +69,8 @@ A detailed (video) tour of our artifact is presented below
 
 The YouTube link of our artifact's tour video is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
 
-<p align="center">
-<table> 
+
+<table align="center"> 
 <tr> 
 <td align="center"> 
 <a href="https://www.youtube.com/watch?v=xH9wxWVgauo"> 
@@ -95,7 +95,7 @@ The YouTube link of our artifact's tour video is shown here: [Let us walk on the
 </td> 
 </tr>
 </table>
-</p>
+
 
 <a name="section_02"></a>
 ## 2. Setup Process
