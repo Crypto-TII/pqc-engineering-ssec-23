@@ -18,7 +18,7 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 5. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_05)
 6. [How to download our public Docker container?](#section_06)
 7. [Additional Resources' Build Process](#section_07)
-8. [Authors](#section_08)
+8. [Conclusions, Acknowledgements and Authors](#section_08)
 
 <a name="section_01"></a>
 ## 1. Introduction
@@ -63,11 +63,39 @@ A detailed (video) tour of our artifact is presented below
 
 <p align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=hLk_B5NpKRA" target="_blank">
- <img src="http://img.youtube.com/vi/hLk_B5NpKRA/mqdefault.jpg" alt="A (full) tour of our artifact." width="500" border="10" />
+ <img src="http://img.youtube.com/vi/hLk_B5NpKRA/mqdefault.jpg" alt="A (full) tour of our artifact." width="320" border="10" />
 </a>
 </p>
 
 The YouTube link of our artifact's tour video is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
+
+<table> 
+<tr> 
+<td align="center"> 
+<a href="https://www.youtube.com/watch?v=xH9wxWVgauo"> 
+<img src="https://img.youtube.com/vi/xH9wxWVgauo/0.jpg" width="320">
+<br> <b>1. Project Overview</b> </a> 
+</td> 
+<td align="center"> 
+<a href="https://www.youtube.com/watch?v=paQdkb1SVGs"> 
+<img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg" width="320">
+<br> <b>2. Installation & Build</b> </a> 
+</td> 
+</tr> 
+
+<tr> 
+<td align="center"> 
+<a href="https://www.youtube.com/watch?v=VIDEO_ID3"> 
+<img src="https://img.youtube.com/vi/VIDEO_ID3/0.jpg" width="320">
+<br> <b>3. Testing & Benchmarking</b> </a> 
+</td> 
+<td align="center"> <a href="https://www.youtube.com/watch?v=VIDEO_ID4"> 
+<img src="https://img.youtube.com/vi/VIDEO_ID4/0.jpg" width="320">
+<br> <b>4. Generating Documentation</b> </a> 
+</td> 
+</tr> 
+
+</table>
 
 <a name="section_02"></a>
 ## 2. Setup Process
@@ -389,7 +417,7 @@ As mentioned before, for a detailed explanation of our testing and benchmarking 
 As part of our experiments, we used a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
 
 <a name="section_08"></a>
-## 8. Authors and Acknowledgements
+## 8. Conclusions, Acknowledgements and Authors
 
 We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. 
 
