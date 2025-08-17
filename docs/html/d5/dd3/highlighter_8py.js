@@ -1,12 +1,12 @@
 var highlighter_8py =
 [
-    [ "Highlighter", "d4/d4f/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_highlighter.html", "d4/d4f/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_highlighter" ],
-    [ "NullHighlighter", "de/dc4/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_null_highlighter.html", "de/dc4/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_null_highlighter" ],
-    [ "RegexHighlighter", "d2/d3e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_regex_highlighter.html", "d2/d3e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_regex_highlighter" ],
-    [ "ReprHighlighter", "de/d59/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_repr_highlighter.html", null ],
-    [ "JSONHighlighter", "df/d8d/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_j_s_o_n_highlighter.html", "df/d8d/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_j_s_o_n_highlighter" ],
-    [ "ISO8601Highlighter", "df/dfa/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1_i_s_o8601_highlighter.html", null ],
-    [ "pip._vendor.rich.highlighter._combine_regex", "d3/dca/namespacepip_1_1__vendor_1_1rich_1_1highlighter.html#a65e3d0c4d85fd2e270ca72d0baf9efe3", null ],
-    [ "pip._vendor.rich.highlighter.console", "d3/dca/namespacepip_1_1__vendor_1_1rich_1_1highlighter.html#a59b27486da7ae78f25305f338b4b2fce", null ],
-    [ "pip._vendor.rich.highlighter.indent", "d3/dca/namespacepip_1_1__vendor_1_1rich_1_1highlighter.html#a9eb11910ba74d4b59975a5784b130732", null ]
+    [ "Highlighter", "d8/d2e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1Highlighter.html", "d8/d2e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1Highlighter" ],
+    [ "NullHighlighter", "db/de3/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1NullHighlighter.html", "db/de3/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1NullHighlighter" ],
+    [ "RegexHighlighter", "d1/d6e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1RegexHighlighter.html", "d1/d6e/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1RegexHighlighter" ],
+    [ "ReprHighlighter", "de/d99/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1ReprHighlighter.html", null ],
+    [ "JSONHighlighter", "d6/d82/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1JSONHighlighter.html", "d6/d82/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1JSONHighlighter" ],
+    [ "ISO8601Highlighter", "df/d1f/classpip_1_1__vendor_1_1rich_1_1highlighter_1_1ISO8601Highlighter.html", null ],
+    [ "_combine_regex", "d5/dd3/highlighter_8py.html#a65e3d0c4d85fd2e270ca72d0baf9efe3", null ],
+    [ "console", "d5/dd3/highlighter_8py.html#a59b27486da7ae78f25305f338b4b2fce", null ],
+    [ "indent", "d5/dd3/highlighter_8py.html#a9eb11910ba74d4b59975a5784b130732", null ]
 ];

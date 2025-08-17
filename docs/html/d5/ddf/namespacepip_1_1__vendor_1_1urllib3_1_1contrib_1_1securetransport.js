@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport =
 [
-    [ "SecureTransportContext", "d6/d52/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1_secure_transport_context.html", "d6/d52/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1_secure_transport_context" ],
-    [ "WrappedSocket", "da/dfd/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1_wrapped_socket.html", "da/dfd/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1_wrapped_socket" ],
+    [ "SecureTransportContext", "db/db8/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1SecureTransportContext.html", "db/db8/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1SecureTransportContext" ],
+    [ "WrappedSocket", "dd/dbc/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1WrappedSocket.html", "dd/dbc/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport_1_1WrappedSocket" ],
     [ "_read_callback", "d5/ddf/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport.html#a0e19b6d2b525348f36438da1b9836a32", null ],
     [ "_write_callback", "d5/ddf/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport.html#a1e5eea477c88f7f16b8748f53d09b4d9", null ],
     [ "extract_from_urllib3", "d5/ddf/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1securetransport.html#a75f0a8591fdc8f8c22b1411ead01838b", null ],

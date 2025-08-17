@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1terminal__theme =
 [
-    [ "TerminalTheme", "dc/db6/classpip_1_1__vendor_1_1rich_1_1terminal__theme_1_1_terminal_theme.html", "dc/db6/classpip_1_1__vendor_1_1rich_1_1terminal__theme_1_1_terminal_theme" ],
+    [ "TerminalTheme", "d8/d4f/classpip_1_1__vendor_1_1rich_1_1terminal__theme_1_1TerminalTheme.html", "d8/d4f/classpip_1_1__vendor_1_1rich_1_1terminal__theme_1_1TerminalTheme" ],
     [ "_ColorTuple", "d4/daa/namespacepip_1_1__vendor_1_1rich_1_1terminal__theme.html#aedc5d89594cbd25e943588f3c36a33fd", null ],
     [ "DEFAULT_TERMINAL_THEME", "d4/daa/namespacepip_1_1__vendor_1_1rich_1_1terminal__theme.html#a3551950a1c99ab8d2f8c18bf791be1ef", null ],
     [ "DIMMED_MONOKAI", "d4/daa/namespacepip_1_1__vendor_1_1rich_1_1terminal__theme.html#a6d3194c21fc0c07d4527b8216ede1f20", null ],

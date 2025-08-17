@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1distlib_1_1manifest =
 [
-    [ "Manifest", "d2/d05/classpip_1_1__vendor_1_1distlib_1_1manifest_1_1_manifest.html", "d2/d05/classpip_1_1__vendor_1_1distlib_1_1manifest_1_1_manifest" ],
+    [ "Manifest", "db/d8f/classpip_1_1__vendor_1_1distlib_1_1manifest_1_1Manifest.html", "db/d8f/classpip_1_1__vendor_1_1distlib_1_1manifest_1_1Manifest" ],
     [ "_COLLAPSE_PATTERN", "d9/df3/namespacepip_1_1__vendor_1_1distlib_1_1manifest.html#aad55f2a93711f1477b19823d0051ee37", null ],
     [ "_COMMENTED_LINE", "d9/df3/namespacepip_1_1__vendor_1_1distlib_1_1manifest.html#ac4700fdc513fa7ae80a0d483af9e8bc7", null ],
     [ "_PYTHON_VERSION", "d9/df3/namespacepip_1_1__vendor_1_1distlib_1_1manifest.html#aaa5d403ae4daf6e11ea7731fda321118", null ],

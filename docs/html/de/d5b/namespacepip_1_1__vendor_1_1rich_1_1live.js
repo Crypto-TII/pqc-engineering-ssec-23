@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1rich_1_1live =
 [
-    [ "_RefreshThread", "d3/d82/classpip_1_1__vendor_1_1rich_1_1live_1_1___refresh_thread.html", "d3/d82/classpip_1_1__vendor_1_1rich_1_1live_1_1___refresh_thread" ],
-    [ "Live", "d7/d9a/classpip_1_1__vendor_1_1rich_1_1live_1_1_live.html", "d7/d9a/classpip_1_1__vendor_1_1rich_1_1live_1_1_live" ],
+    [ "_RefreshThread", "d1/ddf/classpip_1_1__vendor_1_1rich_1_1live_1_1__RefreshThread.html", "d1/ddf/classpip_1_1__vendor_1_1rich_1_1live_1_1__RefreshThread" ],
+    [ "Live", "d0/d4d/classpip_1_1__vendor_1_1rich_1_1live_1_1Live.html", "d0/d4d/classpip_1_1__vendor_1_1rich_1_1live_1_1Live" ],
     [ "console", "de/d5b/namespacepip_1_1__vendor_1_1rich_1_1live.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "examples", "de/d5b/namespacepip_1_1__vendor_1_1rich_1_1live.html#a6c5cb3270a5b60d3b3a235b403170f13", null ],
     [ "exchange_rate_dict", "de/d5b/namespacepip_1_1__vendor_1_1rich_1_1live.html#a45a4a8000fea3dcf158bcda2628e822e", null ],

@@ -1,6 +1,6 @@
 var namespacepip_1_1__internal_1_1configuration =
 [
-    [ "Configuration", "dc/da9/classpip_1_1__internal_1_1configuration_1_1_configuration.html", "dc/da9/classpip_1_1__internal_1_1configuration_1_1_configuration" ],
+    [ "Configuration", "d2/db9/classpip_1_1__internal_1_1configuration_1_1Configuration.html", "d2/db9/classpip_1_1__internal_1_1configuration_1_1Configuration" ],
     [ "_disassemble_key", "d7/dd5/namespacepip_1_1__internal_1_1configuration.html#ab81a58178755060af7f841ea5890800c", null ],
     [ "_normalize_name", "d7/dd5/namespacepip_1_1__internal_1_1configuration.html#a6473fcca83fa136870d5033aad5d4db4", null ],
     [ "get_configuration_files", "d7/dd5/namespacepip_1_1__internal_1_1configuration.html#a726590db503ba1f77059fcec1478a9ed", null ],

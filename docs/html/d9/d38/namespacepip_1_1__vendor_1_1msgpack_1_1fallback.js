@@ -1,8 +1,8 @@
 var namespacepip_1_1__vendor_1_1msgpack_1_1fallback =
 [
-    [ "Packer", "d8/da6/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_packer.html", "d8/da6/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_packer" ],
-    [ "StringIO", "db/d71/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_string_i_o.html", "db/d71/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_string_i_o" ],
-    [ "Unpacker", "d1/d3d/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_unpacker.html", "d1/d3d/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1_unpacker" ],
+    [ "Packer", "d1/d2e/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1Packer.html", "d1/d2e/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1Packer" ],
+    [ "StringIO", "d3/dbe/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1StringIO.html", "d3/dbe/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1StringIO" ],
+    [ "Unpacker", "de/d94/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1Unpacker.html", "de/d94/classpip_1_1__vendor_1_1msgpack_1_1fallback_1_1Unpacker" ],
     [ "_check_type_strict", "d9/d38/namespacepip_1_1__vendor_1_1msgpack_1_1fallback.html#a241b49ab956fda20e954427a34e39670", null ],
     [ "_get_data_from_buffer", "d9/d38/namespacepip_1_1__vendor_1_1msgpack_1_1fallback.html#a96fbf843299a3a18461ba6a14a0cd6a7", null ],
     [ "_is_recursionerror", "d9/d38/namespacepip_1_1__vendor_1_1msgpack_1_1fallback.html#ad61a870ec92f20e82faa5be5ac4c2682", null ],

@@ -1,4 +1,4 @@
-# Let us walk on the 3-isogeny graph: dCTIDH modified version
+# dCTIDH modified version
 
 ## Table of contents
 1. [Introduction](#section_01)
@@ -11,7 +11,7 @@
 <a name="section_01"></a>
 ## 1. Introduction
 
-This repository contains auxiliary material taken from the [dCTIDH repository](https://github.com/PaZeZeVaAt/dCTIDH).
+This repository contains auxiliary material taken from the <a href="https://github.com/PaZeZeVaAt/dCTIDH" target="_blank">dCTIDH repository</a>.
 In particular, we list the modifications performed on the code below.
 
 - Modified files:
@@ -89,7 +89,7 @@ ssec-23/dCTIDH$ sudo bash benchmark_opt_rad.sh
 
 This will generate a tree structure like the one shown below
 
-![tree_structure](../gifs/benchmark_dCTIDH.png)
+\image html ../gifs/benchmark_dCTIDH.png width=30%
 
 To run the statistics, for a particular `OPT_RAD`, execute
 
@@ -103,7 +103,7 @@ ssec-23/dCTIDH$ python3 analyze_bench.py < statistics_output/results/OPT_RAD_1/b
 ```
 This will output the results like the following
 
-![stats](../gifs/dCTIDH_stats.png)
+\image html ../gifs/dCTIDH_stats.png width=100%
 
 where the highlighted number is the desired statistical result.
 
@@ -112,7 +112,7 @@ where the highlighted number is the desired statistical result.
 
 If `DENABLE_CT_TESTING=ON`, `checkct` versions of the executable are created for all versions, which can be validated with `valgrind`.
 
-For example, to validate that ctidh-2047m6l194 is constant-time:
+For example, to validate that `ctidh-2047m6l194` is constant-time:
 
 ```sh 
 valgrind ./main/checkct-2047m6l194.main

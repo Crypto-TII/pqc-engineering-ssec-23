@@ -7,6 +7,6 @@ var stop_8py =
     [ "stop_when_event_set", "d2/d12/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__when__event__set.html", "d2/d12/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__when__event__set" ],
     [ "stop_after_attempt", "da/d56/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__after__attempt.html", "da/d56/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__after__attempt" ],
     [ "stop_after_delay", "d5/d42/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__after__delay.html", "d5/d42/classpip_1_1__vendor_1_1tenacity_1_1stop_1_1stop__after__delay" ],
-    [ "pip._vendor.tenacity.stop.stop_never", "db/dff/namespacepip_1_1__vendor_1_1tenacity_1_1stop.html#a1ce52db558fe096911fc1d5e8e901ce3", null ],
-    [ "pip._vendor.tenacity.stop.StopBaseT", "db/dff/namespacepip_1_1__vendor_1_1tenacity_1_1stop.html#a664873d2d9e1aa8459e157fbdf615e34", null ]
+    [ "stop_never", "db/d9d/stop_8py.html#a1ce52db558fe096911fc1d5e8e901ce3", null ],
+    [ "StopBaseT", "db/d9d/stop_8py.html#a664873d2d9e1aa8459e157fbdf615e34", null ]
 ];

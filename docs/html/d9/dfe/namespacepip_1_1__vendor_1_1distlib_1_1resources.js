@@ -1,11 +1,11 @@
 var namespacepip_1_1__vendor_1_1distlib_1_1resources =
 [
-    [ "Resource", "d6/d16/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource.html", "d6/d16/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource" ],
-    [ "ResourceBase", "d4/d30/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_base.html", "d4/d30/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_base" ],
-    [ "ResourceCache", "d7/d00/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_cache.html", "d7/d00/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_cache" ],
-    [ "ResourceContainer", "d1/d5e/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_container.html", "d1/d5e/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_container" ],
-    [ "ResourceFinder", "df/d96/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_finder.html", "df/d96/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_resource_finder" ],
-    [ "ZipResourceFinder", "d1/dd5/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_zip_resource_finder.html", "d1/dd5/classpip_1_1__vendor_1_1distlib_1_1resources_1_1_zip_resource_finder" ],
+    [ "Resource", "dc/da5/classpip_1_1__vendor_1_1distlib_1_1resources_1_1Resource.html", "dc/da5/classpip_1_1__vendor_1_1distlib_1_1resources_1_1Resource" ],
+    [ "ResourceBase", "db/df6/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceBase.html", "db/df6/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceBase" ],
+    [ "ResourceCache", "da/d7c/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceCache.html", "da/d7c/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceCache" ],
+    [ "ResourceContainer", "d4/d76/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceContainer.html", "d4/d76/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceContainer" ],
+    [ "ResourceFinder", "d3/d81/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceFinder.html", "d3/d81/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ResourceFinder" ],
+    [ "ZipResourceFinder", "d4/d3b/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ZipResourceFinder.html", "d4/d3b/classpip_1_1__vendor_1_1distlib_1_1resources_1_1ZipResourceFinder" ],
     [ "finder", "d9/dfe/namespacepip_1_1__vendor_1_1distlib_1_1resources.html#abea11adcbfc6cc0b38f52e51e81ed31e", null ],
     [ "finder_for_path", "d9/dfe/namespacepip_1_1__vendor_1_1distlib_1_1resources.html#a843362552adacad0ca312e37d1098050", null ],
     [ "register_finder", "d9/dfe/namespacepip_1_1__vendor_1_1distlib_1_1resources.html#aaa47bb3b5698025642e0af6cb5ed2678", null ],

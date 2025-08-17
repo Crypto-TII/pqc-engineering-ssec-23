@@ -10,5 +10,5 @@ var tenacity_2wait_8py =
     [ "wait_exponential", "d1/d31/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential.html", "d1/d31/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential" ],
     [ "wait_random_exponential", "db/de6/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential.html", "db/de6/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__random__exponential" ],
     [ "wait_exponential_jitter", "dd/d2c/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter.html", "dd/d2c/classpip_1_1__vendor_1_1tenacity_1_1wait_1_1wait__exponential__jitter" ],
-    [ "pip._vendor.tenacity.wait.WaitBaseT", "d2/dfa/namespacepip_1_1__vendor_1_1tenacity_1_1wait.html#af4823a650699c61a9e1d3f5be82c6ea3", null ]
+    [ "WaitBaseT", "df/d30/tenacity_2wait_8py.html#af4823a650699c61a9e1d3f5be82c6ea3", null ]
 ];

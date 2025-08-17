@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait =
 [
-    [ "NoWayToWaitForSocketError", "d3/d41/classpip_1_1__vendor_1_1urllib3_1_1util_1_1wait_1_1_no_way_to_wait_for_socket_error.html", null ],
+    [ "NoWayToWaitForSocketError", "d6/da8/classpip_1_1__vendor_1_1urllib3_1_1util_1_1wait_1_1NoWayToWaitForSocketError.html", null ],
     [ "_have_working_poll", "d6/d5c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait.html#a9f5b91e23df25469bccc1cdc17ee099a", null ],
     [ "_retry_on_intr", "d6/d5c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait.html#a271c6508b78d0bce7cf8643097ba64a2", null ],
     [ "null_wait_for_socket", "d6/d5c/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1wait.html#addce67b4097e5d99edced12733d97d67", null ],

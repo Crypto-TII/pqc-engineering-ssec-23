@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1markup =
 [
-    [ "Tag", "d7/df7/classpip_1_1__vendor_1_1rich_1_1markup_1_1_tag.html", "d7/df7/classpip_1_1__vendor_1_1rich_1_1markup_1_1_tag" ],
+    [ "Tag", "d6/d8c/classpip_1_1__vendor_1_1rich_1_1markup_1_1Tag.html", "d6/d8c/classpip_1_1__vendor_1_1rich_1_1markup_1_1Tag" ],
     [ "_parse", "d4/d3b/namespacepip_1_1__vendor_1_1rich_1_1markup.html#aab6348e4068f0fe5f8f72e061431640a", null ],
     [ "escape", "d4/d3b/namespacepip_1_1__vendor_1_1rich_1_1markup.html#a972c7159a0dbde5a028ca5b574c0f7ad", null ],
     [ "render", "d4/d3b/namespacepip_1_1__vendor_1_1rich_1_1markup.html#a185293bab47e92c9acff0a3ded22c6e1", null ],

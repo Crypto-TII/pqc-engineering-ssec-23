@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1poolmanager =
 [
-    [ "PoolManager", "db/d75/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1_pool_manager.html", "db/d75/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1_pool_manager" ],
-    [ "ProxyManager", "d6/df4/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1_proxy_manager.html", "d6/df4/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1_proxy_manager" ],
+    [ "PoolManager", "d3/d42/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1PoolManager.html", "d3/d42/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1PoolManager" ],
+    [ "ProxyManager", "d7/d8c/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1ProxyManager.html", "d7/d8c/classpip_1_1__vendor_1_1urllib3_1_1poolmanager_1_1ProxyManager" ],
     [ "_default_key_normalizer", "df/d87/namespacepip_1_1__vendor_1_1urllib3_1_1poolmanager.html#aa8789e0997fc1e16b081c9458c0467ab", null ],
     [ "proxy_from_url", "df/d87/namespacepip_1_1__vendor_1_1urllib3_1_1poolmanager.html#aa269fd82389c57d706ee2445548f72ea", null ],
     [ "_key_fields", "df/d87/namespacepip_1_1__vendor_1_1urllib3_1_1poolmanager.html#acaf5753764784eb7dd3c6b794fc9a9c0", null ],

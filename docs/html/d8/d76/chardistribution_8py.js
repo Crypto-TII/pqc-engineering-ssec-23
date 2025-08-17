@@ -1,11 +1,11 @@
 var chardistribution_8py =
 [
-    [ "CharDistributionAnalysis", "d0/d28/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_char_distribution_analysis.html", "d0/d28/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_char_distribution_analysis" ],
-    [ "EUCTWDistributionAnalysis", "d0/d2c/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_t_w_distribution_analysis.html", "d0/d2c/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_t_w_distribution_analysis" ],
-    [ "EUCKRDistributionAnalysis", "d7/d29/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_k_r_distribution_analysis.html", "d7/d29/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_k_r_distribution_analysis" ],
-    [ "JOHABDistributionAnalysis", "d9/d4b/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_j_o_h_a_b_distribution_analysis.html", "d9/d4b/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_j_o_h_a_b_distribution_analysis" ],
-    [ "GB2312DistributionAnalysis", "d8/d45/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_g_b2312_distribution_analysis.html", "d8/d45/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_g_b2312_distribution_analysis" ],
-    [ "Big5DistributionAnalysis", "df/d55/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_big5_distribution_analysis.html", "df/d55/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_big5_distribution_analysis" ],
-    [ "SJISDistributionAnalysis", "df/d26/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_s_j_i_s_distribution_analysis.html", "df/d26/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_s_j_i_s_distribution_analysis" ],
-    [ "EUCJPDistributionAnalysis", "d8/d42/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_j_p_distribution_analysis.html", "d8/d42/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1_e_u_c_j_p_distribution_analysis" ]
+    [ "CharDistributionAnalysis", "d0/dfe/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1CharDistributionAnalysis.html", "d0/dfe/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1CharDistributionAnalysis" ],
+    [ "EUCTWDistributionAnalysis", "df/d96/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCTWDistributionAnalysis.html", "df/d96/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCTWDistributionAnalysis" ],
+    [ "EUCKRDistributionAnalysis", "db/d98/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCKRDistributionAnalysis.html", "db/d98/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCKRDistributionAnalysis" ],
+    [ "JOHABDistributionAnalysis", "d9/d1f/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1JOHABDistributionAnalysis.html", "d9/d1f/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1JOHABDistributionAnalysis" ],
+    [ "GB2312DistributionAnalysis", "d6/dfa/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1GB2312DistributionAnalysis.html", "d6/dfa/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1GB2312DistributionAnalysis" ],
+    [ "Big5DistributionAnalysis", "d8/d7b/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1Big5DistributionAnalysis.html", "d8/d7b/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1Big5DistributionAnalysis" ],
+    [ "SJISDistributionAnalysis", "d9/d97/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1SJISDistributionAnalysis.html", "d9/d97/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1SJISDistributionAnalysis" ],
+    [ "EUCJPDistributionAnalysis", "d3/d23/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCJPDistributionAnalysis.html", "d3/d23/classpip_1_1__vendor_1_1chardet_1_1chardistribution_1_1EUCJPDistributionAnalysis" ]
 ];

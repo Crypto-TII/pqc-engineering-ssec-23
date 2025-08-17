@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1box =
 [
-    [ "Box", "d7/de1/classpip_1_1__vendor_1_1rich_1_1box_1_1_box.html", "d7/de1/classpip_1_1__vendor_1_1rich_1_1box_1_1_box" ],
+    [ "Box", "d9/d85/classpip_1_1__vendor_1_1rich_1_1box_1_1Box.html", "d9/d85/classpip_1_1__vendor_1_1rich_1_1box_1_1Box" ],
     [ "box", "dc/d1c/namespacepip_1_1__vendor_1_1rich_1_1box.html#a4485d04ca451246b6a81dd2799f83906", null ],
     [ "BOXES", "dc/d1c/namespacepip_1_1__vendor_1_1rich_1_1box.html#a9d6e53328b062e47828617033beb0a81", null ],
     [ "columns", "dc/d1c/namespacepip_1_1__vendor_1_1rich_1_1box.html#a2236b72f560276e1c4ca3409b8b3ecb5", null ],

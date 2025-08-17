@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1distro_1_1distro =
 [
     [ "cached_property", "da/dd3/classpip_1_1__vendor_1_1distro_1_1distro_1_1cached__property.html", "da/dd3/classpip_1_1__vendor_1_1distro_1_1distro_1_1cached__property" ],
-    [ "InfoDict", "d2/d66/classpip_1_1__vendor_1_1distro_1_1distro_1_1_info_dict.html", null ],
-    [ "LinuxDistribution", "d9/d0e/classpip_1_1__vendor_1_1distro_1_1distro_1_1_linux_distribution.html", "d9/d0e/classpip_1_1__vendor_1_1distro_1_1distro_1_1_linux_distribution" ],
-    [ "VersionDict", "df/d10/classpip_1_1__vendor_1_1distro_1_1distro_1_1_version_dict.html", null ],
+    [ "InfoDict", "d8/d97/classpip_1_1__vendor_1_1distro_1_1distro_1_1InfoDict.html", null ],
+    [ "LinuxDistribution", "dd/d0d/classpip_1_1__vendor_1_1distro_1_1distro_1_1LinuxDistribution.html", "dd/d0d/classpip_1_1__vendor_1_1distro_1_1distro_1_1LinuxDistribution" ],
+    [ "VersionDict", "d1/d86/classpip_1_1__vendor_1_1distro_1_1distro_1_1VersionDict.html", null ],
     [ "build_number", "d3/d28/namespacepip_1_1__vendor_1_1distro_1_1distro.html#ad858f4924992d1dcc4a57d861a67b5f5", null ],
     [ "codename", "d3/d28/namespacepip_1_1__vendor_1_1distro_1_1distro.html#a1fbf49eea3d4c08fef13834070ba2f6e", null ],
     [ "distro_release_attr", "d3/d28/namespacepip_1_1__vendor_1_1distro_1_1distro.html#a6ff62155b1a856010b8ca49a62b67dd2", null ],

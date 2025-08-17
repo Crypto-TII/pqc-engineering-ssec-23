@@ -1,10 +1,10 @@
 var namespacepip_1_1__internal_1_1models_1_1direct__url =
 [
-    [ "ArchiveInfo", "dd/d6e/classpip_1_1__internal_1_1models_1_1direct__url_1_1_archive_info.html", "dd/d6e/classpip_1_1__internal_1_1models_1_1direct__url_1_1_archive_info" ],
-    [ "DirectUrl", "dd/d89/classpip_1_1__internal_1_1models_1_1direct__url_1_1_direct_url.html", "dd/d89/classpip_1_1__internal_1_1models_1_1direct__url_1_1_direct_url" ],
-    [ "DirectUrlValidationError", "d3/db5/classpip_1_1__internal_1_1models_1_1direct__url_1_1_direct_url_validation_error.html", null ],
-    [ "DirInfo", "d4/d49/classpip_1_1__internal_1_1models_1_1direct__url_1_1_dir_info.html", "d4/d49/classpip_1_1__internal_1_1models_1_1direct__url_1_1_dir_info" ],
-    [ "VcsInfo", "d6/d2c/classpip_1_1__internal_1_1models_1_1direct__url_1_1_vcs_info.html", "d6/d2c/classpip_1_1__internal_1_1models_1_1direct__url_1_1_vcs_info" ],
+    [ "ArchiveInfo", "d4/d70/classpip_1_1__internal_1_1models_1_1direct__url_1_1ArchiveInfo.html", "d4/d70/classpip_1_1__internal_1_1models_1_1direct__url_1_1ArchiveInfo" ],
+    [ "DirectUrl", "d9/db2/classpip_1_1__internal_1_1models_1_1direct__url_1_1DirectUrl.html", "d9/db2/classpip_1_1__internal_1_1models_1_1direct__url_1_1DirectUrl" ],
+    [ "DirectUrlValidationError", "da/dd6/classpip_1_1__internal_1_1models_1_1direct__url_1_1DirectUrlValidationError.html", null ],
+    [ "DirInfo", "d0/da5/classpip_1_1__internal_1_1models_1_1direct__url_1_1DirInfo.html", "d0/da5/classpip_1_1__internal_1_1models_1_1direct__url_1_1DirInfo" ],
+    [ "VcsInfo", "d9/d13/classpip_1_1__internal_1_1models_1_1direct__url_1_1VcsInfo.html", "d9/d13/classpip_1_1__internal_1_1models_1_1direct__url_1_1VcsInfo" ],
     [ "_exactly_one_of", "d8/d24/namespacepip_1_1__internal_1_1models_1_1direct__url.html#abc0bc17cc5dc7be162d4141de5beed36", null ],
     [ "_filter_none", "d8/d24/namespacepip_1_1__internal_1_1models_1_1direct__url.html#a4bad1db7442552bcb7200c9d06c6a992", null ],
     [ "_get", "d8/d24/namespacepip_1_1__internal_1_1models_1_1direct__url.html#aa0614b0d0dba7796a7c94263753ac484", null ],

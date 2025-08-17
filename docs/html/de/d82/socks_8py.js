@@ -1,9 +1,9 @@
 var socks_8py =
 [
-    [ "SOCKSConnection", "dd/dcd/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_connection.html", "dd/dcd/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_connection" ],
-    [ "SOCKSHTTPSConnection", "d6/de3/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_h_t_t_p_s_connection.html", null ],
-    [ "SOCKSHTTPConnectionPool", "d8/df4/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_h_t_t_p_connection_pool.html", null ],
-    [ "SOCKSHTTPSConnectionPool", "dc/dee/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_h_t_t_p_s_connection_pool.html", null ],
-    [ "SOCKSProxyManager", "d3/d53/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_proxy_manager.html", "d3/d53/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1_s_o_c_k_s_proxy_manager" ],
-    [ "pip._vendor.urllib3.contrib.socks.ssl", "d1/dda/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks.html#abb1c2a54408d504d582d683faa4cb0ce", null ]
+    [ "SOCKSConnection", "d2/d3c/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSConnection.html", "d2/d3c/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSConnection" ],
+    [ "SOCKSHTTPSConnection", "dc/d2c/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSHTTPSConnection.html", null ],
+    [ "SOCKSHTTPConnectionPool", "d2/d7b/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSHTTPConnectionPool.html", null ],
+    [ "SOCKSHTTPSConnectionPool", "db/d51/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSHTTPSConnectionPool.html", null ],
+    [ "SOCKSProxyManager", "d1/de7/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSProxyManager.html", "d1/de7/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1socks_1_1SOCKSProxyManager" ],
+    [ "ssl", "de/d82/socks_8py.html#abb1c2a54408d504d582d683faa4cb0ce", null ]
 ];

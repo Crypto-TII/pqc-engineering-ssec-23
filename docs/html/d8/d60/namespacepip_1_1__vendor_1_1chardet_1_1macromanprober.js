@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1chardet_1_1macromanprober =
 [
-    [ "MacRomanProber", "d5/db5/classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober.html", "d5/db5/classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1_mac_roman_prober" ],
+    [ "MacRomanProber", "df/db0/classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1MacRomanProber.html", "df/db0/classpip_1_1__vendor_1_1chardet_1_1macromanprober_1_1MacRomanProber" ],
     [ "ACO", "d8/d60/namespacepip_1_1__vendor_1_1chardet_1_1macromanprober.html#a4b75ac65ebfba80169afb67b78ee5c07", null ],
     [ "ACV", "d8/d60/namespacepip_1_1__vendor_1_1chardet_1_1macromanprober.html#a1461d4982e93ddca455912db90aed029", null ],
     [ "ASC", "d8/d60/namespacepip_1_1__vendor_1_1chardet_1_1macromanprober.html#a27b92d83b71e265990fcc28b1128a9f8", null ],

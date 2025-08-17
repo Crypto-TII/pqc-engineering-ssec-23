@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1rich_1_1text =
 [
-    [ "Span", "df/df7/classpip_1_1__vendor_1_1rich_1_1text_1_1_span.html", "df/df7/classpip_1_1__vendor_1_1rich_1_1text_1_1_span" ],
-    [ "Text", "d7/dbd/classpip_1_1__vendor_1_1rich_1_1text_1_1_text.html", "d7/dbd/classpip_1_1__vendor_1_1rich_1_1text_1_1_text" ],
+    [ "Span", "dd/d8f/classpip_1_1__vendor_1_1rich_1_1text_1_1Span.html", "dd/d8f/classpip_1_1__vendor_1_1rich_1_1text_1_1Span" ],
+    [ "Text", "d1/dd7/classpip_1_1__vendor_1_1rich_1_1text_1_1Text.html", "d1/dd7/classpip_1_1__vendor_1_1rich_1_1text_1_1Text" ],
     [ "_re_whitespace", "d2/ddd/namespacepip_1_1__vendor_1_1rich_1_1text.html#a9bcbf1cbccce9bd1c55509ce88ba48f8", null ],
     [ "console", "d2/ddd/namespacepip_1_1__vendor_1_1rich_1_1text.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "DEFAULT_JUSTIFY", "d2/ddd/namespacepip_1_1__vendor_1_1rich_1_1text.html#ad52992c88dd46e862f7bf191de5d05f5", null ],

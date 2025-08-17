@@ -12,7 +12,7 @@ var namespacepip_1_1__vendor_1_1distlib =
     [ "util", "d6/d99/namespacepip_1_1__vendor_1_1distlib_1_1util.html", "d6/d99/namespacepip_1_1__vendor_1_1distlib_1_1util" ],
     [ "version", "d2/d38/namespacepip_1_1__vendor_1_1distlib_1_1version.html", "d2/d38/namespacepip_1_1__vendor_1_1distlib_1_1version" ],
     [ "wheel", "d6/dc4/namespacepip_1_1__vendor_1_1distlib_1_1wheel.html", "d6/dc4/namespacepip_1_1__vendor_1_1distlib_1_1wheel" ],
-    [ "DistlibException", "d3/dab/classpip_1_1__vendor_1_1distlib_1_1_distlib_exception.html", null ],
-    [ "NullHandler", "d6/d15/classpip_1_1__vendor_1_1distlib_1_1_null_handler.html", "d6/d15/classpip_1_1__vendor_1_1distlib_1_1_null_handler" ],
+    [ "DistlibException", "d7/d11/classpip_1_1__vendor_1_1distlib_1_1DistlibException.html", null ],
+    [ "NullHandler", "d6/d39/classpip_1_1__vendor_1_1distlib_1_1NullHandler.html", "d6/d39/classpip_1_1__vendor_1_1distlib_1_1NullHandler" ],
     [ "logger", "dd/d98/namespacepip_1_1__vendor_1_1distlib.html#a0b14e488ae28d98d262453f3e9cd6e4d", null ]
 ];

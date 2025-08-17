@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1packaging_1_1__manylinux =
 [
-    [ "_ELFFileHeader", "d3/ded/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1___e_l_f_file_header.html", "d3/ded/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1___e_l_f_file_header" ],
-    [ "_GLibCVersion", "d1/d73/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1___g_lib_c_version.html", null ],
+    [ "_ELFFileHeader", "dc/d0a/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1__ELFFileHeader.html", "dc/d0a/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1__ELFFileHeader" ],
+    [ "_GLibCVersion", "d4/db8/classpip_1_1__vendor_1_1packaging_1_1__manylinux_1_1__GLibCVersion.html", null ],
     [ "_get_elf_header", "d0/dd1/namespacepip_1_1__vendor_1_1packaging_1_1__manylinux.html#aa53fda2115f1c96d8f49924357eb296e", null ],
     [ "_get_glibc_version", "d0/dd1/namespacepip_1_1__vendor_1_1packaging_1_1__manylinux.html#ab5a925aeb7526c1da928fed3333499e5", null ],
     [ "_glibc_version_string", "d0/dd1/namespacepip_1_1__vendor_1_1packaging_1_1__manylinux.html#a444c3783199444c999f6ed406c83b030", null ],

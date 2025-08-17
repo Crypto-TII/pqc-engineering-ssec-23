@@ -1,4 +1,4 @@
-# Let us walk on the 3-isogeny graph: CLion Setup
+# CLion Setup
 
 This project uses `cmake`. In case it is desired to use a specialized IDE like Clion, a stand-alone `cmake` build can be done as well, but the instructions have to be run manually.
 
@@ -26,4 +26,4 @@ To set up the environment, in clion, create four different cmake profiles with t
 
 Please refer to the figure below for clarification.
 
-![CMake Profile](gifs/01-cmake-profile/cmake-profile.gif)
+\image html gifs/01-cmake-profile/cmake-profile.gif width=80%

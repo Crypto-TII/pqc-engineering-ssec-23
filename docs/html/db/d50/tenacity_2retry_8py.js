@@ -14,7 +14,7 @@ var tenacity_2retry_8py =
     [ "retry_if_not_exception_message", "dd/d68/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__if__not__exception__message.html", "dd/d68/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__if__not__exception__message" ],
     [ "retry_any", "d2/d4e/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__any.html", "d2/d4e/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__any" ],
     [ "retry_all", "d5/dfc/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__all.html", "d5/dfc/classpip_1_1__vendor_1_1tenacity_1_1retry_1_1retry__all" ],
-    [ "pip._vendor.tenacity.retry.retry_always", "d6/d7a/namespacepip_1_1__vendor_1_1tenacity_1_1retry.html#a08a81e4bb90b2dbc58fb45d26adb59ae", null ],
-    [ "pip._vendor.tenacity.retry.retry_never", "d6/d7a/namespacepip_1_1__vendor_1_1tenacity_1_1retry.html#a8ffd6af7cc314b3705125862265d84f7", null ],
-    [ "pip._vendor.tenacity.retry.RetryBaseT", "d6/d7a/namespacepip_1_1__vendor_1_1tenacity_1_1retry.html#a97803dd9a3a478d3bef38710b0665e31", null ]
+    [ "retry_always", "db/d50/tenacity_2retry_8py.html#a08a81e4bb90b2dbc58fb45d26adb59ae", null ],
+    [ "retry_never", "db/d50/tenacity_2retry_8py.html#a8ffd6af7cc314b3705125862265d84f7", null ],
+    [ "RetryBaseT", "db/d50/tenacity_2retry_8py.html#a97803dd9a3a478d3bef38710b0665e31", null ]
 ];

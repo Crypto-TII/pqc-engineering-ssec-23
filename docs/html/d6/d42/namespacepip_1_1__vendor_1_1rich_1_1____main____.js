@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1____main____ =
 [
-    [ "ColorBox", "d8/da5/classpip_1_1__vendor_1_1rich_1_1____main_____1_1_color_box.html", "d8/da5/classpip_1_1__vendor_1_1rich_1_1____main_____1_1_color_box" ],
+    [ "ColorBox", "d7/d9f/classpip_1_1__vendor_1_1rich_1_1____main_____1_1ColorBox.html", "d7/d9f/classpip_1_1__vendor_1_1rich_1_1____main_____1_1ColorBox" ],
     [ "make_test_card", "d6/d42/namespacepip_1_1__vendor_1_1rich_1_1____main____.html#a304386f812c7fc5f4e736b35a80ad23c", null ],
     [ "c", "d6/d42/namespacepip_1_1__vendor_1_1rich_1_1____main____.html#ae0323a9039add2978bf5b49550572c7c", null ],
     [ "console", "d6/d42/namespacepip_1_1__vendor_1_1rich_1_1____main____.html#a59b27486da7ae78f25305f338b4b2fce", null ],

@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1requests_1_1cookies =
 [
-    [ "CookieConflictError", "d4/df0/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_cookie_conflict_error.html", null ],
-    [ "MockRequest", "d2/d29/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request.html", "d2/d29/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_request" ],
-    [ "MockResponse", "d4/d75/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response.html", "d4/d75/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_mock_response" ],
-    [ "RequestsCookieJar", "d9/d08/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar.html", "d9/d08/classpip_1_1__vendor_1_1requests_1_1cookies_1_1_requests_cookie_jar" ],
+    [ "CookieConflictError", "d5/d33/classpip_1_1__vendor_1_1requests_1_1cookies_1_1CookieConflictError.html", null ],
+    [ "MockRequest", "dd/d36/classpip_1_1__vendor_1_1requests_1_1cookies_1_1MockRequest.html", "dd/d36/classpip_1_1__vendor_1_1requests_1_1cookies_1_1MockRequest" ],
+    [ "MockResponse", "d2/db3/classpip_1_1__vendor_1_1requests_1_1cookies_1_1MockResponse.html", "d2/db3/classpip_1_1__vendor_1_1requests_1_1cookies_1_1MockResponse" ],
+    [ "RequestsCookieJar", "d0/d7b/classpip_1_1__vendor_1_1requests_1_1cookies_1_1RequestsCookieJar.html", "d0/d7b/classpip_1_1__vendor_1_1requests_1_1cookies_1_1RequestsCookieJar" ],
     [ "_copy_cookie_jar", "d3/d97/namespacepip_1_1__vendor_1_1requests_1_1cookies.html#ac6c02824e944875cc2413b2bd973a4fe", null ],
     [ "cookiejar_from_dict", "d3/d97/namespacepip_1_1__vendor_1_1requests_1_1cookies.html#a6eb881dae150c5f407da309c55240352", null ],
     [ "create_cookie", "d3/d97/namespacepip_1_1__vendor_1_1requests_1_1cookies.html#a3a92b391170f2af1ac9dc0a53c1d00a2", null ],

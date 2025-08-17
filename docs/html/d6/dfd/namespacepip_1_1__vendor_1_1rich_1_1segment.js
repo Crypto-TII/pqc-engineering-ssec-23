@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1rich_1_1segment =
 [
-    [ "ControlType", "d4/d36/classpip_1_1__vendor_1_1rich_1_1segment_1_1_control_type.html", null ],
-    [ "Segment", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment.html", "d8/d15/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment" ],
-    [ "SegmentLines", "d2/de5/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment_lines.html", "d2/de5/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segment_lines" ],
-    [ "Segments", "d6/d72/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segments.html", "d6/d72/classpip_1_1__vendor_1_1rich_1_1segment_1_1_segments" ],
+    [ "ControlType", "d4/da3/classpip_1_1__vendor_1_1rich_1_1segment_1_1ControlType.html", null ],
+    [ "Segment", "d7/db8/classpip_1_1__vendor_1_1rich_1_1segment_1_1Segment.html", "d7/db8/classpip_1_1__vendor_1_1rich_1_1segment_1_1Segment" ],
+    [ "SegmentLines", "d2/d25/classpip_1_1__vendor_1_1rich_1_1segment_1_1SegmentLines.html", "d2/d25/classpip_1_1__vendor_1_1rich_1_1segment_1_1SegmentLines" ],
+    [ "Segments", "d7/d51/classpip_1_1__vendor_1_1rich_1_1segment_1_1Segments.html", "d7/d51/classpip_1_1__vendor_1_1rich_1_1segment_1_1Segments" ],
     [ "code", "d6/dfd/namespacepip_1_1__vendor_1_1rich_1_1segment.html#a515d5ccc1af741b45f0f72a00854a848", null ],
     [ "console", "d6/dfd/namespacepip_1_1__vendor_1_1rich_1_1segment.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "ControlCode", "d6/dfd/namespacepip_1_1__vendor_1_1rich_1_1segment.html#a6c4a3fb041d602d74f7fea1d49e83034", null ],

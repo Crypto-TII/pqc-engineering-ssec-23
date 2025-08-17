@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1idna_1_1core =
 [
-    [ "IDNABidiError", "d6/d64/classpip_1_1__vendor_1_1idna_1_1core_1_1_i_d_n_a_bidi_error.html", null ],
-    [ "IDNAError", "d7/d4a/classpip_1_1__vendor_1_1idna_1_1core_1_1_i_d_n_a_error.html", null ],
-    [ "InvalidCodepoint", "d6/dc4/classpip_1_1__vendor_1_1idna_1_1core_1_1_invalid_codepoint.html", null ],
-    [ "InvalidCodepointContext", "df/d24/classpip_1_1__vendor_1_1idna_1_1core_1_1_invalid_codepoint_context.html", null ],
+    [ "IDNABidiError", "d0/dbf/classpip_1_1__vendor_1_1idna_1_1core_1_1IDNABidiError.html", null ],
+    [ "IDNAError", "dc/d7e/classpip_1_1__vendor_1_1idna_1_1core_1_1IDNAError.html", null ],
+    [ "InvalidCodepoint", "de/ddc/classpip_1_1__vendor_1_1idna_1_1core_1_1InvalidCodepoint.html", null ],
+    [ "InvalidCodepointContext", "d7/d50/classpip_1_1__vendor_1_1idna_1_1core_1_1InvalidCodepointContext.html", null ],
     [ "_combining_class", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#af2c62e4cba987622c4985702cbb901f2", null ],
     [ "_is_script", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#ac50867907d1002e94725ab2fb4713478", null ],
     [ "_punycode", "dc/dbe/namespacepip_1_1__vendor_1_1idna_1_1core.html#a1756e2dc74e8f28a611e97614fadc111", null ],

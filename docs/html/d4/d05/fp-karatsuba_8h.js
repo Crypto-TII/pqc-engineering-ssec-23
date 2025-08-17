@@ -41,6 +41,7 @@ var fp_karatsuba_8h =
     [ "uintbig_p", "d4/d05/fp-karatsuba_8h.html#a5868cc1adbe4d51b040679d670a52799", null ],
     [ "uintbig_set", "d4/d05/fp-karatsuba_8h.html#a025a6281b31c979a25e56924b8d82734", null ],
     [ "uintbig_sub", "d4/d05/fp-karatsuba_8h.html#a6e3bcb511ca974add7a30be03e5d3e2a", null ],
+    [ "fp", "d4/d05/fp-karatsuba_8h.html#a167c68a20b94476341fdbff3d8688784", null ],
     [ "uintbig", "d4/d05/fp-karatsuba_8h.html#ad073c9a7722855530cfe22e68299dc1a", null ],
     [ "fp_add", "d4/d05/fp-karatsuba_8h.html#af4fd94e997d335eb15ade2d04c7ea55b", null ],
     [ "fp_add_s", "d4/d05/fp-karatsuba_8h.html#adb5f19ead46c90e394d5df32d4a9921d", null ],

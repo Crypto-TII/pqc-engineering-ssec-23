@@ -19,9 +19,9 @@ var namespacepip_1_1__vendor_1_1webencodings =
       [ "test_x_user_defined", "d1/dd1/namespacepip_1_1__vendor_1_1webencodings_1_1tests.html#a8c2b76e59ab66b97bb5e65a091fe2728", null ]
     ] ],
     [ "x_user_defined", "de/d5e/namespacepip_1_1__vendor_1_1webencodings_1_1x__user__defined.html", "de/d5e/namespacepip_1_1__vendor_1_1webencodings_1_1x__user__defined" ],
-    [ "Encoding", "d2/df0/classpip_1_1__vendor_1_1webencodings_1_1_encoding.html", "d2/df0/classpip_1_1__vendor_1_1webencodings_1_1_encoding" ],
-    [ "IncrementalDecoder", "d4/db7/classpip_1_1__vendor_1_1webencodings_1_1_incremental_decoder.html", "d4/db7/classpip_1_1__vendor_1_1webencodings_1_1_incremental_decoder" ],
-    [ "IncrementalEncoder", "d2/d20/classpip_1_1__vendor_1_1webencodings_1_1_incremental_encoder.html", "d2/d20/classpip_1_1__vendor_1_1webencodings_1_1_incremental_encoder" ],
+    [ "Encoding", "db/d16/classpip_1_1__vendor_1_1webencodings_1_1Encoding.html", "db/d16/classpip_1_1__vendor_1_1webencodings_1_1Encoding" ],
+    [ "IncrementalDecoder", "d6/d22/classpip_1_1__vendor_1_1webencodings_1_1IncrementalDecoder.html", "d6/d22/classpip_1_1__vendor_1_1webencodings_1_1IncrementalDecoder" ],
+    [ "IncrementalEncoder", "d0/da7/classpip_1_1__vendor_1_1webencodings_1_1IncrementalEncoder.html", "d0/da7/classpip_1_1__vendor_1_1webencodings_1_1IncrementalEncoder" ],
     [ "_detect_bom", "da/d8d/namespacepip_1_1__vendor_1_1webencodings.html#a29703ba23cf26b97ff2f5204275a5dba", null ],
     [ "_get_encoding", "da/d8d/namespacepip_1_1__vendor_1_1webencodings.html#a5ff505973cb23a34572b853caed68224", null ],
     [ "_iter_decode_generator", "da/d8d/namespacepip_1_1__vendor_1_1webencodings.html#a90ba11ae30ff8ce99266c1cb1163fddf", null ],

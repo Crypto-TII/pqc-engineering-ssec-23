@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html =
 [
-    [ "HtmlFormatter", "da/dd8/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter.html", "da/dd8/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1_html_formatter" ],
+    [ "HtmlFormatter", "da/d32/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1HtmlFormatter.html", "da/d32/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1html_1_1HtmlFormatter" ],
     [ "_get_ttype_class", "d2/d37/namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html.html#ab1ac0a60c1c8188d8afe5dc6e6344cc7", null ],
     [ "escape_html", "d2/d37/namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html.html#a37174304116f41735c443966188194ae", null ],
     [ "webify", "d2/d37/namespacepip_1_1__vendor_1_1pygments_1_1formatters_1_1html.html#aeeee14e8795ea13b3ee7aeb56345f547", null ],

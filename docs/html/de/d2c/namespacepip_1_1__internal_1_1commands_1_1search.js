@@ -1,7 +1,7 @@
 var namespacepip_1_1__internal_1_1commands_1_1search =
 [
-    [ "SearchCommand", "db/d61/classpip_1_1__internal_1_1commands_1_1search_1_1_search_command.html", "db/d61/classpip_1_1__internal_1_1commands_1_1search_1_1_search_command" ],
-    [ "TransformedHit", "dd/d26/classpip_1_1__internal_1_1commands_1_1search_1_1_transformed_hit.html", null ],
+    [ "SearchCommand", "d7/d92/classpip_1_1__internal_1_1commands_1_1search_1_1SearchCommand.html", "d7/d92/classpip_1_1__internal_1_1commands_1_1search_1_1SearchCommand" ],
+    [ "TransformedHit", "d8/da1/classpip_1_1__internal_1_1commands_1_1search_1_1TransformedHit.html", null ],
     [ "highest_version", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#a0d43a958c9afef3e9803edb77bda1770", null ],
     [ "print_dist_installation_info", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#aaa64ef9e86abf53fd711eb806637aa8b", null ],
     [ "print_results", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#a421ba37b9ba0db03cc21c448681b97ec", null ],

@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1rich_1_1color =
 [
-    [ "Color", "d5/d28/classpip_1_1__vendor_1_1rich_1_1color_1_1_color.html", "d5/d28/classpip_1_1__vendor_1_1rich_1_1color_1_1_color" ],
-    [ "ColorParseError", "de/d82/classpip_1_1__vendor_1_1rich_1_1color_1_1_color_parse_error.html", null ],
-    [ "ColorSystem", "d4/d8e/classpip_1_1__vendor_1_1rich_1_1color_1_1_color_system.html", "d4/d8e/classpip_1_1__vendor_1_1rich_1_1color_1_1_color_system" ],
-    [ "ColorType", "d1/d50/classpip_1_1__vendor_1_1rich_1_1color_1_1_color_type.html", "d1/d50/classpip_1_1__vendor_1_1rich_1_1color_1_1_color_type" ],
+    [ "Color", "d0/d56/classpip_1_1__vendor_1_1rich_1_1color_1_1Color.html", "d0/d56/classpip_1_1__vendor_1_1rich_1_1color_1_1Color" ],
+    [ "ColorParseError", "d6/d89/classpip_1_1__vendor_1_1rich_1_1color_1_1ColorParseError.html", null ],
+    [ "ColorSystem", "da/d1b/classpip_1_1__vendor_1_1rich_1_1color_1_1ColorSystem.html", "da/d1b/classpip_1_1__vendor_1_1rich_1_1color_1_1ColorSystem" ],
+    [ "ColorType", "d7/d33/classpip_1_1__vendor_1_1rich_1_1color_1_1ColorType.html", "d7/d33/classpip_1_1__vendor_1_1rich_1_1color_1_1ColorType" ],
     [ "blend_rgb", "d3/d22/namespacepip_1_1__vendor_1_1rich_1_1color.html#ae6f434e52906ce87d0a383005aa37c41", null ],
     [ "parse_rgb_hex", "d3/d22/namespacepip_1_1__vendor_1_1rich_1_1color.html#a7b22aceae3992de77aa6ba82902c90c6", null ],
     [ "ANSI_COLOR_NAMES", "d3/d22/namespacepip_1_1__vendor_1_1rich_1_1color.html#a3f6e0f27237f5dbe541a3c1d18a49b88", null ],

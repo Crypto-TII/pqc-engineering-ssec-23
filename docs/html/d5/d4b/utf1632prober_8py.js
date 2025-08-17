@@ -1,4 +1,4 @@
 var utf1632prober_8py =
 [
-    [ "UTF1632Prober", "db/d38/classpip_1_1__vendor_1_1chardet_1_1utf1632prober_1_1_u_t_f1632_prober.html", "db/d38/classpip_1_1__vendor_1_1chardet_1_1utf1632prober_1_1_u_t_f1632_prober" ]
+    [ "UTF1632Prober", "da/db2/classpip_1_1__vendor_1_1chardet_1_1utf1632prober_1_1UTF1632Prober.html", "da/db2/classpip_1_1__vendor_1_1chardet_1_1utf1632prober_1_1UTF1632Prober" ]
 ];

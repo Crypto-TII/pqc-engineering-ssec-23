@@ -1,4 +1,4 @@
 var bbcode_8py =
 [
-    [ "BBCodeFormatter", "d7/d50/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1bbcode_1_1_b_b_code_formatter.html", "d7/d50/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1bbcode_1_1_b_b_code_formatter" ]
+    [ "BBCodeFormatter", "d6/d90/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1bbcode_1_1BBCodeFormatter.html", "d6/d90/classpip_1_1__vendor_1_1pygments_1_1formatters_1_1bbcode_1_1BBCodeFormatter" ]
 ];

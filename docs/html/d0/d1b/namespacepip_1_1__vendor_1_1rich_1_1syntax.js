@@ -1,10 +1,10 @@
 var namespacepip_1_1__vendor_1_1rich_1_1syntax =
 [
-    [ "_SyntaxHighlightRange", "d5/dfc/classpip_1_1__vendor_1_1rich_1_1syntax_1_1___syntax_highlight_range.html", null ],
-    [ "ANSISyntaxTheme", "de/dd2/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_a_n_s_i_syntax_theme.html", "de/dd2/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_a_n_s_i_syntax_theme" ],
-    [ "PygmentsSyntaxTheme", "db/d64/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_pygments_syntax_theme.html", "db/d64/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_pygments_syntax_theme" ],
-    [ "Syntax", "df/d14/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_syntax.html", "df/d14/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_syntax" ],
-    [ "SyntaxTheme", "d7/d95/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_syntax_theme.html", "d7/d95/classpip_1_1__vendor_1_1rich_1_1syntax_1_1_syntax_theme" ],
+    [ "_SyntaxHighlightRange", "d4/ddb/classpip_1_1__vendor_1_1rich_1_1syntax_1_1__SyntaxHighlightRange.html", null ],
+    [ "ANSISyntaxTheme", "d9/d82/classpip_1_1__vendor_1_1rich_1_1syntax_1_1ANSISyntaxTheme.html", "d9/d82/classpip_1_1__vendor_1_1rich_1_1syntax_1_1ANSISyntaxTheme" ],
+    [ "PygmentsSyntaxTheme", "d5/d48/classpip_1_1__vendor_1_1rich_1_1syntax_1_1PygmentsSyntaxTheme.html", "d5/d48/classpip_1_1__vendor_1_1rich_1_1syntax_1_1PygmentsSyntaxTheme" ],
+    [ "Syntax", "d1/daf/classpip_1_1__vendor_1_1rich_1_1syntax_1_1Syntax.html", "d1/daf/classpip_1_1__vendor_1_1rich_1_1syntax_1_1Syntax" ],
+    [ "SyntaxTheme", "d5/da4/classpip_1_1__vendor_1_1rich_1_1syntax_1_1SyntaxTheme.html", "d5/da4/classpip_1_1__vendor_1_1rich_1_1syntax_1_1SyntaxTheme" ],
     [ "_get_code_index_for_syntax_position", "d0/d1b/namespacepip_1_1__vendor_1_1rich_1_1syntax.html#a77883d5c899482dfe3510319e09e648a", null ],
     [ "action", "d0/d1b/namespacepip_1_1__vendor_1_1rich_1_1syntax.html#a2f4ab7bf743142dae2e459aa18f9f1d4", null ],
     [ "ANSI_DARK", "d0/d1b/namespacepip_1_1__vendor_1_1rich_1_1syntax.html#a01e17645ff35c38defa6e6d0036f245e", null ],

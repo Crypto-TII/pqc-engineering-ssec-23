@@ -1,11 +1,11 @@
 var namespacepip_1_1__vendor_1_1packaging_1_1specifiers =
 [
-    [ "_IndividualSpecifier", "d9/d98/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1___individual_specifier.html", "d9/d98/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1___individual_specifier" ],
-    [ "BaseSpecifier", "df/d1d/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_base_specifier.html", "df/d1d/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_base_specifier" ],
-    [ "InvalidSpecifier", "d1/da4/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_invalid_specifier.html", null ],
-    [ "LegacySpecifier", "d0/de6/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_legacy_specifier.html", "d0/de6/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_legacy_specifier" ],
-    [ "Specifier", "d3/dc8/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_specifier.html", "d3/dc8/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_specifier" ],
-    [ "SpecifierSet", "d5/d11/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_specifier_set.html", "d5/d11/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1_specifier_set" ],
+    [ "_IndividualSpecifier", "d9/d84/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1__IndividualSpecifier.html", "d9/d84/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1__IndividualSpecifier" ],
+    [ "BaseSpecifier", "d8/d0f/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1BaseSpecifier.html", "d8/d0f/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1BaseSpecifier" ],
+    [ "InvalidSpecifier", "dc/d72/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1InvalidSpecifier.html", null ],
+    [ "LegacySpecifier", "d9/de0/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1LegacySpecifier.html", "d9/de0/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1LegacySpecifier" ],
+    [ "Specifier", "d3/d88/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1Specifier.html", "d3/d88/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1Specifier" ],
+    [ "SpecifierSet", "df/d14/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1SpecifierSet.html", "df/d14/classpip_1_1__vendor_1_1packaging_1_1specifiers_1_1SpecifierSet" ],
     [ "_is_not_suffix", "dd/d9c/namespacepip_1_1__vendor_1_1packaging_1_1specifiers.html#a13fa1daae75705c155de9dca4f4ac503", null ],
     [ "_pad_version", "dd/d9c/namespacepip_1_1__vendor_1_1packaging_1_1specifiers.html#a1c1cb313e3a254dc0a59828d46c7c256", null ],
     [ "_require_version_compare", "dd/d9c/namespacepip_1_1__vendor_1_1packaging_1_1specifiers.html#a8f374e619391a4af551285ee1e29ab5f", null ],

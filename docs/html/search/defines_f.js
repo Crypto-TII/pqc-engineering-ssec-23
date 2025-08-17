@@ -8,5 +8,5 @@ var searchData=
   ['random_5fseed_5',['RANDOM_SEED',['../df/dfd/test__utils_8h.html#aaf798789e9272ddf55aef59fa3d87dbd',1,'test_utils.h']]],
   ['random_5ftrit_5fstring_6',['RANDOM_TRIT_STRING',['../df/dfd/test__utils_8h.html#a881ff62623ff1fae0e4321bff87fb9c6',1,'test_utils.h']]],
   ['redc_5falpha_7',['redc_alpha',['../d4/d05/fp-karatsuba_8h.html#a7c6e6f3cf285277913c617d3043d3733',1,'fp-karatsuba.h']]],
-  ['rol_8',['ROL',['../d1/d6a/fips202_8c.html#aec7a6f8049659733c0c5aac28df4abe2',1,'ROL:&#160;fips202.c'],['../d3/dda/keccakf1600_8c.html#aec7a6f8049659733c0c5aac28df4abe2',1,'ROL:&#160;keccakf1600.c']]]
+  ['rol_8',['rol',['../d1/d6a/fips202_8c.html#aec7a6f8049659733c0c5aac28df4abe2',1,'ROL:&#160;fips202.c'],['../d3/dda/keccakf1600_8c.html#aec7a6f8049659733c0c5aac28df4abe2',1,'ROL:&#160;keccakf1600.c']]]
 ];

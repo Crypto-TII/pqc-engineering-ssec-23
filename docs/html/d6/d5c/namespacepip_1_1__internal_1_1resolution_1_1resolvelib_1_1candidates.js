@@ -1,11 +1,11 @@
 var namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates =
 [
-    [ "_InstallRequirementBackedCandidate", "dc/d03/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1___install_requirement_backed_candidate.html", "dc/d03/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1___install_requirement_backed_candidate" ],
-    [ "AlreadyInstalledCandidate", "d3/d4e/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_already_installed_candidate.html", "d3/d4e/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_already_installed_candidate" ],
-    [ "EditableCandidate", "dd/d77/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_editable_candidate.html", "dd/d77/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_editable_candidate" ],
-    [ "ExtrasCandidate", "d8/df7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_extras_candidate.html", "d8/df7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_extras_candidate" ],
-    [ "LinkCandidate", "d1/def/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_link_candidate.html", "d1/def/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_link_candidate" ],
-    [ "RequiresPythonCandidate", "db/d0a/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_requires_python_candidate.html", "db/d0a/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1_requires_python_candidate" ],
+    [ "_InstallRequirementBackedCandidate", "d9/de7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1__InstallRequirementBackedCandidate.html", "d9/de7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1__InstallRequirementBackedCandidate" ],
+    [ "AlreadyInstalledCandidate", "de/de7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1AlreadyInstalledCandidate.html", "de/de7/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1AlreadyInstalledCandidate" ],
+    [ "EditableCandidate", "d6/d0f/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1EditableCandidate.html", "d6/d0f/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1EditableCandidate" ],
+    [ "ExtrasCandidate", "d9/d15/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1ExtrasCandidate.html", "d9/d15/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1ExtrasCandidate" ],
+    [ "LinkCandidate", "d6/d34/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1LinkCandidate.html", "d6/d34/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1LinkCandidate" ],
+    [ "RequiresPythonCandidate", "d8/d70/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1RequiresPythonCandidate.html", "d8/d70/classpip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates_1_1RequiresPythonCandidate" ],
     [ "_make_install_req_from_dist", "d6/d5c/namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates.html#aa5483e8c4669bde37655bf4e5e4885aa", null ],
     [ "as_base_candidate", "d6/d5c/namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates.html#a62f6fc4cf0f1c5abe555bfcc1ff444d9", null ],
     [ "make_install_req_from_editable", "d6/d5c/namespacepip_1_1__internal_1_1resolution_1_1resolvelib_1_1candidates.html#a69445fa263ffefa3032a4e87e7614581", null ],

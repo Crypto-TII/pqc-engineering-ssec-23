@@ -1,8 +1,8 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl =
 [
-    [ "PyOpenSSLContext", "de/d6e/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1_py_open_s_s_l_context.html", "de/d6e/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1_py_open_s_s_l_context" ],
-    [ "UnsupportedExtension", "d0/d14/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1_unsupported_extension.html", null ],
-    [ "WrappedSocket", "d3/d95/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1_wrapped_socket.html", "d3/d95/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1_wrapped_socket" ],
+    [ "PyOpenSSLContext", "d7/d13/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1PyOpenSSLContext.html", "d7/d13/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1PyOpenSSLContext" ],
+    [ "UnsupportedExtension", "da/d70/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1UnsupportedExtension.html", null ],
+    [ "WrappedSocket", "dc/d46/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1WrappedSocket.html", "dc/d46/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl_1_1WrappedSocket" ],
     [ "_dnsname_to_stdlib", "d9/dd1/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl.html#ac98ad3d4991fe6cc9f9e33bda9a26884", null ],
     [ "_validate_dependencies_met", "d9/dd1/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl.html#a207cbd34637ce9d26ce38dcab7b13ec3", null ],
     [ "_verify_callback", "d9/dd1/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1pyopenssl.html#abfd4a10524995910397c528d13be698b", null ],

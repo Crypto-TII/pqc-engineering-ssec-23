@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1control =
 [
-    [ "Control", "d3/d9b/classpip_1_1__vendor_1_1rich_1_1control_1_1_control.html", "d3/d9b/classpip_1_1__vendor_1_1rich_1_1control_1_1_control" ],
+    [ "Control", "df/dec/classpip_1_1__vendor_1_1rich_1_1control_1_1Control.html", "df/dec/classpip_1_1__vendor_1_1rich_1_1control_1_1Control" ],
     [ "escape_control_codes", "d3/d50/namespacepip_1_1__vendor_1_1rich_1_1control.html#a45cd48c6d2e965e1c6579445dc29fd1d", null ],
     [ "strip_control_codes", "d3/d50/namespacepip_1_1__vendor_1_1rich_1_1control.html#a439404d7380abd1bc2c965cd487c8cb9", null ],
     [ "_CONTROL_STRIP_TRANSLATE", "d3/d50/namespacepip_1_1__vendor_1_1rich_1_1control.html#a7f8f202e7a5132182278f5cb702e99cb", null ],

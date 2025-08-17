@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1packaging_1_1version =
 [
-    [ "_BaseVersion", "d9/d99/classpip_1_1__vendor_1_1packaging_1_1version_1_1___base_version.html", "d9/d99/classpip_1_1__vendor_1_1packaging_1_1version_1_1___base_version" ],
-    [ "InvalidVersion", "d5/d39/classpip_1_1__vendor_1_1packaging_1_1version_1_1_invalid_version.html", null ],
-    [ "LegacyVersion", "db/d53/classpip_1_1__vendor_1_1packaging_1_1version_1_1_legacy_version.html", "db/d53/classpip_1_1__vendor_1_1packaging_1_1version_1_1_legacy_version" ],
-    [ "Version", "d6/d65/classpip_1_1__vendor_1_1packaging_1_1version_1_1_version.html", "d6/d65/classpip_1_1__vendor_1_1packaging_1_1version_1_1_version" ],
+    [ "_BaseVersion", "db/d6f/classpip_1_1__vendor_1_1packaging_1_1version_1_1__BaseVersion.html", "db/d6f/classpip_1_1__vendor_1_1packaging_1_1version_1_1__BaseVersion" ],
+    [ "InvalidVersion", "d4/d17/classpip_1_1__vendor_1_1packaging_1_1version_1_1InvalidVersion.html", null ],
+    [ "LegacyVersion", "d8/d13/classpip_1_1__vendor_1_1packaging_1_1version_1_1LegacyVersion.html", "d8/d13/classpip_1_1__vendor_1_1packaging_1_1version_1_1LegacyVersion" ],
+    [ "Version", "d4/d44/classpip_1_1__vendor_1_1packaging_1_1version_1_1Version.html", "d4/d44/classpip_1_1__vendor_1_1packaging_1_1version_1_1Version" ],
     [ "_cmpkey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#aa7f2d3c8e1e4a6df628a475a33ec0062", null ],
     [ "_legacy_cmpkey", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a455c0a5be106bc94d5489e7b5d96039b", null ],
     [ "_parse_letter_version", "dd/d40/namespacepip_1_1__vendor_1_1packaging_1_1version.html#a2d05d90d479ac7021adc9cd65a4b1cc8", null ],

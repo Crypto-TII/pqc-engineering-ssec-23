@@ -1,11 +1,11 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1connection =
 [
-    [ "BaseSSLError", "d5/d4b/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_base_s_s_l_error.html", null ],
-    [ "BrokenPipeError", "dc/d19/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_broken_pipe_error.html", null ],
-    [ "ConnectionError", "db/dc1/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_connection_error.html", null ],
-    [ "DummyConnection", "df/d2a/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_dummy_connection.html", null ],
-    [ "HTTPConnection", "d2/d75/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_h_t_t_p_connection.html", "d2/d75/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_h_t_t_p_connection" ],
-    [ "HTTPSConnection", "d9/d5c/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_h_t_t_p_s_connection.html", "d9/d5c/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1_h_t_t_p_s_connection" ],
+    [ "BaseSSLError", "db/d8e/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1BaseSSLError.html", null ],
+    [ "BrokenPipeError", "d8/da1/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1BrokenPipeError.html", null ],
+    [ "ConnectionError", "dd/db6/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1ConnectionError.html", null ],
+    [ "DummyConnection", "de/d7a/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1DummyConnection.html", null ],
+    [ "HTTPConnection", "d0/d47/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1HTTPConnection.html", "d0/d47/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1HTTPConnection" ],
+    [ "HTTPSConnection", "df/d04/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1HTTPSConnection.html", "df/d04/classpip_1_1__vendor_1_1urllib3_1_1connection_1_1HTTPSConnection" ],
     [ "_get_default_user_agent", "d8/dc8/namespacepip_1_1__vendor_1_1urllib3_1_1connection.html#ab73fb386c7d4cc8985ddf40a3aa67859", null ],
     [ "_match_hostname", "d8/dc8/namespacepip_1_1__vendor_1_1urllib3_1_1connection.html#a190123820c3283e85c0b62676e1951e9", null ],
     [ "_CONTAINS_CONTROL_CHAR_RE", "d8/dc8/namespacepip_1_1__vendor_1_1urllib3_1_1connection.html#a7d9d67a8bddffd91fdb7f8ce431f5d5a", null ],

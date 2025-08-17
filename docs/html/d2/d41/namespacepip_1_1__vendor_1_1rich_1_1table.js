@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1rich_1_1table =
 [
-    [ "_Cell", "dc/d01/classpip_1_1__vendor_1_1rich_1_1table_1_1___cell.html", null ],
-    [ "Column", "d7/d36/classpip_1_1__vendor_1_1rich_1_1table_1_1_column.html", "d7/d36/classpip_1_1__vendor_1_1rich_1_1table_1_1_column" ],
-    [ "Row", "db/dc3/classpip_1_1__vendor_1_1rich_1_1table_1_1_row.html", null ],
-    [ "Table", "da/d35/classpip_1_1__vendor_1_1rich_1_1table_1_1_table.html", "da/d35/classpip_1_1__vendor_1_1rich_1_1table_1_1_table" ],
+    [ "_Cell", "de/d8c/classpip_1_1__vendor_1_1rich_1_1table_1_1__Cell.html", null ],
+    [ "Column", "d2/d06/classpip_1_1__vendor_1_1rich_1_1table_1_1Column.html", "d2/d06/classpip_1_1__vendor_1_1rich_1_1table_1_1Column" ],
+    [ "Row", "d1/dea/classpip_1_1__vendor_1_1rich_1_1table_1_1Row.html", null ],
+    [ "Table", "d9/df3/classpip_1_1__vendor_1_1rich_1_1table_1_1Table.html", "d9/df3/classpip_1_1__vendor_1_1rich_1_1table_1_1Table" ],
     [ "header", "d2/d41/namespacepip_1_1__vendor_1_1rich_1_1table.html#a9de320b0653fe2961b4a82422409324f", null ],
     [ "console", "d2/d41/namespacepip_1_1__vendor_1_1rich_1_1table.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "end_section", "d2/d41/namespacepip_1_1__vendor_1_1rich_1_1table.html#acdfc9a600b3c12de675f7bad86f6ef55", null ],

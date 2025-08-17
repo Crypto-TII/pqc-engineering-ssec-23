@@ -1,7 +1,7 @@
 var namespacepip_1_1__internal_1_1operations_1_1freeze =
 [
-    [ "_EditableInfo", "d0/d74/classpip_1_1__internal_1_1operations_1_1freeze_1_1___editable_info.html", null ],
-    [ "FrozenRequirement", "d0/dc3/classpip_1_1__internal_1_1operations_1_1freeze_1_1_frozen_requirement.html", "d0/dc3/classpip_1_1__internal_1_1operations_1_1freeze_1_1_frozen_requirement" ],
+    [ "_EditableInfo", "d6/dde/classpip_1_1__internal_1_1operations_1_1freeze_1_1__EditableInfo.html", null ],
+    [ "FrozenRequirement", "d6/d3d/classpip_1_1__internal_1_1operations_1_1freeze_1_1FrozenRequirement.html", "d6/d3d/classpip_1_1__internal_1_1operations_1_1freeze_1_1FrozenRequirement" ],
     [ "_format_as_name_version", "dc/df1/namespacepip_1_1__internal_1_1operations_1_1freeze.html#aa90e5a7862ecf3a737e713a300eb9c7b", null ],
     [ "_get_editable_info", "dc/df1/namespacepip_1_1__internal_1_1operations_1_1freeze.html#a6e7607b2f0cb0f2b9410a3f8ee8524e4", null ],
     [ "freeze", "dc/df1/namespacepip_1_1__internal_1_1operations_1_1freeze.html#ad922e29a6582977e069aaebe9081cb29", null ],

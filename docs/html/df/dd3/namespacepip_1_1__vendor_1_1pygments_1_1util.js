@@ -1,9 +1,9 @@
 var namespacepip_1_1__vendor_1_1pygments_1_1util =
 [
-    [ "ClassNotFound", "d1/d55/classpip_1_1__vendor_1_1pygments_1_1util_1_1_class_not_found.html", null ],
-    [ "Future", "d6/db9/classpip_1_1__vendor_1_1pygments_1_1util_1_1_future.html", "d6/db9/classpip_1_1__vendor_1_1pygments_1_1util_1_1_future" ],
-    [ "OptionError", "d1/dd9/classpip_1_1__vendor_1_1pygments_1_1util_1_1_option_error.html", null ],
-    [ "UnclosingTextIOWrapper", "df/da0/classpip_1_1__vendor_1_1pygments_1_1util_1_1_unclosing_text_i_o_wrapper.html", "df/da0/classpip_1_1__vendor_1_1pygments_1_1util_1_1_unclosing_text_i_o_wrapper" ],
+    [ "ClassNotFound", "d3/d55/classpip_1_1__vendor_1_1pygments_1_1util_1_1ClassNotFound.html", null ],
+    [ "Future", "d8/d5e/classpip_1_1__vendor_1_1pygments_1_1util_1_1Future.html", "d8/d5e/classpip_1_1__vendor_1_1pygments_1_1util_1_1Future" ],
+    [ "OptionError", "dc/d4b/classpip_1_1__vendor_1_1pygments_1_1util_1_1OptionError.html", null ],
+    [ "UnclosingTextIOWrapper", "d1/d98/classpip_1_1__vendor_1_1pygments_1_1util_1_1UnclosingTextIOWrapper.html", "d1/d98/classpip_1_1__vendor_1_1pygments_1_1util_1_1UnclosingTextIOWrapper" ],
     [ "docstring_headline", "df/dd3/namespacepip_1_1__vendor_1_1pygments_1_1util.html#a40648b8da2c05b3403781fff747f5c2c", null ],
     [ "doctype_matches", "df/dd3/namespacepip_1_1__vendor_1_1pygments_1_1util.html#a175484e34474dad15e86deec3c042cf3", null ],
     [ "duplicates_removed", "df/dd3/namespacepip_1_1__vendor_1_1pygments_1_1util.html#a62c8d2d39e4876bd02b8ebc82f2bab56", null ],

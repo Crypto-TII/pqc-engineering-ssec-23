@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1logging =
 [
-    [ "RichHandler", "da/d53/classpip_1_1__vendor_1_1rich_1_1logging_1_1_rich_handler.html", "da/d53/classpip_1_1__vendor_1_1rich_1_1logging_1_1_rich_handler" ],
+    [ "RichHandler", "d2/d69/classpip_1_1__vendor_1_1rich_1_1logging_1_1RichHandler.html", "d2/d69/classpip_1_1__vendor_1_1rich_1_1logging_1_1RichHandler" ],
     [ "divide", "d4/d2d/namespacepip_1_1__vendor_1_1rich_1_1logging.html#a64d4af8efaa1fba765360fdcda309ac4", null ],
     [ "datefmt", "d4/d2d/namespacepip_1_1__vendor_1_1rich_1_1logging.html#a97b77dfb3e75978c1394101661dcc563", null ],
     [ "extra", "d4/d2d/namespacepip_1_1__vendor_1_1rich_1_1logging.html#ac0c2cc2d8ec1b1223bd916a56c8f0b3a", null ],

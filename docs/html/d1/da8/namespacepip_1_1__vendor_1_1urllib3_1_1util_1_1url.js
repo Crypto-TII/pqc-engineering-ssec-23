@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1url =
 [
-    [ "Url", "d6/dd8/classpip_1_1__vendor_1_1urllib3_1_1util_1_1url_1_1_url.html", "d6/dd8/classpip_1_1__vendor_1_1urllib3_1_1util_1_1url_1_1_url" ],
+    [ "Url", "d0/dc3/classpip_1_1__vendor_1_1urllib3_1_1util_1_1url_1_1Url.html", "d0/dc3/classpip_1_1__vendor_1_1urllib3_1_1util_1_1url_1_1Url" ],
     [ "_encode_invalid_chars", "d1/da8/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1url.html#afba943221e16f8127854ddf2cf2da21c", null ],
     [ "_encode_target", "d1/da8/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1url.html#a933b1ad7b57d68bf85ee17be12d982e8", null ],
     [ "_idna_encode", "d1/da8/namespacepip_1_1__vendor_1_1urllib3_1_1util_1_1url.html#a6dd217815c25fdd272f46ac21c130f94", null ],

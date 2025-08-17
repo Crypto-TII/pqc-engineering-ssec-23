@@ -1,11 +1,11 @@
 var namespacepip_1_1__vendor_1_1rich_1_1pretty =
 [
-    [ "_Line", "db/db8/classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line.html", "db/db8/classpip_1_1__vendor_1_1rich_1_1pretty_1_1___line" ],
-    [ "BrokenRepr", "db/d7c/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr.html", "db/d7c/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_broken_repr" ],
-    [ "Node", "d9/d33/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node.html", "d9/d33/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_node" ],
-    [ "Pretty", "d7/d4b/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty.html", "d7/d4b/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_pretty" ],
-    [ "StockKeepingUnit", "dd/d6e/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_stock_keeping_unit.html", null ],
-    [ "Thing", "df/d64/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing.html", "df/d64/classpip_1_1__vendor_1_1rich_1_1pretty_1_1_thing" ],
+    [ "_Line", "d8/d7e/classpip_1_1__vendor_1_1rich_1_1pretty_1_1__Line.html", "d8/d7e/classpip_1_1__vendor_1_1rich_1_1pretty_1_1__Line" ],
+    [ "BrokenRepr", "d6/d64/classpip_1_1__vendor_1_1rich_1_1pretty_1_1BrokenRepr.html", "d6/d64/classpip_1_1__vendor_1_1rich_1_1pretty_1_1BrokenRepr" ],
+    [ "Node", "de/dd2/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Node.html", "de/dd2/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Node" ],
+    [ "Pretty", "d2/d19/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Pretty.html", "d2/d19/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Pretty" ],
+    [ "StockKeepingUnit", "d3/de6/classpip_1_1__vendor_1_1rich_1_1pretty_1_1StockKeepingUnit.html", null ],
+    [ "Thing", "dc/d46/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Thing.html", "dc/d46/classpip_1_1__vendor_1_1rich_1_1pretty_1_1Thing" ],
     [ "_get_attr_fields", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a05aff3886a560650bf2f8c5a1465af41", null ],
     [ "_get_braces_for_array", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a3d60a514775ed27afd90122ea9fa567b", null ],
     [ "_get_braces_for_defaultdict", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#ae14cecb3d45948db4d09561bccaae433", null ],
@@ -17,8 +17,8 @@ var namespacepip_1_1__vendor_1_1rich_1_1pretty =
     [ "_safe_isinstance", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#af335ebc79a328518d40475e437b52321", null ],
     [ "install", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a6d4aa764aeef077ea5d78d03f917e244", null ],
     [ "is_expandable", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#af431c9fbb50f31ef6f08e3f77d22a36c", null ],
-    [ "pprint", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#add5a92f75c2fb3213a119bdff9938240", null ],
-    [ "pretty_repr", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#ac95882a99cba8497708e3789c3b64732", null ],
+    [ "pprint", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#ac6b10435ca77e220aace8d4bbaa85159", null ],
+    [ "pretty_repr", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#aa4535a4fa691ef984107d6143f3fef6c", null ],
     [ "traverse", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#aeb9afb4a973eabd5e75a2d37ef69eafd", null ],
     [ "_BRACES", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a6f14d2866769831c480cd88810fad272", null ],
     [ "_CONTAINERS", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#abdedd208eebb619f3a84088418e4f685", null ],
@@ -26,6 +26,5 @@ var namespacepip_1_1__vendor_1_1rich_1_1pretty =
     [ "_has_attrs", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a6edba38697c6d356b8c2bd1e0544064a", null ],
     [ "_MAPPING_CONTAINERS", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a9499c4fe89b92b6684c924564cb614c5", null ],
     [ "d", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#a1aabac6d068eef6a7bad3fdf50a05cc8", null ],
-    [ "data", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#adf374424c2cdd923b5646cc29b68562d", null ],
-    [ "pprint", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#ae42009b24c28a05443f4aa73bac697eb", null ]
+    [ "data", "d4/dd6/namespacepip_1_1__vendor_1_1rich_1_1pretty.html#adf374424c2cdd923b5646cc29b68562d", null ]
 ];

@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1colorama_1_1win32 =
 [
-    [ "CONSOLE_SCREEN_BUFFER_INFO", "d3/d6b/classpip_1_1__vendor_1_1colorama_1_1win32_1_1_c_o_n_s_o_l_e___s_c_r_e_e_n___b_u_f_f_e_r___i_n_f_o.html", "d3/d6b/classpip_1_1__vendor_1_1colorama_1_1win32_1_1_c_o_n_s_o_l_e___s_c_r_e_e_n___b_u_f_f_e_r___i_n_f_o" ],
+    [ "CONSOLE_SCREEN_BUFFER_INFO", "d9/dea/classpip_1_1__vendor_1_1colorama_1_1win32_1_1CONSOLE__SCREEN__BUFFER__INFO.html", "d9/dea/classpip_1_1__vendor_1_1colorama_1_1win32_1_1CONSOLE__SCREEN__BUFFER__INFO" ],
     [ "_winapi_test", "dd/d5a/namespacepip_1_1__vendor_1_1colorama_1_1win32.html#a49151e26f165a0b680ac78af7b7ca2b8", null ],
     [ "FillConsoleOutputAttribute", "dd/d5a/namespacepip_1_1__vendor_1_1colorama_1_1win32.html#afd46567d5ff2f3b44ca17457fff0295d", null ],
     [ "FillConsoleOutputCharacter", "dd/d5a/namespacepip_1_1__vendor_1_1colorama_1_1win32.html#ab13a22b95d63de9eecf748883658be00", null ],

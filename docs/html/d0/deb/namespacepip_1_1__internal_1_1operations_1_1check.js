@@ -1,6 +1,6 @@
 var namespacepip_1_1__internal_1_1operations_1_1check =
 [
-    [ "PackageDetails", "db/d58/classpip_1_1__internal_1_1operations_1_1check_1_1_package_details.html", null ],
+    [ "PackageDetails", "d7/dc9/classpip_1_1__internal_1_1operations_1_1check_1_1PackageDetails.html", null ],
     [ "_create_whitelist", "d0/deb/namespacepip_1_1__internal_1_1operations_1_1check.html#a6d53ecb7cfee784131c353b3481f9841", null ],
     [ "_simulate_installation_of", "d0/deb/namespacepip_1_1__internal_1_1operations_1_1check.html#a47965e88f455a9276a767f8c72c59b6b", null ],
     [ "check_install_conflicts", "d0/deb/namespacepip_1_1__internal_1_1operations_1_1check.html#a1249fb6782f53fa81c88c9ac1ce5216a", null ],

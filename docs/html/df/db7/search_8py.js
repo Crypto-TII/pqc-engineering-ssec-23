@@ -1,10 +1,10 @@
 var search_8py =
 [
-    [ "TransformedHit", "dd/d26/classpip_1_1__internal_1_1commands_1_1search_1_1_transformed_hit.html", null ],
-    [ "SearchCommand", "db/d61/classpip_1_1__internal_1_1commands_1_1search_1_1_search_command.html", "db/d61/classpip_1_1__internal_1_1commands_1_1search_1_1_search_command" ],
-    [ "pip._internal.commands.search.highest_version", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#a0d43a958c9afef3e9803edb77bda1770", null ],
-    [ "pip._internal.commands.search.print_dist_installation_info", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#aaa64ef9e86abf53fd711eb806637aa8b", null ],
-    [ "pip._internal.commands.search.print_results", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#a421ba37b9ba0db03cc21c448681b97ec", null ],
-    [ "pip._internal.commands.search.transform_hits", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#ae8b11caa93259115d9c26f3c44e13e7a", null ],
-    [ "pip._internal.commands.search.logger", "de/d2c/namespacepip_1_1__internal_1_1commands_1_1search.html#a0b14e488ae28d98d262453f3e9cd6e4d", null ]
+    [ "TransformedHit", "d8/da1/classpip_1_1__internal_1_1commands_1_1search_1_1TransformedHit.html", null ],
+    [ "SearchCommand", "d7/d92/classpip_1_1__internal_1_1commands_1_1search_1_1SearchCommand.html", "d7/d92/classpip_1_1__internal_1_1commands_1_1search_1_1SearchCommand" ],
+    [ "highest_version", "df/db7/search_8py.html#a0d43a958c9afef3e9803edb77bda1770", null ],
+    [ "print_dist_installation_info", "df/db7/search_8py.html#aaa64ef9e86abf53fd711eb806637aa8b", null ],
+    [ "print_results", "df/db7/search_8py.html#a421ba37b9ba0db03cc21c448681b97ec", null ],
+    [ "transform_hits", "df/db7/search_8py.html#ae8b11caa93259115d9c26f3c44e13e7a", null ],
+    [ "logger", "df/db7/search_8py.html#a0b14e488ae28d98d262453f3e9cd6e4d", null ]
 ];

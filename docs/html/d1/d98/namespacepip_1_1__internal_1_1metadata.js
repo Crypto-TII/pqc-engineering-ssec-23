@@ -8,7 +8,7 @@ var namespacepip_1_1__internal_1_1metadata =
     [ "base", "d6/d40/namespacepip_1_1__internal_1_1metadata_1_1base.html", "d6/d40/namespacepip_1_1__internal_1_1metadata_1_1base" ],
     [ "importlib", "d0/d20/namespacepip_1_1__internal_1_1metadata_1_1importlib.html", "d0/d20/namespacepip_1_1__internal_1_1metadata_1_1importlib" ],
     [ "pkg_resources", "d1/de2/namespacepip_1_1__internal_1_1metadata_1_1pkg__resources.html", "d1/de2/namespacepip_1_1__internal_1_1metadata_1_1pkg__resources" ],
-    [ "Backend", "da/db3/classpip_1_1__internal_1_1metadata_1_1_backend.html", null ],
+    [ "Backend", "d3/dfe/classpip_1_1__internal_1_1metadata_1_1Backend.html", null ],
     [ "_should_use_importlib_metadata", "d1/d98/namespacepip_1_1__internal_1_1metadata.html#a66137300191f8eb9a00cb9d73a0386c1", null ],
     [ "get_default_environment", "d1/d98/namespacepip_1_1__internal_1_1metadata.html#ae9233cbe9dac61075f0d44ccdbc81dc6", null ],
     [ "get_directory_distribution", "d1/d98/namespacepip_1_1__internal_1_1metadata.html#a708c1ab53bbbdf9ced0f351bc628a0bf", null ],

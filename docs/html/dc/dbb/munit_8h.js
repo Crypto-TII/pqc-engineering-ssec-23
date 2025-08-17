@@ -1,10 +1,10 @@
 var munit_8h =
 [
-    [ "MunitParameterEnum", "dc/d31/struct_munit_parameter_enum.html", "dc/d31/struct_munit_parameter_enum" ],
-    [ "MunitParameter", "d8/dc2/struct_munit_parameter.html", "d8/dc2/struct_munit_parameter" ],
-    [ "MunitTest", "d0/d79/struct_munit_test.html", "d0/d79/struct_munit_test" ],
-    [ "MunitSuite_", "d3/d4e/struct_munit_suite__.html", "d3/d4e/struct_munit_suite__" ],
-    [ "MunitArgument_", "dd/d8f/struct_munit_argument__.html", "dd/d8f/struct_munit_argument__" ],
+    [ "MunitParameterEnum", "d5/d86/structMunitParameterEnum.html", "d5/d86/structMunitParameterEnum" ],
+    [ "MunitParameter", "da/dbc/structMunitParameter.html", "da/dbc/structMunitParameter" ],
+    [ "MunitTest", "d9/dd2/structMunitTest.html", "d9/dd2/structMunitTest" ],
+    [ "MunitSuite_", "d3/d12/structMunitSuite__.html", "d3/d12/structMunitSuite__" ],
+    [ "MunitArgument_", "d6/d8e/structMunitArgument__.html", "d6/d8e/structMunitArgument__" ],
     [ "MUNIT_ARRAY_PARAM", "dc/dbb/munit_8h.html#a1b1a67220a7d6748d11801a7157105a3", null ],
     [ "munit_assert", "dc/dbb/munit_8h.html#a1564f2c41a79142aea8a104e3ade1d4b", null ],
     [ "munit_assert_char", "dc/dbb/munit_8h.html#a889be2a286026f5741713d8a734c2f25", null ],

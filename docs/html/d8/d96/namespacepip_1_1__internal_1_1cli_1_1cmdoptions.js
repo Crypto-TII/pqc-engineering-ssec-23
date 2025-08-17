@@ -1,6 +1,6 @@
 var namespacepip_1_1__internal_1_1cli_1_1cmdoptions =
 [
-    [ "PipOption", "d1/db5/classpip_1_1__internal_1_1cli_1_1cmdoptions_1_1_pip_option.html", null ],
+    [ "PipOption", "dd/dfb/classpip_1_1__internal_1_1cli_1_1cmdoptions_1_1PipOption.html", null ],
     [ "_convert_python_version", "d8/d96/namespacepip_1_1__internal_1_1cli_1_1cmdoptions.html#ae16f67ad5e1b2e0f4f3cb155558ccb0e", null ],
     [ "_get_format_control", "d8/d96/namespacepip_1_1__internal_1_1cli_1_1cmdoptions.html#a13e395efae0a7d491317ab85ca146982", null ],
     [ "_handle_config_settings", "d8/d96/namespacepip_1_1__internal_1_1cli_1_1cmdoptions.html#a7969516bc62a89b39156708906918f08", null ],

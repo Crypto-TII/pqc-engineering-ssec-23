@@ -1,10 +1,10 @@
 var namespacepip_1_1__vendor_1_1rich_1_1__win32__console =
 [
-    [ "CONSOLE_CURSOR_INFO", "da/db1/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_c_o_n_s_o_l_e___c_u_r_s_o_r___i_n_f_o.html", null ],
-    [ "CONSOLE_SCREEN_BUFFER_INFO", "d4/d2a/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_c_o_n_s_o_l_e___s_c_r_e_e_n___b_u_f_f_e_r___i_n_f_o.html", null ],
-    [ "LegacyWindowsError", "dc/da7/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_legacy_windows_error.html", null ],
-    [ "LegacyWindowsTerm", "d0/d1f/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_legacy_windows_term.html", "d0/d1f/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_legacy_windows_term" ],
-    [ "WindowsCoordinates", "db/dc1/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_windows_coordinates.html", "db/dc1/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1_windows_coordinates" ],
+    [ "CONSOLE_CURSOR_INFO", "d1/dc6/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1CONSOLE__CURSOR__INFO.html", null ],
+    [ "CONSOLE_SCREEN_BUFFER_INFO", "d7/d5a/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1CONSOLE__SCREEN__BUFFER__INFO.html", null ],
+    [ "LegacyWindowsError", "d2/d73/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1LegacyWindowsError.html", null ],
+    [ "LegacyWindowsTerm", "d0/d8a/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1LegacyWindowsTerm.html", "d0/d8a/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1LegacyWindowsTerm" ],
+    [ "WindowsCoordinates", "d4/da6/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1WindowsCoordinates.html", "d4/da6/classpip_1_1__vendor_1_1rich_1_1__win32__console_1_1WindowsCoordinates" ],
     [ "FillConsoleOutputAttribute", "db/d55/namespacepip_1_1__vendor_1_1rich_1_1__win32__console.html#aaf4be2a27265b920a0abffbb028357a5", null ],
     [ "FillConsoleOutputCharacter", "db/d55/namespacepip_1_1__vendor_1_1rich_1_1__win32__console.html#af7efb9f4ee4aae36d478c52b2dc9f355", null ],
     [ "GetConsoleCursorInfo", "db/d55/namespacepip_1_1__vendor_1_1rich_1_1__win32__console.html#aa832cc5ef803e65a506cf4afaf5c2d7e", null ],

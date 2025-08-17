@@ -1,5 +1,5 @@
 var __internal_2commands_2index_8py =
 [
-    [ "IndexCommand", "d4/d5b/classpip_1_1__internal_1_1commands_1_1index_1_1_index_command.html", "d4/d5b/classpip_1_1__internal_1_1commands_1_1index_1_1_index_command" ],
-    [ "pip._internal.commands.index.logger", "d0/d9f/namespacepip_1_1__internal_1_1commands_1_1index.html#a0b14e488ae28d98d262453f3e9cd6e4d", null ]
+    [ "IndexCommand", "db/d31/classpip_1_1__internal_1_1commands_1_1index_1_1IndexCommand.html", "db/d31/classpip_1_1__internal_1_1commands_1_1index_1_1IndexCommand" ],
+    [ "logger", "d9/d52/__internal_2commands_2index_8py.html#a0b14e488ae28d98d262453f3e9cd6e4d", null ]
 ];

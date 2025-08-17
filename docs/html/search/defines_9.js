@@ -1,7 +1,7 @@
 var searchData=
 [
   ['init_5fkeys_0',['init_keys',['../de/d7a/ctidh__api_8h.html#aeddfa85cb76d2d04027aa661e40b0eb0',1,'ctidh_api.h']]],
-  ['inline_5felapsed_1',['INLINE_ELAPSED',['../db/d77/c-code_2src_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h'],['../db/dbe/d_c_t_i_d_h_2main_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h']]],
+  ['inline_5felapsed_1',['inline_elapsed',['../db/d77/c-code_2src_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h'],['../d5/d57/dCTIDH_2main_2cycle_8h.html#af4fe9fb7498d9f0df140f6709c5affa8',1,'INLINE_ELAPSED:&#160;cycle.h']]],
   ['int32_2',['int32',['../de/de7/int32__sort_8c.html#ae5125ea470cb5e419d49e07ad57eeba2',1,'int32_sort.c']]],
   ['int32_5fminmax_3',['int32_MINMAX',['../d0/d36/int32__minmax__x86_8c.html#a3c7d2acd5caeae4e88d0d121c5b75b29',1,'int32_minmax_x86.c']]],
   ['int32_5fsort_4',['int32_sort',['../dc/d36/int32__sort_8h.html#ae059af982adfb60f176da9058368aa87',1,'int32_sort.h']]],

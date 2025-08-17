@@ -2,7 +2,9 @@
 
 [![Build and testing multiple primes' targets.](https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml)
 
-Accompanying repository to the manuscript titled [“Let us walk on the 3-isogeny graph: efficient, fast, and simple”](https://eprint.iacr.org/2025/691).
+Accompanying repository to the manuscript titled <a href="https://eprint.iacr.org/2025/691" target="_blank">
+"Let us walk on the 3-isogeny graph: efficient, fast, and simple".
+</a>
 
 ## Table of contents
 1. [Introduction](#section_01)  
@@ -36,7 +38,10 @@ A video summarizing our ideas and contribution (in a general-reader level) is sh
 </a>
 </p>
 
-The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1).
+The YouTube link of our video is shown here:
+<a href="https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1" target="_blank">
+Let us walk on the 3-isogeny graph: efficient, fast, and simple
+</a>
 
 A general tree description of the source code of our project is shown below.
 
@@ -59,82 +64,97 @@ In the following sections, we will cover in detail:
 4. A real-life production CI/CD pipeline integration, showing how to download our manuscript's results as public artifacts, and
 5. Detailed instructions on how to download and mount our Docker container.
 
-A detailed (full) video tour of our artifact is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10).
+A detailed (full) video tour of our artifact is shown here: <a href="https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10" target="_blank">
+Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact
+</a>
 
 For convenience, a list of all the videos of each individual section is shown below.
 
 <table align="center"> 
 <tr style="width: 100%"> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=xH9wxWVgauo&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=2"> 
-<img src="https://img.youtube.com/vi/xH9wxWVgauo/0.jpg">
+<a href="https://www.youtube.com/watch?v=xH9wxWVgauo&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=2" target="_blank"> 
+
+\image html https://img.youtube.com/vi/xH9wxWVgauo/0.jpg width=50%
+
 <br> <b>1. Overview and Introduction to our artifact</b> </a> 
 </td> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=paQdkb1SVGs&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=3"> 
-<img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg">
+<a href="https://www.youtube.com/watch?v=paQdkb1SVGs&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=3" target="_blank"> 
+
+\image html https://img.youtube.com/vi/paQdkb1SVGs/0.jpg width=50%
+
 <br> <b>2. How to Install, Build and Test our source code?</b> </a> 
 </td> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4"> 
-<img src="https://img.youtube.com/vi/wCXyVPfD3lM/0.jpg">
+<a href="https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4" target="_blank"> 
+
+\image html https://img.youtube.com/vi/wCXyVPfD3lM/0.jpg width=50%
+
 <br> <b>3. How to benchmark our project: The Dos and Dont's</b> </a> 
 </td> 
 </tr>
 <tr style="width: 100%"> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5"> 
-<img src="https://img.youtube.com/vi/kOgkQY2_Tr8/0.jpg">
+<a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5" target="_blank"> 
+
+\image html https://img.youtube.com/vi/kOgkQY2_Tr8/0.jpg width=50%
+
 <br> <b>4. How to Replicate our Manuscript's Results?</b> </a> 
 </td> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6"> 
-<img src="https://img.youtube.com/vi/PdysZFECqJk/0.jpg">
+<a href="https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6" target="_blank"> 
+
+\image html https://img.youtube.com/vi/PdysZFECqJk/0.jpg width=50%
+
 <br> <b>5. How to Generate the Source Code Technical Documentation?</b> </a> 
 </td> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7"> 
-<img src="https://img.youtube.com/vi/Z8lkkB7D3BE/0.jpg">
+<a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7" target="_blank"> 
+
+\image html https://img.youtube.com/vi/Z8lkkB7D3BE/0.jpg width=50%
+
 <br> <b>6. CI Pipeline in action: Real-World Software Development Demo</b> </a> 
 </td> 
 </tr>
 <tr style="width: 100%"> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=8"> 
-<img src="https://img.youtube.com/vi/TQrU4osynUg/0.jpg">
+<a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=8" target="_blank"> 
+
+\image html https://img.youtube.com/vi/TQrU4osynUg/0.jpg width=50%
+
 <br> <b>7. How to Download our Docker Container?</b> </a> 
 </td> 
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9"> 
-<img src="https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg">
+<a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9" target="_blank"> 
+
+\image html https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg width=50%
+
 <br> <b>8. Conclusions</b> </a> 
 </td>
 <td align="center" style="width: 33%"> 
-<a href="https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10"> 
-<img src="https://img.youtube.com/vi/hLk_B5NpKRA/0.jpg">
+<a href="https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10" target="_blank"> 
+
+\image html https://img.youtube.com/vi/hLk_B5NpKRA/0.jpg width=50%
+
 <br> <b>(Full) guided tour of our artifact</b> </a> 
 </td> 
 </tr>
 </table>
 
-A slide-style presentation with a summary of the technical steps presented in this repository is also available here: [Let us walk on the 3-isogeny graph: Step-by-step Artifact Walkthrough](docs/artifact_walkthrough.pdf).
+A slide-style presentation with a summary of the technical steps presented in this repository is also available here: <a href="artifact_walkthrough.pdf" target="_blank"><b>Let us walk on the 3-isogeny graph: Step-by-step Artifact Walkthrough</b></a>.
 
 <a name="section_02"></a>
 ## 2. Setup Process
 
 In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to [Let us walk on the 3-isogeny graph: CLion Setup](README_Clion_IDE.md).
 
-
-
-In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to \ref ccode_README for more information.
-
-
 <a name="section_02_01"></a>
 ### 2.1. Build
 
 #### System requirements
 
-Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
+Our (physical) testbed consists of machine with a 12th Gen. Intel Core i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
 
 Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
@@ -148,7 +168,9 @@ pip list | grep numpy
 pip list | grep matplotlib
 ```
 If all the requirements are met, the terminal should return installed versions like the ones below.
-![](gifs/01-cmake-profile/numpy.png)
+
+\image html gifs/01-cmake-profile/numpy.png width=60%
+
 
 To build our project, in the root directory `pqc-engineering-ssec-23`, simply run
 ```shell
@@ -159,11 +181,11 @@ make -j
 ```
 This will create the `cmake-build-release` folder with all the tests for all the supported primes: `p254`, `p255`, `p381`, `p383`, `p398`, `p511`, `p575`, `p592`, `p765`, and `p783`. A list of the generated tests is shown below.
 
-![](gifs/03-examples/01.png)
+\image html gifs/03-examples/01.png width=60%
 
 A demo of the whole process of setup and build process is shown below.
 
-![](gifs/03-examples/build_release.gif)
+\image html gifs/03-examples/build_release.gif width=60%
 
 
 <a name="section_02_02"></a>
@@ -190,7 +212,7 @@ To execute any particular test, simply select one of the following
 ```
 For example, the execution of `./tests/tests-ssec-p254` is shown below.
 
-![](gifs/03-examples/testing.gif)
+\image html gifs/03-examples/testing.gif width=60%
 
 To run ALL the tests in verbose mode, simply run
 ```
@@ -199,7 +221,7 @@ ctest -V -R test
 
 A demo of all the tests running in verbose mode is shown below.
 
-![](gifs/03-examples/testing_verbose.gif)
+\image html gifs/03-examples/testing_verbose.gif width=60%
 
 <a name="section_03"></a>
 ## 3. Benchmarking
@@ -207,7 +229,7 @@ A demo of all the tests running in verbose mode is shown below.
 In this section, we show how to perform the **benchmarking** of our source code. 
 
 As supplementary material: 
-1. A detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 3: How to benchmark our project? The Dos and Dont's](https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4). 
+1. A detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4" target="_blank">Modulo 3: How to benchmark our project? The Dos and Dont's</a>. 
 2. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
@@ -229,7 +251,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug
 ```
 In case you run the benchmarking in either one of these two build modes (without the `-DBENCHMARKING` and the `-DARCHITECTURE` flags), you will get the following error:
 
-![](gifs/03-examples/benchmarks_error.png)
+\image html gifs/03-examples/benchmarks_error.png width=60%
 
 To execute any particular benchmarking, inside the `cmake-build-release-cycles-x8664` folder, simply select one of the following
 ```shell
@@ -247,14 +269,14 @@ benchmarks/benchmarks-ssec-p783
 
 A demo of successful benchmarkings is shown below.
 
-![](gifs/03-examples/benchmarking.gif)
+\image html gifs/03-examples/benchmarking.gif width=60%
 
 <a name="section_04"></a>
 ## 4. Reproducing the Manuscript Results
 
-In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. 
+In our <a href="https://eprint.iacr.org/2025/691" target="_blank">manuscript</a>, several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. 
 
-As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 4: How to Replicate our Manuscript's Results?](https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5)
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5" target="_blank">Modulo 4: How to Replicate our Manuscript's Results?</a>
 
 In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
 
@@ -301,11 +323,11 @@ This will automatically build with the `-DBENCHMARKING=CYCLES -DARCHITECTURE=x86
 
 A demo of how to obtain the manuscript's Figure 03 is shown below.
 
-![](gifs/04-replicate-results/fig_03/fig_03.gif)
+\image html gifs/04-replicate-results/fig_03/fig_03.gif width=60%
 
 where the original Figure 3 presented in the manuscript is shown below.
 
-![](gifs/04-replicate-results/fig_03/figure_03_original.png)
+\image html gifs/04-replicate-results/fig_03/figure_03_original.png width=60%
 
 A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_03_output` folder. This folder will be automatically generated once the `generate_figure_03.sh` script executes successfully.
 ```
@@ -330,11 +352,11 @@ This will automatically build with the `-DBENCHMARKING=CYCLES -DARCHITECTURE=x86
 
 A demo of how to obtain the manuscript's Figure 03 is shown below.
 
-![](gifs/04-replicate-results/fig_04/fig_04.gif)
+\image html gifs/04-replicate-results/fig_04/fig_04.gif width=60%
 
 where the original Figure 4 presented in the manuscript is shown below.
 
-![](gifs/04-replicate-results/fig_04/figure_04_original.png)
+\image html gifs/04-replicate-results/fig_04/figure_04_original.png width=50%
 
 A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_04_output` folder. This folder will be automatically generated once the `generate_figure_04.sh` script executes successfully.
 ```
@@ -369,11 +391,11 @@ The script will generate all the required folders to perform all the statistics.
 
 A demo of how to obtain the manuscript's Figure 05 is shown below.
 
-![](gifs/04-replicate-results/fig_05/fig_05.gif)
+\image html gifs/04-replicate-results/fig_05/fig_05.gif width=60%
 
 where the original Figure 5 presented in the manuscript is shown below.
 
-![](gifs/04-replicate-results/fig_05/figure_05_original.png)
+\image html gifs/04-replicate-results/fig_05/figure_05_original.png width=50%
 
 Two PDF files are generated with the generated graphs and stored inside the `reproduced_results/generated_figures/figure_05_output` folder. This folder will be automatically generated once the `generate_figure_05.sh` script executes successfully.
 ```
@@ -387,7 +409,7 @@ Two PDF files are generated with the generated graphs and stored inside the `rep
 <a name="section_05"></a>
 ## 5. Source-Code Technical Documentation: Doxygen
 
-Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 5: How to Generate the Source Code Technical Documentation?](https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6). 
+Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6" target="_blank">Modulo 5: How to Generate the Source Code Technical Documentation?</a> 
 
 To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
@@ -395,42 +417,42 @@ doxygen Doxyfile
 ```
 This will generate an HTML site with interactive diagrams, and plenty of technical documentation. A demo of the generated documentation is shown below.
 
-![](gifs/05-doxygen/doxygen.gif)
+\image html gifs/05-doxygen/doxygen.gif width=70%
 
-A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
+A link to a public-hosted version of our source-code documentation is shown here:
+<a href="https://crypto-tii.github.io/pqc-engineering-ssec-23/" target="_blank">Let us walk on the 3-isogeny graph: Technical Documentation</a>.
 
 <a name="section_06"></a>
 ## 6. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
 
 To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting. 
 
-<p align="center">
-  <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="750">
-</p>
+\image html gifs/02-pipeline/ci-cd.gif width=50%
 
-As supplementary material, a detailed walkthrough of the information conveyed in this section is available in our YouTube video: [Modulo 6: CI Pipeline in action: Real-World Software Development Demo](https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7).
+As supplementary material, a detailed walkthrough of the information conveyed in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7" target="_blank">Modulo 6: CI Pipeline in action: Real-World Software Development Demo</a>.
 
-To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
+To provide CI/CD related capabilities, in our source code we provide a <a href="https://github.com/Crypto-TII/pqc-engineering-ssec-23/blob/main/.github/workflows/cmake-multi-platform.yml" target="_blank">cmake-multi-platform.yml</a> file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
-<p align="center">
-  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="1000">
-</p>
+\image html gifs/02-pipeline/pipeline-gif.gif width=70%
 
 At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 4: Reproducing the Manuscript Results](#section_04)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
 - The benchmark statistics are uploaded in the artifacts marked in **blue**, and
 - The generated manuscript graphs are uploaded in the artifacts marked in **red**.
 All the statistical data and all the graphs are uploaded as public artifacts to provide means to the reader to replicate our results. 
 
-<p align="center">
-  <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="1000">
-</p>
+\image html gifs/02-pipeline/artifacts_uploaded.png width=60%
+
+For our project, the list of executed CI pipelines is shown here: <a href="https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml" target="_blank">GitHub Pipeline</a>, and an example of a successful pipeline execution with the publicly uploaded artifacts (Statistical results and generated graphs) is shown here:
+<a href="https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/runs/17022722897" target="_blank">Pipeline Execution Example</a>.
+
+
 
 <a name="section_07"></a>
 ## 7. How to download our public Docker container?
 
 For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
 
-As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9" target="_blank">Modulo 7: How to Download our publicly available Docker Container?</a>
 
 To download our Docker container, simply execute the command below
 ```bash
@@ -461,17 +483,15 @@ As part of our experiments, we used a modified version of `dCTIDH`. To build the
 <a name="section_09"></a>
 ## 9. Conclusions, Acknowledgements and Authors
 
-We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here: [Modulo 8: Conclusions](https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here: <a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9" target="_blank">Modulo 8: Conclusions</a>.
 
 This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility. 
 
-We invite fellow researchers and practitioners to explore, test, and expand upon our work, helping it grow and evolve in new directions.
+We invite fellow researchers and practitioners to explore, test, and expand upon our work, helping it grow and evolve in new directions. For further information, please feel free to contact any of the authors:
 
-For further information, please feel free to contact any of the authors:
-<p align="center">
-    <a href="mailto:jesus.dominguez@tii.ae"><strong>Jesús-Javier Chi-Domínguez</strong></a>,
-    <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
-    <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>.
-</p>
+- <a href="mailto:jesus.dominguez@tii.ae"><strong>Jesús-Javier Chi-Domínguez</strong></a>,
+- <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
+- <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>.
+
 
 

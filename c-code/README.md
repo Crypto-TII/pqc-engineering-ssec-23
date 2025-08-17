@@ -1,7 +1,4 @@
-\page ccode_README Let us walk on the 3-isogeny graph: CLion Setup
-
-
-# Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation
+# (Detailed) Build, Test and Benchmarking Framework Documentation
 
 ## Table of contents
 1. [Introduction](#section_01)  
@@ -149,11 +146,11 @@ pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-de
 ```
 In case you run the benchmarking in either one of these two build modes (without the `-DBENCHMARKING` and the `-DARCHITECTURE` flags), you will get the following error:
 
-![](../gifs/03-examples/benchmarks_error.png)
+\image html ../gifs/03-examples/benchmarks_error.png width=60%
 
 A successful built that can generate correct benchmarks is shown below.
 
-![](../gifs/03-examples/benchmarks_ok.png)
+\image html ../gifs/03-examples/benchmarks_ok.png width=60%
 
 After building using the correct flags, to run the benchmarks in verbose mode, run
 
@@ -234,7 +231,7 @@ and the hyperthread via
 ```
 where the part of the script concerning disabling both Turbo Boost and hyperthreading is shown below. Note that these boosting disabling commands work in Intel CPUs, and similar ARM instructions or kernel modules are needed in case the benchmarking is desired to be performed in ARM CPUs.
 
-```bash
+```shell
 #!/bin/bash
 TURBO=/sys/devices/system/cpu/intel_pstate/no_turbo
 DISABLE_TURBO=1
@@ -269,7 +266,7 @@ setPerformance
 
 We perform two types of benchmarking: CPU cycles and Execution time, measured in nanoseconds. To measure the CPU cycle count between executions of our tests, we used the `rdtsc` assembly instruction for Intel architectures.
 
-```
+```c
 #if (defined(__GNUC__) || defined(__ICC) || defined(__SUNPRO_C))
    && defined(__x86_64__) && !defined(HAVE_TICK_COUNTER)
 

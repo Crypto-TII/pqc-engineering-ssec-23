@@ -1,6 +1,6 @@
 var filesize_8py =
 [
-    [ "pip._vendor.rich.filesize._to_str", "db/d42/namespacepip_1_1__vendor_1_1rich_1_1filesize.html#ab221d22bd37c14b8a10fb4da32d62ecc", null ],
-    [ "pip._vendor.rich.filesize.decimal", "db/d42/namespacepip_1_1__vendor_1_1rich_1_1filesize.html#a75c3069edab1044085c569772346c2b5", null ],
-    [ "pip._vendor.rich.filesize.pick_unit_and_suffix", "db/d42/namespacepip_1_1__vendor_1_1rich_1_1filesize.html#a386bc7449d8392e7fe7f85b9ce23c962", null ]
+    [ "_to_str", "d8/d9c/filesize_8py.html#a418f1f49c2fa58336b9c6b7c0703b0d3", null ],
+    [ "decimal", "d8/d9c/filesize_8py.html#a8ab9fda3b85ff48885de413958c6443a", null ],
+    [ "pick_unit_and_suffix", "d8/d9c/filesize_8py.html#a386bc7449d8392e7fe7f85b9ce23c962", null ]
 ];

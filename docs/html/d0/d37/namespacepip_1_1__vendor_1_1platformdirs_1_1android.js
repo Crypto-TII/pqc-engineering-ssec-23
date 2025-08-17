@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1platformdirs_1_1android =
 [
-    [ "Android", "da/d7d/classpip_1_1__vendor_1_1platformdirs_1_1android_1_1_android.html", "da/d7d/classpip_1_1__vendor_1_1platformdirs_1_1android_1_1_android" ],
+    [ "Android", "d4/d7f/classpip_1_1__vendor_1_1platformdirs_1_1android_1_1Android.html", "d4/d7f/classpip_1_1__vendor_1_1platformdirs_1_1android_1_1Android" ],
     [ "_android_documents_folder", "d0/d37/namespacepip_1_1__vendor_1_1platformdirs_1_1android.html#abec94f48c294e053c9122b82d0ab168c", null ],
     [ "_android_downloads_folder", "d0/d37/namespacepip_1_1__vendor_1_1platformdirs_1_1android.html#ac2f9d0d006d66317a3c6142f88a963c8", null ],
     [ "_android_folder", "d0/d37/namespacepip_1_1__vendor_1_1platformdirs_1_1android.html#a12b728c2e30a52678fb854368d23c9de", null ],

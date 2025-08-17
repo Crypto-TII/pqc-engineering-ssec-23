@@ -25,8 +25,6 @@ var namespacepip_1_1__vendor_1_1pygments_1_1formatters =
     [ "load_formatter_from_file", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a0109e4b934d010b99009dc69b839675b", null ],
     [ "_formatter_cache", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a802accd70607cd467c51493894c78ab0", null ],
     [ "_pattern_cache", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a9fba100387e9362dfeb7a749b180f979", null ],
-    [ "aliases", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a3bfd9f9844a96236293246df36016a3e", null ],
-    [ "filenames", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a9f192a484d55d014215ba962492cde5e", null ],
     [ "newmod", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#a011a0dabbb0179a8082f46cedeba56d5", null ],
     [ "oldmod", "d3/d9f/namespacepip_1_1__vendor_1_1pygments_1_1formatters.html#ae3e4c312ba3a3a6126cd8a6494c052ed", null ]
 ];

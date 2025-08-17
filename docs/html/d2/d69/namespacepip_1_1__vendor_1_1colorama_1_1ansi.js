@@ -1,10 +1,10 @@
 var namespacepip_1_1__vendor_1_1colorama_1_1ansi =
 [
-    [ "AnsiBack", "d2/dda/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_back.html", null ],
-    [ "AnsiCodes", "da/d84/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_codes.html", "da/d84/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_codes" ],
-    [ "AnsiCursor", "d3/dae/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_cursor.html", "d3/dae/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_cursor" ],
-    [ "AnsiFore", "d0/d2e/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_fore.html", null ],
-    [ "AnsiStyle", "dc/d3b/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1_ansi_style.html", null ],
+    [ "AnsiBack", "d1/dfa/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiBack.html", null ],
+    [ "AnsiCodes", "d6/d68/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiCodes.html", "d6/d68/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiCodes" ],
+    [ "AnsiCursor", "d0/d98/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiCursor.html", "d0/d98/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiCursor" ],
+    [ "AnsiFore", "d4/d87/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiFore.html", null ],
+    [ "AnsiStyle", "d6/d7b/classpip_1_1__vendor_1_1colorama_1_1ansi_1_1AnsiStyle.html", null ],
     [ "clear_line", "d2/d69/namespacepip_1_1__vendor_1_1colorama_1_1ansi.html#af3a20904d9eeb547473187e76986d58e", null ],
     [ "clear_screen", "d2/d69/namespacepip_1_1__vendor_1_1colorama_1_1ansi.html#a3534507c48fd06849fadddbaba29a136", null ],
     [ "code_to_chars", "d2/d69/namespacepip_1_1__vendor_1_1colorama_1_1ansi.html#a8076409d41f418afa5136685a03b4951", null ],

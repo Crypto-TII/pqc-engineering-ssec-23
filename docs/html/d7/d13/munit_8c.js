@@ -1,8 +1,8 @@
 var munit_8c =
 [
-    [ "PsnipClockTimespec", "d0/d3b/struct_psnip_clock_timespec.html", "d0/d3b/struct_psnip_clock_timespec" ],
-    [ "MunitReport", "d2/d63/struct_munit_report.html", "d2/d63/struct_munit_report" ],
-    [ "MunitTestRunner", "d6/dbd/struct_munit_test_runner.html", "d6/dbd/struct_munit_test_runner" ],
+    [ "PsnipClockTimespec", "d9/d97/structPsnipClockTimespec.html", "d9/d97/structPsnipClockTimespec" ],
+    [ "MunitReport", "d1/d96/structMunitReport.html", "d1/d96/structMunitReport" ],
+    [ "MunitTestRunner", "db/def/structMunitTestRunner.html", "db/def/structMunitTestRunner" ],
     [ "_POSIX_C_SOURCE", "d7/d13/munit_8c.html#a3024ccd4a9af5109d24e6c57565d74a1", null ],
     [ "ATOMIC_UINT32_INIT", "d7/d13/munit_8c.html#a6ede33c120d70e15074cd1fb99ee55c3", null ],
     [ "ATOMIC_UINT32_T", "d7/d13/munit_8c.html#a7a749780c76ea55a9f7f8f3e9fea0c63", null ],

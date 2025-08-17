@@ -1,6 +1,6 @@
 var namespacepip_1_1__internal_1_1commands_1_1debug =
 [
-    [ "DebugCommand", "db/d7b/classpip_1_1__internal_1_1commands_1_1debug_1_1_debug_command.html", "db/d7b/classpip_1_1__internal_1_1commands_1_1debug_1_1_debug_command" ],
+    [ "DebugCommand", "d0/df4/classpip_1_1__internal_1_1commands_1_1debug_1_1DebugCommand.html", "d0/df4/classpip_1_1__internal_1_1commands_1_1debug_1_1DebugCommand" ],
     [ "ca_bundle_info", "df/d72/namespacepip_1_1__internal_1_1commands_1_1debug.html#a6f8316b042fb8ec60cfe049893012760", null ],
     [ "create_vendor_txt_map", "df/d72/namespacepip_1_1__internal_1_1commands_1_1debug.html#a69a40926411a0f7bd0c6c58f1a23d6d5", null ],
     [ "get_module_from_module_name", "df/d72/namespacepip_1_1__internal_1_1commands_1_1debug.html#ae7d79b0cab4740a4d5ee510d5d1ee758", null ],

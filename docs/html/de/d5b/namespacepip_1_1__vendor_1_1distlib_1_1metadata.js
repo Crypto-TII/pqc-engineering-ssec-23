@@ -1,11 +1,11 @@
 var namespacepip_1_1__vendor_1_1distlib_1_1metadata =
 [
-    [ "LegacyMetadata", "d3/dc5/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_legacy_metadata.html", "d3/dc5/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_legacy_metadata" ],
-    [ "Metadata", "d3/df6/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata.html", "d3/df6/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata" ],
-    [ "MetadataConflictError", "d8/df1/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata_conflict_error.html", null ],
-    [ "MetadataInvalidError", "d4/d72/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata_invalid_error.html", null ],
-    [ "MetadataMissingError", "d9/dd2/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata_missing_error.html", null ],
-    [ "MetadataUnrecognizedVersionError", "d7/d23/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1_metadata_unrecognized_version_error.html", null ],
+    [ "LegacyMetadata", "d4/d22/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1LegacyMetadata.html", "d4/d22/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1LegacyMetadata" ],
+    [ "Metadata", "d5/dac/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1Metadata.html", "d5/dac/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1Metadata" ],
+    [ "MetadataConflictError", "db/d2e/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1MetadataConflictError.html", null ],
+    [ "MetadataInvalidError", "d0/dd9/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1MetadataInvalidError.html", null ],
+    [ "MetadataMissingError", "d0/d53/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1MetadataMissingError.html", null ],
+    [ "MetadataUnrecognizedVersionError", "d0/dd2/classpip_1_1__vendor_1_1distlib_1_1metadata_1_1MetadataUnrecognizedVersionError.html", null ],
     [ "_best_version", "de/d5b/namespacepip_1_1__vendor_1_1distlib_1_1metadata.html#ab979df74cb4aec28abd9d3b9411d94c8", null ],
     [ "_get_name_and_version", "de/d5b/namespacepip_1_1__vendor_1_1distlib_1_1metadata.html#ac252e819b14c383fe144f1f9ca89b127", null ],
     [ "_version2fieldlist", "de/d5b/namespacepip_1_1__vendor_1_1distlib_1_1metadata.html#acd57e6b83c4ae2c6ef138c175b65bda0", null ],

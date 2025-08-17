@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1packaging_1_1utils =
 [
-    [ "InvalidSdistFilename", "d2/d2a/classpip_1_1__vendor_1_1packaging_1_1utils_1_1_invalid_sdist_filename.html", null ],
-    [ "InvalidWheelFilename", "d6/d8e/classpip_1_1__vendor_1_1packaging_1_1utils_1_1_invalid_wheel_filename.html", null ],
+    [ "InvalidSdistFilename", "dd/d82/classpip_1_1__vendor_1_1packaging_1_1utils_1_1InvalidSdistFilename.html", null ],
+    [ "InvalidWheelFilename", "d6/d17/classpip_1_1__vendor_1_1packaging_1_1utils_1_1InvalidWheelFilename.html", null ],
     [ "canonicalize_name", "dc/da8/namespacepip_1_1__vendor_1_1packaging_1_1utils.html#a1a702bcbfa06e2460db2c4a1b9b41e8a", null ],
     [ "canonicalize_version", "dc/da8/namespacepip_1_1__vendor_1_1packaging_1_1utils.html#a0661968895f7b631ea5db30f8fb930e4", null ],
     [ "parse_sdist_filename", "dc/da8/namespacepip_1_1__vendor_1_1packaging_1_1utils.html#ad405a7b3eede5f5352e277a57e547973", null ],

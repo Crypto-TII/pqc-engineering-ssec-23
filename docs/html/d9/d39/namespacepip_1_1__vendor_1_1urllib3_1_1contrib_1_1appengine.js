@@ -1,8 +1,8 @@
 var namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine =
 [
-    [ "AppEngineManager", "d6/da8/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_manager.html", "d6/da8/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_manager" ],
-    [ "AppEnginePlatformError", "de/d90/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_platform_error.html", null ],
-    [ "AppEnginePlatformWarning", "d3/d4d/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1_app_engine_platform_warning.html", null ],
+    [ "AppEngineManager", "d1/d9a/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1AppEngineManager.html", "d1/d9a/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1AppEngineManager" ],
+    [ "AppEnginePlatformError", "de/d65/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1AppEnginePlatformError.html", null ],
+    [ "AppEnginePlatformWarning", "d2/d67/classpip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine_1_1AppEnginePlatformWarning.html", null ],
     [ "is_appengine", "d9/d39/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine.html#a320bc0bafa373e6fc804aae0c0868fed", null ],
     [ "is_appengine_sandbox", "d9/d39/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine.html#a4ca9285828346ca7c8299d7a97f4d46f", null ],
     [ "is_local_appengine", "d9/d39/namespacepip_1_1__vendor_1_1urllib3_1_1contrib_1_1appengine.html#a531e4e9779fc7cb7e8957995c608eef3", null ],

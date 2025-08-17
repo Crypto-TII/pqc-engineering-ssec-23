@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1pygments_1_1token =
 [
-    [ "_TokenType", "de/d04/classpip_1_1__vendor_1_1pygments_1_1token_1_1___token_type.html", "de/d04/classpip_1_1__vendor_1_1pygments_1_1token_1_1___token_type" ],
+    [ "_TokenType", "d2/d22/classpip_1_1__vendor_1_1pygments_1_1token_1_1__TokenType.html", "d2/d22/classpip_1_1__vendor_1_1pygments_1_1token_1_1__TokenType" ],
     [ "is_token_subtype", "db/ddf/namespacepip_1_1__vendor_1_1pygments_1_1token.html#ab4b4e6dd3b2c14bd80e069feabd5a165", null ],
     [ "string_to_tokentype", "db/ddf/namespacepip_1_1__vendor_1_1pygments_1_1token.html#a4e214ff701fe9572e9f9293df04f9e54", null ],
     [ "Comment", "db/ddf/namespacepip_1_1__vendor_1_1pygments_1_1token.html#a877d6a759c0731b87c53736fde72e9c4", null ],

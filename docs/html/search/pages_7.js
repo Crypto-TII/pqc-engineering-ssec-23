@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['8_20references_0',['8. References',['../E:/pqc-engineering-ssec-23/c-code/README.md#autotoc_md13',1,'']]]
+  ['graph_3a_20efficient_20fast_20and_20simple_0',['Let us walk on the 3-isogeny graph: efficient, fast, and simple',['../index.html',1,'']]]
 ];

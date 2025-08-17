@@ -1,7 +1,7 @@
 var namespacepip_1_1__internal_1_1network_1_1download =
 [
-    [ "BatchDownloader", "de/dab/classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader.html", "de/dab/classpip_1_1__internal_1_1network_1_1download_1_1_batch_downloader" ],
-    [ "Downloader", "d5/d7f/classpip_1_1__internal_1_1network_1_1download_1_1_downloader.html", "d5/d7f/classpip_1_1__internal_1_1network_1_1download_1_1_downloader" ],
+    [ "BatchDownloader", "de/de0/classpip_1_1__internal_1_1network_1_1download_1_1BatchDownloader.html", "de/de0/classpip_1_1__internal_1_1network_1_1download_1_1BatchDownloader" ],
+    [ "Downloader", "db/de8/classpip_1_1__internal_1_1network_1_1download_1_1Downloader.html", "db/de8/classpip_1_1__internal_1_1network_1_1download_1_1Downloader" ],
     [ "_get_http_response_filename", "d1/d20/namespacepip_1_1__internal_1_1network_1_1download.html#a41baacf305c8dfebd740372430df40cc", null ],
     [ "_get_http_response_size", "d1/d20/namespacepip_1_1__internal_1_1network_1_1download.html#a0c05c1be75525de49ed4e12b1e0e2681", null ],
     [ "_http_get_download", "d1/d20/namespacepip_1_1__internal_1_1network_1_1download.html#a9d3cbfed7d037fec8367df482ea1f765", null ],

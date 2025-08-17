@@ -1,9 +1,9 @@
 var namespacepip_1_1__internal_1_1models_1_1link =
 [
-    [ "_CleanResult", "db/d40/classpip_1_1__internal_1_1models_1_1link_1_1___clean_result.html", null ],
-    [ "Link", "de/da5/classpip_1_1__internal_1_1models_1_1link_1_1_link.html", "de/da5/classpip_1_1__internal_1_1models_1_1link_1_1_link" ],
-    [ "LinkHash", "d1/dc4/classpip_1_1__internal_1_1models_1_1link_1_1_link_hash.html", "d1/dc4/classpip_1_1__internal_1_1models_1_1link_1_1_link_hash" ],
-    [ "MetadataFile", "d0/d45/classpip_1_1__internal_1_1models_1_1link_1_1_metadata_file.html", "d0/d45/classpip_1_1__internal_1_1models_1_1link_1_1_metadata_file" ],
+    [ "_CleanResult", "d6/d93/classpip_1_1__internal_1_1models_1_1link_1_1__CleanResult.html", null ],
+    [ "Link", "d8/dc7/classpip_1_1__internal_1_1models_1_1link_1_1Link.html", "d8/dc7/classpip_1_1__internal_1_1models_1_1link_1_1Link" ],
+    [ "LinkHash", "d7/dcc/classpip_1_1__internal_1_1models_1_1link_1_1LinkHash.html", "d7/dcc/classpip_1_1__internal_1_1models_1_1link_1_1LinkHash" ],
+    [ "MetadataFile", "da/dc8/classpip_1_1__internal_1_1models_1_1link_1_1MetadataFile.html", "da/dc8/classpip_1_1__internal_1_1models_1_1link_1_1MetadataFile" ],
     [ "_clean_file_url_path", "d0/d62/namespacepip_1_1__internal_1_1models_1_1link.html#aa9252948b4355a1550c369a8dcf83f70", null ],
     [ "_clean_link", "d0/d62/namespacepip_1_1__internal_1_1models_1_1link.html#a8e4f689e5ed659da6cceb8a1a7487dc0", null ],
     [ "_clean_url_path", "d0/d62/namespacepip_1_1__internal_1_1models_1_1link.html#a642348d12e2125ea147800680f5d4ca8", null ],

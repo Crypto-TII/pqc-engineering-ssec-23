@@ -1,11 +1,11 @@
 var namespacepip_1_1__internal_1_1index_1_1package__finder =
 [
-    [ "BestCandidateResult", "d2/d71/classpip_1_1__internal_1_1index_1_1package__finder_1_1_best_candidate_result.html", "d2/d71/classpip_1_1__internal_1_1index_1_1package__finder_1_1_best_candidate_result" ],
-    [ "CandidateEvaluator", "d0/d30/classpip_1_1__internal_1_1index_1_1package__finder_1_1_candidate_evaluator.html", "d0/d30/classpip_1_1__internal_1_1index_1_1package__finder_1_1_candidate_evaluator" ],
-    [ "CandidatePreferences", "d5/d59/classpip_1_1__internal_1_1index_1_1package__finder_1_1_candidate_preferences.html", "d5/d59/classpip_1_1__internal_1_1index_1_1package__finder_1_1_candidate_preferences" ],
-    [ "LinkEvaluator", "d2/df3/classpip_1_1__internal_1_1index_1_1package__finder_1_1_link_evaluator.html", "d2/df3/classpip_1_1__internal_1_1index_1_1package__finder_1_1_link_evaluator" ],
-    [ "LinkType", "d7/d02/classpip_1_1__internal_1_1index_1_1package__finder_1_1_link_type.html", null ],
-    [ "PackageFinder", "da/d3f/classpip_1_1__internal_1_1index_1_1package__finder_1_1_package_finder.html", "da/d3f/classpip_1_1__internal_1_1index_1_1package__finder_1_1_package_finder" ],
+    [ "BestCandidateResult", "db/d52/classpip_1_1__internal_1_1index_1_1package__finder_1_1BestCandidateResult.html", "db/d52/classpip_1_1__internal_1_1index_1_1package__finder_1_1BestCandidateResult" ],
+    [ "CandidateEvaluator", "db/dda/classpip_1_1__internal_1_1index_1_1package__finder_1_1CandidateEvaluator.html", "db/dda/classpip_1_1__internal_1_1index_1_1package__finder_1_1CandidateEvaluator" ],
+    [ "CandidatePreferences", "d1/dfc/classpip_1_1__internal_1_1index_1_1package__finder_1_1CandidatePreferences.html", "d1/dfc/classpip_1_1__internal_1_1index_1_1package__finder_1_1CandidatePreferences" ],
+    [ "LinkEvaluator", "d0/d5a/classpip_1_1__internal_1_1index_1_1package__finder_1_1LinkEvaluator.html", "d0/d5a/classpip_1_1__internal_1_1index_1_1package__finder_1_1LinkEvaluator" ],
+    [ "LinkType", "d7/d69/classpip_1_1__internal_1_1index_1_1package__finder_1_1LinkType.html", null ],
+    [ "PackageFinder", "de/d3a/classpip_1_1__internal_1_1index_1_1package__finder_1_1PackageFinder.html", "de/d3a/classpip_1_1__internal_1_1index_1_1package__finder_1_1PackageFinder" ],
     [ "_check_link_requires_python", "da/dff/namespacepip_1_1__internal_1_1index_1_1package__finder.html#a5dbf97f0a3513a0d8fe848ce8b6778ee", null ],
     [ "_extract_version_from_fragment", "da/dff/namespacepip_1_1__internal_1_1index_1_1package__finder.html#a067b01bc0ed2ad9d63d1828c991f258c", null ],
     [ "_find_name_version_sep", "da/dff/namespacepip_1_1__internal_1_1index_1_1package__finder.html#a1cd8ac9d7cf5801c805fc403743c7574", null ],

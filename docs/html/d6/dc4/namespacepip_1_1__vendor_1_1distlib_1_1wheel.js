@@ -1,7 +1,7 @@
 var namespacepip_1_1__vendor_1_1distlib_1_1wheel =
 [
-    [ "Mounter", "df/dac/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1_mounter.html", "df/dac/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1_mounter" ],
-    [ "Wheel", "d1/d0b/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1_wheel.html", "d1/d0b/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1_wheel" ],
+    [ "Mounter", "d8/d51/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1Mounter.html", "d8/d51/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1Mounter" ],
+    [ "Wheel", "dc/d37/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1Wheel.html", "dc/d37/classpip_1_1__vendor_1_1distlib_1_1wheel_1_1Wheel" ],
     [ "_derive_abi", "d6/dc4/namespacepip_1_1__vendor_1_1distlib_1_1wheel.html#a9a9843e5d15249b2035cc7ab18d2f9c1", null ],
     [ "_get_glibc_version", "d6/dc4/namespacepip_1_1__vendor_1_1distlib_1_1wheel.html#ada11de9ab7a370faac05a210b9a236a9", null ],
     [ "_get_suffixes", "d6/dc4/namespacepip_1_1__vendor_1_1distlib_1_1wheel.html#ae21721f68f6626554b7f9bbc76a277ec", null ],

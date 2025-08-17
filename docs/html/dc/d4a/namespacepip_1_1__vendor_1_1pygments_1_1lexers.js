@@ -20,10 +20,7 @@ var namespacepip_1_1__vendor_1_1pygments_1_1lexers =
     [ "load_lexer_from_file", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a53389cf2b006528ddabab012b1222656", null ],
     [ "_lexer_cache", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#ab3b7735a6f9b6d56740227a0add3878e", null ],
     [ "_pattern_cache", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a9fba100387e9362dfeb7a749b180f979", null ],
-    [ "aliases", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a3bfd9f9844a96236293246df36016a3e", null ],
     [ "COMPAT", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a9f4c3789c9b84b8d21ba7287b08a6338", null ],
-    [ "filenames", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a9f192a484d55d014215ba962492cde5e", null ],
-    [ "mimetypes", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#aac9f989e6e8aaa969cf6f8f9de9f8233", null ],
     [ "name", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#ab74e6bf80237ddc4109968cedc58c151", null ],
     [ "newmod", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#a011a0dabbb0179a8082f46cedeba56d5", null ],
     [ "oldmod", "dc/d4a/namespacepip_1_1__vendor_1_1pygments_1_1lexers.html#ae3e4c312ba3a3a6126cd8a6494c052ed", null ]

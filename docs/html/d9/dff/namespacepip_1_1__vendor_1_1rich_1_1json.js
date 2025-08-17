@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1json =
 [
-    [ "JSON", "dc/d4a/classpip_1_1__vendor_1_1rich_1_1json_1_1_j_s_o_n.html", "dc/d4a/classpip_1_1__vendor_1_1rich_1_1json_1_1_j_s_o_n" ],
+    [ "JSON", "d5/d3d/classpip_1_1__vendor_1_1rich_1_1json_1_1JSON.html", "d5/d3d/classpip_1_1__vendor_1_1rich_1_1json_1_1JSON" ],
     [ "args", "d9/dff/namespacepip_1_1__vendor_1_1rich_1_1json.html#a8187411843a6284ffb964ef3fb9fcab3", null ],
     [ "console", "d9/dff/namespacepip_1_1__vendor_1_1rich_1_1json.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "default", "d9/dff/namespacepip_1_1__vendor_1_1rich_1_1json.html#affb1327b18bf08a379d19eef89cf1ed1", null ],

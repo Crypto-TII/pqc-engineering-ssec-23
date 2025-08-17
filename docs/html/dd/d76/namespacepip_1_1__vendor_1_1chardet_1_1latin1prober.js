@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1chardet_1_1latin1prober =
 [
-    [ "Latin1Prober", "d6/d9c/classpip_1_1__vendor_1_1chardet_1_1latin1prober_1_1_latin1_prober.html", "d6/d9c/classpip_1_1__vendor_1_1chardet_1_1latin1prober_1_1_latin1_prober" ],
+    [ "Latin1Prober", "d2/da5/classpip_1_1__vendor_1_1chardet_1_1latin1prober_1_1Latin1Prober.html", "d2/da5/classpip_1_1__vendor_1_1chardet_1_1latin1prober_1_1Latin1Prober" ],
     [ "ACO", "dd/d76/namespacepip_1_1__vendor_1_1chardet_1_1latin1prober.html#a4b75ac65ebfba80169afb67b78ee5c07", null ],
     [ "ACV", "dd/d76/namespacepip_1_1__vendor_1_1chardet_1_1latin1prober.html#a1461d4982e93ddca455912db90aed029", null ],
     [ "ASC", "dd/d76/namespacepip_1_1__vendor_1_1chardet_1_1latin1prober.html#a27b92d83b71e265990fcc28b1128a9f8", null ],

@@ -1,6 +1,6 @@
 var namespacepip_1_1__vendor_1_1rich_1_1tree =
 [
-    [ "Tree", "d5/d44/classpip_1_1__vendor_1_1rich_1_1tree_1_1_tree.html", "d5/d44/classpip_1_1__vendor_1_1rich_1_1tree_1_1_tree" ],
+    [ "Tree", "d3/d13/classpip_1_1__vendor_1_1rich_1_1tree_1_1Tree.html", "d3/d13/classpip_1_1__vendor_1_1rich_1_1tree_1_1Tree" ],
     [ "code", "de/d85/namespacepip_1_1__vendor_1_1rich_1_1tree.html#a515d5ccc1af741b45f0f72a00854a848", null ],
     [ "console", "de/d85/namespacepip_1_1__vendor_1_1rich_1_1tree.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "containers_node", "de/d85/namespacepip_1_1__vendor_1_1rich_1_1tree.html#a9fe1f10a572d51ac266e7affdb170694", null ],
