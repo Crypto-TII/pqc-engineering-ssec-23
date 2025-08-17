@@ -38,5 +38,8 @@ benchmarks/benchmarks-ssec-p765 | tee benchmarks_ssec-p765-output.txt
 echo "benchmarks/benchmarks-ssec-p783 | tee benchmarks_ssec-p783-output.txt"
 benchmarks/benchmarks-ssec-p783 | tee benchmarks_ssec-p783-output.txt
 
-cd ../../reproduce_results/manuscript_figure_03
+cd ../../reproduce_results
+mkdir -p generated_figures/figure_03_output
+
+cd manuscript_figure_03
 python3 benchmark_graph_03.py

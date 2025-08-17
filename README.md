@@ -9,15 +9,16 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 2. [Setup Process](#section_02)
    1. [Build](#section_02_01)  
    2. [Testing](#section_02_02)
-   3. [Benchmarking](#section_02_03)
-3. [Reproducing the Manuscript Results](#section_03)
-   1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_03_01)
-   2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_03_02)
-   3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_03_03)
-4. [Source-Code Technical Documentation: Doxygen](#section_04)
-5. [Integrated CI/CD: Build, Test and Benchmarking](#section_05)
-6. [Additional Resources' Build Process](#section_06)
-7. [Authors](#section_07)
+3. [Benchmarking](#section_03)
+4. [Reproducing the Manuscript Results](#section_04)
+   1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_04_01)
+   2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_04_02)
+   3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_04_03)
+5. [Source-Code Technical Documentation: Doxygen](#section_05)
+6. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_06)
+7. [How to download our public Docker container?](#section_07)
+8. [Additional Resources' Build Process](#section_08)
+9. [Conclusions, Acknowledgements and Authors](#section_09)
 
 <a name="section_01"></a>
 ## 1. Introduction
@@ -30,12 +31,12 @@ Our paper reached several important results:
 A video summarizing our ideas and contribution (in a general-reader level) is shown below:
 
 <p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=KhoViHztXpE" target="_blank">
- <img src="http://img.youtube.com/vi/KhoViHztXpE/mqdefault.jpg" alt="Watch the video" width="500" border="10" />
+<a href="https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1" target="_blank">
+ <img src="http://img.youtube.com/vi/BjedMooSV30/0.jpg" alt="Watch the video" width="300" border="10" />
 </a>
 </p>
 
-The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=KhoViHztXpE).
+The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1).
 
 A general tree description of the source code of our project is shown below.
 
@@ -54,8 +55,69 @@ A general tree description of the source code of our project is shown below.
 In the following sections, we will cover in detail:
 1. How to build, test, and benchmark,
 2. How to replicate the results reported in the manuscript, 
-3. How to generate the source code technical documentation using Doxygen, and
-4. A real-life production CI/CD pipeline integration.
+3. How to generate the source code technical documentation using Doxygen,
+4. A real-life production CI/CD pipeline integration, showing how to download our manuscript's results as public artifacts, and
+5. Detailed instructions on how to download and mount our Docker container.
+
+A detailed (full) video tour of our artifact is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10).
+
+For convenience, a list of all the videos of each individual section is shown below.
+
+<table align="center"> 
+<tr style="width: 100%"> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=xH9wxWVgauo&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=2"> 
+<img src="https://img.youtube.com/vi/xH9wxWVgauo/0.jpg">
+<br> <b>1. Overview and Introduction to our artifact</b> </a> 
+</td> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=paQdkb1SVGs&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=3"> 
+<img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg">
+<br> <b>2. How to Install, Build and Test our source code?</b> </a> 
+</td> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4"> 
+<img src="https://img.youtube.com/vi/wCXyVPfD3lM/0.jpg">
+<br> <b>3. How to benchmark our project: The Dos and Dont's</b> </a> 
+</td> 
+</tr>
+<tr style="width: 100%"> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5"> 
+<img src="https://img.youtube.com/vi/kOgkQY2_Tr8/0.jpg">
+<br> <b>4. How to Replicate our Manuscript's Results?</b> </a> 
+</td> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6"> 
+<img src="https://img.youtube.com/vi/PdysZFECqJk/0.jpg">
+<br> <b>5. How to Generate the Source Code Technical Documentation?</b> </a> 
+</td> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7"> 
+<img src="https://img.youtube.com/vi/Z8lkkB7D3BE/0.jpg">
+<br> <b>6. CI Pipeline in action: Real-World Software Development Demo</b> </a> 
+</td> 
+</tr>
+<tr style="width: 100%"> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=8"> 
+<img src="https://img.youtube.com/vi/TQrU4osynUg/0.jpg">
+<br> <b>7. How to Download our Docker Container?</b> </a> 
+</td> 
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9"> 
+<img src="https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg">
+<br> <b>8. Conclusions</b> </a> 
+</td>
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10"> 
+<img src="https://img.youtube.com/vi/hLk_B5NpKRA/0.jpg">
+<br> <b>(Full) guided tour of our artifact</b> </a> 
+</td> 
+</tr>
+</table>
+
+A slide-style presentation with a summary of the technical steps presented in this repository is also available here: [Let us walk on the 3-isogeny graph: Step-by-step Artifact Walkthrough](docs/artifact_walkthrough.pdf).
 
 <a name="section_02"></a>
 ## 2. Setup Process
@@ -139,15 +201,20 @@ A demo of all the tests running in verbose mode is shown below.
 
 ![](gifs/03-examples/testing_verbose.gif)
 
-<a name="section_02_03"></a>
-### 2.3. Benchmarking
+<a name="section_03"></a>
+## 3. Benchmarking
 
-In this section, we show how to perform the **benchmarking** of our source code. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
+In this section, we show how to perform the **benchmarking** of our source code. 
+
+As supplementary material: 
+1. A detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 3: How to benchmark our project? The Dos and Dont's](https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4). 
+2. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
 
 ```bash
-pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
+cd c-code
+cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
 ```
 followed by
 ```bash
@@ -182,10 +249,14 @@ A demo of successful benchmarkings is shown below.
 
 ![](gifs/03-examples/benchmarking.gif)
 
-<a name="section_03"></a>
-## 3. Reproducing the Manuscript Results
+<a name="section_04"></a>
+## 4. Reproducing the Manuscript Results
 
-In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
+In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. 
+
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 4: How to Replicate our Manuscript's Results?](https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5)
+
+In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
 
 The related code to reproduce our results is shown in the tree below.
 
@@ -198,6 +269,7 @@ The related code to reproduce our results is shown in the tree below.
 ├───📁 high-level-scripts
 ├───📁 obtained_statistics_examples
 ├───📁 reproduce_results
+│   ├───📁 generated_figures               # <= AUTOMATICALLY GENERATED!
 │   ├───📁 manuscript_figure_03
 │   │   ├───📄 benchmark_graph_03.py
 │   │   └───📄 generate_figure_03.sh       # <= NEED TO EXECUTE
@@ -214,8 +286,8 @@ The related code to reproduce our results is shown in the tree below.
 └───📄 README.md
 ```
 
-<a name="section_03_01"></a>
-### 3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
+<a name="section_04_01"></a>
+### 4.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
 
 Inside the `reproduce_results/manuscript_figure_03` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -235,8 +307,16 @@ where the original Figure 3 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_03/figure_03_original.png)
 
-<a name="section_03_02"></a>
-### 3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
+A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_03_output` folder. This folder will be automatically generated once the `generate_figure_03.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_03_output
+        └───📄 figure_03_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
+
+<a name="section_04_02"></a>
+### 4.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
 
 Similar to the previous figure, inside the `reproduce_results/manuscript_figure_04` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -256,9 +336,16 @@ where the original Figure 4 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_04/figure_04_original.png)
 
+A PDF is generated with the generated graph and stored inside the `reproduced_results/generated_figures/figure_04_output` folder. This folder will be automatically generated once the `generate_figure_04.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_04_output
+        └───📄 figure_04_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
 
-<a name="section_03_03"></a>
-### 3.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
+<a name="section_04_03"></a>
+### 4.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
 
 Similar to the previous figures, inside the `reproduce_results/manuscript_figure_05` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -288,11 +375,21 @@ where the original Figure 5 presented in the manuscript is shown below.
 
 ![](gifs/04-replicate-results/fig_05/figure_05_original.png)
 
+Two PDF files are generated with the generated graphs and stored inside the `reproduced_results/generated_figures/figure_05_output` folder. This folder will be automatically generated once the `generate_figure_05.sh` script executes successfully.
+```
+📁 reproduce_results
+└───📁 generated_figures                   # <= AUTOMATICALLY GENERATED!
+    └───📁 figure_05_output
+        ├───📄 figure_05_01_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+        └───📄 figure_05_02_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
+```
 
-<a name="section_04"></a>
-## 4. Source-Code Technical Documentation: Doxygen
+<a name="section_05"></a>
+## 5. Source-Code Technical Documentation: Doxygen
 
-Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the `docs` folder, simply run
+Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 5: How to Generate the Source Code Technical Documentation?](https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6). 
+
+To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
 doxygen Doxyfile
 ```
@@ -302,30 +399,73 @@ This will generate an HTML site with interactive diagrams, and plenty of technic
 
 A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
 
-<a name="section_05"></a>
-## 5. Integrated CI/CD: Build, Test and Benchmarking
+<a name="section_06"></a>
+## 6. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
 
-To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test and (3) Benchmark approach.
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting. 
 
 <p align="center">
-  <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="350">
+  <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="750">
 </p>
+
+As supplementary material, a detailed walkthrough of the information conveyed in this section is available in our YouTube video: [Modulo 6: CI Pipeline in action: Real-World Software Development Demo](https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7).
 
 To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
 <p align="center">
-  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="500">
+  <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="1000">
 </p>
 
-<a name="section_06"></a>
-## 6. Additional Resources' Build Process
+At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 4: Reproducing the Manuscript Results](#section_04)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
+- The benchmark statistics are uploaded in the artifacts marked in **blue**, and
+- The generated manuscript graphs are uploaded in the artifacts marked in **red**.
+All the statistical data and all the graphs are uploaded as public artifacts to provide means to the reader to replicate our results. 
+
+<p align="center">
+  <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="1000">
+</p>
+
+<a name="section_07"></a>
+## 7. How to download our public Docker container?
+
+For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
+
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+
+To download our Docker container, simply execute the command below
+```bash
+docker pull tiicrc/github-selfhosted-runner-pqc:latest
+```
+and to verify that it was downloaded correctly, execute
+```bash
+docker images | grep pqc
+```
+
+To mount the docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and execute
+```bash
+docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash
+```
+After mounting, the terminal will change to
+```bash
+/src# <insert commands here>
+```
+At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the benchmarking shown in [Section 3: Benchmarking](#section_03), all the experiments presented in [Section 4: Reproducing the Manuscript Results](#section_04), and all the steps to generate the technical documentation using Doxygen as shown in [Section 5: Source-Code Technical Documentation: Doxygen](#section_05) shall work without problems.
+
+<a name="section_08"></a>
+## 8. Additional Resources' Build Process
 
 As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
-As part of our experiments, we used the a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
+As part of our experiments, we used a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
 
-<a name="section_07"></a>
-## 7. Authors
+<a name="section_09"></a>
+## 9. Conclusions, Acknowledgements and Authors
+
+We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here: [Modulo 8: Conclusions](https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+
+This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility. 
+
+We invite fellow researchers and practitioners to explore, test, and expand upon our work, helping it grow and evolve in new directions.
 
 For further information, please feel free to contact any of the authors:
 <p align="center">
@@ -333,3 +473,5 @@ For further information, please feel free to contact any of the authors:
     <a href="mailto:eduardo.ochoa@tii.ae"><strong>Eduardo Ochoa-Jiménez</strong></a>,
     <a href="mailto:ricardo.pontaza@tii.ae"><strong>Ricardo-Neftalí Pontaza-Rodas</strong></a>.
 </p>
+
+

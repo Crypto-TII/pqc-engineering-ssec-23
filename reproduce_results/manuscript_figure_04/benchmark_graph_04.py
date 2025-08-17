@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import re
@@ -71,4 +73,15 @@ plt.xticks([r + barWidth for r in range(len(IT))],
 plt.title('Benchmarks for the 3-isogenies walks: Our solution vs. QFESTA')
 
 plt.legend()
+
+graph_save_dir = "../generated_figures"
+graph_04_save_dir = "../generated_figures/figure_04_output"
+if not os.path.exists(graph_save_dir):
+    os.makedirs(graph_save_dir)
+if not os.path.exists(graph_04_save_dir):
+    os.makedirs(graph_04_save_dir)
+
+plt.savefig(f'../generated_figures/figure_04_output/figure_04_graph.pdf', format="pdf", bbox_inches="tight")
+
+
 plt.show()
