@@ -1,0 +1,107 @@
+\doxysection{One\+Day\+Cache Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache}{}\label{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache}\index{OneDayCache@{OneDayCache}}
+
+
+Inheritance diagram for One\+Day\+Cache\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=166pt]{da/d27/classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for One\+Day\+Cache\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=166pt]{da/dd0/classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache_a1a7780a56f3d8ec2a494e2de9f4455a6}{update\+\_\+headers}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, response)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1BaseHeuristic}{Base\+Heuristic}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1BaseHeuristic_a967ac850e03079bc33e4c35ca73074a1}{warning}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, response)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1BaseHeuristic_a050b78b666d39f0d49e1cccafff2068c}{apply}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, response)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Cache the response by providing an expires 1 day in the
+future.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{heuristics_8py_source_l00058}{58}} of file \mbox{\hyperlink{heuristics_8py_source}{heuristics.\+py}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache_a1a7780a56f3d8ec2a494e2de9f4455a6}\label{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache_a1a7780a56f3d8ec2a494e2de9f4455a6} 
+\index{OneDayCache@{OneDayCache}!update\_headers@{update\_headers}}
+\index{update\_headers@{update\_headers}!OneDayCache@{OneDayCache}}
+\doxysubsubsection{\texorpdfstring{update\_headers()}{update\_headers()}}
+{\footnotesize\ttfamily update\+\_\+headers (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{response }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Update the response headers with any new headers.
+
+NOTE: This SHOULD always include some Warning header to
+      signify that the response was cached by the client, not
+      by way of the provided headers.
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1BaseHeuristic_a1a7780a56f3d8ec2a494e2de9f4455a6}{Base\+Heuristic}}.
+
+
+
+Definition at line \mbox{\hyperlink{heuristics_8py_source_l00064}{64}} of file \mbox{\hyperlink{heuristics_8py_source}{heuristics.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{def\ }update\_headers(self,\ response):}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ headers\ =\ \{\}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}expires"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{response.headers}}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ date\ =\ parsedate(\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{response.headers}}[\textcolor{stringliteral}{"{}date"{}}])}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ expires\ =\ expire\_after(timedelta(days=1),\ date=datetime(*date[:6]))}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}expires"{}}]\ =\ datetime\_to\_header(expires)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ headers[\textcolor{stringliteral}{"{}cache-\/control"{}}]\ =\ \textcolor{stringliteral}{"{}public"{}}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ headers}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{heuristics_8py_source_l00020}{pip.\+\_\+vendor.\+cachecontrol.\+heuristics.\+datetime\+\_\+to\+\_\+header()}}, \mbox{\hyperlink{heuristics_8py_source_l00015}{pip.\+\_\+vendor.\+cachecontrol.\+heuristics.\+expire\+\_\+after()}}, and \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}.
+
+
+
+Referenced by \mbox{\hyperlink{heuristics_8py_source_l00046}{Base\+Heuristic.\+apply()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{df/d0d/classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache_a1a7780a56f3d8ec2a494e2de9f4455a6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{df/d0d/classpip_1_1__vendor_1_1cachecontrol_1_1heuristics_1_1OneDayCache_a1a7780a56f3d8ec2a494e2de9f4455a6_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/liwuen/projects\+\_\+dev/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/cachecontrol/\mbox{\hyperlink{heuristics_8py}{heuristics.\+py}}\end{DoxyCompactItemize}

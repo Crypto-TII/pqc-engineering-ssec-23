@@ -1,0 +1,94 @@
+\doxysection{analyze\+\_\+bench.\+py}
+\hypertarget{dCTIDH_2analyze__bench_8py_source}{}\label{dCTIDH_2analyze__bench_8py_source}\index{/home/liwuen/projects\_dev/pqc-\/engineering-\/ssec-\/23/dCTIDH/analyze\_bench.py@{/home/liwuen/projects\_dev/pqc-\/engineering-\/ssec-\/23/dCTIDH/analyze\_bench.py}}
+\mbox{\hyperlink{dCTIDH_2analyze__bench_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00001}\mbox{\hyperlink{namespaceanalyze__bench}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00003}00003\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00004}00004\ \textcolor{keyword}{import}\ math}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00005}00005\ \textcolor{keyword}{import}\ statistics}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00007}\mbox{\hyperlink{namespaceanalyze__bench_a07deb97ee9d393145931b857e0bae4c3}{00007}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespaceanalyze__bench_a07deb97ee9d393145931b857e0bae4c3}{mean}}(d):}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00008}00008\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{sum}}(d)*1.0/\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(d)}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00010}\mbox{\hyperlink{namespaceanalyze__bench_a536337420444aa264ec676eb76a3f10e}{00010}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespaceanalyze__bench_a536337420444aa264ec676eb76a3f10e}{deviation}}(d):}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00011}00011\ \ \ m\ =\ \mbox{\hyperlink{namespaceanalyze__bench_a07deb97ee9d393145931b857e0bae4c3}{mean}}(d)}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00012}00012\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{math.sqrt}}(\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{sum}}((x-\/m)**2\ \textcolor{keywordflow}{for}\ x\ \textcolor{keywordflow}{in}\ d)*1.0/\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(d))}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00014}\mbox{\hyperlink{namespaceanalyze__bench_a3121b5e20cccb8e49edcbd3e9ac77712}{00014}}\ keys\ =\ set()}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00015}\mbox{\hyperlink{namespaceanalyze__bench_ac9c8d770468eedf19270cef4324f8414}{00015}}\ validate\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00016}\mbox{\hyperlink{namespaceanalyze__bench_a7763aece7917a6d9c900c5857579f6a7}{00016}}\ action\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00017}\mbox{\hyperlink{namespaceanalyze__bench_aa4bdc35fd5e3d73a8730a457281ea829}{00017}}\ torsion\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00018}\mbox{\hyperlink{namespaceanalyze__bench_a3ef65c71ec630ff524c8230d81dd2dbe}{00018}}\ mults\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00019}\mbox{\hyperlink{namespaceanalyze__bench_a3a9eb37074f7bb22139e9b3e7bb149fa}{00019}}\ sqs\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00020}\mbox{\hyperlink{namespaceanalyze__bench_aafac450fa083e23b091d58f35f5f947d}{00020}}\ adds\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00021}\mbox{\hyperlink{namespaceanalyze__bench_a86cf672daa4e0ad11ad10efc894d19c8}{00021}}\ num\ =\ 0}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00023}00023\ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{sys.stdin}}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00024}\mbox{\hyperlink{namespaceanalyze__bench_a4fa05b1f00fcde100685cc887554b93b}{00024}}\ \ \ line\ =\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{line.split}}()}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00025}00025\ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(line)\ <\ 11:\ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00026}00026\ \ \ \textcolor{keywordflow}{if}\ line[3]\ !=\ \textcolor{stringliteral}{'mulsq'}:\ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00027}00027\ \ \ \textcolor{keywordflow}{if}\ line[5]\ !=\ \textcolor{stringliteral}{'sq'}:\ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00028}00028\ \ \ \textcolor{keywordflow}{if}\ line[7]\ !=\ \textcolor{stringliteral}{'addsub'}:\ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00029}00029\ \ \ \textcolor{keywordflow}{if}\ line[9]\ !=\ \textcolor{stringliteral}{'cycles'}:\ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00031}00031\ \ \ \textcolor{keywordflow}{if}\ line[2]\ ==\ \textcolor{stringliteral}{'validate'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00032}\mbox{\hyperlink{namespaceanalyze__bench_acc1f143bad5d4f0ad289838ec6a79604}{00032}}\ \ \ \ \ target\ =\ validate}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00033}00033\ \ \ \textcolor{keywordflow}{elif}\ line[2]\ ==\ \textcolor{stringliteral}{'action'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00034}00034\ \ \ \ \ target\ =\ action}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00035}00035\ \ \ \textcolor{keywordflow}{elif}\ line[2]\ ==\ \textcolor{stringliteral}{'torsionpoint'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00036}00036\ \ \ \ \ target\ =\ torsion}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00037}00037\ \ \ \textcolor{keywordflow}{elif}\ line[2]\ ==\ \textcolor{stringliteral}{'mults'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00038}00038\ \ \ \ \ target\ =\ mults}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00039}00039\ \ \ \textcolor{keywordflow}{elif}\ line[2]\ ==\ \textcolor{stringliteral}{'sqs'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00040}00040\ \ \ \ \ target\ =\ sqs}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00041}00041\ \ \ \textcolor{keywordflow}{elif}\ line[2]\ ==\ \textcolor{stringliteral}{'adds'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00042}00042\ \ \ \ \ target\ =\ adds}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00043}00043\ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00046}\mbox{\hyperlink{namespaceanalyze__bench_ab5180fa31f3a4727764de27705f76940}{00046}}\ \ \ mul\ =\ int(line[4])}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00047}\mbox{\hyperlink{namespaceanalyze__bench_a03b2cb341146988d5cf16a1d6a7925d4}{00047}}\ \ \ sq\ =\ int(line[6])}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00048}\mbox{\hyperlink{namespaceanalyze__bench_a1bcdbbfdd4334d270fc4e6930c56460e}{00048}}\ \ \ addsub\ =\ int(line[8])}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00049}\mbox{\hyperlink{namespaceanalyze__bench_afa073ac28db2a9222c7b4d9ffb6bfa0a}{00049}}\ \ \ Mcyc\ =\ 0.000001*int(line[10])}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00050}\mbox{\hyperlink{namespaceanalyze__bench_ace1743672a003a347f66e8103c704abd}{00050}}\ \ \ mulsq\ =\ mul+sq}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00051}\mbox{\hyperlink{namespaceanalyze__bench_a2c25cfc1ae6d25d2adb9c867848cdc5e}{00051}}\ \ \ combo185\ =\ mul+0.8*sq+0.05*addsub}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00053}00053\ \ \ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{keys.add}}(int(line[1]))}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00054}00054\ \ \ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ int(line[1]),\textcolor{stringliteral}{'total'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{for}\ name,value\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00056}00056\ \ \ \ \ \ \ (\textcolor{stringliteral}{'Mcyc'},Mcyc),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00057}00057\ \ \ \ \ \ \ (\textcolor{stringliteral}{'mulsq'},mulsq),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00058}00058\ \ \ \ \ \ \ (\textcolor{stringliteral}{'sq'},sq),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00059}00059\ \ \ \ \ \ \ (\textcolor{stringliteral}{'addsub'},addsub),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00060}00060\ \ \ \ \ \ \ (\textcolor{stringliteral}{'mul'},mul),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00061}00061\ \ \ \ \ \ \ (\textcolor{stringliteral}{'combo185'},combo185),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00062}00062\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00063}00063\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k,name)\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ target:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ target[k,name]\ =\ []}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00065}00065\ \ \ \ \ \ \ target[k,name]\ +=\ [value]}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00067}00067\ \ \ num\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00069}00069\ \textcolor{keywordflow}{for}\ k\ \textcolor{keywordflow}{in}\ sorted(keys)+[\textcolor{stringliteral}{'total'}]:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00070}00070\ \ \ \textcolor{keywordflow}{for}\ targetname,target\ \textcolor{keywordflow}{in}\ (}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00071}00071\ \ \ \ \ (\textcolor{stringliteral}{'validate'},validate),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00072}00072\ \ \ \ \ (\textcolor{stringliteral}{'action'},action),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00073}00073\ \ \ \ \ (\textcolor{stringliteral}{'torsionpoint'},torsion),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00074}00074\ \ \ \ \ (\textcolor{stringliteral}{'mults'},mults),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00075}00075\ \ \ \ \ (\textcolor{stringliteral}{'sqs'},sqs),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00076}00076\ \ \ \ \ (\textcolor{stringliteral}{'adds'},adds),}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00077}00077\ \ \ ):}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{if}\ target\ ==\ \{\}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00079}00079\ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00080}\mbox{\hyperlink{namespaceanalyze__bench_a6ea966a45dd42919632c29b78eb4a83e}{00080}}\ \ \ \ \ output\ =\ \textcolor{stringliteral}{'\%s\ \%s'}\ \%\ (k,targetname)}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00081}00081\ \ \ \ \ output\ +=\ \textcolor{stringliteral}{'\ experiments\ \%d'}\ \%\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(target[k,\textcolor{stringliteral}{'Mcyc'}])}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00082}00082\ \ \ \ \ \textcolor{keywordflow}{for}\ name\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{'Mcyc'},\textcolor{stringliteral}{'mulsq'},\textcolor{stringliteral}{'sq'},\textcolor{stringliteral}{'addsub'},\textcolor{stringliteral}{'mul'},\textcolor{stringliteral}{'combo185'}):}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00083}\mbox{\hyperlink{namespaceanalyze__bench_a248f825393a9883799bb751d1ba521b3}{00083}}\ \ \ \ \ \ \ x\ =\ target[k,name]}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00084}\mbox{\hyperlink{namespaceanalyze__bench_aeb959fd2db664ce4ed050483e13418e3}{00084}}\ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{'\ \%s\ \%.0f+-\/\%.0f'}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00085}00085\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ name\ ==\ \textcolor{stringliteral}{'Mcyc'}:}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{'\ \%s\ \%.5f+-\/\%.5f'}}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00087}00087\ \ \ \ \ \ \ output\ +=\ format\%(name,\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{statistics.median}}(x),\mbox{\hyperlink{namespaceanalyze__bench_a536337420444aa264ec676eb76a3f10e}{deviation}}(x))}
+\DoxyCodeLine{\Hypertarget{dCTIDH_2analyze__bench_8py_source_l00088}00088\ \ \ \ \ print(output)}
+
+\end{DoxyCode}

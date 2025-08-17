@@ -1,0 +1,292 @@
+\doxysection{Callback\+File\+Wrapper Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper}{}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper}\index{CallbackFileWrapper@{CallbackFileWrapper}}
+
+
+Inheritance diagram for Callback\+File\+Wrapper\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{d9/d5a/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Callback\+File\+Wrapper\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{de/d7e/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_af405dd8ec15d8cfee7988c659e130958}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, \mbox{\hyperlink{fp-gmp_8h_a167c68a20b94476341fdbff3d8688784}{fp}}, \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{callback}})
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a2c55367d8e5e47bf412f3d18b35f6921}{\+\_\+\+\_\+getattr\+\_\+\+\_\+}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, name)
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a0eafdd2042d0c1deb2a3eb8a41c73498}{read}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{amt}}=\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{None}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a30137d2c2da9beec3551bbbc228659cb}{\+\_\+close}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}})
+\item 
+\mbox{\hyperlink{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a5cb5ff3155ae82968ea0fd9b35ae4862}{\+\_\+safe\+\_\+read}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{amt}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Small wrapper around a fp object which will tee everything read into a
+buffer, and when that file is closed it will execute a callback with the
+contents of that buffer.
+
+All attributes are proxied to the underlying file object.
+
+This class uses members with a double underscore (__) leading prefix so as
+not to accidentally shadow an attribute.
+
+The data is stored in a temporary file until it is all available.  As long
+as the temporary files directory is disk-based (sometimes it's a
+memory-backed-``tmpfs`` on Linux), data will be unloaded to disk if memory
+pressure is high.  For small files the disk usually won't be used at all,
+it'll all be in the filesystem memory cache, so there should be no
+performance impact.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00009}{9}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_af405dd8ec15d8cfee7988c659e130958}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_af405dd8ec15d8cfee7988c659e130958} 
+\index{CallbackFileWrapper@{CallbackFileWrapper}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!CallbackFileWrapper@{CallbackFileWrapper}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{fp,  }\item[{}]{callback }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00028}{28}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{def\ }\_\_init\_\_(self,\ fp,\ callback):}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ self.\_\_buf\ =\ NamedTemporaryFile(\textcolor{stringliteral}{"{}rb+"{}},\ delete=\textcolor{keyword}{True})}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ self.\_\_fp\ =\ fp}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ self.\_\_callback\ =\ callback}
+\DoxyCodeLine{00032\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{filewrapper_8py_source_l00029}{Callback\+File\+Wrapper.\+\_\+\+\_\+buf}}, \mbox{\hyperlink{filewrapper_8py_source_l00031}{Callback\+File\+Wrapper.\+\_\+\+\_\+callback}}, and \mbox{\hyperlink{filewrapper_8py_source_l00030}{Callback\+File\+Wrapper.\+\_\+\+\_\+fp}}.
+
+
+
+Referenced by \mbox{\hyperlink{typing__extensions_8py_source_l00832}{Protocol.\+\_\+\+\_\+init\+\_\+subclass\+\_\+\+\_\+()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=290pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_af405dd8ec15d8cfee7988c659e130958_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a2c55367d8e5e47bf412f3d18b35f6921}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a2c55367d8e5e47bf412f3d18b35f6921} 
+\index{CallbackFileWrapper@{CallbackFileWrapper}!\_\_getattr\_\_@{\_\_getattr\_\_}}
+\index{\_\_getattr\_\_@{\_\_getattr\_\_}!CallbackFileWrapper@{CallbackFileWrapper}}
+\doxysubsubsection{\texorpdfstring{\_\_getattr\_\_()}{\_\_getattr\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+getattr\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{name }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00033}{33}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{def\ }\_\_getattr\_\_(self,\ name):}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ vaguaries\ of\ garbage\ collection\ means\ that\ self.\_\_fp\ is}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ not\ always\ set.\ \ By\ using\ \_\_getattribute\_\_\ and\ the\ private}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ name[0]\ allows\ looking\ up\ the\ attribute\ value\ and\ raising\ an}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ AttributeError\ when\ it\ doesn't\ exist.\ This\ stop\ thigns\ from}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ infinitely\ recursing\ calls\ to\ getattr\ in\ the\ case\ where}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ self.\_\_fp\ hasn't\ been\ set.}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ [0]\ https://docs.python.org/2/reference/expressions.html\#atom-\/identifiers}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ fp\ =\ self.\_\_getattribute\_\_(\textcolor{stringliteral}{"{}\_CallbackFileWrapper\_\_fp"{}})}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{getattr}}(fp,\ name)}
+\DoxyCodeLine{00044\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{filewrapper_8py_source_l00030}{Callback\+File\+Wrapper.\+\_\+\+\_\+fp}}, \mbox{\hyperlink{__vendor_2distlib_2metadata_8py_source_l00731}{Metadata.\+\_\+\+\_\+getattribute\+\_\+\+\_\+()}}, and \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=346pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a2c55367d8e5e47bf412f3d18b35f6921_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a30137d2c2da9beec3551bbbc228659cb}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a30137d2c2da9beec3551bbbc228659cb} 
+\index{CallbackFileWrapper@{CallbackFileWrapper}!\_close@{\_close}}
+\index{\_close@{\_close}!CallbackFileWrapper@{CallbackFileWrapper}}
+\doxysubsubsection{\texorpdfstring{\_close()}{\_close()}}
+{\footnotesize\ttfamily \+\_\+close (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00062}{62}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{def\ }\_close(self):}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\_\_callback:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\_\_buf.tell()\ ==\ 0:}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Empty\ file:}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ b\textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Return\ the\ data\ without\ actually\ loading\ it\ into\ memory,}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ relying\ on\ Python's\ buffer\ API\ and\ mmap().\ mmap()\ just\ gives}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ view\ directly\ into\ the\ filesystem's\ memory\ cache,\ so\ it}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ doesn't\ result\ in\ duplicate\ memory\ use.}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\_\_buf.seek(0,\ 0)}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{memoryview}}(}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{mmap.mmap}}(self.\_\_buf.fileno(),\ 0,\ access=\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{mmap.ACCESS\_READ}})}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ self.\_\_callback(result)}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ assign\ this\ to\ None\ here,\ because\ otherwise\ we\ can\ get\ into}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ really\ tricky\ problems\ where\ the\ CPython\ interpreter\ dead\ locks}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ because\ the\ callback\ is\ holding\ a\ reference\ to\ something\ which}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ has\ a\ \_\_del\_\_\ method.\ Setting\ this\ to\ None\ breaks\ the\ cycle}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ and\ allows\ the\ garbage\ collector\ to\ do\ it's\ thing\ normally.}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ self.\_\_callback\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Closing\ the\ temporary\ file\ releases\ memory\ and\ frees\ disk\ space.}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Important\ when\ caching\ big\ files.}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ self.\_\_buf.close()}
+\DoxyCodeLine{00088\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{filewrapper_8py_source_l00029}{Callback\+File\+Wrapper.\+\_\+\+\_\+buf}}, \mbox{\hyperlink{filewrapper_8py_source_l00031}{Callback\+File\+Wrapper.\+\_\+\+\_\+callback}}, and \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}.
+
+
+
+Referenced by \mbox{\hyperlink{filewrapper_8py_source_l00100}{Callback\+File\+Wrapper.\+\_\+safe\+\_\+read()}}, and \mbox{\hyperlink{filewrapper_8py_source_l00089}{Callback\+File\+Wrapper.\+read()}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a30137d2c2da9beec3551bbbc228659cb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a5cb5ff3155ae82968ea0fd9b35ae4862}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a5cb5ff3155ae82968ea0fd9b35ae4862} 
+\index{CallbackFileWrapper@{CallbackFileWrapper}!\_safe\_read@{\_safe\_read}}
+\index{\_safe\_read@{\_safe\_read}!CallbackFileWrapper@{CallbackFileWrapper}}
+\doxysubsubsection{\texorpdfstring{\_safe\_read()}{\_safe\_read()}}
+{\footnotesize\ttfamily \+\_\+safe\+\_\+read (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{amt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00100}{100}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{def\ }\_safe\_read(self,\ amt):}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ data\ =\ self.\_\_fp.\_safe\_read(amt)}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ amt\ ==\ 2\ \textcolor{keywordflow}{and}\ data\ ==\ b\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}}:}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ urllib\ executes\ this\ read\ to\ toss\ the\ CRLF\ at\ the\ end}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ of\ the\ chunk.}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ self.\_\_buf.write(data)}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\_\_is\_fp\_closed():}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ self.\_close()}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{filewrapper_8py_source_l00029}{Callback\+File\+Wrapper.\+\_\+\+\_\+buf}}, \mbox{\hyperlink{filewrapper_8py_source_l00030}{Callback\+File\+Wrapper.\+\_\+\+\_\+fp}}, \mbox{\hyperlink{filewrapper_8py_source_l00045}{Callback\+File\+Wrapper.\+\_\+\+\_\+is\+\_\+fp\+\_\+closed()}}, \mbox{\hyperlink{filewrapper_8py_source_l00062}{Callback\+File\+Wrapper.\+\_\+close()}}, and \mbox{\hyperlink{filewrapper_8py_source_l00100}{Callback\+File\+Wrapper.\+\_\+safe\+\_\+read()}}.
+
+
+
+Referenced by \mbox{\hyperlink{filewrapper_8py_source_l00100}{Callback\+File\+Wrapper.\+\_\+safe\+\_\+read()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a5cb5ff3155ae82968ea0fd9b35ae4862_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=150pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a5cb5ff3155ae82968ea0fd9b35ae4862_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a0eafdd2042d0c1deb2a3eb8a41c73498}\label{classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a0eafdd2042d0c1deb2a3eb8a41c73498} 
+\index{CallbackFileWrapper@{CallbackFileWrapper}!read@{read}}
+\index{read@{read}!CallbackFileWrapper@{CallbackFileWrapper}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily read (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{amt = {\ttfamily \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{None}}} }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{filewrapper_8py_source_l00089}{89}} of file \mbox{\hyperlink{filewrapper_8py_source}{filewrapper.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{def\ }read(self,\ amt=None):}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ data\ =\ self.\_\_fp.read(amt)}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ data:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ may\ be\ dealing\ with\ b'',\ a\ sign\ that\ things\ are\ over:}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it's\ passed\ e.g.\ after\ we've\ already\ closed\ self.\_\_buf.}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ self.\_\_buf.write(data)}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\_\_is\_fp\_closed():}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ self.\_close()}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data}
+\DoxyCodeLine{00099\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{filewrapper_8py_source_l00029}{Callback\+File\+Wrapper.\+\_\+\+\_\+buf}}, \mbox{\hyperlink{filewrapper_8py_source_l00030}{Callback\+File\+Wrapper.\+\_\+\+\_\+fp}}, \mbox{\hyperlink{filewrapper_8py_source_l00045}{Callback\+File\+Wrapper.\+\_\+\+\_\+is\+\_\+fp\+\_\+closed()}}, \mbox{\hyperlink{filewrapper_8py_source_l00062}{Callback\+File\+Wrapper.\+\_\+close()}}, and \mbox{\hyperlink{filewrapper_8py_source_l00089}{Callback\+File\+Wrapper.\+read()}}.
+
+
+
+Referenced by \mbox{\hyperlink{response_8py_source_l00294}{HTTPResponse.\+data()}}, \mbox{\hyperlink{response_8py_source_l00282}{HTTPResponse.\+drain\+\_\+conn()}}, \mbox{\hyperlink{urllib3_2util_2retry_8py_source_l00512}{Retry.\+increment()}}, \mbox{\hyperlink{urllib3_2util_2retry_8py_source_l00488}{Retry.\+is\+\_\+exhausted()}}, \mbox{\hyperlink{urllib3_2util_2retry_8py_source_l00304}{Retry.\+new()}}, \mbox{\hyperlink{filewrapper_8py_source_l00089}{Callback\+File\+Wrapper.\+read()}}, \mbox{\hyperlink{response_8py_source_l00729}{HTTPResponse.\+readinto()}}, \mbox{\hyperlink{ssltransport_8py_source_l00080}{SSLTransport.\+recv\+\_\+into()}}, and \mbox{\hyperlink{response_8py_source_l00601}{HTTPResponse.\+stream()}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=241pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a0eafdd2042d0c1deb2a3eb8a41c73498_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dc/ddc/classpip_1_1__vendor_1_1cachecontrol_1_1filewrapper_1_1CallbackFileWrapper_a0eafdd2042d0c1deb2a3eb8a41c73498_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/liwuen/projects\+\_\+dev/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/cachecontrol/\mbox{\hyperlink{filewrapper_8py}{filewrapper.\+py}}\end{DoxyCompactItemize}

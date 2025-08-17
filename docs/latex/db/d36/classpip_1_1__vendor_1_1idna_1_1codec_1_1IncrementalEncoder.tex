@@ -1,0 +1,90 @@
+\doxysection{Incremental\+Encoder Class Reference}
+\hypertarget{classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder}{}\label{classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder}\index{IncrementalEncoder@{IncrementalEncoder}}
+
+
+Inheritance diagram for Incremental\+Encoder\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{d6/deb/classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Incremental\+Encoder\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{d6/d75/classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Tuple\mbox{[}str, int\mbox{]} \mbox{\hyperlink{classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder_a0784b6e9ac4f52972887f4ac60eb0fce}{\+\_\+buffer\+\_\+encode}} (\mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{self}}, str data, str errors, bool final)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{codec_8py_source_l00028}{28}} of file \mbox{\hyperlink{codec_8py_source}{codec.\+py}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder_a0784b6e9ac4f52972887f4ac60eb0fce}\label{classpip_1_1__vendor_1_1idna_1_1codec_1_1IncrementalEncoder_a0784b6e9ac4f52972887f4ac60eb0fce} 
+\index{IncrementalEncoder@{IncrementalEncoder}!\_buffer\_encode@{\_buffer\_encode}}
+\index{\_buffer\_encode@{\_buffer\_encode}!IncrementalEncoder@{IncrementalEncoder}}
+\doxysubsubsection{\texorpdfstring{\_buffer\_encode()}{\_buffer\_encode()}}
+{\footnotesize\ttfamily  Tuple\mbox{[}str, int\mbox{]} \+\_\+buffer\+\_\+encode (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{str}]{data,  }\item[{str}]{errors,  }\item[{bool}]{final }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{codec_8py_source_l00029}{29}} of file \mbox{\hyperlink{codec_8py_source}{codec.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{def\ }\_buffer\_encode(self,\ data:\ str,\ errors:\ str,\ final:\ bool)\ -\/>\ Tuple[str,\ int]:\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ errors\ !=\ \textcolor{stringliteral}{'strict'}:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ IDNAError(\textcolor{stringliteral}{'Unsupported\ error\ handling\ \(\backslash\)"{}\{\}\(\backslash\)"{}'}.format(errors))}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ data:}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}},\ 0}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ labels\ =\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{\_unicode\_dots\_re.split}}(data)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ trailing\_dot\ =\ \textcolor{stringliteral}{''}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ labels:}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ labels[-\/1]:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trailing\_dot\ =\ \textcolor{stringliteral}{'.'}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ del\ labels[-\/1]}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \textcolor{keywordflow}{not}\ final:}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Keep\ potentially\ unfinished\ label\ until\ the\ next\ call}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ del\ labels[-\/1]}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ labels:}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trailing\_dot\ =\ \textcolor{stringliteral}{'.'}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ result\ =\ []}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ size\ =\ 0}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ label\ \textcolor{keywordflow}{in}\ labels:}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{result.append}}(alabel(label))}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ size:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size\ +=\ 1}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ size\ +=\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(label)}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Join\ with\ U+002E}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ result\_str\ =\ \textcolor{stringliteral}{'.'}.join(result)\ +\ trailing\_dot\ \ \textcolor{comment}{\#\ type:\ ignore}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ size\ +=\ \mbox{\hyperlink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{len}}(trailing\_dot)}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_str,\ size}
+\DoxyCodeLine{00060\ }
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{prime__search_8m_source_l00010}{i}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/liwuen/projects\+\_\+dev/pqc-\/engineering-\/ssec-\/23/venv/lib/python3.\+12/site-\/packages/pip/\+\_\+vendor/idna/\mbox{\hyperlink{codec_8py}{codec.\+py}}\end{DoxyCompactItemize}

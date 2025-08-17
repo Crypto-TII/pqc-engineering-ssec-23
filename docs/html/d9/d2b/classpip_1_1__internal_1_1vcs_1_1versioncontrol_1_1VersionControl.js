@@ -1,0 +1,28 @@
+var classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl =
+[
+    [ "_is_local_repository", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#ab886fba655aa827ef903002977ff1d84", null ],
+    [ "compare_urls", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#afa70c12caf8bf59431cc3e6da62277ac", null ],
+    [ "fetch_new", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#aa905ab521509960ac2424a5767b4e18e", null ],
+    [ "get_netloc_and_auth", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a1cfc669ebf2be2d1db04b8a292b0bbd2", null ],
+    [ "get_remote_url", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a9b85d9faa46a1287f3829586bba0b288", null ],
+    [ "get_repository_root", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#abe15a19297766ddf6fd687da03880411", null ],
+    [ "get_requirement_revision", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#aa9165e2c7842e42fd1142cc866d32c32", null ],
+    [ "get_revision", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a9fc21d9c16ee10203886725b7fce0c2f", null ],
+    [ "get_src_requirement", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a3c39a3221bcd3f706bf9ac17512dffe3", null ],
+    [ "get_subdirectory", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a33ffc142378b1071ae33180daae2c15f", null ],
+    [ "get_url_rev_and_auth", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a6aaf5748d8bf9f1796983c2ca98b8a8c", null ],
+    [ "get_url_rev_options", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a8663dbbac40ecc99dcbddaf93fa3ea24", null ],
+    [ "is_commit_id_equal", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#aa9fd1b97490dc424130a05eaccdc9eb4", null ],
+    [ "is_immutable_rev_checkout", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a51acf93b6de161cb860f8a6e25b22021", null ],
+    [ "is_repository_directory", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a88232e1ea5b41981f2b32004dbc718ef", null ],
+    [ "make_rev_options", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a8cee8efe13c2119a233aba49821e3cc6", null ],
+    [ "obtain", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a7f2a59c83d152b4b12bd58df83eadff8", null ],
+    [ "run_command", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#ade7dbccedf65d20ab37d5f4c10ffecde", null ],
+    [ "should_add_vcs_url_prefix", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a567f7c2a46f753145668af450810b4b8", null ],
+    [ "switch", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#ace4f91cd9b42ae52423f5e7504f23da0", null ],
+    [ "unpack", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a800f3170024b837476959e725f278600", null ],
+    [ "update", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#ace88fe2499a36fdedba9ccb46c6688e0", null ],
+    [ "dirname", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#a23159e0e6997cdd5125fefe42020ad0a", null ],
+    [ "name", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#ab74e6bf80237ddc4109968cedc58c151", null ],
+    [ "repo_name", "d9/d2b/classpip_1_1__internal_1_1vcs_1_1versioncontrol_1_1VersionControl.html#aded0845aaa89b8bc3fd8569ac2d0573b", null ]
+];
