@@ -31,8 +31,8 @@ Our paper reached several important results:
 A video summarizing our ideas and contribution (in a general-reader level) is shown below:
 
 <p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=BjedMooSV30" target="_blank">
- <img src="http://img.youtube.com/vi/BjedMooSV30/mqdefault.jpg" alt="Watch the video" width="500" border="10" />
+<a href="https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1" target="_blank">
+ <img src="http://img.youtube.com/vi/BjedMooSV30/0.jpg" alt="Watch the video" width="300" border="10" />
 </a>
 </p>
 
