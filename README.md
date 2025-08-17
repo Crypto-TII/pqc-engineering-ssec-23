@@ -65,52 +65,53 @@ For convenience, a list of all the videos of each individual section is shown be
 
 <table align="center"> 
 <tr> 
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=xH9wxWVgauo&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=2"> 
-<img src="https://img.youtube.com/vi/xH9wxWVgauo/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/xH9wxWVgauo/0.jpg" width="300">
 <br> <b>1. Overview and Introduction to our artifact</b> </a> 
 </td> 
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=paQdkb1SVGs&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=3"> 
-<img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/paQdkb1SVGs/0.jpg" width="300">
 <br> <b>2. How to Install, Build and Test our source code?</b> </a> 
 </td> 
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4"> 
-<img src="https://img.youtube.com/vi/wCXyVPfD3lM/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/wCXyVPfD3lM/0.jpg" width="300">
 <br> <b>3. How to benchmark our project: The Dos and Dont's</b> </a> 
 </td> 
 </tr>
-
 <tr> 
-<td align="center"> <a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5"> 
-<img src="https://img.youtube.com/vi/kOgkQY2_Tr8/0.jpg" width="333">
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5"> 
+<img src="https://img.youtube.com/vi/kOgkQY2_Tr8/0.jpg" width="300">
 <br> <b>4. How to Replicate our Manuscript's Results?</b> </a> 
 </td> 
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6"> 
-<img src="https://img.youtube.com/vi/PdysZFECqJk/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/PdysZFECqJk/0.jpg" width="300">
 <br> <b>5. How to Generate the Source Code Technical Documentation?</b> </a> 
 </td> 
-<td align="center"> <a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7"> 
-<img src="https://img.youtube.com/vi/Z8lkkB7D3BE/0.jpg" width="333">
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7"> 
+<img src="https://img.youtube.com/vi/Z8lkkB7D3BE/0.jpg" width="300">
 <br> <b>6. CI Pipeline in action: Real-World Software Development Demo</b> </a> 
 </td> 
 </tr>
-
 <tr> 
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=8"> 
-<img src="https://img.youtube.com/vi/TQrU4osynUg/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/TQrU4osynUg/0.jpg" width="300">
 <br> <b>7. How to Download our Docker Container?</b> </a> 
 </td> 
-<td align="center"> <a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9"> 
-<img src="https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg" width="333">
+<td align="center" style="width: 33%"> 
+<a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9"> 
+<img src="https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg" width="300">
 <br> <b>8. Conclusions</b> </a> 
 </td>
-<td align="center"> 
+<td align="center" style="width: 33%"> 
 <a href="https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10"> 
-<img src="https://img.youtube.com/vi/hLk_B5NpKRA/0.jpg" width="333">
+<img src="https://img.youtube.com/vi/hLk_B5NpKRA/0.jpg" width="300">
 <br> <b>(Full) guided tour of our artifact</b> </a> 
 </td> 
 </tr>
