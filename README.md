@@ -52,6 +52,8 @@ A general tree description of the source code of our project is shown below.
 ├───📁 reproduce_results
 └───📄 README.md
 ```
+Our source-code technical documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/). An example of interactive and clickable functions-dependency graphs [is shown here.](https://crypto-tii.github.io/pqc-engineering-ssec-23/html/df/d89/c-code_2src_2isogeny__walks__3__fp_8c.html)
+
 In the following sections, we will cover in detail:
 1. How to build, test, and benchmark,
 2. How to replicate the results reported in the manuscript, 
