@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dec_0',['dec',['../de/d25/cmake-build-debug_2CMakeFiles_23_828_83_2CompilerIdC_2CMakeCCompilerId_8c.html#ad1280362da42492bbc11aa78cbf776ad',1,'DEC:&#160;CMakeCCompilerId.c'],['../d1/d31/cmake-build-release-cycles-x8664-graph_2CMakeFiles_23_828_83_2CompilerIdC_2CMakeCCompilerId_8c.html#ad1280362da42492bbc11aa78cbf776ad',1,'DEC:&#160;CMakeCCompilerId.c'],['../d0/d15/cmake-build-release-cycles-x8664_2CMakeFiles_23_828_83_2CompilerIdC_2CMakeCCompilerId_8c.html#ad1280362da42492bbc11aa78cbf776ad',1,'DEC:&#160;CMakeCCompilerId.c'],['../d9/d3d/cmake-build-release_2CMakeFiles_23_828_83_2CompilerIdC_2CMakeCCompilerId_8c.html#ad1280362da42492bbc11aa78cbf776ad',1,'DEC:&#160;CMakeCCompilerId.c']]],
-  ['derive_1',['derive',['../d6/ded/checkct_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;checkct.c'],['../dc/dc3/csidh_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;csidh.c'],['../d7/d1d/main_2ctidh_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;ctidh.c']]]
+  ['derive_0',['derive',['../d6/ded/checkct_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;checkct.c'],['../dc/dc3/csidh_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;csidh.c'],['../d7/d1d/main_2ctidh_8c.html#a324ca3991299a9bf4fbab794a413b8e4',1,'derive:&#160;ctidh.c']]]
 ];
