@@ -380,7 +380,9 @@ Two PDF files are generated with the generated graphs and stored inside the `rep
 <a name="section_05"></a>
 ## 5. Source-Code Technical Documentation: Doxygen
 
-Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the `docs` folder, simply run
+Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 5: How to Generate the Source Code Technical Documentation?](https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6). 
+
+To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
 doxygen Doxyfile
 ```
@@ -393,11 +395,13 @@ A link to a public-hosted version of our source-code documentation is shown here
 <a name="section_06"></a>
 ## 6. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
 
-To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting.
+To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting. 
 
 <p align="center">
   <img src="gifs/02-pipeline/ci-cd.gif" alt="Build, test and benchmark jobs." width="750">
 </p>
+
+As supplementary material, a detailed walkthrough of the information conveyed in this section is available in our YouTube video: [Modulo 6: CI Pipeline in action: Real-World Software Development Demo](https://www.youtube.com/watch?v=Z8lkkB7D3BE&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=7).
 
 To provide CI/CD related capabilities, in our source code we provide a [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml) file that uses **Docker images** to build, test and benchmark our solution. This is done to prove that our code and contribution can be integrated in a pipeline and be delivered as a part of a cryptographic solution in an industrial scenario.
 
@@ -418,6 +422,8 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
 ## 7. How to download our public Docker container?
 
 For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
+
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
 
 To download our Docker container, simply execute the command below
 ```bash
@@ -448,7 +454,7 @@ As part of our experiments, we used a modified version of `dCTIDH`. To build the
 <a name="section_09"></a>
 ## 9. Conclusions, Acknowledgements and Authors
 
-We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. 
+We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here: [Modulo 8: Conclusions](https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
 
 This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility. 
 
