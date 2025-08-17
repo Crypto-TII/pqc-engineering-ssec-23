@@ -56,18 +56,10 @@ In the following sections, we will cover in detail:
 1. How to build, test, and benchmark,
 2. How to replicate the results reported in the manuscript, 
 3. How to generate the source code technical documentation using Doxygen,
-4. A real-life production CI/CD pipeline integration, and
+4. A real-life production CI/CD pipeline integration, showing how to download our manuscript's results as public artifacts, and
 5. Detailed instructions on how to download and mount our Docker container.
 
-A detailed (video) tour of our artifact is presented below
-
-<p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=hLk_B5NpKRA" target="_blank">
- <img src="http://img.youtube.com/vi/hLk_B5NpKRA/0.jpg" alt="A (full) tour of our artifact." width="320  " border="10" />
-</a>
-</p>
-
-The YouTube link of our (full) artifact's tour video is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
+A detailed (full) video tour of our artifact is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
 
 For convenience, a list of all the videos of each individual section is shown below.
 
@@ -110,7 +102,7 @@ For convenience, a list of all the videos of each individual section is shown be
 <td align="center"> 
 <a href="https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=8"> 
 <img src="https://img.youtube.com/vi/TQrU4osynUg/0.jpg" width="300">
-<br> <b>7. How to Download our publicly available Docker Container?</b> </a> 
+<br> <b>7. How to Download our Docker Container?</b> </a> 
 </td> 
 <td align="center"> <a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9"> 
 <img src="https://img.youtube.com/vi/JHZuAFgPtuY/0.jpg" width="300">
