@@ -9,16 +9,16 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 2. [Setup Process](#section_02)
    1. [Build](#section_02_01)  
    2. [Testing](#section_02_02)
-   3. [Benchmarking](#section_02_03)
-3. [Reproducing the Manuscript Results](#section_03)
-   1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_03_01)
-   2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_03_02)
-   3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_03_03)
-4. [Source-Code Technical Documentation: Doxygen](#section_04)
-5. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_05)
-6. [How to download our public Docker container?](#section_06)
-7. [Additional Resources' Build Process](#section_07)
-8. [Conclusions, Acknowledgements and Authors](#section_08)
+3. [Benchmarking](#section_03)
+4. [Reproducing the Manuscript Results](#section_04)
+   1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_04_01)
+   2. [Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)](#section_04_02)
+   3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_04_03)
+5. [Source-Code Technical Documentation: Doxygen](#section_05)
+6. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_06)
+7. [How to download our public Docker container?](#section_07)
+8. [Additional Resources' Build Process](#section_08)
+9. [Conclusions, Acknowledgements and Authors](#section_09)
 
 <a name="section_01"></a>
 ## 1. Introduction
@@ -36,7 +36,7 @@ A video summarizing our ideas and contribution (in a general-reader level) is sh
 </a>
 </p>
 
-The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=BjedMooSV30).
+The YouTube link of our video is shown here: [Let us walk on the 3-isogeny graph: efficient, fast, and simple](https://www.youtube.com/watch?v=BjedMooSV30&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=1).
 
 A general tree description of the source code of our project is shown below.
 
@@ -59,7 +59,7 @@ In the following sections, we will cover in detail:
 4. A real-life production CI/CD pipeline integration, showing how to download our manuscript's results as public artifacts, and
 5. Detailed instructions on how to download and mount our Docker container.
 
-A detailed (full) video tour of our artifact is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA).
+A detailed (full) video tour of our artifact is shown here: [Let us walk on the 3-isogeny graph: A (full) guided tour of our GitHub Artifact](https://www.youtube.com/watch?v=hLk_B5NpKRA&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=10).
 
 For convenience, a list of all the videos of each individual section is shown below.
 
@@ -195,10 +195,14 @@ A demo of all the tests running in verbose mode is shown below.
 
 ![](gifs/03-examples/testing_verbose.gif)
 
-<a name="section_02_03"></a>
-### 2.3. Benchmarking
+<a name="section_03"></a>
+## 3. Benchmarking
 
-In this section, we show how to perform the **benchmarking** of our source code. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
+In this section, we show how to perform the **benchmarking** of our source code. 
+
+As supplementary material: 
+1. A detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 3: How to benchmark our project? The Dos and Dont's](https://www.youtube.com/watch?v=wCXyVPfD3lM&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=4). 
+2. For an explanation of how to perform the benchmarks in a detailed mode (and more insights about the used CPU benchmarking method), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
 
@@ -238,10 +242,14 @@ A demo of successful benchmarkings is shown below.
 
 ![](gifs/03-examples/benchmarking.gif)
 
-<a name="section_03"></a>
-## 3. Reproducing the Manuscript Results
+<a name="section_04"></a>
+## 4. Reproducing the Manuscript Results
 
-In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
+In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. 
+
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 4: How to Replicate our Manuscript's Results?](https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5).
+
+In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
 
 The related code to reproduce our results is shown in the tree below.
 
@@ -271,8 +279,8 @@ The related code to reproduce our results is shown in the tree below.
 └───📄 README.md
 ```
 
-<a name="section_03_01"></a>
-### 3.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
+<a name="section_04_01"></a>
+### 4.1. Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks
 
 Inside the `reproduce_results/manuscript_figure_03` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -300,8 +308,8 @@ A PDF is generated with the generated graph and stored inside the `reproduced_re
         └───📄 figure_03_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
 ```
 
-<a name="section_03_02"></a>
-### 3.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
+<a name="section_04_02"></a>
+### 4.2. Figure 4: Benchmarks for the 3-isogenies walks (Our solution vs. QFESTA)
 
 Similar to the previous figure, inside the `reproduce_results/manuscript_figure_04` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -329,8 +337,8 @@ A PDF is generated with the generated graph and stored inside the `reproduced_re
         └───📄 figure_04_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
 ```
 
-<a name="section_03_03"></a>
-### 3.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
+<a name="section_04_03"></a>
+### 4.2. Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.
 
 Similar to the previous figures, inside the `reproduce_results/manuscript_figure_05` folder, it is necessary to give execution permissions to the script, via
 ```shell
@@ -369,8 +377,8 @@ Two PDF files are generated with the generated graphs and stored inside the `rep
         └───📄 figure_05_02_graph.pdf      # <= AUTOMATICALLY SAVED AFTER SUCCESSFUL EXECUTION!
 ```
 
-<a name="section_04"></a>
-## 4. Source-Code Technical Documentation: Doxygen
+<a name="section_05"></a>
+## 5. Source-Code Technical Documentation: Doxygen
 
 Our project supports automatic technical documentation generation via Doxygen. To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
@@ -382,8 +390,8 @@ This will generate an HTML site with interactive diagrams, and plenty of technic
 
 A link to a public-hosted version of our source-code documentation is shown here: [Let us walk on the 3-isogeny graph: Technical Documentation](https://crypto-tii.github.io/pqc-engineering-ssec-23/)
 
-<a name="section_05"></a>
-## 5. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
+<a name="section_06"></a>
+## 6. Integrated CI/CD: Build, Test, Benchmarking, and Reporting
 
 To prove that this project can be integrated in an industrial environment where Continuous Integration (CI) and Continuous Delivery (CD), we follow a classic CI/CD workflow of (1) Build, (2) Test, (3) Benchmark, and (4) Reporting.
 
@@ -406,8 +414,8 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
   <img src="gifs/02-pipeline/artifacts_uploaded.png" alt="Uploaded artifacts." width="1000">
 </p>
 
-<a name="section_06"></a>
-## 6. How to download our public Docker container?
+<a name="section_07"></a>
+## 7. How to download our public Docker container?
 
 For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
 
@@ -430,15 +438,15 @@ After mounting, the terminal will change to
 ```
 At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the experiments presented in [Section 3: Reproducing the Manuscript Results](#section_03), and all the steps to generate the technical documentation using Doxygen as shown in [Section 4: Source-Code Technical Documentation: Doxygen](#section_04) shall work without problems.
 
-<a name="section_07"></a>
-## 7. Additional Resources' Build Process
+<a name="section_08"></a>
+## 8. Additional Resources' Build Process
 
 As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
 As part of our experiments, we used a modified version of `dCTIDH`. To build the modified `dCTIDH`, please refer to [Let us walk on the 3-isogeny graph: dCTIDH modified version](dCTIDH/README.md).
 
-<a name="section_08"></a>
-## 8. Conclusions, Acknowledgements and Authors
+<a name="section_09"></a>
+## 9. Conclusions, Acknowledgements and Authors
 
 We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. 
 
