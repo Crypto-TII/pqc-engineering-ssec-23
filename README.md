@@ -117,6 +117,7 @@ For convenience, a list of all the videos of each individual section is shown be
 </tr>
 </table>
 
+A slide-style presentation with a summary of the technical steps presented in this repository is also available here: [Let us walk on the 3-isogeny graph: Step-by-step Artifact Walkthrough](docs/artifact_walkthrough.pdf).
 
 <a name="section_02"></a>
 ## 2. Setup Process
@@ -207,7 +208,8 @@ As supplementary material:
 For benchmarking, the correct commands must be used when doing the first cmake. Inside the root directory `pqc-engineering-ssec-23`, simply run
 
 ```bash
-pqc-engineering-ssec-23/c-code$ cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
+cd c-code
+cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARKING=CYCLES -DARCHITECTURE=x8664 -B cmake-build-release-cycles-x8664
 ```
 followed by
 ```bash
@@ -247,7 +249,7 @@ A demo of successful benchmarkings is shown below.
 
 In our [manuscript](https://eprint.iacr.org/2025/691), several statistical figures are shown. In this section, we cover how to replicate the obtained graphs. 
 
-As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 4: How to Replicate our Manuscript's Results?](https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5).
+As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 4: How to Replicate our Manuscript's Results?](https://www.youtube.com/watch?v=kOgkQY2_Tr8&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=5)
 
 In order to reproduce some of the figures in the manuscript, we provide with easy-to-use scripts that wrap all the required executions of the benchmarking tests, and by using `numpy` and `matplotlib`, generate the manuscript graphs.
 
@@ -409,7 +411,7 @@ To provide CI/CD related capabilities, in our source code we provide a [cmake-mu
   <img src="gifs/02-pipeline/pipeline-gif.gif" alt="Build, test and benchmark jobs." width="1000">
 </p>
 
-At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 3: Reproducing the Manuscript Results](#section_03)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
+At the end of the Benchmark stage, the Reporting stage generates the three graphs presented in the manuscript (See [Section 4: Reproducing the Manuscript Results](#section_04)). All three generated graphs and all the benchmarking results (per prime) are uploaded as artifacts in the pipeline. In the figure below:
 - The benchmark statistics are uploaded in the artifacts marked in **blue**, and
 - The generated manuscript graphs are uploaded in the artifacts marked in **red**.
 All the statistical data and all the graphs are uploaded as public artifacts to provide means to the reader to replicate our results. 
@@ -442,7 +444,7 @@ After mounting, the terminal will change to
 ```bash
 /src# <insert commands here>
 ```
-At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the experiments presented in [Section 3: Reproducing the Manuscript Results](#section_03), and all the steps to generate the technical documentation using Doxygen as shown in [Section 4: Source-Code Technical Documentation: Doxygen](#section_04) shall work without problems.
+At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the benchmarking shown in [Section 3: Benchmarking](#section_03), all the experiments presented in [Section 4: Reproducing the Manuscript Results](#section_04), and all the steps to generate the technical documentation using Doxygen as shown in [Section 5: Source-Code Technical Documentation: Doxygen](#section_05) shall work without problems.
 
 <a name="section_08"></a>
 ## 8. Additional Resources' Build Process
