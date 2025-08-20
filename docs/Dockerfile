@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install --yes build-essential \
     python3-pip \
     gdb \
     libgmp-dev \
-    graphviz
+    graphviz \
+    nano
 
 RUN pip install numpy \
     matplotlib
