@@ -8,10 +8,8 @@ RUN apt-get update && apt-get install --yes build-essential \
     python3 \
     python3-pip \
     gdb \
-    libgmp-dev
-
-RUN pip install numpy \
-    matplotlib \
+    libgmp-dev \
     graphviz
 
-ENTRYPOINT ["echo", "Hello from pqc-engineering-ssec-23 Docker container!"]
+RUN pip install numpy \
+    matplotlib
