@@ -386,6 +386,11 @@ Two PDF files are generated with the generated graphs and stored inside the `rep
 
 Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 5: How to Generate the Source Code Technical Documentation?](https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6). 
 
+To install Doxygen (and Graphviz) in case not installed in the system, simply run
+```bash
+sudo apt-get install doxygen graphviz
+```
+
 To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
 doxygen Doxyfile
@@ -437,6 +442,8 @@ and to verify that it was downloaded correctly, execute
 ```bash
 docker images | grep pqc
 ```
+
+In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile). If a locally-build container is created, then the instructions below must be adapted to use the used container name.
 
 To mount the docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and execute
 ```bash
