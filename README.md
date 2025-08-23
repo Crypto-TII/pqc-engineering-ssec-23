@@ -7,8 +7,9 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 ## Table of contents
 1. [Introduction](#section_01)  
 2. [Setup Process](#section_02)
-   1. [Build](#section_02_01)  
-   2. [Testing](#section_02_02)
+   1. [System requirements](#section_02_01)
+   2. [Build](#section_02_02)  
+   3. [Testing](#section_02_03)
 3. [Benchmarking](#section_03)
 4. [Reproducing the Manuscript Results](#section_04)
    1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_04_01)
@@ -130,9 +131,7 @@ A slide-style presentation with a summary of the technical steps presented in th
 In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to [Let us walk on the 3-isogeny graph: CLion Setup](README_Clion_IDE.md).
 
 <a name="section_02_01"></a>
-### 2.1. Build
-
-#### System requirements
+### 2.1. System requirements
 
 Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough. Currently, only **Intel CPUs** are natively supported. To run our project in **Apple Silicon-based computers**, please refer to [Section 7: How to use our Docker container?](#section_07).
 
@@ -156,6 +155,9 @@ pip list | grep matplotlib
 If all the requirements are met, the terminal should return installed versions like the ones below.
 ![](gifs/01-cmake-profile/numpy.png)
 
+<a name="section_02_02"></a>
+### 2.2. Build
+
 To build our project, in the root directory `pqc-engineering-ssec-23`, simply run
 ```shell
 cd c-code
@@ -171,9 +173,8 @@ A demo of the whole process of setup and build process is shown below.
 
 ![](gifs/03-examples/build_release.gif)
 
-
-<a name="section_02_02"></a>
-### 2.2. Testing
+<a name="section_02_03"></a>
+### 2.3. Testing
 
 In this section, we show how to perform the **testing** of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
@@ -448,7 +449,7 @@ Currently, natively only Intel CPUs are supported. To build, test, benchmark and
 ![](gifs/06-docker/docker_rosetta_setting.png)
 
 <a name="section_07_01"></a>
-### 7.1 How to download our public Docker container?
+### 7.1. How to download our public Docker container?
 
 To download our Docker container, simply execute the command below
 ```bash
@@ -459,7 +460,7 @@ and to verify that it was downloaded correctly, execute
 docker images | grep pqc
 ```
 <a name="section_07_02"></a>
-### 7.2 How to locally build our Docker container?
+### 7.2. How to locally build our Docker container?
 
 In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile) (location: `docs/Dockerfile`). 
 
@@ -473,7 +474,7 @@ and to verify that it was built correctly, execute
 docker images | grep pqc
 ```
 <a name="section_07_03"></a>
-### 7.3 How to mount our Docker container?
+### 7.3. How to mount our Docker container?
 
 To mount the Docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and then:
 1. In case the Docker container was **downloaded**, execute
