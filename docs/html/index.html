@@ -104,12 +104,11 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md23"></a>
 Table of contents</h1>
 <ol type="1">
-<li><a class="el" href="index.html#section_01">Introduction</a> <br  />
-</li>
+<li><a class="el" href="index.html#section_01">Introduction</a></li>
 <li><a class="el" href="index.html#section_02">Setup Process</a><ol type="a">
-<li><a class="el" href="index.html#section_02_01">Build</a> <br  />
-</li>
-<li><a class="el" href="index.html#section_02_02">Testing</a></li>
+<li><a class="el" href="index.html#section_02_01">System requirements</a></li>
+<li><a class="el" href="index.html#section_02_02">Build</a></li>
+<li><a class="el" href="index.html#section_02_03">Testing</a></li>
 </ol>
 </li>
 <li><a class="el" href="index.html#section_03">Benchmarking</a></li>
@@ -121,7 +120,12 @@ Table of contents</h1>
 </li>
 <li><a class="el" href="index.html#section_05">Source-Code Technical Documentation: Doxygen</a></li>
 <li><a class="el" href="index.html#section_06">Integrated CI/CD: Build, Test, Benchmarking, and Reporting</a></li>
-<li><a class="el" href="index.html#section_07">How to download our public Docker container?</a></li>
+<li><a class="el" href="index.html#section_07">How to use our Docker container?</a><ol type="a">
+<li><a class="el" href="index.html#section_07_01">How to download our public Docker container?</a></li>
+<li><a class="el" href="index.html#section_07_02">How to locally build our Docker container?</a></li>
+<li><a class="el" href="index.html#section_07_03">How to mount our Docker container?</a></li>
+</ol>
+</li>
 <li><a class="el" href="index.html#section_08">Additional Resources' Build Process</a></li>
 <li><a class="el" href="index.html#section_09">Conclusions, Acknowledgements and Authors</a></li>
 </ol>
@@ -207,15 +211,15 @@ Table of contents</h1>
 <p>In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to <a class="el" href="d5/df7/md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2README__Clion__IDE.html">Let us walk on the 3-isogeny graph: CLion Setup</a>.</p>
 <p><a class="anchor" id="section_02_01"></a> </p>
 <h2><a class="anchor" id="autotoc_md26"></a>
-2.1. Build</h2>
-<h3><a class="anchor" id="autotoc_md27"></a>
-System requirements</h3>
-<p>Our (physical) testbed consists of machine with a 12th Gen. Intel Core i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.</p>
+2.1. System requirements</h2>
+<p>Our (physical) testbed consists of machine with a 12th Gen. <a class="el" href="d2/d00/prime__search_8m.html#a6f6ccfcf58b31cb6412107d9d5281426">Intel(R)</a> <a class="el" href="d2/d00/prime__search_8m.html#a6f6ccfcf58b31cb6412107d9d5281426">Core(TM)</a> i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough. Currently, only <b>Intel CPUs</b> are natively supported. To run our project in <b>Apple Silicon-based computers</b>, please refer to <a class="el" href="index.html#section_07">Section 7: How to use our Docker container?</a>.</p>
 <p>Our project works in any out-of-the-box Linux-based environment with some basic software requirements:</p><ul>
 <li>Cmake</li>
 <li>Python3 (numpy and matplotlib)</li>
 </ul>
-<p>To check if your system counts with the required software, simply run </p><div class="fragment"><div class="line">cmake --version</div>
+<p>To install all our required software dependencies, execute </p><div class="fragment"><div class="line">sudo apt-get install --yes build-essential cmake doxygen git sudo python3 python3-pip gdb libgmp-dev graphviz nano</div>
+<div class="line">sudo apt install python3-numpy python3-matplotlib</div>
+</div><!-- fragment --><p>To check if your system counts with the required software, simply run </p><div class="fragment"><div class="line">cmake --version</div>
 <div class="line">python3 --version</div>
 <div class="line">pip list | grep numpy</div>
 <div class="line">pip list | grep matplotlib</div>
@@ -223,6 +227,9 @@ System requirements</h3>
 <div class="image">
 <img src="numpy.png" alt="" width="60%"/>
 </div>
+<p><a class="anchor" id="section_02_02"></a> </p>
+<h2><a class="anchor" id="autotoc_md27"></a>
+2.2. Build</h2>
 <p>To build our project, in the root directory <code>pqc-engineering-ssec-23</code>, simply run </p><div class="fragment"><div class="line">cd c-code</div>
 <div class="line">cmake -DCMAKE_BUILD_TYPE=Release -B cmake-build-release</div>
 <div class="line">cd cmake-build-release</div>
@@ -235,9 +242,9 @@ System requirements</h3>
 <div class="image">
 <img src="build_release.gif" alt="" width="60%"/>
 </div>
-<p><a class="anchor" id="section_02_02"></a> </p>
+<p><a class="anchor" id="section_02_03"></a> </p>
 <h2><a class="anchor" id="autotoc_md28"></a>
-2.2. Testing</h2>
+2.3. Testing</h2>
 <p>In this section, we show how to perform the <b>testing</b> of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation: <a class="el" href="dd/de0/md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2c-code_2README.html">Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation</a>.</p>
 <p>After building as shown in the previous section, inside the <code>c-code/cmake-build-release</code> folder, locate all the possible tests with </p><div class="fragment"><div class="line">ls ./tests/</div>
 </div><!-- fragment --><p> To execute any particular test, simply select one of the following </p><div class="fragment"><div class="line">./tests/tests-ssec-p254</div>
@@ -388,7 +395,8 @@ System requirements</h3>
 <h1><a class="anchor" id="autotoc_md34"></a>
 5. Source-Code Technical Documentation: Doxygen</h1>
 <p>Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=PdysZFECqJk&amp;list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&amp;index=6" target="_blank">Modulo 5: How to Generate the Source Code Technical Documentation?</a></p>
-<p>To generate the Doxygen documentation, inside the <code>docs</code> folder, simply run </p><div class="fragment"><div class="line">doxygen Doxyfile</div>
+<p>To install Doxygen (and Graphviz) in case not installed in the system, simply run </p><div class="fragment"><div class="line">sudo apt-get install doxygen graphviz</div>
+</div><!-- fragment --><p>To generate the Doxygen documentation, inside the <code>docs</code> folder, simply run </p><div class="fragment"><div class="line">doxygen Doxyfile</div>
 </div><!-- fragment --><p> This will generate an HTML site with interactive diagrams, and plenty of technical documentation. A demo of the generated documentation is shown below.</p>
 <div class="image">
 <img src="doxygen.gif" alt="" width="70%"/>
@@ -416,21 +424,44 @@ System requirements</h3>
 <p>For our project, the list of executed CI pipelines is shown here: <a href="https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/workflows/cmake-multi-platform.yml" target="_blank">GitHub Pipeline</a>, and an example of a successful pipeline execution with the publicly uploaded artifacts (Statistical results and generated graphs) is shown here: <a href="https://github.com/Crypto-TII/pqc-engineering-ssec-23/actions/runs/17022722897" target="_blank">Pipeline Execution Example</a>.</p>
 <p><a class="anchor" id="section_07"></a> </p>
 <h1><a class="anchor" id="autotoc_md36"></a>
-7. How to download our public Docker container?</h1>
-<p>For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.</p>
+7. How to use our Docker container?</h1>
+<p>For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) the Docker file used to build it. These two offer our readers the options to download and/or locally build the Docker container with all our software requirements. This provides a self-contained environment where our artifact runs out-of-the-box.</p>
 <p>As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: <a href="https://www.youtube.com/watch?v=TQrU4osynUg&amp;list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&amp;index=9" target="_blank">Modulo 7: How to Download our publicly available Docker Container?</a></p>
+<p>Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in <b>Apple Silicon-based computers</b> (<code>M1</code>, <code>M2</code>, <code>M3</code>, <code>M4</code> CPus), in Docker Desktop, turn <b>OFF</b> Rosetta as shown below.</p>
+<div class="image">
+<img src="docker_rosetta_setting.png" alt="" width="60%"/>
+</div>
+<p><a class="anchor" id="section_07_01"></a> </p>
+<h2><a class="anchor" id="autotoc_md37"></a>
+7.1. How to download our public Docker container?</h2>
 <p>To download our Docker container, simply execute the command below </p><div class="fragment"><div class="line">docker pull tiicrc/github-selfhosted-runner-pqc:latest</div>
 </div><!-- fragment --><p> and to verify that it was downloaded correctly, execute </p><div class="fragment"><div class="line">docker images | grep pqc</div>
-</div><!-- fragment --><p>To mount the docker container, first locate your terminal at the artifact's root folder(<code>pqc-engineering-ssec-23</code>), and execute </p><div class="fragment"><div class="line">docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash</div>
-</div><!-- fragment --><p> After mounting, the terminal will change to </p><div class="fragment"><div class="line">/src# &lt;insert commands here&gt;</div>
-</div><!-- fragment --><p> At this point, all the steps presented in <a class="el" href="index.html#section_02">Section 2: Setup Process</a>, all the benchmarking shown in <a class="el" href="index.html#section_03">Section 3: Benchmarking</a>, all the experiments presented in <a class="el" href="index.html#section_04">Section 4: Reproducing the Manuscript Results</a>, and all the steps to generate the technical documentation using Doxygen as shown in <a class="el" href="index.html#section_05">Section 5: Source-Code Technical Documentation: Doxygen</a> shall work without problems.</p>
+</div><!-- fragment --><p> <a class="anchor" id="section_07_02"></a> </p>
+<h2><a class="anchor" id="autotoc_md38"></a>
+7.2. How to locally build our Docker container?</h2>
+<p>In case it is desired to locally-build the container, the required Dockerfile can be found <a href="docs/Dockerfile">here</a> (location: <code>docs/Dockerfile</code>).</p>
+<p>To build the local Docker container, simply execute </p><div class="fragment"><div class="line">cd docs</div>
+<div class="line">sudo docker build -t pqc-engineering-ssec-23-local-docker .</div>
+</div><!-- fragment --><p> and to verify that it was built correctly, execute </p><div class="fragment"><div class="line">docker images | grep pqc</div>
+</div><!-- fragment --><p> <a class="anchor" id="section_07_03"></a> </p>
+<h2><a class="anchor" id="autotoc_md39"></a>
+7.3. How to mount our Docker container?</h2>
+<p>To mount the Docker container, first locate your terminal at the artifact's root folder(<code>pqc-engineering-ssec-23</code>), and then:</p><ol type="1">
+<li>In case the Docker container was <b>downloaded</b>, execute <div class="fragment"><div class="line">docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash</div>
+</div><!-- fragment --></li>
+<li>In case the <b>local container was built</b>, then execute <div class="fragment"><div class="line">docker run --rm -ti -v $PWD:/src -w /src pqc-engineering-ssec-23-local-docker:latest bash</div>
+</div><!-- fragment --> After mounting, for either of both cases mentioned above, the terminal will change to <div class="fragment"><div class="line">/src# &lt;insert commands here&gt;</div>
+</div><!-- fragment --></li>
+</ol>
+<p>At this point, all the steps presented in <a class="el" href="index.html#section_02">Section 2: Setup Process</a>, all the benchmarking shown in <a class="el" href="index.html#section_03">Section 3: Benchmarking</a>, all the experiments presented in <a class="el" href="index.html#section_04">Section 4: Reproducing the Manuscript Results</a>, and all the steps to generate the technical documentation using Doxygen as shown in <a class="el" href="index.html#section_05">Section 5: Source-Code Technical Documentation: Doxygen</a> shall work without problems.</p>
+<p>For Apple Silicon-based computers, in case the error <code>illegal instruction</code> is returned, please modify the Rosetta settings described above.</p>
 <p><a class="anchor" id="section_08"></a> </p>
-<h1><a class="anchor" id="autotoc_md37"></a>
+<h1><a class="anchor" id="autotoc_md40"></a>
 8. Additional Resources' Build Process</h1>
 <p>As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation: <a class="el" href="dd/de0/md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2c-code_2README.html">Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation</a>.</p>
 <p>As part of our experiments, we used a modified version of <code>dCTIDH</code>. To build the modified <code>dCTIDH</code>, please refer to <a class="el" href="d9/db3/md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2dCTIDH_2README.html">Let us walk on the 3-isogeny graph: dCTIDH modified version</a>.</p>
 <p><a class="anchor" id="section_09"></a> </p>
-<h1><a class="anchor" id="autotoc_md38"></a>
+<h1><a class="anchor" id="autotoc_md41"></a>
 9. Conclusions, Acknowledgements and Authors</h1>
 <p>We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our DevOps team for their invaluable work in setting up our self-hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here: <a href="https://www.youtube.com/watch?v=JHZuAFgPtuY&amp;list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&amp;index=9" target="_blank">Modulo 8: Conclusions</a>.</p>
 <p>This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility.</p>

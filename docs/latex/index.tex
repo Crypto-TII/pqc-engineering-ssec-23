@@ -7,13 +7,12 @@
 Accompanying repository to the manuscript titled \href{https://eprint.iacr.org/2025/691}{\texttt{ "{}\+Let us walk on the 3-\/isogeny graph\+: efficient, fast, and simple"{}. }}\hypertarget{index_autotoc_md23}{}\doxysection{\texorpdfstring{Table of contents}{Table of contents}}\label{index_autotoc_md23}
 
 \begin{DoxyEnumerate}
-\item \doxylink{index_section_01}{Introduction} ~\newline
-
+\item \doxylink{index_section_01}{Introduction}
 \item \doxylink{index_section_02}{Setup Process}
 \begin{DoxyEnumerate}
-\item \doxylink{index_section_02_01}{Build} ~\newline
-
-\item \doxylink{index_section_02_02}{Testing}
+\item \doxylink{index_section_02_01}{System requirements}
+\item \doxylink{index_section_02_02}{Build}
+\item \doxylink{index_section_02_03}{Testing}
 \end{DoxyEnumerate}
 \item \doxylink{index_section_03}{Benchmarking}
 \item \doxylink{index_section_04}{Reproducing the Manuscript Results}
@@ -24,7 +23,12 @@ Accompanying repository to the manuscript titled \href{https://eprint.iacr.org/2
 \end{DoxyEnumerate}
 \item \doxylink{index_section_05}{Source-\/\+Code Technical Documentation\+: Doxygen}
 \item \doxylink{index_section_06}{Integrated CI/\+CD\+: Build, Test, Benchmarking, and Reporting}
-\item \doxylink{index_section_07}{How to download our public Docker container?}
+\item \doxylink{index_section_07}{How to use our Docker container?}
+\begin{DoxyEnumerate}
+\item \doxylink{index_section_07_01}{How to download our public Docker container?}
+\item \doxylink{index_section_07_02}{How to locally build our Docker container?}
+\item \doxylink{index_section_07_03}{How to mount our Docker container?}
+\end{DoxyEnumerate}
 \item \doxylink{index_section_08}{Additional Resources\textquotesingle{} Build Process}
 \item \doxylink{index_section_09}{Conclusions, Acknowledgements and Authors}
 \end{DoxyEnumerate}
@@ -101,15 +105,22 @@ In this section we present a setup process that can be run in any Linux terminal
 
 \label{index_section_02_01}%
 \Hypertarget{index_section_02_01}%
- \hypertarget{index_autotoc_md26}{}\doxysubsection{\texorpdfstring{2.\+1. Build}{2.1. Build}}\label{index_autotoc_md26}
-\hypertarget{index_autotoc_md27}{}\doxysubsubsection{\texorpdfstring{System requirements}{System requirements}}\label{index_autotoc_md27}
-Our (physical) testbed consists of machine with a 12th Gen. Intel Core i9-\/12900H CPU and 32 Gb of RAM, running Ubuntu 20.\+04.\+6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
+ \hypertarget{index_autotoc_md26}{}\doxysubsection{\texorpdfstring{2.\+1. System requirements}{2.1. System requirements}}\label{index_autotoc_md26}
+Our (physical) testbed consists of machine with a 12th Gen. \doxylink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{Intel(\+R)} \doxylink{prime__search_8m_a6f6ccfcf58b31cb6412107d9d5281426}{Core(\+TM)} i9-\/12900H CPU and 32 Gb of RAM, running Ubuntu 20.\+04.\+6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough. Currently, only {\bfseries{Intel CPUs}} are natively supported. To run our project in {\bfseries{Apple Silicon-\/based computers}}, please refer to \doxylink{index_section_07}{Section 7\+: How to use our Docker container?}.
 
 Our project works in any out-\/of-\/the-\/box Linux-\/based environment with some basic software requirements\+:
 \begin{DoxyItemize}
 \item Cmake
 \item Python3 (numpy and matplotlib)
 \end{DoxyItemize}
+
+To install all our required software dependencies, execute 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt-\/get\ install\ -\/-\/yes\ build-\/essential\ cmake\ doxygen\ git\ sudo\ python3\ python3-\/pip\ gdb\ libgmp-\/dev\ graphviz\ nano}
+\DoxyCodeLine{sudo\ apt\ install\ python3-\/numpy\ python3-\/matplotlib}
+
+\end{DoxyCode}
+
 
 To check if your system counts with the required software, simply run 
 \begin{DoxyCode}{0}
@@ -123,6 +134,9 @@ To check if your system counts with the required software, simply run
 
 
 
+\label{index_section_02_02}%
+\Hypertarget{index_section_02_02}%
+ \hypertarget{index_autotoc_md27}{}\doxysubsection{\texorpdfstring{2.\+2. Build}{2.2. Build}}\label{index_autotoc_md27}
 To build our project, in the root directory {\ttfamily pqc-\/engineering-\/ssec-\/23}, simply run 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{cd\ c-\/code}
@@ -139,9 +153,9 @@ A demo of the whole process of setup and build process is shown below.
 
 
 
-\label{index_section_02_02}%
-\Hypertarget{index_section_02_02}%
- \hypertarget{index_autotoc_md28}{}\doxysubsection{\texorpdfstring{2.\+2. Testing}{2.2. Testing}}\label{index_autotoc_md28}
+\label{index_section_02_03}%
+\Hypertarget{index_section_02_03}%
+ \hypertarget{index_autotoc_md28}{}\doxysubsection{\texorpdfstring{2.\+3. Testing}{2.3. Testing}}\label{index_autotoc_md28}
 In this section, we show how to perform the {\bfseries{testing}} of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation\+: \doxysectlink{md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2c-code_2README}{Let us walk on the 3-\/isogeny graph\+: (Detailed) Build, Test and Benchmarking Framework Documentation}{0}.
 
 After building as shown in the previous section, inside the {\ttfamily c-\/code/cmake-\/build-\/release} folder, locate all the possible tests with 
@@ -391,6 +405,13 @@ Two PDF files are generated with the generated graphs and stored inside the {\tt
  \hypertarget{index_autotoc_md34}{}\doxysection{\texorpdfstring{5. Source-\/\+Code Technical Documentation\+: Doxygen}{5. Source-Code Technical Documentation: Doxygen}}\label{index_autotoc_md34}
 Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our You\+Tube video\+: \href{https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6}{\texttt{ Modulo 5\+: How to Generate the Source Code Technical Documentation?}}
 
+To install Doxygen (and Graphviz) in case not installed in the system, simply run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt-\/get\ install\ doxygen\ graphviz}
+
+\end{DoxyCode}
+
+
 To generate the Doxygen documentation, inside the {\ttfamily docs} folder, simply run 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{doxygen\ Doxyfile}
@@ -427,11 +448,18 @@ For our project, the list of executed CI pipelines is shown here\+: \href{https:
 
 \label{index_section_07}%
 \Hypertarget{index_section_07}%
- \hypertarget{index_autotoc_md36}{}\doxysection{\texorpdfstring{7. How to download our public Docker container?}{7. How to download our public Docker container?}}\label{index_autotoc_md36}
-For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-\/installed. This provides a self-\/contained environment where our artifact runs out-\/of-\/the-\/box.
+ \hypertarget{index_autotoc_md36}{}\doxysection{\texorpdfstring{7. How to use our Docker container?}{7. How to use our Docker container?}}\label{index_autotoc_md36}
+For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) the Docker file used to build it. These two offer our readers the options to download and/or locally build the Docker container with all our software requirements. This provides a self-\/contained environment where our artifact runs out-\/of-\/the-\/box.
 
 As supplementary material, a detailed walkthrough of the steps in this section is available in our You\+Tube video\+: \href{https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9}{\texttt{ Modulo 7\+: How to Download our publicly available Docker Container?}}
 
+Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in {\bfseries{Apple Silicon-\/based computers}} ({\ttfamily M1}, {\ttfamily M2}, {\ttfamily M3}, {\ttfamily M4} CPus), in Docker Desktop, turn {\bfseries{OFF}} Rosetta as shown below.
+
+
+
+\label{index_section_07_01}%
+\Hypertarget{index_section_07_01}%
+ \hypertarget{index_autotoc_md37}{}\doxysubsection{\texorpdfstring{7.\+1. How to download our public Docker container?}{7.1. How to download our public Docker container?}}\label{index_autotoc_md37}
 To download our Docker container, simply execute the command below 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{docker\ pull\ tiicrc/github-\/selfhosted-\/runner-\/pqc:latest}
@@ -442,30 +470,60 @@ To download our Docker container, simply execute the command below
 \DoxyCodeLine{docker\ images\ |\ grep\ pqc}
 
 \end{DoxyCode}
+ \label{index_section_07_02}%
+\Hypertarget{index_section_07_02}%
+ \hypertarget{index_autotoc_md38}{}\doxysubsection{\texorpdfstring{7.\+2. How to locally build our Docker container?}{7.2. How to locally build our Docker container?}}\label{index_autotoc_md38}
+In case it is desired to locally-\/build the container, the required Dockerfile can be found \href{docs/Dockerfile}{\texttt{ here}} (location\+: {\ttfamily docs/\+Dockerfile}).
 
+To build the local Docker container, simply execute 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ docs}
+\DoxyCodeLine{sudo\ docker\ build\ -\/t\ pqc-\/engineering-\/ssec-\/23-\/local-\/docker\ .}
 
-To mount the docker container, first locate your terminal at the artifact\textquotesingle{}s root folder({\ttfamily pqc-\/engineering-\/ssec-\/23}), and execute 
+\end{DoxyCode}
+ and to verify that it was built correctly, execute 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{docker\ images\ |\ grep\ pqc}
+
+\end{DoxyCode}
+ \label{index_section_07_03}%
+\Hypertarget{index_section_07_03}%
+ \hypertarget{index_autotoc_md39}{}\doxysubsection{\texorpdfstring{7.\+3. How to mount our Docker container?}{7.3. How to mount our Docker container?}}\label{index_autotoc_md39}
+To mount the Docker container, first locate your terminal at the artifact\textquotesingle{}s root folder({\ttfamily pqc-\/engineering-\/ssec-\/23}), and then\+:
+\begin{DoxyEnumerate}
+\item In case the Docker container was {\bfseries{downloaded}}, execute 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{docker\ run\ -\/-\/rm\ -\/ti\ -\/v\ \$PWD:/src\ -\/w\ /src\ tiicrc/github-\/selfhosted-\/runner-\/pqc:latest\ bash}
 
 \end{DoxyCode}
- After mounting, the terminal will change to 
+
+\item In case the {\bfseries{local container was built}}, then execute 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{docker\ run\ -\/-\/rm\ -\/ti\ -\/v\ \$PWD:/src\ -\/w\ /src\ pqc-\/engineering-\/ssec-\/23-\/local-\/docker:latest\ bash}
+
+\end{DoxyCode}
+ After mounting, for either of both cases mentioned above, the terminal will change to 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{/src\#\ <insert\ commands\ here>}
 
 \end{DoxyCode}
- At this point, all the steps presented in \doxylink{index_section_02}{Section 2\+: Setup Process}, all the benchmarking shown in \doxylink{index_section_03}{Section 3\+: Benchmarking}, all the experiments presented in \doxylink{index_section_04}{Section 4\+: Reproducing the Manuscript Results}, and all the steps to generate the technical documentation using Doxygen as shown in \doxylink{index_section_05}{Section 5\+: Source-\/\+Code Technical Documentation\+: Doxygen} shall work without problems.
+
+\end{DoxyEnumerate}
+
+At this point, all the steps presented in \doxylink{index_section_02}{Section 2\+: Setup Process}, all the benchmarking shown in \doxylink{index_section_03}{Section 3\+: Benchmarking}, all the experiments presented in \doxylink{index_section_04}{Section 4\+: Reproducing the Manuscript Results}, and all the steps to generate the technical documentation using Doxygen as shown in \doxylink{index_section_05}{Section 5\+: Source-\/\+Code Technical Documentation\+: Doxygen} shall work without problems.
+
+For Apple Silicon-\/based computers, in case the error {\ttfamily illegal instruction} is returned, please modify the Rosetta settings described above.
 
 \label{index_section_08}%
 \Hypertarget{index_section_08}%
- \hypertarget{index_autotoc_md37}{}\doxysection{\texorpdfstring{8. Additional Resources\textquotesingle{} Build Process}{8. Additional Resources' Build Process}}\label{index_autotoc_md37}
+ \hypertarget{index_autotoc_md40}{}\doxysection{\texorpdfstring{8. Additional Resources\textquotesingle{} Build Process}{8. Additional Resources' Build Process}}\label{index_autotoc_md40}
 As mentioned before, for a detailed explanation of our testing and benchmarking frameworks (with insights of the CPU benchmarking approach), please refer to our additional documentation\+: \doxysectlink{md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2c-code_2README}{Let us walk on the 3-\/isogeny graph\+: (Detailed) Build, Test and Benchmarking Framework Documentation}{0}.
 
 As part of our experiments, we used a modified version of {\ttfamily d\+CTIDH}. To build the modified {\ttfamily d\+CTIDH}, please refer to \doxysectlink{md__2home_2liwuen_2projects__dev_2pqc-engineering-ssec-23_2dCTIDH_2README}{Let us walk on the 3-\/isogeny graph\+: d\+CTIDH modified version}{0}.
 
 \label{index_section_09}%
 \Hypertarget{index_section_09}%
- \hypertarget{index_autotoc_md38}{}\doxysection{\texorpdfstring{9. Conclusions, Acknowledgements and Authors}{9. Conclusions, Acknowledgements and Authors}}\label{index_autotoc_md38}
+ \hypertarget{index_autotoc_md41}{}\doxysection{\texorpdfstring{9. Conclusions, Acknowledgements and Authors}{9. Conclusions, Acknowledgements and Authors}}\label{index_autotoc_md41}
 We sincerely thank the scientific community, our collaborators, and everyone who made our artifact possible — with special gratitude to our Dev\+Ops team for their invaluable work in setting up our self-\/hosted runner and infrastructure. Words alone cannot fully convey our gratitude to our collaborators. To express our conclusions and acknowledgments in a more vivid and engaging way, we invite to watch our video here\+: \href{https://www.youtube.com/watch?v=JHZuAFgPtuY&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9}{\texttt{ Modulo 8\+: Conclusions}}.
 
 This project highlights the importance of clear, comprehensive documentation, building software that seamlessly integrates into continuous integration pipelines to meet industry standards, and leveraging Docker containers for reproducibility.

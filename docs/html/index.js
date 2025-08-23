@@ -3,10 +3,9 @@ var index =
     [ "Table of contents", "index.html#autotoc_md23", null ],
     [ "1. Introduction", "index.html#autotoc_md24", null ],
     [ "2. Setup Process", "index.html#autotoc_md25", [
-      [ "2.1. Build", "index.html#autotoc_md26", [
-        [ "System requirements", "index.html#autotoc_md27", null ]
-      ] ],
-      [ "2.2. Testing", "index.html#autotoc_md28", null ]
+      [ "2.1. System requirements", "index.html#autotoc_md26", null ],
+      [ "2.2. Build", "index.html#autotoc_md27", null ],
+      [ "2.3. Testing", "index.html#autotoc_md28", null ]
     ] ],
     [ "3. Benchmarking", "index.html#autotoc_md29", null ],
     [ "4. Reproducing the Manuscript Results", "index.html#autotoc_md30", [
@@ -16,7 +15,11 @@ var index =
     ] ],
     [ "5. Source-Code Technical Documentation: Doxygen", "index.html#autotoc_md34", null ],
     [ "6. Integrated CI/CD: Build, Test, Benchmarking, and Reporting", "index.html#autotoc_md35", null ],
-    [ "7. How to download our public Docker container?", "index.html#autotoc_md36", null ],
-    [ "8. Additional Resources' Build Process", "index.html#autotoc_md37", null ],
-    [ "9. Conclusions, Acknowledgements and Authors", "index.html#autotoc_md38", null ]
+    [ "7. How to use our Docker container?", "index.html#autotoc_md36", [
+      [ "7.1. How to download our public Docker container?", "index.html#autotoc_md37", null ],
+      [ "7.2. How to locally build our Docker container?", "index.html#autotoc_md38", null ],
+      [ "7.3. How to mount our Docker container?", "index.html#autotoc_md39", null ]
+    ] ],
+    [ "8. Additional Resources' Build Process", "index.html#autotoc_md40", null ],
+    [ "9. Conclusions, Acknowledgements and Authors", "index.html#autotoc_md41", null ]
 ];

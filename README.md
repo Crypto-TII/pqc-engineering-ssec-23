@@ -512,6 +512,8 @@ After mounting, for either of both cases mentioned above, the terminal will chan
 ```bash
 /src# <insert commands here>
 ```
+
+
 At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the benchmarking shown in [Section 3: Benchmarking](#section_03), all the experiments presented in [Section 4: Reproducing the Manuscript Results](#section_04), and all the steps to generate the technical documentation using Doxygen as shown in [Section 5: Source-Code Technical Documentation: Doxygen](#section_05) shall work without problems.
 
 For Apple Silicon-based computers, in case the error `illegal instruction` is returned, please modify the Rosetta settings described above.
