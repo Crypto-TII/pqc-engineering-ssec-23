@@ -428,11 +428,16 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
 </p>
 
 <a name="section_07"></a>
-## 7. How to download our public Docker container?
+## 7. How to use our Docker container?
 
-For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
+For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) a Docker file. These two options offer our readers to download (or create) a system with all our software requirements. This provides a self-contained environment where our artifact runs out-of-the-box.
 
 As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+
+Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in an **Apple Silicon-based computer** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, the following settings regarding Rosetta must be modified.
+
+
+### 7.1 How to download our public Docker container?
 
 To download our Docker container, simply execute the command below
 ```bash
@@ -443,13 +448,31 @@ and to verify that it was downloaded correctly, execute
 docker images | grep pqc
 ```
 
-In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile). If a locally-build container is created, then the instructions below must be adapted to use the used container name.
+### 7.2 How to locally build our Docker container?
 
-To mount the docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and execute
+In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile) (location: `docs/Dockerfile`). 
+
+To build the local Docker container, simply execute
+```bash
+cd docs
+sudo docker build -t pqc-engineering-ssec-23-local-docker .
+```
+and to verify that it was built correctly, execute
+```bash
+docker images | grep pqc
+```
+### 7.3 How to mount our Docker container?
+
+To mount the Docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and then:
+1. In case the Docker container was **downloaded**, execute
 ```bash
 docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash
 ```
-After mounting, the terminal will change to
+2. In case the **local container was built**, then execute
+```bash
+docker run --rm -ti -v $PWD:/src -w /src pqc-engineering-ssec-23-local-docker:latest bash
+```
+After mounting, for either of both cases mentioned above, the terminal will change to
 ```bash
 /src# <insert commands here>
 ```
