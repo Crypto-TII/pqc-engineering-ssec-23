@@ -440,8 +440,9 @@ For the convenience of our readers and any scientist that would like to replicat
 
 As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
 
-Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in an **Apple Silicon-based computer** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, the following settings regarding Rosetta must be modified.
+Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in an **Apple Silicon-based computer** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, turn **OFF** Rosetta as shown below.
 
+![](gifs/06-docker/docker_rosetta_setting.png)
 
 ### 7.1 How to download our public Docker container?
 
