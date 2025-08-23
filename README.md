@@ -16,7 +16,10 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
    3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_04_03)
 5. [Source-Code Technical Documentation: Doxygen](#section_05)
 6. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_06)
-7. [How to download our public Docker container?](#section_07)
+7. [How to use our Docker container?](#section_07)
+   1. [How to download our public Docker container?](#section_07_01)
+   2. [How to locally build our Docker container?](#section_07_02)
+   3. [How to mount our Docker container?](#section_07_03)
 8. [Additional Resources' Build Process](#section_08)
 9. [Conclusions, Acknowledgements and Authors](#section_09)
 
@@ -131,7 +134,7 @@ In this section we present a setup process that can be run in any Linux terminal
 
 #### System requirements
 
-Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
+Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough. Currently, only **Intel CPUs** are natively supported. To run our project in **Apple Silicon-based computers**, please refer to [Section 7: How to use our Docker container?](#section_07).
 
 Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
@@ -436,14 +439,15 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
 <a name="section_07"></a>
 ## 7. How to use our Docker container?
 
-For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) a Docker file. These two options offer our readers to download (or create) a system with all our software requirements. This provides a self-contained environment where our artifact runs out-of-the-box.
+For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) the Docker file used to build it. These two offer our readers the options to download and/or locally build the Docker container with all our software requirements. This provides a self-contained environment where our artifact runs out-of-the-box.
 
 As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
 
-Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in an **Apple Silicon-based computer** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, turn **OFF** Rosetta as shown below.
+Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in **Apple Silicon-based computers** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, turn **OFF** Rosetta as shown below.
 
 ![](gifs/06-docker/docker_rosetta_setting.png)
 
+<a name="section_07_01"></a>
 ### 7.1 How to download our public Docker container?
 
 To download our Docker container, simply execute the command below
@@ -454,7 +458,7 @@ and to verify that it was downloaded correctly, execute
 ```bash
 docker images | grep pqc
 ```
-
+<a name="section_07_02"></a>
 ### 7.2 How to locally build our Docker container?
 
 In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile) (location: `docs/Dockerfile`). 
@@ -468,6 +472,7 @@ and to verify that it was built correctly, execute
 ```bash
 docker images | grep pqc
 ```
+<a name="section_07_03"></a>
 ### 7.3 How to mount our Docker container?
 
 To mount the Docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and then:
@@ -484,6 +489,8 @@ After mounting, for either of both cases mentioned above, the terminal will chan
 /src# <insert commands here>
 ```
 At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the benchmarking shown in [Section 3: Benchmarking](#section_03), all the experiments presented in [Section 4: Reproducing the Manuscript Results](#section_04), and all the steps to generate the technical documentation using Doxygen as shown in [Section 5: Source-Code Technical Documentation: Doxygen](#section_05) shall work without problems.
+
+For Apple Silicon-based computers, in case the error `illegal instruction` is returned, please modify the Rosetta settings described above.
 
 <a name="section_08"></a>
 ## 8. Additional Resources' Build Process
