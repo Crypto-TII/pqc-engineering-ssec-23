@@ -1,7 +1,0 @@
-var classpip_1_1__vendor_1_1pkg__resources_1_1_version_conflict =
-[
-    [ "dist", "d2/d23/classpip_1_1__vendor_1_1pkg__resources_1_1_version_conflict.html#a55bd507d7f3d4be8e5187f620e7d5fd7", null ],
-    [ "report", "d2/d23/classpip_1_1__vendor_1_1pkg__resources_1_1_version_conflict.html#a32b773fc56a3ade0665c27101d61045a", null ],
-    [ "req", "d2/d23/classpip_1_1__vendor_1_1pkg__resources_1_1_version_conflict.html#a9adab7ef024962363798351a37bac3fd", null ],
-    [ "with_context", "d2/d23/classpip_1_1__vendor_1_1pkg__resources_1_1_version_conflict.html#af65554ea7fed65d8e48c034a5e076c0b", null ]
-];
