@@ -137,6 +137,12 @@ Our project works in any out-of-the-box Linux-based environment with some basic 
 - Cmake
 - Python3 (numpy and matplotlib)
 
+To install all our required software dependencies, execute
+```shell
+sudo apt-get install --yes build-essential cmake doxygen git sudo python3 python3-pip gdb libgmp-dev graphviz nano
+sudo apt install python3-numpy python3-matplotlib
+```
+
 To check if your system counts with the required software, simply run 
 ```shell
 cmake --version
