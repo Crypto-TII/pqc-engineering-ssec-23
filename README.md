@@ -7,8 +7,9 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
 ## Table of contents
 1. [Introduction](#section_01)  
 2. [Setup Process](#section_02)
-   1. [Build](#section_02_01)  
-   2. [Testing](#section_02_02)
+   1. [System requirements](#section_02_01)
+   2. [Build](#section_02_02)  
+   3. [Testing](#section_02_03)
 3. [Benchmarking](#section_03)
 4. [Reproducing the Manuscript Results](#section_04)
    1. [Figure 3: Benchmarks for the 2-isogenies vs. 3-isogenies walks](#section_04_01)
@@ -16,7 +17,10 @@ Accompanying repository to the manuscript titled [“Let us walk on the 3-isogen
    3. [Figure 5 (a) and Figure 5 (b): Benchmarks for state-of-the-art dCTIDH vs. dCTIDH modified using our proposal.](#section_04_03)
 5. [Source-Code Technical Documentation: Doxygen](#section_05)
 6. [Integrated CI/CD: Build, Test, Benchmarking, and Reporting](#section_06)
-7. [How to download our public Docker container?](#section_07)
+7. [How to use our Docker container?](#section_07)
+   1. [How to download our public Docker container?](#section_07_01)
+   2. [How to locally build our Docker container?](#section_07_02)
+   3. [How to mount our Docker container?](#section_07_03)
 8. [Additional Resources' Build Process](#section_08)
 9. [Conclusions, Acknowledgements and Authors](#section_09)
 
@@ -127,15 +131,19 @@ A slide-style presentation with a summary of the technical steps presented in th
 In this section we present a setup process that can be run in any Linux terminal. In case a specialized IDE like CLion is desired, please refer to [Let us walk on the 3-isogeny graph: CLion Setup](README_Clion_IDE.md).
 
 <a name="section_02_01"></a>
-### 2.1. Build
+### 2.1. System requirements
 
-#### System requirements
-
-Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough.
+Our (physical) testbed consists of machine with a 12th Gen. Intel(R) Core(TM) i9-12900H CPU and 32 Gb of RAM, running Ubuntu 20.04.6 LTS (64 bits), but any Linux environment running in an Intel CPU is enough. Currently, only **Intel CPUs** are natively supported. To run our project in **Apple Silicon-based computers**, please refer to [Section 7: How to use our Docker container?](#section_07).
 
 Our project works in any out-of-the-box Linux-based environment with some basic software requirements:
 - Cmake
 - Python3 (numpy and matplotlib)
+
+To install all our required software dependencies, execute
+```shell
+sudo apt-get install --yes build-essential cmake doxygen git sudo python3 python3-pip gdb libgmp-dev graphviz nano
+sudo apt install python3-numpy python3-matplotlib
+```
 
 To check if your system counts with the required software, simply run 
 ```shell
@@ -146,6 +154,9 @@ pip list | grep matplotlib
 ```
 If all the requirements are met, the terminal should return installed versions like the ones below.
 ![](gifs/01-cmake-profile/numpy.png)
+
+<a name="section_02_02"></a>
+### 2.2. Build
 
 To build our project, in the root directory `pqc-engineering-ssec-23`, simply run
 ```shell
@@ -162,9 +173,8 @@ A demo of the whole process of setup and build process is shown below.
 
 ![](gifs/03-examples/build_release.gif)
 
-
-<a name="section_02_02"></a>
-### 2.2. Testing
+<a name="section_02_03"></a>
+### 2.3. Testing
 
 In this section, we show how to perform the **testing** of our source code. For a detailed explanation of each testing mode, please refer to our additional documentation: [Let us walk on the 3-isogeny graph: (Detailed) Build, Test and Benchmarking Framework Documentation](c-code/README.md).
 
@@ -386,6 +396,11 @@ Two PDF files are generated with the generated graphs and stored inside the `rep
 
 Our project supports automatic technical documentation generation via Doxygen. As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 5: How to Generate the Source Code Technical Documentation?](https://www.youtube.com/watch?v=PdysZFECqJk&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=6). 
 
+To install Doxygen (and Graphviz) in case not installed in the system, simply run
+```bash
+sudo apt-get install doxygen graphviz
+```
+
 To generate the Doxygen documentation, inside the `docs` folder, simply run
 ```bash
 doxygen Doxyfile
@@ -423,11 +438,18 @@ All the statistical data and all the graphs are uploaded as public artifacts to 
 </p>
 
 <a name="section_07"></a>
-## 7. How to download our public Docker container?
+## 7. How to use our Docker container?
 
-For the convenience of our readers and any scientist that would like to replicate our results, we provide a publicly available Docker container, with all the system requirements pre-installed. This provides a self-contained environment where our artifact runs out-of-the-box.
+For the convenience of our readers and any scientist that would like to replicate our results, we provide (1) a publicly available Docker container, and (2) the Docker file used to build it. These two offer our readers the options to download and/or locally build the Docker container with all our software requirements. This provides a self-contained environment where our artifact runs out-of-the-box.
 
 As supplementary material, a detailed walkthrough of the steps in this section is available in our YouTube video: [Modulo 7: How to Download our publicly available Docker Container?](https://www.youtube.com/watch?v=TQrU4osynUg&list=PLFgwYy6Y-xWYCFruq66CFXXiWEWckEk6Q&index=9).
+
+Currently, natively only Intel CPUs are supported. To build, test, benchmark and replicate our results in **Apple Silicon-based computers** (`M1`, `M2`, `M3`, `M4` CPus), in Docker Desktop, turn **OFF** Rosetta as shown below.
+
+![](gifs/06-docker/docker_rosetta_setting.png)
+
+<a name="section_07_01"></a>
+### 7.1. How to download our public Docker container?
 
 To download our Docker container, simply execute the command below
 ```bash
@@ -437,16 +459,39 @@ and to verify that it was downloaded correctly, execute
 ```bash
 docker images | grep pqc
 ```
+<a name="section_07_02"></a>
+### 7.2. How to locally build our Docker container?
 
-To mount the docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and execute
+In case it is desired to locally-build the container, the required Dockerfile can be found [here](docs/Dockerfile) (location: `docs/Dockerfile`). 
+
+To build the local Docker container, simply execute
+```bash
+cd docs
+sudo docker build -t pqc-engineering-ssec-23-local-docker .
+```
+and to verify that it was built correctly, execute
+```bash
+docker images | grep pqc
+```
+<a name="section_07_03"></a>
+### 7.3. How to mount our Docker container?
+
+To mount the Docker container, first locate your terminal at the artifact's root folder(`pqc-engineering-ssec-23`), and then:
+1. In case the Docker container was **downloaded**, execute
 ```bash
 docker run --rm -ti -v $PWD:/src -w /src tiicrc/github-selfhosted-runner-pqc:latest bash
 ```
-After mounting, the terminal will change to
+2. In case the **local container was built**, then execute
+```bash
+docker run --rm -ti -v $PWD:/src -w /src pqc-engineering-ssec-23-local-docker:latest bash
+```
+After mounting, for either of both cases mentioned above, the terminal will change to
 ```bash
 /src# <insert commands here>
 ```
 At this point, all the steps presented in [Section 2: Setup Process](#section_02), all the benchmarking shown in [Section 3: Benchmarking](#section_03), all the experiments presented in [Section 4: Reproducing the Manuscript Results](#section_04), and all the steps to generate the technical documentation using Doxygen as shown in [Section 5: Source-Code Technical Documentation: Doxygen](#section_05) shall work without problems.
+
+For Apple Silicon-based computers, in case the error `illegal instruction` is returned, please modify the Rosetta settings described above.
 
 <a name="section_08"></a>
 ## 8. Additional Resources' Build Process
